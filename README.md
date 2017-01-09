@@ -35,7 +35,7 @@ Temporary directory that should be removed
 
 # Licenses
 
-This project utilizes six (6) different dependencies for release builds and seven (7) different dependencies for development builds. The dependencies are as follows:
+This project utilizes seven (7) different dependencies for release builds and eight (8) different dependencies for development builds. The dependencies are as follows:
 
 - [backward-cpp](https://github.com/bombela/backward-cpp)
 - [FreeType](https://www.freetype.org/index.html)
@@ -44,7 +44,9 @@ This project utilizes six (6) different dependencies for release builds and seve
 - [SOIL](http://www.lonesock.net/soil.html)
 - [TinyXML2](http://www.grinninglizard.com/tinyxml2)
 - [Bullet3](http://bulletphysics.org/wordpress/)
+- [Assimp](http://www.assimp.org)
 
+The licenses for each dependency can be found in the [deps](./deps) folder, except for `assimp` that has to be installed globally on the system when building.
 
 
 
