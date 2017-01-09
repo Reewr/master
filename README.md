@@ -1,6 +1,6 @@
 # Master Thesis
 
-This repository contains the master thesis for Alexander Imenes and Svein Inge Albrigtsen. The master thesis was performed at [University of Agder](http://uia.no) in the Spring semester of 2017. The project itself bases itself on a game engine that was created during the course Advanced Programming with C++ in the fall semester of 2013. The engine was later expanded with Dynamic Animations and Procedural Terrain Generations during the bachelor thesis done in the Spring semster of 2014 by the same authors.
+This repository contains the master thesis for Alexander Imenes and Svein Inge Albrigtsen. The master thesis was performed at [University of Agder](http://uia.no) in the Spring semester of 2017. The project itself bases itself on a game engine that was created during the course Advanced Programming with C++ in the fall semester of 2013. The engine was later expanded with Dynamic Animations and Procedural Terrain Generations during the bachelor thesis done in the Spring semester of 2014 by the same authors.
 
 The repository contains several folders, most of which are essential to the code itself. Below is a short explanation of each of the directories
 
@@ -31,4 +31,21 @@ The main source folder. All code is in here.
 **tmp**
 
 Temporary directory that should be removed
+
+
+# Licenses
+
+This project utilizes six (6) different dependencies for release builds and seven (7) different dependencies for development builds. The dependencies are as follows:
+
+- [backward-cpp](https://github.com/bombela/backward-cpp)
+- [FreeType](https://www.freetype.org/index.html)
+- [GLFW](http://www.glfw.org)
+- [OpenGL Loader](https://bitbucket.org/alfonse/glloadgen/wiki/Home)
+- [SOIL](http://www.lonesock.net/soil.html)
+- [TinyXML2](http://www.grinninglizard.com/tinyxml2)
+- [Bullet3](http://bulletphysics.org/wordpress/)
+
+
+
+
 
