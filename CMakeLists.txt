@@ -12,8 +12,8 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 include(cotire)
 
 # Find & add GLFW
-add_subdirectory(deps/glfw-3.0.4)
-include_directories(deps/glfw-3.0.4/include)
+add_subdirectory(deps/glfw)
+include_directories(deps/glfw/include)
 
 # Find & add OGL (OpenGL Loading Library)
 add_subdirectory(deps/OGL/)

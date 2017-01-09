@@ -1,3 +1,6 @@
 [submodule "deps/assimp"]
 	path = deps/assimp
 	url = git@github.com:assimp/assimp.git
+[submodule "deps/glfw"]
+	path = deps/glfw
+	url = git@github.com:glfw/glfw.git
