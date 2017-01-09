@@ -7,3 +7,6 @@
 [submodule "deps/SOIL"]
 	path = deps/SOIL
 	url = git@github.com:kbranigan/Simple-OpenGL-Image-Library.git
+[submodule "deps/backward-cpp"]
+	path = deps/backward-cpp
+	url = git@github.com:bombela/backward-cpp.git
