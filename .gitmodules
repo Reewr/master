@@ -1,0 +1,3 @@
+[submodule "deps/assimp"]
+	path = deps/assimp
+	url = git@github.com:assimp/assimp.git

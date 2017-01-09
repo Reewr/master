@@ -1,13 +1,13 @@
 cmake_minimum_required(VERSION 2.8)
 
 set(CMAKE_CXX_COMPILER g++)
-
-project(HELLOTEST CXX)
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
+project(DDDGP CXX)
+
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR})
 set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 
 include(cotire)
 
@@ -37,7 +37,15 @@ endif(NOT WIN32)
 add_subdirectory(deps/freetype-2.5.3)
 include_directories(deps/freetype-2.5.3/include)
 
+# find & add assimp, also set flags
+set(ASSIMP_BUILD_TESTS OFF)
+set(ASSIMP_BUILD_ASSIMP_TOOLS OFF)
+
+add_subdirectory(deps/assimp)
+include_directories(deps/assimp/include)
+
 link_directories(${LIBRARY_OUTPUT_PATH})
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR})
 
 #Find & add MMM
 #include_directories(src)
@@ -45,24 +53,8 @@ link_directories(${LIBRARY_OUTPUT_PATH})
 
 include_directories(src)
 
-# Find & add ASSIMP
-# Assimp is found in
-# /usr/include
-# C:/Mingw/include
-# The reason for this is because we will
-# hopefully, remove assimp as our loader
-
-find_package(assimp REQUIRED)
-
-if(ASSIMP_FOUND)
-  include_directories(${ASSIMP_INCLUDE_DIR})
-else (ASSIMP_FOUND)
-  message("ERROR: Assimp not found")
-endif (ASSIMP_FOUND)
-
+set(CMAKE_CXX_COMPILER g++)
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic-errors -g -std=c++11")
-
-# set(CMAKE_CXX_COMPILER g++)
 
 FILE(GLOB_RECURSE DDDGP_GLOB_CPP src/*.cpp)
 FILE(GLOB_RECURSE DDDGP_GLOB_HPP src/*.hpp)
@@ -77,12 +69,11 @@ target_link_libraries(DDDGP ogl)
 target_link_libraries(DDDGP SOIL)
 target_link_libraries(DDDGP tinyxml2)
 target_link_libraries(DDDGP freetype)
+target_link_libraries(DDDGP assimp)
 
 if(NOT WIN32)
   target_link_libraries(DDDGP backward)
 endif(NOT WIN32)
-
-target_link_libraries(DDDGP ${ASSIMP_LIBRARY})
 
 cotire(DDDGP)
 
@@ -92,7 +83,7 @@ if(WIN32)
   add_custom_target(
     cleanbuild
     COMMAND
-    cd .. & rmdir /S /Q build & mkdir build & cd build & cmake -G \"MinGW Makefiles\" .. & mingw32-make -j5
+    cd .. & rmdir /S /Q build & mkdir build & cd build & cmake -G \"MinGW Makefiles\" .. & mingw31-make -j5
     WORKING_DIRECTORY
     "${CMAKE_SOURCE_DIR}/build"
   )
