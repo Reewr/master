@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<gui>
+  <screen name="Options" title="Options">
+    <window name="Graphics">
+      <guimenu name="Graphics" x="55" y="35" size="15" ori="1" offset="0" color="1">
+        <item name="Resolution" x="55" y="35" size="15">
+          <guidropdown name="Resolution" x="50" y="60">
+            <item name="1024x768"/>
+            <item name="1280x1024"/>
+            <item name="1366x768"/>
+            <item name="1600x900"/>
+            <item name="1920x1080"/>
+          </guidropdown>
+        </item>
+        <item name="Vsync" x="225" y="35" size="15">
+          <guidropdown name="Vsync" x="230" y="60">
+            <item name="Off"/>
+            <item name="On"/>
+          </guidropdown>
+        </item>
+        <item name="Display Mode" x="400" y="35" size="15">
+          <guidropdown name="DisplayMode" x="400" y="60">
+            <item name="Window"/>
+            <item name="Borderless"/>
+            <item name="Fullscreen"/>
+          </guidropdown>
+        </item>
+        <item name="View Distance" x="575" y="35" size="15">
+          <guidropdown name="ViewDistance" x="605" y="60">
+            <item name="Low"/>
+            <item name="Medium"/>
+            <item name="High"/>
+            <item name="Ultra"/>
+          </guidropdown>
+        </item>
+        <item name="Monitor" x="90" y="125" size="15">
+          <guidropdown name="Monitor" x="50" y="150">
+            <item name="Primary(1)"/>
+            <item name="Secondary(2)"/>
+            <item name="Tertiary(3)"/>
+          </guidropdown>
+        </item>
+        <item name="Anti-aliasing" x="280" y="125" size="15">
+          <guidropdown name="Aliasing" x="315" y="150">
+            <item name="Off"/>
+            <item name="2x"/>
+            <item name="4x"/>
+            <item name="8x"/>
+            <item name="16x"/>
+          </guidropdown>
+        </item>
+        <item name="Anisotrophic filtering" x="516" y="125" size="15">
+          <guidropdown name="Aniso" x="580" y="150">
+            <item name="Off"/>
+            <item name="2x"/>
+            <item name="4x"/>
+            <item name="8x"/>
+            <item name="16x"/>
+          </guidropdown>
+        </item>
+        <item name="Shadow Sampling" x="50" y="225" size="15">
+          <guidropdown name="ShadowSamples" x="100" y="250">
+            <item name="Off"/>
+            <item name="2x"/>
+            <item name="4x"/>
+            <item name="8x"/>
+            <item name="16x"/>
+          </guidropdown>
+        </item>
+        <item name="Shadow Resolution" x="300" y="225" size="15">
+          <guidropdown name="ShadowRes" x="350" y="250">
+            <item name="Low"/>
+            <item name="Medium"/>
+            <item name="High"/>
+            <item name="Ultra"/>
+          </guidropdown>
+        </item>
+      </guimenu>
+    </window>
+    <window name="Audio">
+      <guimenu name="Audio" x="225" y="35" size="15" ori="1" offset="180" color="1">
+        <item name="Master Volume" x="225" y="35" size="15">
+          <guislider name="MasterVolume" x="195" y="75" scale="0.25"/>
+        </item>
+        <item name="SFX Volume" x="225" y="155" size="15">
+          <guislider name="SFXVolume" x="195" y="185" scale="0.25"/>
+        </item>
+        <item name="Music Volume" x="225" y="265" size="15">
+          <guislider name="MusicVolume" x="195" y="295" scale="0.25"/>
+        </item>
+      </guimenu>
+    </window>
+    <window name="Game">
+
+      <guimenu name="Game1" x="50" y="50" size="15" ori="0" offset="150" color="1">
+        <item name="Camera Rotation:" x="50" y="50" size="15">
+        </item>
+        <item name="Speed" x="80" y="90" size="15">
+          <guidropdown name="CamRotSpeed" x="180" y="90">
+            <item name=" 60 degrees"/>
+            <item name="120 degrees"/>
+            <item name="180 degrees"/>
+            <item name="240 degrees"/>
+            <item name="300 degrees"/>
+            <item name="360 degrees"/>
+            <item name="720 degrees"/>
+          </guidropdown>
+        </item>
+        <item name="Inverse Horizontal" x="80" y="130" size="15">
+          <guidropdown name="CamRotInvH" x="270" y="130">
+            <item name="Off"/>
+            <item name="On"/>
+          </guidropdown>
+        </item>
+        <item name="Inverse Vertical" x="80" y="170" size="15">
+          <guidropdown name="CamRotInvV" x="270" y="170">
+            <item name="Off"/>
+            <item name="On"/>
+          </guidropdown>
+        </item>
+      </guimenu>
+
+      <guimenu name="Game2" x="50" y="150" size="15" ori="0" offset="180" color="1">
+        <item name="Camera Zoom" x="430" y="50" size="15">
+        </item>
+        <item name="Speed" x="460" y="90" size="15">
+          <guidropdown name="CamZoomSpeed" x="550" y="90">
+            <item name="0.1"/>
+            <item name="0.2"/>
+            <item name="0.3"/>
+            <item name="0.4"/>
+            <item name="0.5"/>
+            <item name="0.6"/>
+            <item name="0.7"/>
+            <item name="0.8"/>
+            <item name="0.9"/>
+            <item name="1"/>
+            <item name="2"/>
+          </guidropdown>
+        </item>
+        <item name="Inverse" x="460" y="130" size="15">
+          <guidropdown name="CamZoomInv" x="550" y="130">
+            <item name="Off"/>
+            <item name="On"/>
+          </guidropdown>
+        </item>
+      </guimenu>
+
+    </window>
+    <window name="Keybindings">
+      <guimenu name="Keybindings1" x="320" y="60" size="15" ori="0" offset="180" color="1">
+        <item name="Key 1" x="320" y="60" size="15"/>
+        <item name="Key 2" x="495" y="60" size="15"/>
+      </guimenu>
+    </window>
+  </screen>
+  <screen name="Pause" title="Game Paused">
+    <guimenu name="PauseOptions" x="35" y="150" size="20" ori="0" offset="140" color="1">
+      <item name="Resume" x="35" y="150" size="20"/>
+      <item name="Options" x="175" y="150" size="20"/>
+      <item name="Quit" x="315" y="150" size="20"/>
+    </guimenu>
+  </screen>
+  <screen name="Load" title="Load Game">
+    <guimenu name="Load" x="20" y="550" size="20" ori="0" offset="330" color="1">
+      <item name="Load Game" x="20" y="550" size="20"/>
+      <item name="Cancel" x="300" y="550" size="20"/>
+    </guimenu>
+  </screen>
+</gui>

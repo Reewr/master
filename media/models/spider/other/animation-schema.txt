@@ -1,0 +1,50 @@
+base
+  translate_x            0
+  translate_y            1
+  translate_z            2
+  rot_x                  3
+  rot_y                  4
+  rot_z                  5
+
+sternum_front            6  -> ?
+  coxa                   7  -> ?
+    thorax 2x            8  -> - arch back
+      coxa               9  -> + counteracts previous
+        neck             10 -> - lifts/looks up
+          head_disk      11 -> - looks right
+          head_inner
+          head
+sternum_back             12 -> ?
+  coxa                   13  -> ?
+    thorax 2x            14  -> - arch back
+      coxa               15  -> + counteracts previous
+        hip              16 -> - lifts up
+        abdomin_inner
+        abdomin
+joint                    17+(i*10)  -> - moves leg back
+trochanter               
+  joint                  18+(i*10)  -> - lifts leg up
+  femur_tibia_inner      
+  femur                  
+    joint                19+(i*10)  -> - bends down
+    patella_inner        
+    patella              
+      joint              20+(i*10)  -> - bends down
+      femur_tibia_inner  
+      tibia              
+        joint_rot        21+(i*10)  -> ?
+        metatarsus       
+          joint_mini     22 + i*10  -> - down
+            tarsus_bot   23 + i*10  -> - close claw
+            tarsus_top  -23 + i*10 
+            
+            tip_loc_x    24 + i*10
+            tip_loc_y    25 + i*10
+            tiy_loc_z    26 + i*10
+
+
+Leg numbers:
+(18-24) <- 1 | 0 -> (11-17)
+(32-38) <- 3 | 2 -> (25-31)
+(46-52) <- 5 | 4 -> (39-45)
+(60-66) <- 7 | 6 -> (53-59)

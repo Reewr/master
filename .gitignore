@@ -1,0 +1,5 @@
+.clang-format
+.ycm_extra_conf.py
+build
+lib
+tags

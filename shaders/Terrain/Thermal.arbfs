@@ -1,0 +1,58 @@
+!!NVfp4.0
+# cgc version 3.1.0013, build date Apr 24 2012
+# command line args: -oglsl -strict -glslWerror -deprecated -profile gpu_fp
+# source file: Thermal.fs
+#vendor NVIDIA Corporation
+#version 3.1.0.13
+#profile gpu_fp
+#program main
+#semantic ground
+#semantic screenRes
+#var float2 Texcoord : $vin.ATTR0 : ATTR0 : -1 : 1
+#var sampler2D ground :  : texunit 0 : -1 : 1
+#var float2 screenRes :  :  : -1 : 0
+#var float4 output_color : $vout.COL00 : COL0[0] : -1 : 1
+ATTRIB fragment_attrib[] = { fragment.attrib[0..0] };
+TEMP R0, R1, R2, R3, R4;
+TEMP RC, HC;
+OUTPUT result_color0 = result.color;
+TEX.F R4.y, fragment.attrib[0], texture[0], 2D;
+TEX.F R0.y, fragment.attrib[0], texture[0], 2D, (0, 1);
+TEX.F R1.y, fragment.attrib[0], texture[0], 2D, (0, -1);
+TEX.F R3.y, fragment.attrib[0], texture[0], 2D, (-1);
+TEX.F R2.y, fragment.attrib[0], texture[0], 2D, (1);
+ADD.F R0.w, R4.y, -R3.y;
+SGT.F R0.w, |R0|, {0.0029296875}.x;
+TRUNC.U R1.z, R0.w;
+ADD.F R1.x, R4.y, -R2.y;
+SGT.F R1.x, |R1|, {0.0029296875};
+TRUNC.U R1.w, R1.x;
+OR.U.CC HC.x, R1.z, R1.w;
+ADD.F R0.x, R4.y, -R1.y;
+ADD.F R0.z, R4.y, -R0.y;
+MOV.F R0.w, R4.y;
+MOV.F R1.x, R4.y;
+IF    NE.x;
+ADD.F R0.x, R0.w, R3.y;
+ADD.F R0.x, R0, R2.y;
+ADD.F R0.x, R0, R1.y;
+ADD.F R0.x, R0, R0.y;
+MUL.F R1.x, R0, {0.2};
+ELSE;
+SGT.F R0.z, |R0|, {0.0029296875}.x;
+SGT.F R0.x, |R0|, {0.0029296875};
+TRUNC.U R0.z, R0;
+TRUNC.U R0.x, R0;
+OR.U.CC HC.x, R0, R0.z;
+IF    NE.x;
+ADD.F R0.x, R0.w, R3.y;
+ADD.F R0.x, R0, R2.y;
+ADD.F R0.x, R0, R1.y;
+ADD.F R0.x, R0, R0.y;
+MUL.F R1.x, R0, {0.2};
+ENDIF;
+ENDIF;
+MOV.F result_color0.xzw, {0, 1}.xyxy;
+MOV.F result_color0.y, R1.x;
+END
+# 38 instructions, 5 R-regs
