@@ -1,5 +1,7 @@
 #include "Engine.hpp"
 
+#include "OpenGLHeaders.hpp"
+
 #include "GUI/GUI.hpp"
 #include "Graphical/Font.hpp"
 #include "Graphical/Framebuffer.hpp"
