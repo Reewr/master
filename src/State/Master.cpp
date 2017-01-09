@@ -23,7 +23,7 @@ void Master::drawGUI() {
 
 void Master::mouseMovementCB(double, double) { }
 void Master::mouseScrollCB(double, double) { }
-int Master::mouseButtonCB(int, int, int) { }
+int Master::mouseButtonCB(int, int, int) { return State::NOCHANGE; }
 int Master::keyboardCB(int key, int, int action, int mods) {
   int stateChange = State::NOCHANGE;
 
