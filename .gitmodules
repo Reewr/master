@@ -4,3 +4,6 @@
 [submodule "deps/glfw"]
 	path = deps/glfw
 	url = git@github.com:glfw/glfw.git
+[submodule "deps/SOIL"]
+	path = deps/SOIL
+	url = git@github.com:kbranigan/Simple-OpenGL-Image-Library.git
