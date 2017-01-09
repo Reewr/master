@@ -32,6 +32,33 @@ The main source folder. All code is in here.
 
 Temporary directory that should be removed
 
+# Building and running
+
+This project has only been tested on Linux. All the dependencies does however support cross-platform and it should therefore be possible to compile and run it on other systems.
+
+In order to build the system, you can do the following:
+
+```
+# install assimp with your package manager
+pacman -S assimp
+
+# Clone and change dir
+git clone git@github.com:Reewr/master-thesis.git
+cd master-thesis
+
+# Make required folders
+mkdir build
+mkdir lib
+
+# Initiate cmake and make
+cd build
+cmake ..
+make
+
+# Change dir and run program
+cd ..
+./DDDGP
+```
 
 # Licenses
 
