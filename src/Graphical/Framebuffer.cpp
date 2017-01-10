@@ -227,7 +227,7 @@ void Framebuffer::bind(bool bindProgram) {
  *   the program to use
  */
 void Framebuffer::bind(Program* program) {
-  if (p == nullptr)
+  if (program == nullptr)
     throw Error("Program is null");
 
   bind(false);
