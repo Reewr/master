@@ -126,15 +126,14 @@ private:
   bool mIsDepth;
   bool mIsOwnProgram;
   bool mNeedsDrawing;
-
-  GLuint mFrameBuffer;
   bool mIsBound;
 
-  GL::Rectangle* mQuad;
-  Program* mProgram;
-  Texture* mTexture;
-
   vec2 mFrameSize;
+
+  GL::Rectangle* mQuad;
+  Program*       mProgram;
+  Texture*       mTexture;
+  GLuint         mFrameBuffer;
 
   static int numSS;
   static std::string ssLoc;

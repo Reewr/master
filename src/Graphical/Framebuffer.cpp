@@ -96,10 +96,10 @@ void Framebuffer::setup() {
   mTexture = new Texture();
   mQuad    = new GL::Rectangle(vec2(), mFrameSize);
 
-  GLenum buffer       = mIsDepth ? GL_NONE : GL_COLOR_ATTACHMENT0;
-  GLenum drawBuffer[] = { buffer };
-  GLenum type         = mIsDepth ? GL_DEPTH_COMPONENT  : GL_RGBA32F;
-  GLenum attachment   = mIsDepth ? GL_DEPTH_ATTACHMENT : GL_COLOR_ATTACHMENT0;
+  GLenum type          = mIsDepth ? GL_DEPTH_COMPONENT  : GL_RGBA32F;
+  GLenum buffer        = mIsDepth ? GL_NONE             : GL_COLOR_ATTACHMENT0;
+  GLenum attachment    = mIsDepth ? GL_DEPTH_ATTACHMENT : GL_COLOR_ATTACHMENT0;
+  GLenum drawBuffer[1] = {buffer};
 
   glGenFramebuffers(1, &mFrameBuffer);
   glBindFramebuffer(GL_FRAMEBUFFER, mFrameBuffer);
@@ -111,8 +111,6 @@ void Framebuffer::setup() {
   if (!mIsDepth) {
     mProgram->setUniform("screenRes", mFrameSize);
     mTexture->generateMipmaps();
-  } else {
-
   }
 
   glFramebufferTexture2D(GL_FRAMEBUFFER,
@@ -216,9 +214,24 @@ void Framebuffer::bind(bool bindProgram) {
   mIsBound = true;
 }
 
-void Framebuffer::bind(Program* p) {
+/**
+ * @brief
+ *   Binds the framebuffer together with the given program.
+ *   It also sets the viewport to the size defined by the frame
+ *   size.
+ *
+ *   When using this function, this also clears the
+ *   texture when binding the framebuffer
+ *
+ * @param program
+ *   the program to use
+ */
+void Framebuffer::bind(Program* program) {
+  if (p == nullptr)
+    throw Error("Program is null");
+
   bind(false);
-  p->bind();
+  program->bind();
 }
 
 /**
@@ -255,7 +268,8 @@ void Framebuffer::nonClearBind(bool bindProgram) {
  * @param bindProgram
  */
 void Framebuffer::nonClearBind(Program* program) {
-  if (program == nullptr) throw Error("Pointer to program is null");
+  if (program == nullptr)
+    throw Error("Pointer to program is null");
 
   nonClearBind(false);
   program->bind();
