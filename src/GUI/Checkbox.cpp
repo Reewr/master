@@ -39,15 +39,15 @@ Checkbox* Checkbox::fromXML(tinyxml2::XMLElement* element) {
   const char* check = element->Attribute("check");
 
   if (element->QueryFloatAttribute("x", &position.x) != 0) {
-    throw new Error("XMLElement has no float attribute 'x'");
+    throw Error("XMLElement has no float attribute 'x'");
   }
 
   if (element->QueryFloatAttribute("y", &position.y) != 0) {
-    throw new Error("XMLElement has no float attribute 'y'");
+    throw Error("XMLElement has no float attribute 'y'");
   }
 
   if (check == nullptr) {
-    throw new Error("XMLElement has no 'check' attribute");
+    throw Error("XMLElement has no 'check' attribute");
   }
 
   return new Checkbox(std::string(check), position);

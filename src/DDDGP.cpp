@@ -37,11 +37,10 @@ int main(int argc, char* argv[]) {
   Engine* engine = new Engine();
 
   try {
-    bool initialized = engine->initialize(argc, argv);
-    if (!initialized) {
-      throw new Error("Engined failed to initialize");
+    if (!engine->initialize(argc, argv)) {
+      throw Error("Engined failed to initialize");
     }
-  } catch (Error err) {
+  } catch (const Error &err) {
     fatalError(err.what());
     delete engine;
     return 1;
@@ -58,7 +57,7 @@ int main(int argc, char* argv[]) {
   // runs the loop, exiting on any errors
   try {
     engine->runLoop();
-  } catch (Error err) {
+  } catch (const Error &err) {
     fatalError(err.what());
     delete engine;
     return 1;

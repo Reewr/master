@@ -69,18 +69,18 @@ Dropdown::Dropdown(const std::vector<std::string>& options, const vec2& position
  */
 Dropdown* Dropdown::fromXML(tinyxml2::XMLElement *element) {
   if (element == nullptr) {
-    throw new Error("XMLElement is null");
+    throw Error("XMLElement is null");
   }
 
   vec2 position;
 
   // retrieve the positions of the dropdown
   if (element->QueryFloatAttribute("x", &position.x) != 0) {
-    throw new Error("Float position 'x' does not exist in XMLElement");
+    throw Error("Float position 'x' does not exist in XMLElement");
   }
 
   if (element->QueryFloatAttribute("x", &position.y) != 0) {
-    throw new Error("Float position 'y' does not exist in XMLElement");
+    throw Error("Float position 'y' does not exist in XMLElement");
   }
 
   std::vector<std::string> strOptions;
@@ -90,7 +90,7 @@ Dropdown* Dropdown::fromXML(tinyxml2::XMLElement *element) {
     const char* option = options->Attribute("name");
 
     if (option == nullptr) {
-      throw new Error("Option has no attribute 'name'");
+      throw Error("Option has no attribute 'name'");
     }
 
     strOptions.push_back(std::string(option));

@@ -26,7 +26,7 @@ Slider::Slider(const vec2& pos, const float scale, const std::string valSign) {
 
 Slider* Slider::fromXML(tinyxml2::XMLElement* element) {
   if (element == nullptr) {
-    throw new Error("XMLElement is null");
+    throw Error("XMLElement is null");
   }
 
   vec2 position;
@@ -34,11 +34,11 @@ Slider* Slider::fromXML(tinyxml2::XMLElement* element) {
   const char* valueSign = element->Attribute("scale");
 
   if (element->QueryFloatAttribute("x", &position.x) != 0) {
-    throw new Error("XMLElement has no float attribute 'x'");
+    throw Error("XMLElement has no float attribute 'x'");
   }
 
   if (element->QueryFloatAttribute("y", &position.y) != 0) {
-    throw new Error("XMLElement has no float attribute 'x'");
+    throw Error("XMLElement has no float attribute 'x'");
   }
 
   if (element->QueryFloatAttribute("x", &scale) != 0) {

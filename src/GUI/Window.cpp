@@ -52,7 +52,7 @@ void handleGUIElement(Window* window, tinyxml2::XMLElement* element) {
   std::string type     = std::string(cStrType);
 
   if (cStrName == nullptr) {
-    throw new Error("XMLElement: '" + type + "' has no name attribute");
+    throw Error("XMLElement: '" + type + "' has no name attribute");
   }
 
   std::string name = std::string(cStrName);
@@ -72,7 +72,7 @@ void handleGUIElement(Window* window, tinyxml2::XMLElement* element) {
   } else if (type == "window") {
     widget = Window::fromXML(element);
   } else {
-    throw new Error("XMLElement: '" + type + "' is not supported");
+    throw Error("XMLElement: '" + type + "' is not supported");
   }
 
   window->add(name, widget);
@@ -80,7 +80,7 @@ void handleGUIElement(Window* window, tinyxml2::XMLElement* element) {
 
 Window* Window::fromXML(tinyxml2::XMLElement* element) {
   if (element == nullptr) {
-    throw new Error("XMLElement is null");
+    throw Error("XMLElement is null");
   }
 
   const char* cStrTexture = element->Attribute("texture");
@@ -88,7 +88,7 @@ Window* Window::fromXML(tinyxml2::XMLElement* element) {
   const char* cStrTitle   = element->Attribute("title");
 
   if (cStrName == nullptr) {
-    throw new Error("XMLElement has no attribute 'name'");
+    throw Error("XMLElement has no attribute 'name'");
   }
 
   std::string texture = std::string(cStrTexture == nullptr ? "NONE" : cStrTexture);
@@ -155,7 +155,7 @@ void Window::addWindow(std::string name, Rect r, std::string tex) {
 
 void Window::add(std::string name, GUI* widget) {
   if (widget == nullptr) {
-    throw new Error("GUI Widget is null");
+    throw Error("GUI Widget is null");
   }
 
   widget->setPosition(mBoundingBox.topleft + widget->position());
@@ -204,7 +204,7 @@ void Window::add(std::string name, GUI* widget) {
     log("Adding '" + name + "' as Window");
     mWindows[name] = window;
   } else {
-    throw new Error("No implementation for element");
+    throw Error("No implementation for element");
   }
 }
 

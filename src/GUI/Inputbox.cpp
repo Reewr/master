@@ -56,30 +56,30 @@ Inputbox::Inputbox(const Rect& r, const std::string text) {
  */
 Inputbox* Inputbox::fromXML(tinyxml2::XMLElement* element) {
   if (element == nullptr) {
-    throw new Error("XMLElement is null");
+    throw Error("XMLElement is null");
   }
 
   Rect rect;
   const char* text = element->Attribute("text");
 
   if (text == nullptr) {
-    throw new Error("XMLElement has no attribute 'text'");
+    throw Error("XMLElement has no attribute 'text'");
   }
 
   if (element->QueryFloatAttribute("x1", &rect.topleft.x) != 0) {
-    throw new Error("XMLElement has no float attribute 'x1'");
+    throw Error("XMLElement has no float attribute 'x1'");
   }
 
   if (element->QueryFloatAttribute("y1", &rect.topleft.y) != 0) {
-    throw new Error("XMLElement has no float attribute 'y1'");
+    throw Error("XMLElement has no float attribute 'y1'");
   }
 
   if (element->QueryFloatAttribute("x2", &rect.size.x) != 0) {
-    throw new Error("XMLElement has no float attribute 'x2'");
+    throw Error("XMLElement has no float attribute 'x2'");
   }
 
   if (element->QueryFloatAttribute("y2", &rect.size.x) != 0) {
-    throw new Error("XMLElement has no float attribute 'y2'");
+    throw Error("XMLElement has no float attribute 'y2'");
   }
 
   return new Inputbox(rect, std::string(text));

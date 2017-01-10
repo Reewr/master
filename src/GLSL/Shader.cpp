@@ -11,7 +11,7 @@ std::string loadTextfile(const std::string& filename) {
   std::string line;
 
   if (!fs.is_open()) {
-    throw new Error("Unable to open file: " + filename);
+    throw Error("Unable to open file: " + filename);
   }
 
   while (fs.good()) {
