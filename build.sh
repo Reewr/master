@@ -126,6 +126,12 @@ different_build_type() {
   fi
 }
 
+# If executed outside of root folder, we fail
+if [ ! -f "CMakeLists.txt" ] || [ ! -f ".gitignore" ]; then
+  echo "Error: Script must be run in root of project folder"
+  exit
+fi
+
 # Exiting, showing usage if no arguments
 if [ $# -eq 0 ]; then
   usage
