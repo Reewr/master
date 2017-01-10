@@ -1,19 +1,43 @@
 cmake_minimum_required(VERSION 2.8)
 
-set(CMAKE_CXX_COMPILER g++)
-set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
+# =======================================
+# Project initialization
+# =====================================
 
+# Set the project name and what type of program it is
 project(DDDGP CXX)
 
+# Export compile commands to a JSON file
+# so that it can be used by IDEs if needed
+set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
+
+# Set the primary compiler.
+#
+# TODO: We can remove this in favour of whatever
+# the environment has as compiler when we know that both g++ and clang++
+# builds correctly.
+set(CMAKE_CXX_COMPILER g++)
+
+# Tell CMake where to look for CMake modules and where to place lib/bin files
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 
+# Cotire is a tool used to optimize the builds. We have to include it like this
 include(cotire)
 
+
+# =======================================
+# Dependency inclusion
+# =======================================
+
 # Find & add TinyXML2
+#
+# Note:
+# -----
 # This must be prior to glfw as they both add the custom target `uninstall`.
 # glfw, unlike TinyXML, actually checks whether `uninstall` already exists.
+#
 # Added issue: https://github.com/leethomason/tinyxml2/issues/516
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/tinyxml2)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/tinyxml2)
@@ -30,7 +54,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/OGL/include)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/SOIL/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/SOIL/src)
 
-# Find & add backward-cpp
+# Find & add backward-cpp if not on windows
 if (NOT WIN32)
   add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/backward-cpp)
 endif(NOT WIN32)
@@ -39,7 +63,7 @@ endif(NOT WIN32)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/freetype-2.5.3)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/freetype-2.5.3/include)
 
-# find & add assimp, also set flags
+# Find & add assimp, also set flags
 set(ASSIMP_BUILD_TESTS OFF)
 set(ASSIMP_BUILD_ASSIMP_TOOLS OFF)
 
@@ -50,17 +74,31 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/assimp/include)
 # to root
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR})
 
-#Find & add MMM
-#include_directories(src)
-#add_subdirectory(src/Math)
 
+# =======================================
+# Project files
+# =======================================
+
+# Set the include directories so that we can actually
+# find our headers when we specify them.
 include_directories(src)
 
+# Set the compiler and flags
+# TODO:
+# Set to preferred compiler after we get it working with both g++ and clang++
+# Also, set flags correctly. This is not correctly.
 set(CMAKE_CXX_COMPILER g++)
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic-errors -g -std=c++11")
 
+# Add files
+# TODO: Remove globbing and include specifically.
 FILE(GLOB_RECURSE DDDGP_GLOB_CPP ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 FILE(GLOB_RECURSE DDDGP_GLOB_HPP ${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp)
+
+
+# =======================================
+# Dependency inclusion and linking
+# =======================================
 
 # Add backward to the exectuable, but only do so
 # if the platform isnt windows
@@ -79,10 +117,6 @@ find_library(OGL_LIBRARY NAME ogl)
 find_library(SOIL_LIBRARY NAME SOIL)
 find_library(FREETYPE_LIBRARY NAME freetype)
 find_library(ASSIMP_LIBRARY NAME assimp)
-
-#
-# Linking & stuff
-#
 
 # Note regarding TinyXML2:
 # ------------------------
@@ -104,10 +138,18 @@ target_link_libraries(DDDGP SOIL)
 target_link_libraries(DDDGP freetype)
 target_link_libraries(DDDGP assimp)
 
+# =======================================
+# Custom commands
+# =======================================
+
+# Perform cotire on our executable to optimize the build
 cotire(DDDGP)
 
+# Add a custom `run` command so that you can do `ninja run` to run the
+# the executable.
 add_custom_target(run COMMAND DDDGP DEPENDS DDDGP WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH})
 
+# Add special clean command if on windows
 if(WIN32)
   add_custom_target(
     cleanbuild
