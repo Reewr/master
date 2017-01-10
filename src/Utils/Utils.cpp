@@ -116,6 +116,53 @@ std::string Utils::toUpper(std::string s) {
   return s;
 }
 
+/**
+ * @brief
+ *   Trims the string from the right, which means any trailing whitespace,
+ *   such that "  Hello World!   " becomes "  Hello World!"
+ *
+ *   Note: the string is sent by reference and does change the contents
+ *
+ * @param s
+ * @returns s
+ */
+void Utils::rTrim(std::string& s) {
+  s.erase(std::find_if(s.rbegin(), s.rend(),
+                       std::not1(std::ptr_fun<int, int>(std::isspace))).base(),
+          s.end());
+}
+
+/**
+ * @brief
+ *   Trims the string from the left.
+ *   such that "  Hello World!  " becomes "Hello World!  "
+ *
+ *   Note: the string is sent by reference and does change the contents
+ *
+ * @param s
+ * @returns s
+ */
+void Utils::lTrim(std::string& s) {
+  s.erase(s.begin(),
+          std::find_if(s.begin(),
+                       s.end(),
+                       std::not1(std::ptr_fun<int, int>(std::isspace))));
+}
+
+/**
+ * @brief
+ *   Trims the string from both left and right
+ *   such that "  Hello World!  " becomes "Hello World!"
+ *
+ *   Note: the string is sent by reference and does change the contents
+ *
+ * @param s
+ */
+void Utils::trim(std::string& s) {
+  rTrim(s);
+  lTrim(s);
+}
+
 void Utils::logTimeNoEnd() {
   std::cout << timeSinceStart() << " ";
 }

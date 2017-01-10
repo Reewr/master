@@ -20,16 +20,16 @@ struct Wrapper {
   template <typename T>
   Wrapper (T& t, std::map<std::string, T> m) {
 
-    std::string s = "";
+    std::string str = "";
     for (const auto& kv: m)
-      s += " " + kv.first;
-    valid_params = s;
+      str += " " + kv.first;
+    valid_params = str;
 
-    parse = [&t,m,s](const Prop& p, const Params& ps) {
+    parse = [&t,m,str](const Prop& p, const Params& ps) {
       try {
         t = m.at(ps[0]);
       } catch (...) {
-        unknown_parameter(p, ps[0], s);
+        unknown_parameter(p, ps[0], str);
       }
     };
 
