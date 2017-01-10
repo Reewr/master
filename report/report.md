@@ -9,7 +9,7 @@
 
 % TitleHead: ![](img/uia.jpg {width="50%"})\
 % Subject  : IKT590 - ACTOR
-% Title    : Stochastic Decision Tree
+% Title    : TITLE
 % Author   : Alexander Imenes
 % Date     : Grimstad \today
 % Keywords : find, keywords
