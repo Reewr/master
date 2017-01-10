@@ -1,8 +1,11 @@
 #include "Master.hpp"
 
+#include "../OpenGLHeaders.hpp"
+
 #include "../Input.hpp"
 #include "../Utils/Asset.hpp"
 #include "../GUIMenu/Console.hpp"
+#include "../Utils/Utils.hpp"
 
 Master::Master(Asset* asset, Input* input) : mInput(input), mAsset(asset) {
   mConsole = new GConsole(input);
@@ -30,8 +33,14 @@ int Master::keyboardCB(int key, int, int action, int mods) {
   if (action == GLFW_RELEASE)
     return stateChange;
 
+  log("Keypress: ", key, " equals: ", Input::keyStrings[key]);
+
   if (mConsole->isVisible()) {
     return mConsole->handleKeyInput(key, action, mods);
+  }
+
+  if (key == GLFW_KEY_ESCAPE) {
+    return State::QUIT;
   }
 
   return stateChange;
