@@ -11,13 +11,6 @@ project(DDDGP CXX)
 # so that it can be used by IDEs if needed
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
-# Set the primary compiler.
-#
-# TODO: We can remove this in favour of whatever
-# the environment has as compiler when we know that both g++ and clang++
-# builds correctly.
-set(CMAKE_CXX_COMPILER g++)
-
 # Tell CMake where to look for CMake modules and where to place lib/bin files
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
@@ -84,10 +77,6 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR})
 include_directories(src)
 
 # Set the compiler and flags
-# TODO:
-# Set to preferred compiler after we get it working with both g++ and clang++
-# Also, set flags correctly. This is not correctly.
-set(CMAKE_CXX_COMPILER g++)
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic-errors -g -std=c++11")
 
 # Add files
