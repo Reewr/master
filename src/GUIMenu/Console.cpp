@@ -17,7 +17,7 @@ GConsole::GConsole(Input* input) {
   mInput       = input;
   mBoundingBox = Rect(25, 25, 768, 400);
   mRect        = new GL::Rectangle(mBoundingBox);
-  mText        = new Text(mFont, "> _", vec2(30, 25+400-30), 20, Text::WHITE);
+  mText        = new Text(mFont, "> _", vec2(30, 395), 20, Text::WHITE);
 
   // Specific program for the console since the console
   // is just drawn in black with alpha
@@ -33,9 +33,21 @@ GConsole::~GConsole() {
   delete mRect;
 }
 
-void performCommand() {
-}
-
+/**
+ * @brief
+ *   Handles the key input for a console
+ *
+ * @param key
+ *   The glfw key code of the key that was pressed
+ *
+ * @param action
+ *   The action taken
+ *
+ * @param mods
+ *   A bit flagged int with the mods that are clicked
+ *
+ * @return
+ */
 int GConsole::handleKeyInput(const int key, const int, const int mods) {
   if (!isVisible() && Input::keyStrings[key] == "|") {
     isVisible(true);
@@ -64,7 +76,7 @@ int GConsole::handleKeyInput(const int key, const int, const int mods) {
       if (mCurrentText.length() > 0)
         mCurrentText.pop_back();
     case GLFW_KEY_ENTER:
-      performCommand();
+      //performCommand();
     default:
       mCurrentText.append(hasShift ? Utils::toUpper(character) : character);
   }
