@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 
 # =======================================
 # Project initialization
@@ -18,7 +18,6 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 
 # Cotire is a tool used to optimize the builds. We have to include it like this
 include(cotire)
-
 
 # =======================================
 # Dependency inclusion
@@ -71,6 +70,13 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR})
 # =======================================
 # Project files
 # =======================================
+if (NOT CMAKE_BUILD_TYPE STREQUAL "Release")
+  set(CMAKE_BUILD_TYPE Debug)
+endif()
+
+message("=========================================")
+message("-- Building ${CMAKE_BUILD_TYPE}")
+message("=========================================")
 
 # Set the include directories so that we can actually
 # find our headers when we specify them.
@@ -81,26 +87,29 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-if (CMAKE_BUILD_TYPE STREQUAL "Release")
-  message("=========================================")
-  message("-- Building release build! Optimizations!")
-  message("=========================================")
-  add_definitions(-O3)
-else()
-  set(CMAKE_BUILD_TYPE Debug)
-  message("=========================================")
-  message("-- Building debug build!")
-  message("=========================================")
-endif()
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} \
+  -Wall \
+  -Wextra \
+  -pedantic-errors \
+  -O3 \
+  -fdiagnostics-color=always")
 
+# Set lots of warnings. All warnings that are listed below -Wall
+# are warnings that GCC does not automatically include due to their
+# possible contraversy. Adding them now to see how bad it gets
+set(WARN_FLAGS "-Wall -Wextra -Wfloat-equal -Wundef -Wshadow")
+set(WARN_FLAGS "${WARN_FLAGS} -Wcast-qual -Wno-cast-align")
+set(WARN_FLAGS "${WARN_FLAGS} -Wwrite-strings -Wconversion -Wsign-compare")
+set(WARN_FLAGS "${WARN_FLAGS} -Wmissing-declarations")
+set(WARN_FLAGS "${WARN_FLAGS} -Wredundant-decls -Wunreachable-code -Winline")
+set(WARN_FLAGS "${WARN_FLAGS} -pedantic-errors -fdiagnostics-color=always")
 
-add_definitions(-Wall -Wextra -pedantic-errors)
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${WARN_FLAGS}")
 
 # Add files
 # TODO: Remove globbing and include specifically.
 FILE(GLOB_RECURSE DDDGP_GLOB_CPP ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 FILE(GLOB_RECURSE DDDGP_GLOB_HPP ${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp)
-
 
 # =======================================
 # Dependency inclusion and linking
