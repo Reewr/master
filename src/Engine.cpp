@@ -287,12 +287,9 @@ bool Engine::initWindow() {
 
   // Set version we want
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
-  // glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-  // This bugs out  because we have code that is not
-  // compatible with version above 3.0
-  // (depricated functions being used)
+  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
   // Set the debug context, since we are developing
   glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
