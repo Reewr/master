@@ -115,7 +115,7 @@ FILE(GLOB_RECURSE DDDGP_GLOB_HPP ${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp)
 # Dependency inclusion and linking
 # =======================================
 
-# Add backward to the exectuable, but only do so
+# Add backward-cpp to the exectuable, but only do so
 # if the platform isnt windows
 if (NOT WIN32 AND CMAKE_BUILD_TYPE EQUAL "DEBUG")
   add_executable(DDDGP ${DDDGP_GLOB_CPP} ${DDDGP_GLOB_HPP} ${BACKWARD_ENABLE})
