@@ -149,7 +149,6 @@ bool Engine::initialize(int argc, char *argv[], int isRefresh, int initState) {
  *   The time since last update call
  */
 void Engine::updateState(float deltaTime) {
-  // Update the current state with deltatime
   if (current != NULL) {
     current->update(deltaTime);
   } else {
@@ -180,7 +179,6 @@ void Engine::updateState(float deltaTime) {
 void Engine::keyboardCB(int key, int scan, int action, int mods) {
   if (current == nullptr)
     return error("Engine: Failed at keyboardCB - Current == nullptr");
-
 
   int stateBack = current->keyboardCB(key, scan, action, mods);
   if (stateBack != states.top() && stateBack != State::NOCHANGE)
@@ -271,7 +269,6 @@ bool Engine::initGLFW() {
  * @return true if successful
  */
 bool Engine::initOpenGLBindings() {
-  // initialize ogl
   if (ogl_LoadFunctions() != ogl_LOAD_SUCCEEDED) {
     error("Engine: Failed to initialize OGL: ");
     return false;
@@ -299,8 +296,6 @@ bool Engine::initWindow() {
 
   // Set the debug context, since we are developing
   glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
-
-  // Set antialising based on config
   glfwWindowHint(GLFW_SAMPLES, cfg->graphics.aliasing);
 
   // No resizing, because of the resolutions in settings
@@ -310,12 +305,11 @@ bool Engine::initWindow() {
   glfwWindowHint(GLFW_DECORATED,
                  cfg->graphics.winMode == 1 ? GL_FALSE : GL_TRUE);
 
-  // get monitor, may be null, but thats okay
+  // get monitor, may be null, but thats okay since glfw supports it
   GLFWmonitor *monitor = getMonitor();
   window = glfwCreateWindow(cfg->graphics.res.x, cfg->graphics.res.y, "DDDGP",
                             monitor, NULL);
 
-  // if the window isnt created, terminate
   if (!window) {
     error("Engine: Could not open window with GLFW. Check GLFW error messages");
     glfwTerminate();
@@ -350,6 +344,19 @@ void Engine::initGL() {
   glFrontFace(GL_CCW);
 }
 
+/**
+ * @brief
+ *   Retrieve the correct monitor based on the configuration give through the
+ *   config file. For simplicity, which monitor to use is only considered if
+ *   the user uses Fullscreen mode. It will choose the monitor that the user
+ *   has selected as long as it is valid, otherwise we use the primary monitor.
+ *
+ *   When using fullscreen mode we will also make sure that we get the correct
+ *   resolution of the monitor
+ *
+ * @return
+ *   Null if fullscreen isnt enabled otherwise a monitor
+ */
 GLFWmonitor *Engine::getMonitor() {
   int monitorCount;
   GLFWmonitor *monitor         = NULL;
@@ -357,8 +364,7 @@ GLFWmonitor *Engine::getMonitor() {
   CFG cfg                      = asset->cfg;
   GLFWmonitor **monitors       = glfwGetMonitors(&monitorCount);
 
-  // if we are running fullscreen, we gotta
-  // use the correct monitor
+  // if we are running fullscreen, we gotta use the correct monitor
   if (cfg.graphics.winMode == 2) {
 
     // if the user has selected a monitor and its
@@ -369,8 +375,7 @@ GLFWmonitor *Engine::getMonitor() {
     else
       monitor = glfwGetPrimaryMonitor();
 
-    // since its fullscreen, we get the resolution
-    // of the monitor
+    // since its fullscreen, we get the resolution of the monitor
     videoMode = glfwGetVideoMode(monitor);
     cfg.graphics.res = vec2(videoMode->width, videoMode->height);
   }
@@ -378,6 +383,14 @@ GLFWmonitor *Engine::getMonitor() {
   return monitor;
 }
 
+/**
+ * @brief
+ *   Deinitializes the engine, deleting all the resources and calling other
+ *   deinit functions. Also terminates glfw if `isFullDeinit` is true.
+ *
+ * @param isFullDeinit
+ *   If true, also shuts down glfw.
+ */
 void Engine::deinitialize(bool isFullDeinit) {
   GUI::deinit();
   /* Model::deinit(); */
@@ -392,12 +405,19 @@ void Engine::deinitialize(bool isFullDeinit) {
     glfwTerminate();
 }
 
+/**
+ * @brief
+ *   This function runs the actual main loop. It will also calculate the delta
+ *   time. basically, how long the previous loop spent doing its things. If
+ *   vsync is on, this will most likely be a static ~17.6ms.
+ *
+ *   Calls updateState(deltaTime) and also polls for event
+ */
 void Engine::runLoop() {
   // Used to check the difference between the loops
   static float startTime = glfwGetTime();
 
   while (!glfwWindowShouldClose(window)) {
-    // Get delta time
     float currentTime = glfwGetTime();
     float deltaTime = currentTime - startTime;
     startTime = currentTime;
@@ -414,6 +434,16 @@ void Engine::runLoop() {
   }
 }
 
+/**
+ * @brief
+ *   Refreshes the state by checking the new configuration that might have been
+ *   added and sets those.
+ *
+ * @param isWinRefresh
+ *   When true, it means that some changes to the configuration was made so
+ *   that a normal refresh isnt good enough. If true, it will unload all
+ *   resources before reloading them.
+ */
 void Engine::refreshState(bool isWinRefresh) {
   int type = isWinRefresh ? State::WINREFRESH : State::REFRESH;
   deinitialize(isWinRefresh);
@@ -423,28 +453,39 @@ void Engine::refreshState(bool isWinRefresh) {
   }
 }
 
+/**
+ * @brief
+ *   Changes the state to a new state specified by `newState`.
+ *
+ * @param newState
+ */
 void Engine::changeState(int newState) {
   switch (newState) {
-  case State::QUITALL:
-    while (!states.empty())
+    case State::QUITALL:
+      while (!states.empty())
+        states.pop();
+      return;
+    case State::QUIT:
       states.pop();
-    return;
-  case State::QUIT:
-    states.pop();
-    break;
-  case State::REFRESH:
-    refreshState(false);
-    break;
-  case State::WINREFRESH:
-    refreshState(true);
-    break;
-  default:
-    states.push(newState);
-    break;
+      break;
+    case State::REFRESH:
+      refreshState(false);
+      break;
+    case State::WINREFRESH:
+      refreshState(true);
+      break;
+    default:
+      states.push(newState);
+      break;
   }
   createState();
 }
 
+/**
+ * @brief
+ *   Creates the state that is at the top of the state stack. Deletes
+ *   the current state if that exists
+ */
 void Engine::createState() {
   if (current != nullptr) {
     delete current;
@@ -467,6 +508,12 @@ void Engine::createState() {
   }
 }
 
+/**
+ * @brief
+ *   Tells glfw to close the window. Since the loop checks for a flag which is
+ *   called `windowShouldClose`, calling this function effectively ends the
+ *   main loop and therefore stops the program
+ */
 void Engine::closeWindow() {
   log("Now closing GLFW window..");
   glfwSetWindowShouldClose(window, GL_TRUE);
