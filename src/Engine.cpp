@@ -42,9 +42,6 @@ Engine::Engine(std::string cfgPath) { this->cfgPath = cfgPath; }
 
 Engine::~Engine() { deinitialize(); }
 
-// Just returns a pointer to the window, for convinience
-GLFWwindow *Engine::getWindow() const { return window; }
-
 // Initializes the entire engine
 /**
  * @brief

@@ -31,8 +31,6 @@ public:
   //! Desctructor that deletes all the allocated objects
   ~Engine();
 
-  GLFWwindow* getWindow() const;
-
   //! Sends the update signal to the current state
   //! (update signal = draw, animations etc)
   void updateState(float deltaTime);
