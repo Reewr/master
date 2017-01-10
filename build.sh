@@ -9,8 +9,16 @@
 # This will automatically use the make-program `ninja`
 # if it exists
 build_dddgp() {
+  local build_type
   mkdir -p build bin lib
   cd build || exit
+
+  # Set build type
+  if [ "$2" == "release" ]; then
+    build_type="Release"
+  else
+    build_type="Debug"
+  fi
 
   # Currently our project only runs with g++, so we force
   # cmake to use g++ / gcc by setting export flags.
@@ -27,21 +35,25 @@ build_dddgp() {
   #
   # This could have been shorted down significantly
   # by the use of `eval`, but CMake is not a fan of that.
-  if ! hash ninja 2/dev/null; then
-    cmake .. -Wno-dev
-
-    if [ "$1" == "run" ]; then
-      make run
-    else
-      make
+  if hash ninja 2/dev/null; then
+    if [ ! -f "./build.ninja" ]; then
+      cmake -GNinja -Wno-dev -D CMAKE_BUILD_TYPE="$build_type" ..
     fi
-  else
-    cmake .. -GNinja -Wno-dev
 
     if [ "$1" == "run" ]; then
       ninja run
     else
       ninja
+    fi
+  else
+    if [ ! -f "./Makefile" ]; then
+      cmake -Wno-dev -D CMAKE_BUILD_TYPE="$build_type" ..
+    fi
+
+    if [ "$1" == "run" ]; then
+      make run
+    else
+      make
     fi
   fi
 
@@ -55,12 +67,9 @@ build_dddgp() {
 # Prints the usage of the binary
 function usage() {
   cat <<EOF
-usage: ./build.sh <command> [-h|--help]
+usage: ./build.sh <command> [<flags>]
 
 The following commands are available:
-
-  -h, --help
-    Shows this help menu
 
   clean
     Cleans the build by removing build, bin and lib folders
@@ -74,7 +83,47 @@ The following commands are available:
   build
     Builds the executable, creating needed directories if
     they don't already exist.
+
+The following flags are available:
+
+  -h, --help
+    Shows this help menu
+
+  -r, --release
+    Sets CMake up to build a release build. Using this
+    will force a total rebuild nomatter with optimizations.
+
+  -d, --debug
+    Sets CMake up to build a debug build. This is set by
+    default and you should not need to specify it.
+
 EOF
+}
+
+clean_build_dir() {
+  rm -rf build bin lib DDDGP
+}
+
+# If we try to run a debug build with a release build
+# within the build directory, we clean the build dir
+different_build_type() {
+  # Just test that Cmake has been executed
+  if [ -d "./build" ] && [ -f "./build/CMakeCache.txt" ]; then
+    local result
+
+    cd ./build || exit
+    if hash ninja 2/dev/null; then
+      result=$(ninja print_build_type | awk 'NR!=1')
+    else
+      result=$(make --silent print_build_type)
+    fi
+
+    cd ..
+
+    if [ "$result" == "Release" ] && [ "$1" != "release" ]; then
+      clean_build_dir
+    fi
+  fi
 }
 
 # Exiting, showing usage if no arguments
@@ -83,6 +132,8 @@ if [ $# -eq 0 ]; then
   exit
 fi
 
+COMMAND=""
+BUILD_TYPE=""
 # Parse the arguments and perform the actions
 # asked for, printing help and exiting on invalid arguments
 while [ $# -gt 0 ]; do
@@ -93,13 +144,18 @@ while [ $# -gt 0 ]; do
       exit
       ;;
     clean)
-      rm -rf build bin lib DDDGP
+      clean_build_dir
+      exit
       ;;
     run)
-      build_dddgp "run"
+      COMMAND="run"
       ;;
     build)
-      build_dddgp
+      COMMAND="build"
+      ;;
+    -r | --release)
+      clean_build_dir
+      BUILD_TYPE="release"
       ;;
     *)
       echo "ERROR: unknown parameter \"$PARAM\""
@@ -109,3 +165,8 @@ while [ $# -gt 0 ]; do
   esac
   shift
 done
+
+# Finally perform the action needed based on the arguments
+# that we got
+different_build_type "$BUILD_TYPE"
+build_dddgp "$COMMAND" "$BUILD_TYPE"

@@ -76,8 +76,25 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR})
 # find our headers when we specify them.
 include_directories(src)
 
-# Set the compiler and flags
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic-errors -g -std=c++11")
+# We must require C++11
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+if (CMAKE_BUILD_TYPE STREQUAL "Release")
+  message("=========================================")
+  message("-- Building release build! Optimizations!")
+  message("=========================================")
+  add_definitions(-O3)
+else()
+  set(CMAKE_BUILD_TYPE Debug)
+  message("=========================================")
+  message("-- Building debug build!")
+  message("=========================================")
+endif()
+
+
+add_definitions(-Wall -Wextra -pedantic-errors)
 
 # Add files
 # TODO: Remove globbing and include specifically.
@@ -91,12 +108,12 @@ FILE(GLOB_RECURSE DDDGP_GLOB_HPP ${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp)
 
 # Add backward to the exectuable, but only do so
 # if the platform isnt windows
-if (NOT WIN32)
+if (NOT WIN32 AND CMAKE_BUILD_TYPE EQUAL "DEBUG")
   add_executable(DDDGP ${DDDGP_GLOB_CPP} ${DDDGP_GLOB_HPP} ${BACKWARD_ENABLE})
   add_backward(DDDGP)
 else (NOT WIN32)
   add_executable(DDDGP ${DDDGP_GLOB_CPP} ${DDDGP_GLOB_HPP})
-endif (NOT WIN32)
+endif ()
 
 # Find the libraries that we've just added since the CMake documentation
 # advises against using `set_link_directory`
@@ -137,6 +154,9 @@ cotire(DDDGP)
 # Add a custom `run` command so that you can do `ninja run` to run the
 # the executable.
 add_custom_target(run COMMAND DDDGP DEPENDS DDDGP WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH})
+
+# Add custom command for checking what build version we're using
+add_custom_target(print_build_type COMMAND ${CMAKE_COMMAND} -E echo ${CMAKE_BUILD_TYPE})
 
 # Add special clean command if on windows
 if(WIN32)
