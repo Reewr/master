@@ -10,3 +10,6 @@
 [submodule "deps/backward-cpp"]
 	path = deps/backward-cpp
 	url = git@github.com:bombela/backward-cpp.git
+[submodule "deps/tinyxml2"]
+	path = deps/tinyxml2
+	url = git@github.com:leethomason/tinyxml2.git

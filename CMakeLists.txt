@@ -11,40 +11,45 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 
 include(cotire)
 
+# Find & add TinyXML2
+# This must be prior to glfw as they both add the custom target `uninstall`.
+# glfw, unlike TinyXML, actually checks whether `uninstall` already exists.
+# Added issue: https://github.com/leethomason/tinyxml2/issues/516
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/tinyxml2)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/tinyxml2)
+
 # Find & add GLFW
-add_subdirectory(deps/glfw)
-include_directories(deps/glfw/include)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/glfw)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/glfw/include)
 
 # Find & add OGL (OpenGL Loading Library)
-add_subdirectory(deps/OGL/)
-include_directories(deps/OGL/include)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/OGL/)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/OGL/include)
 
 # Find & add SOIL (Simple OpenGL Image Library)
-add_subdirectory(deps/SOIL/)
-include_directories(deps/SOIL/src)
-
-# Find & add TinyXML2
-add_subdirectory(deps/tinyxml2)
-include_directories(deps/tinyxml2)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/SOIL/)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/SOIL/src)
 
 # Find & add backward-cpp
-if(NOT WIN32)
-  add_subdirectory(deps/backward-cpp)
-  include_directories(deps/backward-cpp)
+if (NOT WIN32)
+  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/backward-cpp)
 endif(NOT WIN32)
 
 # Find & add FreeType2
-add_subdirectory(deps/freetype-2.5.3)
-include_directories(deps/freetype-2.5.3/include)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/freetype-2.5.3)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/freetype-2.5.3/include)
 
 # find & add assimp, also set flags
 set(ASSIMP_BUILD_TESTS OFF)
 set(ASSIMP_BUILD_ASSIMP_TOOLS OFF)
 
-add_subdirectory(deps/assimp)
-include_directories(deps/assimp/include)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/assimp)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/assimp/include)
 
 link_directories(${LIBRARY_OUTPUT_PATH})
+
+# Set this later so ASSIMP doesnt add the binary files
+# to root
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR})
 
 #Find & add MMM
@@ -56,24 +61,38 @@ include_directories(src)
 set(CMAKE_CXX_COMPILER g++)
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic-errors -g -std=c++11")
 
-FILE(GLOB_RECURSE DDDGP_GLOB_CPP src/*.cpp)
-FILE(GLOB_RECURSE DDDGP_GLOB_HPP src/*.hpp)
+FILE(GLOB_RECURSE DDDGP_GLOB_CPP ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
+FILE(GLOB_RECURSE DDDGP_GLOB_HPP ${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp)
 
-add_executable(DDDGP ${DDDGP_GLOB_CPP} ${DDDGP_GLOB_HPP})
+# Add backward to the exectuable, but only do so
+# if the platform isnt windows
+if (NOT WIN32)
+  add_executable(DDDGP ${DDDGP_GLOB_CPP} ${DDDGP_GLOB_HPP} ${BACKWARD_ENABLE})
+  add_backward(DDDGP)
+else (NOT WIN32)
+  add_executable(DDDGP ${DDDGP_GLOB_CPP} ${DDDGP_GLOB_HPP})
+endif (NOT WIN32)
 
 #
 # Linking & stuff
 #
+
+# Due to a strange usecase in TinyXML2, there's some issue with undefined
+# references. Two of the functions are defined inline, `GetErrorStr1` and
+# `GetErrorStr2` that uses `GetStr()` which is not defined inline. This
+# causes the linker to throw undefined reference to `GetStr()`. Adding
+# the cpp-file to the link library fixes this error.
+#
+# An issue (https://github.com/leethomason/tinyxml2/issues/498) has already
+# been made regarding this, but the maintainer / author said:
+# "No way to address / test. Would accept a PR"
+target_link_libraries(DDDGP tinyxml2
+                      ${CMAKE_CURRENT_SOURCE_DIR}/deps/tinyxml2/tinyxml2.cpp)
 target_link_libraries(DDDGP glfw ${GLFW_LIBRARIES})
 target_link_libraries(DDDGP ogl)
 target_link_libraries(DDDGP SOIL)
-target_link_libraries(DDDGP tinyxml2)
 target_link_libraries(DDDGP freetype)
 target_link_libraries(DDDGP assimp)
-
-if(NOT WIN32)
-  target_link_libraries(DDDGP backward)
-endif(NOT WIN32)
 
 cotire(DDDGP)
 

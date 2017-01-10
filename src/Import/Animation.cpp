@@ -8,7 +8,6 @@
 #include "../Utils/Utils.hpp"
 #include "XML.hpp"
 
-
 std::vector<std::string> split (std::string s, std::string delims) {
   std::vector<std::string> ws = {""};
 
@@ -39,14 +38,15 @@ std::vector<float> map_to_float (std::vector<std::string> ws) {
 
 Import::Animation::Animation (const char* filePath) : XML(filePath) {
   Error err = "Error while parsing '" + std::string(filePath) + "'.";
+  int success = tinyxml2::XMLError::XML_SUCCESS;
 
   tinyxml2::XMLElement* root = this->doc->RootElement();
 
-  if (root->QueryIntAttribute("frame_size", &n) != tinyxml2::XML_NO_ERROR) {
+  if (root->QueryIntAttribute("frame_size", &n) != success) {
     fatalError("missing 'frame_size' attribute in anim file");
     throw err;
   }
-  if (root->QueryIntAttribute("frames", &l) != tinyxml2::XML_NO_ERROR) {
+  if (root->QueryIntAttribute("frames", &l) != success) {
     fatalError("missing 'frames' attribute in anim file");
     throw err;
   }
@@ -62,7 +62,7 @@ Import::Animation::Animation (const char* filePath) : XML(filePath) {
     }
 
     float t = 0;
-    if (frame->QueryFloatAttribute ("time", &t) != tinyxml2::XML_NO_ERROR) {
+    if (frame->QueryFloatAttribute ("time", &t) != success) {
       fatalError("missing or malformed time attribute in anim file");
       throw err;
     }
