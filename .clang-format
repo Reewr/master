@@ -2,7 +2,7 @@
 Language: Cpp
 
 # We'll base this LLVM style, but change some stuff
-BasedOnStyle: Mozilla
+BasedOnStyle: LLVM
 
 # No need for extra indent of access modifiers .ie (public)
 #
@@ -51,14 +51,14 @@ AlignAfterOpenBracket: true
 # This does not take into account any spacing, so it
 # will align these variables even if one of them
 # is suppppper long
-AlignConsecutiveAssignments: false
+AlignConsecutiveAssignments: true
 
 # Align declarations i.e
 #
 # int         aaaa = 12;
 # float       b = 23;
 # std::string ccc = "23";
-AlignConsecutiveDeclarations: false
+AlignConsecutiveDeclarations: true
 
 # Aligns escape newlines, if false puts them in the right
 # most column
@@ -107,7 +107,7 @@ AllowShortCaseLabelsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: Inline
 
 # If true, if (a) return; can be put on a single line.
-AllowShortIfStatementsOnASingleLine: All
+AllowShortIfStatementsOnASingleLine: false
 
 # If true, while (true) continue; can be put on a single line.
 AllowShortLoopsOnASingleLine: false
@@ -152,6 +152,7 @@ BinPackArguments: false
 # If false, a function declaration’s or function definition’s parameters will
 # either all be on the same line or will have one line each.
 BinPackParameters: false
+
 
 # The way to wrap binary operators.
 #
@@ -202,14 +203,14 @@ BreakBeforeBinaryOperators: None
 BreakBeforeBraces: Attach
 
 # If true, ternary operators will be placed after line breaks.
-BreakBeforeTernaryOperators: true
+BreakBeforeTernaryOperators: false
 
 # Always break constructor initializers before commas and align the commas
 # with the colon.
 BreakConstructorInitializersBeforeComma: true
 
 # Allow breaking string literals when formatting.
-BreakStringLiterals: false
+BreakStringLiterals: true
 
 # The column limit.
 #
@@ -217,7 +218,7 @@ BreakStringLiterals: false
 # In this case, clang-format will respect the input’s line
 # breaking decisions within statements unless they contradict
 # other rules.
-ColumnLimit: 85
+ColumnLimit: 80
 
 # If the constructor initializers don’t fit on a line,
 # put each initializer on its own line.
@@ -225,7 +226,7 @@ ConstructorInitializerAllOnOneLineOrOnePerLine: true
 
 # The number of characters to use for indentation of constructor
 # initializer lists.
-ConstructorInitializerIndentWidth: 2
+ConstructorInitializerIndentWidth: 4
 
 # Indent width for line continuations.
 ContinuationIndentWidth: 2
@@ -262,7 +263,7 @@ IndentCaseLabels: true
 IndentWidth: 2
 
 # Indent if a function definition or declaration is wrapped after the type.
-IndentWrappedFunctionNames: true
+IndentWrappedFunctionNames: false
 
 # The maximum number of consecutive empty lines to keep.
 MaxEmptyLinesToKeep: 2
