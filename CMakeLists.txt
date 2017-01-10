@@ -302,7 +302,7 @@ cotire(DDDGP)
 
 # Add a custom `run` command so that you can do `ninja run` to run the
 # the executable.
-add_custom_target(run COMMAND DDDGP DEPENDS DDDGP WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH})
+add_custom_target(run COMMAND DDDGP DEPENDS DDDGP WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH} USES_TERMINAL)
 
 # Add custom command for checking what build version we're using
 add_custom_target(print_build_type COMMAND ${CMAKE_COMMAND} -E echo ${CMAKE_BUILD_TYPE})
