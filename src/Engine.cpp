@@ -42,7 +42,6 @@ Engine::Engine(std::string cfgPath) { this->cfgPath = cfgPath; }
 
 Engine::~Engine() { deinitialize(); }
 
-// Initializes the entire engine
 /**
  * @brief
  *   Initializes the engine by first loading the configuration
@@ -111,13 +110,10 @@ bool Engine::initialize(int argc, char *argv[], int isRefresh, int initState) {
     glfwSwapInterval((asset->cfg.graphics.vsync) ? 1 : 0);
   }
 
-  // Create audio and input handlers
   input = new Input(window, &asset->cfg);
 
-  // Initialize the GUI, Texture and FrameBuffers
-  GUI::init(&asset->cfg);
-  log("Engine: Initialized successfully...");
 
+  GUI::init(&asset->cfg);
   Texture::init(&asset->cfg);
   /* Spider::init(); */
   /* Model::init(&asset->cfg); */
@@ -138,6 +134,7 @@ bool Engine::initialize(int argc, char *argv[], int isRefresh, int initState) {
     /* } */
   }
 
+  log("Engine: Initialized successfully...");
   return true;
 }
 
