@@ -46,8 +46,6 @@ set(ASSIMP_BUILD_ASSIMP_TOOLS OFF)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/assimp)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/assimp/include)
 
-link_directories(${LIBRARY_OUTPUT_PATH})
-
 # Set this later so ASSIMP doesnt add the binary files
 # to root
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR})
@@ -73,10 +71,21 @@ else (NOT WIN32)
   add_executable(DDDGP ${DDDGP_GLOB_CPP} ${DDDGP_GLOB_HPP})
 endif (NOT WIN32)
 
+# Find the libraries that we've just added since the CMake documentation
+# advises against using `set_link_directory`
+find_library(TINYXML2_LIBRARY NAME tinyxml2)
+find_library(GLFW_LIBRARY NAME glfw)
+find_library(OGL_LIBRARY NAME ogl)
+find_library(SOIL_LIBRARY NAME SOIL)
+find_library(FREETYPE_LIBRARY NAME freetype)
+find_library(ASSIMP_LIBRARY NAME assimp)
+
 #
 # Linking & stuff
 #
 
+# Note regarding TinyXML2:
+# ------------------------
 # Due to a strange usecase in TinyXML2, there's some issue with undefined
 # references. Two of the functions are defined inline, `GetErrorStr1` and
 # `GetErrorStr2` that uses `GetStr()` which is not defined inline. This
@@ -86,6 +95,7 @@ endif (NOT WIN32)
 # An issue (https://github.com/leethomason/tinyxml2/issues/498) has already
 # been made regarding this, but the maintainer / author said:
 # "No way to address / test. Would accept a PR"
+# ------------------------
 target_link_libraries(DDDGP tinyxml2
                       ${CMAKE_CURRENT_SOURCE_DIR}/deps/tinyxml2/tinyxml2.cpp)
 target_link_libraries(DDDGP glfw ${GLFW_LIBRARIES})
