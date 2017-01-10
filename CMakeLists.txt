@@ -106,10 +106,150 @@ set(WARN_FLAGS "${WARN_FLAGS} -pedantic-errors -fdiagnostics-color=always")
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${WARN_FLAGS}")
 
-# Add files
-# TODO: Remove globbing and include specifically.
-FILE(GLOB_RECURSE DDDGP_GLOB_CPP ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
-FILE(GLOB_RECURSE DDDGP_GLOB_HPP ${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp)
+set(SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
+
+# Store the CPP files
+set(DDDGP_CPP
+
+  # Top level files
+  ${SRC_DIR}/DDDGP.cpp
+  ${SRC_DIR}/Engine.cpp
+  ${SRC_DIR}/Input.cpp
+
+  # src/3D
+  ${SRC_DIR}/3D/Camera.cpp
+
+  # src/GLSL
+  ${SRC_DIR}/GLSL/Program.cpp
+  ${SRC_DIR}/GLSL/Shader.cpp
+
+  # src/GUI
+  ${SRC_DIR}/GUI/Checkbox.cpp
+  ${SRC_DIR}/GUI/Dropdown.cpp
+  ${SRC_DIR}/GUI/GUI.cpp
+  ${SRC_DIR}/GUI/Inputbox.cpp
+  ${SRC_DIR}/GUI/Menu.cpp
+  ${SRC_DIR}/GUI/Notification.cpp
+  ${SRC_DIR}/GUI/Slider.cpp
+  ${SRC_DIR}/GUI/Tooltip.cpp
+  ${SRC_DIR}/GUI/Window.cpp
+
+  # src/GUIMenu
+  ${SRC_DIR}/GUIMenu/Console.cpp
+  ${SRC_DIR}/GUIMenu/OptionsMenu.cpp
+  ${SRC_DIR}/GUIMenu/PauseMenu.cpp
+
+  # src/Graphical
+  ${SRC_DIR}/Graphical/Font.cpp
+  ${SRC_DIR}/Graphical/Framebuffer.cpp
+  ${SRC_DIR}/Graphical/Text.cpp
+  ${SRC_DIR}/Graphical/Texture.cpp
+
+  # src/Graphical/GL
+  ${SRC_DIR}/Graphical/GL/Grid.cpp
+  ${SRC_DIR}/Graphical/GL/Grid3D.cpp
+  ${SRC_DIR}/Graphical/GL/Rectangle.cpp
+  ${SRC_DIR}/Graphical/GL/Shape.cpp
+
+  # src/Import
+  ${SRC_DIR}/Import/Animation.cpp
+  ${SRC_DIR}/Import/UILoader.cpp
+  ${SRC_DIR}/Import/XML.cpp
+
+  # src/Math
+  # TODO: Remove in favour of MMM
+  ${SRC_DIR}/Math/MathCD.cpp
+  ${SRC_DIR}/Math/extra/camera.cpp
+  ${SRC_DIR}/Math/extra/print.cpp
+  ${SRC_DIR}/Math/mat3/mat3.cpp
+  ${SRC_DIR}/Math/mat4/mat4.cpp
+  ${SRC_DIR}/Math/vec2/vec2.cpp
+  ${SRC_DIR}/Math/vec3/vec3.cpp
+  ${SRC_DIR}/Math/vec4/vec4.cpp
+
+  # src/State
+  ${SRC_DIR}/State/MainMenu.cpp
+  ${SRC_DIR}/State/Master.cpp
+  ${SRC_DIR}/State/State.cpp
+
+  # src/Utils
+  ${SRC_DIR}/Utils/Asset.cpp
+  ${SRC_DIR}/Utils/CFG.cpp
+  ${SRC_DIR}/Utils/Utils.cpp
+)
+
+set(DDDGP_HPP
+
+  # Top level headers
+  ${SRC_DIR}/Engine.hpp
+  ${SRC_DIR}/Input.hpp
+  ${SRC_DIR}/OpenGLHeaders.hpp
+
+  # src/3D
+  ${SRC_DIR}/3D/Camera.hpp
+
+  # src/GLSL
+  ${SRC_DIR}/GLSL/Program.hpp
+  ${SRC_DIR}/GLSL/Shader.hpp
+
+  # src/GUI
+  ${SRC_DIR}/GUI/Checkbox.hpp
+  ${SRC_DIR}/GUI/Dropdown.hpp
+  ${SRC_DIR}/GUI/GUI.hpp
+  ${SRC_DIR}/GUI/Inputbox.hpp
+  ${SRC_DIR}/GUI/Menu.hpp
+  ${SRC_DIR}/GUI/Notification.hpp
+  ${SRC_DIR}/GUI/Slider.hpp
+  ${SRC_DIR}/GUI/Tooltip.hpp
+  ${SRC_DIR}/GUI/Window.hpp
+
+  # src/GUIMenu
+  ${SRC_DIR}/GUIMenu/Console.hpp
+  ${SRC_DIR}/GUIMenu/OptionsMenu.hpp
+  ${SRC_DIR}/GUIMenu/PauseMenu.hpp
+
+  # src/Graphical
+  ${SRC_DIR}/Graphical/Font.hpp
+  ${SRC_DIR}/Graphical/Framebuffer.hpp
+  ${SRC_DIR}/Graphical/Text.hpp
+  ${SRC_DIR}/Graphical/Texture.hpp
+
+  # src/Graphical/GL
+  ${SRC_DIR}/Graphical/GL/Grid.hpp
+  ${SRC_DIR}/Graphical/GL/Grid3D.hpp
+  ${SRC_DIR}/Graphical/GL/Rectangle.hpp
+  ${SRC_DIR}/Graphical/GL/Shape.hpp
+
+  # src/Import
+  ${SRC_DIR}/Import/Animation.hpp
+  ${SRC_DIR}/Import/UILoader.hpp
+  ${SRC_DIR}/Import/XML.hpp
+
+  # src/Math
+  # TODO: Remove in favour of MMM
+  ${SRC_DIR}/Math/Math.hpp
+  ${SRC_DIR}/Math/MathCD.hpp
+  ${SRC_DIR}/Math/basic/basic.hpp
+  ${SRC_DIR}/Math/extra/MVP.hpp
+  ${SRC_DIR}/Math/extra/camera.hpp
+  ${SRC_DIR}/Math/extra/print.hpp
+  ${SRC_DIR}/Math/mat3/mat3.hpp
+  ${SRC_DIR}/Math/mat4/mat4.hpp
+  ${SRC_DIR}/Math/swizzle/swizzle.hpp
+  ${SRC_DIR}/Math/vec2/vec2.hpp
+  ${SRC_DIR}/Math/vec3/vec3.hpp
+  ${SRC_DIR}/Math/vec4/vec4.hpp
+
+  # src/State
+  ${SRC_DIR}/State/MainMenu.hpp
+  ${SRC_DIR}/State/Master.hpp
+  ${SRC_DIR}/State/State.hpp
+
+  # src/Utils
+  ${SRC_DIR}/Utils/Asset.hpp
+  ${SRC_DIR}/Utils/CFG.hpp
+  ${SRC_DIR}/Utils/Utils.hpp
+)
 
 # =======================================
 # Dependency inclusion and linking
@@ -118,10 +258,10 @@ FILE(GLOB_RECURSE DDDGP_GLOB_HPP ${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp)
 # Add backward-cpp to the exectuable, but only do so
 # if the platform isnt windows
 if (NOT WIN32 AND CMAKE_BUILD_TYPE EQUAL "DEBUG")
-  add_executable(DDDGP ${DDDGP_GLOB_CPP} ${DDDGP_GLOB_HPP} ${BACKWARD_ENABLE})
+  add_executable(DDDGP ${DDDGP_CPP} ${DDDGP_HPP} ${BACKWARD_ENABLE})
   add_backward(DDDGP)
 else (NOT WIN32)
-  add_executable(DDDGP ${DDDGP_GLOB_CPP} ${DDDGP_GLOB_HPP})
+  add_executable(DDDGP ${DDDGP_CPP} ${DDDGP_HPP})
 endif ()
 
 # Find the libraries that we've just added since the CMake documentation
