@@ -46,7 +46,7 @@ public:
   ~Menu();
 
   //! :)
-  void draw(float deltaTime) const;
+  void draw(float deltaTime);
 
   //! Returns index if inside any of the menuItems, -1 otherwise.
   int isInsideMenuElement(const vec2& pos) const;

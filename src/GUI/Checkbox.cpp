@@ -92,7 +92,7 @@ void Checkbox::setOffset(const vec2& offset) {
  *
  * @param float
  */
-void Checkbox::draw(float) const {
+void Checkbox::draw(float) {
   mGUIProgram->bind();
   mGUIProgram->setUniform("guiOffset", mOffset);
   mSquare->draw();

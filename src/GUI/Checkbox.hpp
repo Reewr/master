@@ -32,7 +32,7 @@ public:
   void setOffset(const vec2& of);
 
   // Draws the box
-  void draw(float deltaTime) const;
+  void draw(float deltaTime);
 
 private:
   bool     mIsTicked;
