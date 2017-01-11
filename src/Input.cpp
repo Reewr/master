@@ -20,12 +20,46 @@ Input::Input(GLFWwindow* w, CFG* c) {
   initialize();
 }
 
+/**
+ * @brief
+ *   Returns a Keys structure for the given action. If the action
+ *   cannot be found, a Keys structure of two KEY_UNKNOWN variables
+ *   are returned.
+ *
+ * @param action
+ *   The action to check for
+ *
+ * @return
+ */
 Keys Input::getKey(int action) {
   if (keys.count(action))
     return keys[action];
   return { GLFW_KEY_UNKNOWN, GLFW_KEY_UNKNOWN };
 }
 
+/**
+ * @brief
+ *   Sets zero, one or two keys for a specific action. Both key variables
+ *   are optional. Sending none of the key values in will effectively
+ *   unbind the action, meaning that the action can never be invoked.
+ *
+ *   Sending one or more keys will unbind the keys from other existing
+ *   actions and rebind them to this action.
+ *
+ *   Note: A side effect of this function is that you can effectively
+ *         unbind other actions than the one you are setting if you are
+ *         using one or two of the only keys that the other action depends
+ *         on.
+ *
+ * @param action
+ *   The action to bind and/or unbind
+ *
+ * @param glfwKey1
+ *   A glfw key, is optional
+ *
+ * @param glfwKey2
+ *   A glfw key, is optional
+ */
 void Input::setKey(int action, int glfwKey1, int glfwKey2) {
   unbindExisting(glfwKey1);
   unbindExisting(glfwKey2);
@@ -36,6 +70,13 @@ void Input::setKey(int action, int glfwKey1, int glfwKey2) {
   glfwKeys[glfwKey2] = action;
 }
 
+/**
+ * @brief
+ *   Checks if a glfw key is bound to an action. If so, it will
+ *   unbind it from the said action.
+ *
+ * @param glfwKey
+ */
 void Input::unbindExisting(int glfwKey) {
   if (glfwKeys.count(glfwKey)) {
     if (keys[glfwKeys[glfwKey]].key1 == glfwKey)
@@ -46,16 +87,52 @@ void Input::unbindExisting(int glfwKey) {
   glfwKeys[glfwKey] = NOT_BOUND;
 }
 
+/**
+ * @brief
+ *   Checks whether a glfw key is a mapping to a specific action.
+ *   This can be used when you want to check if some input X represents
+ *   the action you need.
+ *
+ * @param desiredAction
+ *   An action found in Input
+ *
+ * @param glfwKey
+ *
+ * @return
+ */
 bool Input::checkKey(int desiredAction, int glfwKey) {
   return (desiredAction == getAction(glfwKey));
 }
 
+/**
+ * @brief
+ *   Retrieves the action for a specific key.
+ *   May return NOT_BOUND which means there are no actions
+ *   bound to the given key.
+ *
+ * @param glfwKey
+ *
+ * @return
+ */
 int Input::getAction(int glfwKey) {
   if (glfwKeys.count(glfwKey))
     return glfwKeys[glfwKey];
   return NOT_BOUND;
 }
 
+/**
+ * @brief
+ *   This works much like checkKey, but instead of only checking one
+ *   action it checks multiple. Returning true if any of the actions
+ *   is bound to the given key.
+ *
+ * @param desiredActions
+ *   A list of actions found in Input
+ *
+ * @param glfwKey
+ *
+ * @return
+ */
 bool Input::checkKeys(std::vector<int> desiredActions, int glfwKey) {
   for (int i : desiredActions)
     if (checkKey(i, glfwKey))
@@ -63,6 +140,13 @@ bool Input::checkKeys(std::vector<int> desiredActions, int glfwKey) {
   return false;
 }
 
+/**
+ * @brief
+ *   Goes through all the available keys and checks which actions
+ *   are pressed, returning a vector of the actions.
+ *
+ * @return
+ */
 std::vector<int> Input::getPressedActions() {
   std::vector<int> actions;
   for (auto& k : keys)
@@ -71,6 +155,14 @@ std::vector<int> Input::getPressedActions() {
   return actions;
 }
 
+/**
+ * @brief
+ *   Checks whether an action is pressed.
+ *
+ * @param action
+ *
+ * @return
+ */
 bool Input::isActionPressed(int action) {
   Keys k = getKey(action);
   if (k.key1 < 8 && (isMousePressed(k.key1) || isMousePressed(k.key2)))
@@ -80,6 +172,14 @@ bool Input::isActionPressed(int action) {
   return false;
 }
 
+/**
+ * @brief
+ *   Checks whether the mouse key is pressed down
+ *
+ * @param key
+ *
+ * @return
+ */
 bool Input::isMousePressed(int key) {
   if (key == -1)
     return false;
@@ -88,6 +188,14 @@ bool Input::isMousePressed(int key) {
   return false;
 }
 
+/**
+ * @brief
+ *   Checks whether a key is pressed down.
+ *
+ * @param key
+ *
+ * @return
+ */
 bool Input::isKeyPressed(int key) {
   if (key == -1)
     return false;
@@ -96,32 +204,81 @@ bool Input::isKeyPressed(int key) {
   return false;
 }
 
+/**
+ * @brief
+ *   Returns the last recorded mouse positions
+ *
+ * @return
+ */
 vec2 Input::getMouseCoords() {
   double x, y;
   glfwGetCursorPos(window, &x, &y);
   return vec2(x, y);
 }
 
+/**
+ * @brief
+ *   This can be used to store coordinate. This can
+ *   be overwritten by other calls to this function
+ *   with the same button.
+ *
+ * @param btn
+ */
 void Input::setPressedCoord(int btn) {
   pressedCoords[btn] = getMouseCoords();
 }
 
+/**
+ * @brief
+ *   Returns the pressed coordinates for a mouse button
+ *   that was recorded by setPressedCoord()
+ *
+ * @param btn
+ *
+ * @return
+ */
 vec2 Input::getPressedCoord(int btn) {
   if (!pressedCoords.count(btn))
     return vec2();
   return pressedCoords.at(btn);
 }
 
+/**
+ * @brief
+ *   Get the names of all the actions
+ *
+ * @return
+ */
 std::vector<std::string> Input::getActionsString() {
   return actionsString;
 }
 
+/**
+ * @brief
+ *   Turns a glfwkey to a string representation of itself.
+ *   This is not always that accurate due to the different
+ *   languages a keyboard can have. This assumes US standard.
+ *
+ * @param glfwKey
+ *
+ * @return
+ */
 std::string Input::glfwKeyToString(int glfwKey) {
   if (keyStrings.count(glfwKey))
     return keyStrings[glfwKey];
   return "unbound";
 }
 
+/**
+ * @brief
+ *   Like glfwKeyToString(), this function returns the string
+ *   representation of a button. However, this returns the representation
+ *   for two keys on a specific action.
+ *
+ * @param action
+ *
+ * @return
+ */
 std::vector<std::string> Input::getActionKeysToString(int action) {
   std::vector<std::string> v;
   v.push_back(glfwKeyToString(getKey(action).key1));
@@ -129,25 +286,64 @@ std::vector<std::string> Input::getActionKeysToString(int action) {
   return v;
 }
 
+/**
+ * @brief
+ *   This adds keys for an action. unlike `setKey`, this also
+ *   takes in the string representation of that action.
+ *
+ * @param action
+ * @param k
+ * @param text
+ */
 void Input::addAction(int action, Keys k, std::string text) {
   setKey(action, k.key1, k.key2);
   actionsString.push_back(text);
 }
 
+/**
+ * @brief
+ *   This lets you store a function that should be executed whenever
+ *   an key is clicked. This function can then be executed by using the
+ *   doKeyCB() function.
+ *
+ * @param key
+ * @param f
+ * @param isPressed
+ */
 void Input::addKeyCB(int key, std::function<int(void)>&& f, int isPressed) {
   functionCalls[key] = { isPressed, f };
 }
 
-int Input::doKeyCB(int key, int action) {
-  if (functionCalls.count(key) && functionCalls[key].isPressed == action)
+/**
+ * @brief
+ *   Executes a function that was previously stored by an addKeyCB call.
+ *   The glfwAction here is whether the key was pressed or not.
+ *
+ * @param key
+ * @param action
+ *
+ * @return
+ */
+int Input::doKeyCB(int key, int glfwAction) {
+  if (functionCalls.count(key) && functionCalls[key].isPressed == glfwAction)
     return functionCalls[key].func();
   return 0;
 }
 
+/**
+ * @brief Clears the functions stored using addKeyCB()
+ */
 void Input::resetKeyCB() {
   functionCalls.clear();
 }
 
+/**
+ * @brief
+ *   Initializes the entire key set.
+ *   @TODO
+ *     this should possibly be moved to the states,
+ *     or the engine if the given options are global
+ */
 void Input::initialize() {
   CFG::Bindings* b = &cfg->bindings;
 
@@ -159,13 +355,8 @@ void Input::initialize() {
   addAction(MOVE_RIGHT, b->moveRight, "Move right");
   addAction(ROTATE, { GLFW_MOUSE_BUTTON_3 }, "Rotate");
   addAction(SCREENSHOT, b->screenshot, "Take screenshot");
-  addAction(ADDRAIN, b->addRain, "Add rain");
-  addAction(REMOVERAIN, b->removeRain, "Remove Rain");
-  addAction(ADDEVAPORATION, b->addEvaporation, "Add Evaporation");
-  addAction(REMOVEEVAPORATION, b->removeEvporation, "Remove Evaporation");
-  addAction(ADDEROSION, b->addErosion, "Add Erosion");
-  addAction(REMOVEEROSION, b->removeErosion, "Remove Erosion");
   addAction(HIDEGUI, b->hideGUI, "Hide GUI");
+  addAction(CONSOLE, b->showConsole, "Show console");
 }
 
 std::map<int, std::string> Input::keyStrings = { { -1, "unbound" },

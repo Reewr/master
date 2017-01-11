@@ -15,6 +15,12 @@ struct ActB;
 struct GLFWwindow;
 struct CFG;
 
+/**
+ * @brief
+ *   Keys is a representation of an action together with two keys.
+ *   Since every action can have two possible keybinding, this helps
+ *   save that.
+ */
 struct Keys {
   Keys(int k1 = -1, int k2 = -1);
   Keys(const ActB& a);
@@ -63,10 +69,13 @@ public:
   //! Returns true if key is held down.
   bool isKeyPressed(int key);
 
+  //! Returns the string representation for an action
   std::vector<std::string> getActionsString();
 
+  //! Returns the string representation of a key
   std::string glfwKeyToString(int glfwKey);
 
+  //! Returns the string representation of two keys for an action
   std::vector<std::string> getActionKeysToString(int action);
 
   //! Returns last reported mouse coords
@@ -79,6 +88,8 @@ public:
   //! not recorded.
   vec2 getPressedCoord(int btn);
 
+  //! Adds an action. Unlike `setKeys` this also allows you to set
+  //! the string representation of that action
   void addAction(int action, Keys k, std::string text = "");
 
   //! Adds a callback function to a specific key
@@ -101,19 +112,16 @@ public:
     MOVE_RIGHT,
     ROTATE,
     SCREENSHOT,
-    ADDRAIN,
-    REMOVERAIN,
-    ADDEVAPORATION,
-    REMOVEEVAPORATION,
-    ADDEROSION,
-    REMOVEEROSION,
-    HIDEGUI
+    CONSOLE
   };
 
+  // Massive maps that contain a key to string and string to key
+  // representation of every available glfw key.
   static std::map<int, std::string> keyStrings;
   static std::map<std::string, int> keyMap;
 
 private:
+  // used to store the functions received through addKeyCB()
   std::map<int, InputFunc> functionCalls;
   std::map<int, Keys>      keys;
   std::map<int, int>       glfwKeys;

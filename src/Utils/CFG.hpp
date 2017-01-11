@@ -48,20 +48,15 @@ struct CFG {
   } camera;
 
   struct Bindings {
-    ActB moveUp           = ActB(87);
-    ActB moveDown         = ActB(83);
-    ActB moveLeft         = ActB(65);
-    ActB moveRight        = ActB(68);
-    ActB pauseMenu        = ActB(256);
-    ActB rotate           = ActB(2);
-    ActB screenshot       = ActB();
-    ActB addRain          = ActB();
-    ActB removeRain       = ActB();
-    ActB addEvaporation   = ActB();
-    ActB removeEvporation = ActB();
-    ActB addErosion       = ActB();
-    ActB removeErosion    = ActB();
-    ActB hideGUI          = ActB();
+    ActB moveUp      = ActB(87);
+    ActB moveDown    = ActB(83);
+    ActB moveLeft    = ActB(65);
+    ActB moveRight   = ActB(68);
+    ActB pauseMenu   = ActB(256);
+    ActB rotate      = ActB(2);
+    ActB showConsole = ActB();
+    ActB screenshot  = ActB();
+    ActB hideGUI     = ActB();
   } bindings;
 
   struct Audio {
@@ -158,12 +153,7 @@ private:
          { "Bindings.rotate", bindings.rotate },
 
          { "Bindings.screenshot", bindings.screenshot },
-         { "Bindings.add_rain", bindings.addRain },
-         { "Bindings.remove_rain", bindings.removeRain },
-         { "Bindings.add_evaporation", bindings.addEvaporation },
-         { "Bindings.remove_evporation", bindings.removeEvporation },
-         { "Bindings.add_erosion", bindings.addErosion },
-         { "Bindings.remove_erosion", bindings.removeErosion },
+         { "Bindings.show_console", bindings.showConsole },
          { "Bindings.hide_GUI", bindings.hideGUI },
 
 
