@@ -29,6 +29,8 @@ public:
   //!
   void mouseScrollCB(double offsetx, double offsety);
 
+  void charCB(unsigned int codepoint);
+
 private:
   void draw3D();
   void drawGUI();

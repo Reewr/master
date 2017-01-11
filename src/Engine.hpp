@@ -55,6 +55,9 @@ public:
   //! Sends the input to the current state.
   void mouseScrollCB(double offsetx, double offsety);
 
+  //! Sends textual input to the current state
+  void charCB(unsigned int codePoint);
+
   void runLoop();
 
 protected:

@@ -29,6 +29,9 @@ void Master::mouseScrollCB(double, double) {}
 int  Master::mouseButtonCB(int, int, int) {
   return State::NOCHANGE;
 }
+
+void Master::charCB(unsigned int) {}
+
 int Master::keyboardCB(int key, int, int action, int mods) {
   int stateChange = State::NOCHANGE;
 

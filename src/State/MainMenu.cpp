@@ -119,3 +119,4 @@ int MainMenu::mouseButtonCB(int button, int action, int) {
 }
 
 void MainMenu::mouseScrollCB(double, double) {}
+void MainMenu::charCB(unsigned int) {}

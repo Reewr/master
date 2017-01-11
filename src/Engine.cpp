@@ -36,6 +36,11 @@ static void placementMouseScrollCB(GLFWwindow* w, double ox, double oy) {
   e->mouseScrollCB(ox, oy);
 }
 
+static void placementCharCB(GLFWwindow* w, unsigned int codePoint) {
+  Engine* e = static_cast<Engine*>(glfwGetWindowUserPointer(w));
+  e->charCB(codePoint);
+}
+
 static void glfwErrorHandler(int, const char* k) {
   error("GLFW_ERROR: ", k);
 }
@@ -106,6 +111,7 @@ bool Engine::initialize(int argc, char* argv[], int isRefresh, int initState) {
     glfwSetScrollCallback(window, placementMouseScrollCB);
     glfwSetCursorPosCallback(window, placementMouseMovementCB);
     glfwSetMouseButtonCallback(window, placementMouseButtonCB);
+    glfwSetCharCallback(window, placementCharCB);
   } else {
     // Else we just readjust the window
     // based on the settings given
@@ -247,6 +253,24 @@ void Engine::mouseScrollCB(double offsetx, double offsety) {
     return error("Engine: Failed at mouseScrollCB - Current == NULL");
 
   current->mouseScrollCB(offsetx, offsety);
+}
+
+/**
+ * @brief
+ *   This is called whenever there is text sent to the menu.
+ *   It may be sent whenever key callbacks are also sent, so you
+ *   should beware of that.
+ *
+ *   The codepoint represents a unicode character and can be converted
+ *   using utils::utf8toStr()
+ *
+ * @param codePoint
+ */
+void Engine::charCB(unsigned int codePoint) {
+  if (current == nullptr)
+    return error("Engine: Failed at charCB - Current == NULL");
+
+  current->charCB(codePoint);
 }
 
 /**

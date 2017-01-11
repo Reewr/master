@@ -36,6 +36,8 @@ public:
   //!
   void mouseScrollCB(double offsetx, double offsety);
 
+  void charCB(unsigned int codepoint);
+
 protected:
   int handleMenuActionInput();
 

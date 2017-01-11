@@ -25,6 +25,7 @@ public:
   virtual void mouseMovementCB(double x, double y) = 0;
   virtual int mouseButtonCB(int button, int action, int mods) = 0;
   virtual void mouseScrollCB(double offsetx, double offsety) = 0;
+  virtual void charCB(unsigned int codepoint) = 0;
 
 protected:
   State();
