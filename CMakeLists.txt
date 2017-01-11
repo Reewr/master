@@ -15,9 +15,19 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 
+if (NOT CMAKE_BUILD_TYPE STREQUAL "Release")
+  set(CMAKE_BUILD_TYPE Debug)
+endif()
+
 # =======================================
 # Dependency inclusion
 # =======================================
+
+# Macro to simply set the difference options of the dependencies
+# Mostly used to not build tests and stuff
+macro(SET_OPTION opt value)
+  set(${opt} ${value} CACHE "" INTERNAL FORCE)
+endmacro()
 
 # Find & add TinyXML2
 #
@@ -27,10 +37,15 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 # glfw, unlike TinyXML, actually checks whether `uninstall` already exists.
 #
 # Added issue: https://github.com/leethomason/tinyxml2/issues/516
+
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/tinyxml2)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/tinyxml2)
 
 # Find & add GLFW
+SET_OPTION(GLFW_BUILD_EXAMPLES OFF)
+SET_OPTION(GLFW_BUILD_TESTS OFF)
+SET_OPTION(GLFW_BUILD_DOCS OFF)
+
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/glfw)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/glfw/include)
 
@@ -39,6 +54,7 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/OGL/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/OGL/include)
 
 # Find & add SOIL (Simple OpenGL Image Library)
+SET_OPTION(SOIL_BUILD_TESTS OFF)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/SOIL/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/SOIL/src)
 
@@ -52,17 +68,22 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/freetype)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/freetype/include)
 
 # Find & add assimp, also set flags
-set(ASSIMP_BUILD_TESTS OFF)
-set(ASSIMP_BUILD_ASSIMP_TOOLS OFF)
+SET_OPTION(ASSIMP_BUILD_TESTS OFF)
+SET_OPTION(ASSIMP_BUILD_ASSIMP_TOOLS OFF)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/assimp)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/assimp/include)
 
 # Find and add bulletphysics
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/bulletphysics)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}./deps/bulletphysics/src)
+SET_OPTION(USE_GRAPHICAL_BENCHMARK OFF)
+SET_OPTION(BUILD_CPU_DEMOS OFF)
+SET_OPTION(BUILD_OPENGL3_DEMOS OFF)
+SET_OPTION(BUILD_BULLET2_DEMOS OFF)
+SET_OPTION(BUILD_EXTRAS OFF)
+SET_OPTION(BUILD_UNIT_TESTS OFF)
 
-set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libraries")
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/bullet)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}./deps/bullet/src)
 
 # Set this later so ASSIMP doesnt add the binary files
 # to root
@@ -72,9 +93,6 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR})
 # =======================================
 # Project files
 # =======================================
-if (NOT CMAKE_BUILD_TYPE STREQUAL "Release")
-  set(CMAKE_BUILD_TYPE Debug)
-endif()
 
 message("=========================================")
 message("-- Building ${CMAKE_BUILD_TYPE}")
@@ -99,6 +117,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} \
 # Set lots of warnings. All warnings that are listed below -Wall
 # are warnings that GCC does not automatically include due to their
 # possible contraversy. Adding them now to see how bad it gets
+# TODO: Go through and add needed warnings
 set(WARN_FLAGS "-Wall -Wextra -fdiagnostics-color=always")
 #set(WARN_FLAGS "${WARN_FLAGS} -Wfloat-equal -Wundef -Wshadow")
 #set(WARN_FLAGS "${WARN_FLAGS} -Wcast-qual -Wno-cast-align")
