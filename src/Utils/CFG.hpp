@@ -17,7 +17,8 @@ struct ActB {
   int key2;
 };
 
-struct CFG {
+class CFG {
+public:
   typedef std::string        Prop;
   typedef std::string        Param;
   typedef std::vector<Param> Params;

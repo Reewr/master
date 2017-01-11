@@ -13,7 +13,7 @@
 struct Asset;
 struct ActB;
 struct GLFWwindow;
-struct CFG;
+class CFG;
 
 /**
  * @brief

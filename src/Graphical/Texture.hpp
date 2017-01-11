@@ -10,7 +10,7 @@
 #include "../Math/MathCD.hpp"
 #include "GL/Rectangle.hpp"
 
-struct CFG;
+class CFG;
 
 //! Texture contains information about the loaded texture,
 //! can load .PNG & .dds. Can also draw simple squared texture

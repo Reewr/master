@@ -3,9 +3,9 @@
 
 #include "../Math/MathCD.hpp"
 
-class CFG;
 class Font;
 class Program;
+class CFG;
 
 //! Fully Virtual class used by all GUI elements.
 class GUI {
