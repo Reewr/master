@@ -58,6 +58,12 @@ set(ASSIMP_BUILD_ASSIMP_TOOLS OFF)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/assimp)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/assimp/include)
 
+# Find and add bulletphysics
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/bulletphysics)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}./deps/bulletphysics/src)
+
+set(BUILD_SHARED_LIBS ON CACHE BOOL "Build shared libraries")
+
 # Set this later so ASSIMP doesnt add the binary files
 # to root
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR})
@@ -263,12 +269,14 @@ endif ()
 
 # Find the libraries that we've just added since the CMake documentation
 # advises against using `set_link_directory`
+# TODO: Fix this as this block is incorrect use!
 find_library(TINYXML2_LIBRARY NAME tinyxml2)
 find_library(GLFW_LIBRARY NAME glfw)
 find_library(OGL_LIBRARY NAME ogl)
 find_library(SOIL_LIBRARY NAME SOIL)
 find_library(FREETYPE_LIBRARY NAME freetype)
 find_library(ASSIMP_LIBRARY NAME assimp)
+find_library(BULLET_LIBRARY NAME bullet)
 
 # Note regarding TinyXML2:
 # ------------------------
@@ -289,6 +297,10 @@ target_link_libraries(DDDGP ogl)
 target_link_libraries(DDDGP SOIL)
 target_link_libraries(DDDGP freetype)
 target_link_libraries(DDDGP assimp)
+target_link_libraries(DDDGP
+                      Bullet3Dynamics
+                      Bullet3Collision
+                      Bullet3Common )
 
 # =======================================
 # Custom commands
