@@ -116,16 +116,23 @@ EOF
 
 # Runs clang on all the files one by one, outputting only
 # if a file was changed.
+# Also supports an interactive mode that shows the changes
+# that are to be done and asks for confirmation before
+# performing the said changes
 run_clang() {
   local files=()
   local diff
   local use_color_diff=1
 
+  # Throw error if we cant find a .clang-format file since
+  # we dont trust the clang-format to do the correct formatting
+  # without it
   if [ ! -f "./.clang-format" ]; then
     echo "Error: No .clang-format file found in directory"
     exit
   fi
 
+  # Recommend to use colordiff over diff. So much better
   if ! hash colordiff 2>/dev/null; then
    if [ "$1" == "interactive" ]; then
       echo -en "\e[1m\e[31m=>\e[0m colordiff not installed. Recommend installing"
@@ -136,6 +143,8 @@ run_clang() {
 
   echo -e "\e[1m\e[31m=>\e[0m Grabbing all source files"
 
+  # Adds all the files that has been found to a list of files by
+  # splitting by space and processing each entry
   while IFS=  read -r -d $'\0'; do
     files+=("$REPLY")
   done < <(find "src/" \( -iname "*.hpp" -o -iname "*.cpp" -o -iname "*.tpp" \) -print0)
@@ -175,6 +184,7 @@ run_clang() {
       fi
     fi
 
+    # Go signal is given, replace file
     echo -e "\e[32m  Replacing...\e[0m"
     mv "$file.formatted" "$file"
   done
@@ -203,6 +213,7 @@ different_build_type() {
 
     cd ..
 
+    # If going from release to debug builds, clear it
     if [ "$result" == "Release" ] && [ "$1" != "release" ]; then
       clean_build_dir
     fi
@@ -267,6 +278,8 @@ if [ "$FLAG" == "interactive" ] && [ "$COMMAND" != "clang-format" ]; then
   exit
 fi
 
+# Finally perform the action needed based on the arguments
+# that we got
 case "$COMMAND" in
   build | run)
     different_build_type "$FLAG"
@@ -276,6 +289,3 @@ case "$COMMAND" in
     run_clang "$FLAG"
     ;;
 esac
-
-# Finally perform the action needed based on the arguments
-# that we got
