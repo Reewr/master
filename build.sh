@@ -162,7 +162,7 @@ run_clang() {
       if [[ use_color_diff -eq 1 ]]; then
         colordiff --unified=2 "$file" "$file.formatted" | less -R
       else
-        echo "$diff" | less
+        diff --unified=2 "$file" "$file.formatted" | less
       fi
 
       # Ask user for whether or not this is okay. if not we ignore and continue
