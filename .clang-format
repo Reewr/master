@@ -295,7 +295,7 @@ NamespaceIndentation: Inner
 #   PAS_Right (in configuration: Right) Align pointer to the right.
 #   PAS_Middle (in configuration: Middle) Align pointer in the middle.
 #
-PointerAlignment: Right
+PointerAlignment: Left
 
 # If true, clang-format will attempt to re-flow comments.
 ReflowComments: true
