@@ -35,7 +35,7 @@ build_dddgp() {
   #
   # This could have been shorted down significantly
   # by the use of `eval`, but CMake is not a fan of that.
-  if hash ninja 2/dev/null; then
+  if hash ninja 2>/dev/null; then
     if [ ! -f "./build.ninja" ]; then
       cmake -GNinja -Wno-dev -D CMAKE_BUILD_TYPE="$build_type" ..
     fi
@@ -84,6 +84,11 @@ The following commands are available:
     Builds the executable, creating needed directories if
     they don't already exist.
 
+  clang-format
+    Runs clang-format on every file located under src/*. Will fail if there
+    is not a .clang-format file in the directory. Will show changes made
+    to files. It will only consider '.cpp', '.hpp', or '.tpp' files.
+
 The following flags are available:
 
   -h, --help
@@ -97,9 +102,87 @@ The following flags are available:
     Sets CMake up to build a debug build. This is set by
     default and you should not need to specify it.
 
+  -i, --interactive
+    This flag only works with the command 'clang-format'. It will, before
+    changing every file, ask you if you want to replace it with the new
+    format. It will also show you the difference between the original and
+    the newly formatted file.
+
+    The newly formatted file with have the extension '.formatted' in addition
+    to the '.cpp', '.hpp', or '.tpp' format that is supported.
+
 EOF
 }
 
+# Runs clang on all the files one by one, outputting only
+# if a file was changed.
+run_clang() {
+  local files=()
+  local diff
+  local use_color_diff=1
+
+  if [ ! -f "./.clang-format" ]; then
+    echo "Error: No .clang-format file found in directory"
+    exit
+  fi
+
+  if ! hash colordiff 2>/dev/null; then
+   if [ "$1" == "interactive" ]; then
+      echo -en "\e[1m\e[31m=>\e[0m colordiff not installed. Recommend installing"
+      echo -e " it for syntax highlighting when viewing diffs"
+      use_color_diff=0
+    fi
+  fi
+
+  echo -e "\e[1m\e[31m=>\e[0m Grabbing all source files"
+
+  while IFS=  read -r -d $'\0'; do
+    files+=("$REPLY")
+  done < <(find "src/" \( -iname "*.hpp" -o -iname "*.cpp" -o -iname "*.tpp" \) -print0)
+
+  echo -e "\e[1m\e[31m=>\e[0m Formatting files"
+
+  # Start processing file by file. Adding progress as we go along
+  for file in "${files[@]}"; do
+    clang-format -style="file" "$file" > "$file.formatted"
+    diff=$(diff "$file" "$file.formatted")
+
+    # No changes == continue
+    if [ -z "$diff" ]; then
+      rm "$file.formatted"
+      continue
+    fi
+
+    echo -en "\e[1m\e[31m=>\e[0m Found difference in '$file'. "
+
+    # If interactive is enabled, show diff and then prompt for change
+    if [ "$1" == "interactive" ]; then
+
+      # If colordiff is available, pipe that to less with the RAW tag
+      if [[ use_color_diff -eq 1 ]]; then
+        colordiff --unified=2 "$file" "$file.formatted" | less -R
+      else
+        echo "$diff" | less
+      fi
+
+      # Ask user for whether or not this is okay. if not we ignore and continue
+      read -p "Do you agree with the changes? (y/n) " -n 1 -r
+
+      if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo -e "\e[31m  Ignoring...\e[0m"
+        rm "$file.formatted"
+        continue
+      fi
+    fi
+
+    echo -e "\e[32m  Replacing...\e[0m"
+    mv "$file.formatted" "$file"
+  done
+}
+
+# Removes the build directory used by cmake, as well
+# as other directories and files that are produced
+# when building
 clean_build_dir() {
   rm -rf build bin lib DDDGP
 }
@@ -139,7 +222,7 @@ if [ $# -eq 0 ]; then
 fi
 
 COMMAND=""
-BUILD_TYPE=""
+FLAG=""
 # Parse the arguments and perform the actions
 # asked for, printing help and exiting on invalid arguments
 while [ $# -gt 0 ]; do
@@ -159,9 +242,15 @@ while [ $# -gt 0 ]; do
     build)
       COMMAND="build"
       ;;
+    clang-format)
+      COMMAND="clang-format"
+      ;;
     -r | --release)
       clean_build_dir
-      BUILD_TYPE="release"
+      FLAG="release"
+      ;;
+    -i | --interactive)
+      FLAG="interactive"
       ;;
     *)
       echo "ERROR: unknown parameter \"$PARAM\""
@@ -172,7 +261,21 @@ while [ $# -gt 0 ]; do
   shift
 done
 
+# Exit if user tries to do interactive build or something
+if [ "$FLAG" == "interactive" ] && [ "$COMMAND" != "clang-format" ]; then
+  echo "Error: -i, --interactive can only be used with command 'clang-format'"
+  exit
+fi
+
+case "$COMMAND" in
+  build | run)
+    different_build_type "$FLAG"
+    build_dddgp "$COMMAND" "$FLAG"
+    ;;
+  clang-format)
+    run_clang "$FLAG"
+    ;;
+esac
+
 # Finally perform the action needed based on the arguments
 # that we got
-different_build_type "$BUILD_TYPE"
-build_dddgp "$COMMAND" "$BUILD_TYPE"
