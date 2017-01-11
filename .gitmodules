@@ -19,3 +19,6 @@
 [submodule "deps/bullet"]
 	path = deps/bullet
 	url = git@github.com:bulletphysics/bullet3.git
+[submodule "deps/mmm"]
+	path = deps/mmm
+	url = git@github.com:Thhethssmuz/mmm.git
