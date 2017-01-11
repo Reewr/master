@@ -11,13 +11,9 @@ project(DDDGP CXX)
 # so that it can be used by IDEs if needed
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
-# Tell CMake where to look for CMake modules and where to place lib/bin files
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
+# Tell CMake where to place lib/bin files
 set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
-
-# Cotire is a tool used to optimize the builds. We have to include it like this
-include(cotire)
 
 # =======================================
 # Dependency inclusion
@@ -297,9 +293,6 @@ target_link_libraries(DDDGP assimp)
 # =======================================
 # Custom commands
 # =======================================
-
-# Perform cotire on our executable to optimize the build
-cotire(DDDGP)
 
 # Add a custom `run` command so that you can do `ninja run` to run the
 # the executable.
