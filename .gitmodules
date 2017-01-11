@@ -16,3 +16,6 @@
 [submodule "deps/freetype"]
 	path = deps/freetype
 	url = git://git.sv.nongnu.org/freetype/freetype2.git
+[submodule "deps/bullet"]
+	path = deps/bullet
+	url = git@github.com:bulletphysics/bullet3.git
