@@ -14,7 +14,9 @@ This folder contains the .ini file that is used to set the different options use
 
 **deps**
 
-This folder contains all the dependencies of the project as source files.
+This folder contains all the dependencies of the project as source files. All of these, except for one, is git submodules. This means that these are retrieved from other repositories when you are cloning it and therefore need the `--recursive` flag.
+
+The only dependency that is not a submodule is the `OGL` library, which are files that have been generated. For more information about the dependencies, please checkout [Licenses](#licenses)
 
 **media**
 
@@ -28,15 +30,11 @@ This directory contains all the GLSL shader files used by the game engine. They 
 
 The main source folder. All code is in here.
 
-**tmp**
-
-Temporary directory that should be removed
-
 # Building and running
 
 This project has only been tested on Linux. All the dependencies does however support cross-platform and it should therefore be possible to compile and run it on other systems.
 
-The `ninja` system is preferred when building this project due to the speed increases it has. It can, however, be built with make as well, by replacing `ninja` with `make` and removing the `-GNinja` flag on cmake
+The `ninja` system is preferred when building this project due to the speed increases it has. It can, however, be built with `make` as well. The build file showcased below will use `ninja` if available, otherwise it will use `make`.
 
 ```
 # Clone and change dir
@@ -46,6 +44,8 @@ cd master-thesis
 # Build the project, followed by running the executable
 ./build.sh run
 ```
+
+The [build.sh](./build.sh) file has several commands that can be useful for development, such as `run` for building the engine followed by starting it, `build` to just build it, `clean` to rebuild it. More commands and more information can be found by using `./build.sh -h`
 
 # Licenses
 
