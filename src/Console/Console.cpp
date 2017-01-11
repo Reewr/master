@@ -6,7 +6,7 @@
 #include "../Graphical/GL/Rectangle.hpp"
 #include "../Graphical/Text.hpp"
 #include "../Graphical/Texture.hpp"
-#include "../Input.hpp"
+#include "../Input/Input.hpp"
 #include "../Math/Math.hpp"
 #include "../State/State.hpp"
 #include "../Utils/CFG.hpp"

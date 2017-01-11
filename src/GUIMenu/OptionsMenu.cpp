@@ -9,7 +9,7 @@
 #include "../GUI/Inputbox.hpp"
 #include "../GUI/Slider.hpp"
 #include "../Graphical/Texture.hpp"
-#include "../Input.hpp"
+#include "../Input/Input.hpp"
 #include "../State/State.hpp"
 #include "../Utils/Asset.hpp"
 #include "../Utils/Utils.hpp"

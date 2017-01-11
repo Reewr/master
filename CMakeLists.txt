@@ -136,13 +136,16 @@ set(DDDGP_CPP
   # Top level files
   ${SRC_DIR}/DDDGP.cpp
   ${SRC_DIR}/Engine.cpp
-  ${SRC_DIR}/Input.cpp
 
   # src/3D
   ${SRC_DIR}/3D/Camera.cpp
 
   # src/Console
   ${SRC_DIR}/Console/Console.cpp
+
+  # src/Input
+  ${SRC_DIR}/Input/Input.cpp
+  ${SRC_DIR}/Input/Event.cpp
 
   # src/GLSL
   ${SRC_DIR}/GLSL/Program.cpp
@@ -206,7 +209,6 @@ set(DDDGP_HPP
 
   # Top level headers
   ${SRC_DIR}/Engine.hpp
-  ${SRC_DIR}/Input.hpp
   ${SRC_DIR}/OpenGLHeaders.hpp
 
   # src/3D
@@ -214,6 +216,10 @@ set(DDDGP_HPP
 
   # src/Console
   ${SRC_DIR}/Console/Console.hpp
+
+  # src/Input
+  ${SRC_DIR}/Input/Input.hpp
+  ${SRC_DIR}/Input/Event.hpp
 
   # src/GLSL
   ${SRC_DIR}/GLSL/Program.hpp

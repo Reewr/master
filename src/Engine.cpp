@@ -13,7 +13,7 @@
 #include "Utils/Utils.hpp"
 /* #include <3D/Spider.hpp> */
 /* #include <3D/Model.hpp> */
-#include "Input.hpp"
+#include "Input/Input.hpp"
 
 // These functions are because of GLFW's callback. They call engine functions
 static void placementKeyboardCB(GLFWwindow* w, int k, int s, int a, int m) {
@@ -414,6 +414,8 @@ GLFWmonitor* Engine::getMonitor() {
   return monitor;
 }
 
+void Engine::sendInputs() {}
+
 /**
  * @brief
  *   Deinitializes the engine, deleting all the resources and calling other
@@ -457,6 +459,7 @@ void Engine::runLoop() {
     updateState(deltaTime);
 
     glfwPollEvents();
+    sendInputs();
     glfwSwapBuffers(window);
 
     if (LOOP_LOGGER > 1) {

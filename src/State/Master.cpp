@@ -3,7 +3,7 @@
 #include "../OpenGLHeaders.hpp"
 
 #include "../Console/Console.hpp"
-#include "../Input.hpp"
+#include "../Input/Input.hpp"
 #include "../Utils/Asset.hpp"
 #include "../Utils/Utils.hpp"
 
@@ -30,7 +30,9 @@ int  Master::mouseButtonCB(int, int, int) {
   return State::NOCHANGE;
 }
 
-void Master::charCB(unsigned int) {}
+void Master::charCB(unsigned int codepoint) {
+  log(codepoint, Utils::utf8toStr(codepoint));
+}
 
 int Master::keyboardCB(int key, int, int action, int mods) {
   int stateChange = State::NOCHANGE;

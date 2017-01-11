@@ -69,6 +69,8 @@ protected:
 
   GLFWmonitor* getMonitor();
 
+  void sendInputs();
+
   void deinitialize(bool isFullDeinit = true);
 
   void refreshState(bool isWinRefresh);
