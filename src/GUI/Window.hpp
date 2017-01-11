@@ -15,7 +15,7 @@ class Text;
 class Dropdown;
 class Checkbox;
 class Inputbox;
-struct Texture;
+class Texture;
 
 namespace tinyxml2 {
 class XMLElement;

@@ -14,7 +14,8 @@ class CFG;
 
 //! Texture contains information about the loaded texture,
 //! can load .PNG & .dds. Can also draw simple squared texture
-struct Texture {
+class Texture {
+public:
 
   //! Textures to load - MODE
   enum { GUI, TEXTURE, DDS, CUBE, MAP, EMPTY };
