@@ -86,7 +86,7 @@ AlignTrailingComments: true
 
 # Allow putting all parameters of a function declaration onto the
 # next line even if BinPackParameters is false.
-AllowAllParametersOfDeclarationOnNextLine: true
+AllowAllParametersOfDeclarationOnNextLine: false
 
 # Allows contracting simple braced statements to a single line.
 #
@@ -252,6 +252,10 @@ DerivePointerAlignment: false
 # Disables formatting completely.
 DisableFormat: false
 
+# If true, clang-format detetects whether function call
+# defintions are formatted with one parameter per line
+ExperimentalAutoDetectBinPacking: false
+
 # Indent case labels one level from the switch statement.
 #
 # When false, use the same indentation level as for the switch statement.
@@ -360,6 +364,9 @@ SpacesInSquareBrackets: false
 #   LS_Auto (in configuration: Auto)
 #     Automatic detection based on the input.
 Standard: Cpp11
+
+# Penalities
+PenaltyBreakBeforeFirstCallParameter: 10000
 
 # The way to use tab characters in the resulting file.
 #
