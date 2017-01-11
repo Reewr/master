@@ -52,8 +52,8 @@ if (NOT WIN32)
 endif(NOT WIN32)
 
 # Find & add FreeType2
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/freetype-2.5.3)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/freetype-2.5.3/include)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/freetype)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/freetype/include)
 
 # Find & add assimp, also set flags
 set(ASSIMP_BUILD_TESTS OFF)
@@ -97,12 +97,13 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} \
 # Set lots of warnings. All warnings that are listed below -Wall
 # are warnings that GCC does not automatically include due to their
 # possible contraversy. Adding them now to see how bad it gets
-set(WARN_FLAGS "-Wall -Wextra -Wfloat-equal -Wundef -Wshadow")
-set(WARN_FLAGS "${WARN_FLAGS} -Wcast-qual -Wno-cast-align")
-set(WARN_FLAGS "${WARN_FLAGS} -Wwrite-strings -Wconversion -Wsign-compare")
-set(WARN_FLAGS "${WARN_FLAGS} -Wmissing-declarations")
-set(WARN_FLAGS "${WARN_FLAGS} -Wredundant-decls -Wunreachable-code -Winline")
-set(WARN_FLAGS "${WARN_FLAGS} -pedantic-errors -fdiagnostics-color=always")
+set(WARN_FLAGS "-Wall -Wextra -fdiagnostics-color=always")
+#set(WARN_FLAGS "${WARN_FLAGS} -Wfloat-equal -Wundef -Wshadow")
+#set(WARN_FLAGS "${WARN_FLAGS} -Wcast-qual -Wno-cast-align")
+#set(WARN_FLAGS "${WARN_FLAGS} -Wwrite-strings -Wconversion -Wsign-compare")
+#set(WARN_FLAGS "${WARN_FLAGS} -Wmissing-declarations")
+#set(WARN_FLAGS "${WARN_FLAGS} -Wredundant-decls -Wunreachable-code -Winline")
+#set(WARN_FLAGS "${WARN_FLAGS} -pedantic-errors")
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${WARN_FLAGS}")
 

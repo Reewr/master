@@ -78,10 +78,10 @@ void Font::loadFromFile(const std::string& filename, int size) {
   FT_Set_Pixel_Sizes(mFace, 0, size);
   FT_GlyphSlot g = mFace->glyph;
 
-  int rowW = 0;
-  int rowH = 0;
-  int w    = 0;
-  int h    = 0;
+  unsigned int rowW = 0;
+  unsigned int rowH = 0;
+  unsigned int w    = 0;
+  unsigned int h    = 0;
 
   // goes through the different characters, loading them
   // into memory and figuring out the size of the texture
