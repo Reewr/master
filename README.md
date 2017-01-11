@@ -38,7 +38,7 @@ The `ninja` system is preferred when building this project due to the speed incr
 
 ```
 # Clone and change dir
-git clone --recursive git://github.com/foo/bar.git
+git clone --recursive git://github.com/reewr/master-thesis.git
 cd master-thesis
 
 # Build the project, followed by running the executable
