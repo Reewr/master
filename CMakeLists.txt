@@ -141,6 +141,9 @@ set(DDDGP_CPP
   # src/3D
   ${SRC_DIR}/3D/Camera.cpp
 
+  # src/Console
+  ${SRC_DIR}/Console/Console.cpp
+
   # src/GLSL
   ${SRC_DIR}/GLSL/Program.cpp
   ${SRC_DIR}/GLSL/Shader.cpp
@@ -157,7 +160,6 @@ set(DDDGP_CPP
   ${SRC_DIR}/GUI/Window.cpp
 
   # src/GUIMenu
-  ${SRC_DIR}/GUIMenu/Console.cpp
   ${SRC_DIR}/GUIMenu/OptionsMenu.cpp
   ${SRC_DIR}/GUIMenu/PauseMenu.cpp
 
@@ -210,6 +212,9 @@ set(DDDGP_HPP
   # src/3D
   ${SRC_DIR}/3D/Camera.hpp
 
+  # src/Console
+  ${SRC_DIR}/Console/Console.hpp
+
   # src/GLSL
   ${SRC_DIR}/GLSL/Program.hpp
   ${SRC_DIR}/GLSL/Shader.hpp
@@ -226,7 +231,6 @@ set(DDDGP_HPP
   ${SRC_DIR}/GUI/Window.hpp
 
   # src/GUIMenu
-  ${SRC_DIR}/GUIMenu/Console.hpp
   ${SRC_DIR}/GUIMenu/OptionsMenu.hpp
   ${SRC_DIR}/GUIMenu/PauseMenu.hpp
 
