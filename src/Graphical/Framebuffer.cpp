@@ -1,22 +1,22 @@
 #include "Framebuffer.hpp"
 
-#include <fstream>
 #include "../OpenGLHeaders.hpp"
+#include <fstream>
 
 #include "../GLSL/Program.hpp"
-#include "GL/Rectangle.hpp"
-#include "Texture.hpp"
+#include "../Math/Math.hpp"
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
-#include "../Math/Math.hpp"
+#include "GL/Rectangle.hpp"
+#include "Texture.hpp"
 
 
-CFG* Framebuffer::cfg              = NULL;
-Program* Framebuffer::drawProgram  = NULL;
-Program* Framebuffer::copyProgram  = NULL;
-Program* Framebuffer::clearProgram = NULL;
-std::string Framebuffer::ssLoc     = "";
-int Framebuffer::numSS             = 0;
+CFG*        Framebuffer::cfg          = NULL;
+Program*    Framebuffer::drawProgram  = NULL;
+Program*    Framebuffer::copyProgram  = NULL;
+Program*    Framebuffer::clearProgram = NULL;
+std::string Framebuffer::ssLoc        = "";
+int         Framebuffer::numSS        = 0;
 
 Framebuffer::Framebuffer() {
   mFrameBuffer  = 0;
@@ -51,7 +51,7 @@ Framebuffer::Framebuffer(std::string vs, std::string fs, int size, bool depth) {
 Framebuffer::Framebuffer(std::string vs,
                          std::string fs,
                          const vec2& size,
-                         bool depth) {
+                         bool        depth) {
   mIsDepth      = depth;
   mFrameSize    = size;
   mNeedsDrawing = false;
@@ -96,10 +96,10 @@ void Framebuffer::setup() {
   mTexture = new Texture();
   mQuad    = new GL::Rectangle(vec2(), mFrameSize);
 
-  GLenum type          = mIsDepth ? GL_DEPTH_COMPONENT  : GL_RGBA32F;
-  GLenum buffer        = mIsDepth ? GL_NONE             : GL_COLOR_ATTACHMENT0;
+  GLenum type          = mIsDepth ? GL_DEPTH_COMPONENT : GL_RGBA32F;
+  GLenum buffer        = mIsDepth ? GL_NONE : GL_COLOR_ATTACHMENT0;
   GLenum attachment    = mIsDepth ? GL_DEPTH_ATTACHMENT : GL_COLOR_ATTACHMENT0;
-  GLenum drawBuffer[1] = {buffer};
+  GLenum drawBuffer[1] = { buffer };
 
   glGenFramebuffers(1, &mFrameBuffer);
   glBindFramebuffer(GL_FRAMEBUFFER, mFrameBuffer);
@@ -182,7 +182,8 @@ void Framebuffer::activateDraw(const vec2& position) {
  */
 void Framebuffer::draw() {
   failCheck();
-  if (!mNeedsDrawing) activateDraw();
+  if (!mNeedsDrawing)
+    activateDraw();
   drawProgram->bind();
   mTexture->draw();
 }
@@ -210,7 +211,8 @@ void Framebuffer::bind(bool bindProgram) {
     glClear(GL_COLOR_BUFFER_BIT);
   glClearColor(0.0, 0.0, 0.0, 1.0);
 
-  if (bindProgram) mProgram->bind();
+  if (bindProgram)
+    mProgram->bind();
   mIsBound = true;
 }
 
@@ -293,10 +295,10 @@ void Framebuffer::finalize() {
   mIsBound = false;
 }
 
-void Framebuffer::doQuad(GL::Rectangle* inQuad,
-                         Program* program,
+void Framebuffer::doQuad(GL::Rectangle*               inQuad,
+                         Program*                     program,
                          const std::vector<Texture*>& t,
-                         unsigned int textureStart) {
+                         unsigned int                 textureStart) {
   bind(program);
   // bind the textures on different locations, based on tStart
   for (unsigned int i = 0; i < t.size(); i++) {
@@ -308,15 +310,15 @@ void Framebuffer::doQuad(GL::Rectangle* inQuad,
   finalize();
 }
 
-void Framebuffer::doQuad(GL::Rectangle* inQuad,
+void Framebuffer::doQuad(GL::Rectangle*               inQuad,
                          const std::vector<Texture*>& t,
-                         unsigned int tStart) {
+                         unsigned int                 tStart) {
   doQuad(inQuad, mProgram, t, tStart);
 }
 
-void Framebuffer::doQuad(Program* p,
+void Framebuffer::doQuad(Program*                     p,
                          const std::vector<Texture*>& t,
-                         unsigned int tStart) {
+                         unsigned int                 tStart) {
   doQuad(mQuad, p, t, tStart);
 }
 
@@ -324,10 +326,10 @@ void Framebuffer::doQuad(const std::vector<Texture*>& t, unsigned int tStart) {
   doQuad(mQuad, mProgram, t, tStart);
 }
 
-void Framebuffer::nonClearQuad(GL::Rectangle* inQuad,
-                               Program* p,
+void Framebuffer::nonClearQuad(GL::Rectangle*               inQuad,
+                               Program*                     p,
                                const std::vector<Texture*>& t,
-                               unsigned int tStart) {
+                               unsigned int                 tStart) {
   nonClearBind(p);
   for (unsigned int i = 0; i < t.size(); i++) {
     t[i]->bind(tStart);
@@ -337,19 +339,20 @@ void Framebuffer::nonClearQuad(GL::Rectangle* inQuad,
   finalize();
 }
 
-void Framebuffer::nonClearQuad(GL::Rectangle* inQuad,
+void Framebuffer::nonClearQuad(GL::Rectangle*               inQuad,
                                const std::vector<Texture*>& t,
-                               unsigned int tStart) {
+                               unsigned int                 tStart) {
   nonClearQuad(inQuad, mProgram, t, tStart);
 }
 
-void Framebuffer::nonClearQuad(Program* p,
+void Framebuffer::nonClearQuad(Program*                     p,
                                const std::vector<Texture*>& t,
-                               unsigned int tStart) {
+                               unsigned int                 tStart) {
   nonClearQuad(mQuad, p, t, tStart);
 }
 
-void Framebuffer::nonClearQuad(const std::vector<Texture*>& t, unsigned int tStart) {
+void Framebuffer::nonClearQuad(const std::vector<Texture*>& t,
+                               unsigned int                 tStart) {
   nonClearQuad(mQuad, mProgram, t, tStart);
 }
 
@@ -357,11 +360,12 @@ void Framebuffer::queueStart() {
   bind(false);
 }
 
-void Framebuffer::queueQuad(GL::Rectangle* inQuad,
-                            Program* p,
+void Framebuffer::queueQuad(GL::Rectangle*               inQuad,
+                            Program*                     p,
                             const std::vector<Texture*>& t,
-                            unsigned int tStart) {
-  if (!mIsBound) throw Error("Tried using queue without starting");
+                            unsigned int                 tStart) {
+  if (!mIsBound)
+    throw Error("Tried using queue without starting");
   p->bind();
   for (unsigned int i = 0; i < t.size(); i++) {
     t[i]->bind(tStart);
@@ -370,17 +374,18 @@ void Framebuffer::queueQuad(GL::Rectangle* inQuad,
   inQuad->draw();
 }
 
-void Framebuffer::queueQuad(GL::Rectangle* inQuad,
+void Framebuffer::queueQuad(GL::Rectangle*               inQuad,
                             const std::vector<Texture*>& t,
-                            unsigned int tStart) {
+                            unsigned int                 tStart) {
   queueQuad(inQuad, mProgram, t, tStart);
 }
-void Framebuffer::queueQuad(Program* p,
+void Framebuffer::queueQuad(Program*                     p,
                             const std::vector<Texture*>& t,
-                            unsigned int tStart) {
+                            unsigned int                 tStart) {
   queueQuad(mQuad, p, t, tStart);
 }
-void Framebuffer::queueQuad(const std::vector<Texture*>& t, unsigned int tStart) {
+void Framebuffer::queueQuad(const std::vector<Texture*>& t,
+                            unsigned int                 tStart) {
   queueQuad(mQuad, mProgram, t, tStart);
 }
 
@@ -423,7 +428,7 @@ float Framebuffer::getPixel(const vec2& pos, GLenum type) {
 }
 
 void Framebuffer::printPixels(const Rect& r, GLenum type, std::string name) {
-  const int mult          = (type == GL_RGBA) ? 4 : (type == GL_RGB) ? 3 : 1;
+  const int          mult = (type == GL_RGBA) ? 4 : (type == GL_RGB) ? 3 : 1;
   std::vector<float> data = getPixels(r, type);
   log(name, ":");
   for (unsigned int i = 0; i < data.size(); i += mult) {
@@ -446,7 +451,7 @@ void Framebuffer::clear() {
 
 void Framebuffer::copy(Texture* toCopy) {
   copyProgram->setUniform("screenRes", mFrameSize);
-  doQuad(copyProgram, {toCopy});
+  doQuad(copyProgram, { toCopy });
 }
 
 bool Framebuffer::isInitialized() {
@@ -460,13 +465,14 @@ void Framebuffer::init(CFG* cfg, std::string screenshotLoc) {
   ssLoc            = screenshotLoc;
   numSS            = 0;
   drawProgram      = new Program("shaders/GUI/GUI.vsfs", 0);
-  drawProgram->bindAttribs({"position", "texcoord"}, {0, 1});
+  drawProgram->bindAttribs({ "position", "texcoord" }, { 0, 1 });
   drawProgram->link();
   drawProgram->setUniform("screenRes", cfg->graphics.res, "guiOffset", vec2());
   drawProgram->setUniform("inTexture", 0);
 
-  clearProgram = new Program("shaders/Framebuffer.vs", "shaders/Utils/Clear.fs");
-  copyProgram  = new Program("shaders/Framebuffer.vs", "shaders/Utils/Copy.fs");
+  clearProgram =
+    new Program("shaders/Framebuffer.vs", "shaders/Utils/Clear.fs");
+  copyProgram = new Program("shaders/Framebuffer.vs", "shaders/Utils/Copy.fs");
   copyProgram->setUniform("toCopy", 0);
   initScreenshot();
 }
@@ -478,8 +484,8 @@ void Framebuffer::deinit() {
 }
 
 void Framebuffer::initScreenshot() {
-  std::string name = Utils::toStr(( int ) cfg->graphics.res.x) + "x";
-  name += Utils::toStr(( int ) cfg->graphics.res.y);
+  std::string name = Utils::toStr((int) cfg->graphics.res.x) + "x";
+  name += Utils::toStr((int) cfg->graphics.res.y);
   name += " - ";
   while (true) {
     std::string test = ssLoc + name + Utils::toStr(numSS) + ".tga";
@@ -492,23 +498,37 @@ void Framebuffer::initScreenshot() {
 }
 
 void Framebuffer::takeScreenshot() {
-  std::string filename = ssLoc + Utils::toStr(( int ) cfg->graphics.res.x) + "x";
-  filename += Utils::toStr(( int ) cfg->graphics.res.y);
+  std::string filename = ssLoc + Utils::toStr((int) cfg->graphics.res.x) + "x";
+  filename += Utils::toStr((int) cfg->graphics.res.y);
   filename += " - " + Utils::toStr(numSS) + ".tga";
   numSS++;
-  vec2 size            = cfg->graphics.res;
-  const long imageSize = cfg->graphics.res.x * cfg->graphics.res.y * 3;
-  unsigned char* data  = new unsigned char[imageSize];
+  vec2           size      = cfg->graphics.res;
+  const long     imageSize = cfg->graphics.res.x * cfg->graphics.res.y * 3;
+  unsigned char* data      = new unsigned char[imageSize];
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
   glReadPixels(0, 0, size.x, size.y, GL_BGR, GL_UNSIGNED_BYTE, data);
-  int xa                   = ( int ) size.x % 256;
-  int xb                   = (size.x - xa) / 256;
-  int ya                   = ( int ) size.y % 256;
-  int yb                   = (size.y - ya) / 256;
-  unsigned char header[18] = {0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                              ( unsigned char ) xa, ( unsigned char ) xb,
-                              ( unsigned char ) ya, ( unsigned char ) yb,
-                              24, 0};
+  int           xa         = (int) size.x % 256;
+  int           xb         = (size.x - xa) / 256;
+  int           ya         = (int) size.y % 256;
+  int           yb         = (size.y - ya) / 256;
+  unsigned char header[18] = { 0,
+                               0,
+                               2,
+                               0,
+                               0,
+                               0,
+                               0,
+                               0,
+                               0,
+                               0,
+                               0,
+                               0,
+                               (unsigned char) xa,
+                               (unsigned char) xb,
+                               (unsigned char) ya,
+                               (unsigned char) yb,
+                               24,
+                               0 };
 
   std::fstream f(filename, std::ios::out | std::ios::binary);
   f.write(reinterpret_cast<char*>(header), sizeof(char) * 18);
@@ -550,7 +570,9 @@ void Framebuffer::checkFramebuffer() {
       case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
         error("Missing attachment");
         break;
-      case GL_FRAMEBUFFER_UNSUPPORTED: error("Not supported"); break;
+      case GL_FRAMEBUFFER_UNSUPPORTED:
+        error("Not supported");
+        break;
     }
     throw Error("Framebuffer is not complete.");
   }

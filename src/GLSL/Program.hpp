@@ -1,9 +1,9 @@
 #ifndef GLSL_PROGRAM_HPP
 #define GLSL_PROGRAM_HPP
 
+#include <map>
 #include <string>
 #include <vector>
-#include <map>
 
 #include "../OpenGLHeaders.hpp"
 
@@ -39,22 +39,22 @@ public:
   //! not link so you can set attrib values before hand.
   bool createProgram(const std::string& fs,
                      const std::string& vs,
-                     const bool link = true);
+                     const bool         link = true);
   bool createProgram(const std::string& fs,
-                     const Shader& vertex,
-                     const bool link = true);
-  bool createProgram(const Shader& frag,
+                     const Shader&      vertex,
+                     const bool         link = true);
+  bool createProgram(const Shader&      frag,
                      const std::string& vs,
-                     const bool link = true);
+                     const bool         link = true);
   bool createProgram(const Shader& frag,
                      const Shader& vertex,
-                     const bool link = true);
+                     const bool    link = true);
 
   bool createProgram(const std::string& fsvs, int link = 1);
 
   void deleteProgram();
 
-  //!Adds a shader to the current program
+  //! Adds a shader to the current program
   bool addShader(const Shader& sh);
   bool addShader(const std::string& sh);
 
@@ -81,24 +81,25 @@ public:
   //! Sets several uniforms with the names in unis to values is.
   //! Returns false if one fails. Lists has to be equal in size.
   template <typename T>
-  bool setUniforms(const std::vector<std::string>& unis, const std::vector<T>& t);
+  bool setUniforms(const std::vector<std::string>& unis,
+                   const std::vector<T>&           t);
 
   //! Set several uniform pairs ("uniformname", vec2, "uniformname2", int)
-  template <typename T, typename...Ts>
-  bool setUniform(const std::string& uni, T x, Ts...xs);
+  template <typename T, typename... Ts>
+  bool setUniform(const std::string& uni, T x, Ts... xs);
 
   //! Lets you bind an attribute (by name) to a index.
   //!  Only allowed if the program is not linked.
   bool bindAttrib(const std::string& attrib, const int index);
   bool bindAttribs(const std::vector<std::string>& attribs,
-                   const std::vector<int>& indexes);
+                   const std::vector<int>&         indexes);
 
   bool isActive() const;
 
-  static bool checkErrors(const std::string& place,
+  static bool checkErrors(const std::string&              place,
                           const std::vector<std::string>& files = {});
-private:
 
+private:
   bool setGLUniform(GLint loc, const int i);
   bool setGLUniform(GLint loc, const int i, const int j);
   bool setGLUniform(GLint loc, const float f);
@@ -122,7 +123,6 @@ private:
 
   bool isLinked;
   bool isUsable;
-
 };
 
 #include <GLSL/Program.tpp>

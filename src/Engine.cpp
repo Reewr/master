@@ -7,40 +7,46 @@
 #include "Graphical/Framebuffer.hpp"
 #include "Graphical/Text.hpp"
 #include "Graphical/Texture.hpp"
-#include "Utils/Asset.hpp"
-#include "Utils/Utils.hpp"
 #include "State/MainMenu.hpp"
 #include "State/Master.hpp"
+#include "Utils/Asset.hpp"
+#include "Utils/Utils.hpp"
 /* #include <3D/Spider.hpp> */
 /* #include <3D/Model.hpp> */
 #include "Input.hpp"
 
 // These functions are because of GLFW's callback. They call engine functions
-static void placementKeyboardCB(GLFWwindow *w, int k, int s, int a, int m) {
-  Engine *e = static_cast<Engine *>(glfwGetWindowUserPointer(w));
+static void placementKeyboardCB(GLFWwindow* w, int k, int s, int a, int m) {
+  Engine* e = static_cast<Engine*>(glfwGetWindowUserPointer(w));
   e->keyboardCB(k, s, a, m);
 }
 
-static void placementMouseMovementCB(GLFWwindow *w, double x, double y) {
-  Engine *e = static_cast<Engine *>(glfwGetWindowUserPointer(w));
+static void placementMouseMovementCB(GLFWwindow* w, double x, double y) {
+  Engine* e = static_cast<Engine*>(glfwGetWindowUserPointer(w));
   e->mouseMovementCB(x, y);
 }
 
-static void placementMouseButtonCB(GLFWwindow *w, int b, int a, int m) {
-  Engine *e = static_cast<Engine *>(glfwGetWindowUserPointer(w));
+static void placementMouseButtonCB(GLFWwindow* w, int b, int a, int m) {
+  Engine* e = static_cast<Engine*>(glfwGetWindowUserPointer(w));
   e->mouseButtonCB(b, a, m);
 }
 
-static void placementMouseScrollCB(GLFWwindow *w, double ox, double oy) {
-  Engine *e = static_cast<Engine *>(glfwGetWindowUserPointer(w));
+static void placementMouseScrollCB(GLFWwindow* w, double ox, double oy) {
+  Engine* e = static_cast<Engine*>(glfwGetWindowUserPointer(w));
   e->mouseScrollCB(ox, oy);
 }
 
-static void glfwErrorHandler(int, const char *k) { error("GLFW_ERROR: ", k); }
+static void glfwErrorHandler(int, const char* k) {
+  error("GLFW_ERROR: ", k);
+}
 
-Engine::Engine(std::string cfgPath) { this->cfgPath = cfgPath; }
+Engine::Engine(std::string cfgPath) {
+  this->cfgPath = cfgPath;
+}
 
-Engine::~Engine() { deinitialize(); }
+Engine::~Engine() {
+  deinitialize();
+}
 
 /**
  * @brief
@@ -77,7 +83,7 @@ Engine::~Engine() { deinitialize(); }
  *  returns true if everything goes according to the plan,
  *  else false
  */
-bool Engine::initialize(int argc, char *argv[], int isRefresh, int initState) {
+bool Engine::initialize(int argc, char* argv[], int isRefresh, int initState) {
   asset = new Asset();
 
   // Load the configuration file
@@ -104,8 +110,9 @@ bool Engine::initialize(int argc, char *argv[], int isRefresh, int initState) {
     // Else we just readjust the window
     // based on the settings given
     window = glfwGetCurrentContext();
-    glfwSetWindowSize(window, (int)asset->cfg.graphics.res.x,
-                      (int)asset->cfg.graphics.res.y);
+    glfwSetWindowSize(window,
+                      (int) asset->cfg.graphics.res.x,
+                      (int) asset->cfg.graphics.res.y);
     glViewport(0, 0, asset->cfg.graphics.res.x, asset->cfg.graphics.res.y);
     glfwSwapInterval((asset->cfg.graphics.vsync) ? 1 : 0);
   }
@@ -283,7 +290,7 @@ bool Engine::initOpenGLBindings() {
 }
 
 bool Engine::initWindow() {
-  CFG *cfg = &asset->cfg;
+  CFG* cfg = &asset->cfg;
 
   // Set version we want
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -303,9 +310,12 @@ bool Engine::initWindow() {
                  cfg->graphics.winMode == 1 ? GL_FALSE : GL_TRUE);
 
   // get monitor, may be null, but thats okay since glfw supports it
-  GLFWmonitor *monitor = getMonitor();
-  window = glfwCreateWindow(cfg->graphics.res.x, cfg->graphics.res.y, "DDDGP",
-                            monitor, NULL);
+  GLFWmonitor* monitor = getMonitor();
+  window               = glfwCreateWindow(cfg->graphics.res.x,
+                            cfg->graphics.res.y,
+                            "DDDGP",
+                            monitor,
+                            NULL);
 
   if (!window) {
     error("Engine: Could not open window with GLFW. Check GLFW error messages");
@@ -354,12 +364,12 @@ void Engine::initGL() {
  * @return
  *   Null if fullscreen isnt enabled otherwise a monitor
  */
-GLFWmonitor *Engine::getMonitor() {
-  int monitorCount;
-  GLFWmonitor *monitor         = NULL;
-  const GLFWvidmode *videoMode = NULL;
-  CFG cfg                      = asset->cfg;
-  GLFWmonitor **monitors       = glfwGetMonitors(&monitorCount);
+GLFWmonitor* Engine::getMonitor() {
+  int                monitorCount;
+  GLFWmonitor*       monitor   = NULL;
+  const GLFWvidmode* videoMode = NULL;
+  CFG                cfg       = asset->cfg;
+  GLFWmonitor**      monitors  = glfwGetMonitors(&monitorCount);
 
   // if we are running fullscreen, we gotta use the correct monitor
   if (cfg.graphics.winMode == 2) {
@@ -373,7 +383,7 @@ GLFWmonitor *Engine::getMonitor() {
       monitor = glfwGetPrimaryMonitor();
 
     // since its fullscreen, we get the resolution of the monitor
-    videoMode = glfwGetVideoMode(monitor);
+    videoMode        = glfwGetVideoMode(monitor);
     cfg.graphics.res = vec2(videoMode->width, videoMode->height);
   }
 
@@ -416,8 +426,8 @@ void Engine::runLoop() {
 
   while (!glfwWindowShouldClose(window)) {
     float currentTime = glfwGetTime();
-    float deltaTime = currentTime - startTime;
-    startTime = currentTime;
+    float deltaTime   = currentTime - startTime;
+    startTime         = currentTime;
 
     LOOP_LOGGER += deltaTime;
     updateState(deltaTime);
@@ -495,9 +505,13 @@ void Engine::createState() {
   }
 
   switch (states.top()) {
-    case State::MAINMENU: current = new MainMenu(asset, input); break;
+    case State::MAINMENU:
+      current = new MainMenu(asset, input);
+      break;
     /* case State::GAME    : current = new Game(asset, input); break; */
-    case State::MASTER_THESIS: current = new Master(asset, input); break;
+    case State::MASTER_THESIS:
+      current = new Master(asset, input);
+      break;
     default:
       error("Tried to make state that does not exist: ", states.top());
       closeWindow();

@@ -4,11 +4,11 @@ mat4::operator float*() {
   return m;
 }
 
-float& mat4::operator[] (int n) {
+float& mat4::operator[](int n) {
   return m[n];
 }
 
-mat4& mat4::operator+= (const mat4& n) {
+mat4& mat4::operator+=(const mat4& n) {
   m[0] += n[0];
   m[1] += n[1];
   m[2] += n[2];
@@ -27,7 +27,7 @@ mat4& mat4::operator+= (const mat4& n) {
   m[15] += n[15];
   return *this;
 }
-mat4& mat4::operator+= (float s) {
+mat4& mat4::operator+=(float s) {
   m[0] += s;
   m[1] += s;
   m[2] += s;
@@ -47,7 +47,7 @@ mat4& mat4::operator+= (float s) {
   return *this;
 }
 
-mat4& mat4::operator-= (const mat4& n) {
+mat4& mat4::operator-=(const mat4& n) {
   m[0] -= n[0];
   m[1] -= n[1];
   m[2] -= n[2];
@@ -66,7 +66,7 @@ mat4& mat4::operator-= (const mat4& n) {
   m[15] -= n[15];
   return *this;
 }
-mat4& mat4::operator-= (float s) {
+mat4& mat4::operator-=(float s) {
   m[0] -= s;
   m[1] -= s;
   m[2] -= s;
@@ -86,7 +86,7 @@ mat4& mat4::operator-= (float s) {
   return *this;
 }
 
-mat4& mat4::operator*= (float s) {
+mat4& mat4::operator*=(float s) {
   m[0] *= s;
   m[1] *= s;
   m[2] *= s;
@@ -105,12 +105,12 @@ mat4& mat4::operator*= (float s) {
   m[15] *= s;
   return *this;
 }
-mat4& mat4::operator*= (const mat4& n) {
+mat4& mat4::operator*=(const mat4& n) {
   *this = *this * n;
   return *this;
 }
 
-mat4& mat4::operator/= (float s) {
+mat4& mat4::operator/=(float s) {
   m[0] /= s;
   m[1] /= s;
   m[2] /= s;
@@ -130,17 +130,17 @@ mat4& mat4::operator/= (float s) {
   return *this;
 }
 
-mat4& mat4::operator= (const mat4& n) {
-  m[0] = n[0];
-  m[1] = n[1];
-  m[2] = n[2];
-  m[3] = n[3];
-  m[4] = n[4];
-  m[5] = n[5];
-  m[6] = n[6];
-  m[7] = n[7];
-  m[8] = n[8];
-  m[9] = n[9];
+mat4& mat4::operator=(const mat4& n) {
+  m[0]  = n[0];
+  m[1]  = n[1];
+  m[2]  = n[2];
+  m[3]  = n[3];
+  m[4]  = n[4];
+  m[5]  = n[5];
+  m[6]  = n[6];
+  m[7]  = n[7];
+  m[8]  = n[8];
+  m[9]  = n[9];
   m[10] = n[10];
   m[11] = n[11];
   m[12] = n[12];
@@ -150,15 +150,15 @@ mat4& mat4::operator= (const mat4& n) {
   return *this;
 }
 
-mat4& mat4::identity () {
+mat4& mat4::identity() {
   *this = identity4();
   return *this;
 }
-mat4& mat4::transpose () {
+mat4& mat4::transpose() {
   *this = ::transpose(*this);
   return *this;
 }
-mat4& mat4::inverse () {
+mat4& mat4::inverse() {
   *this = ::inverse(*this);
   return *this;
 }

@@ -3,14 +3,14 @@
 
 #include <string>
 
-#include "GUI.hpp"
 #include "../Math/MathCD.hpp"
+#include "GUI.hpp"
 
 class Text;
 class Texture;
 
 namespace tinyxml2 {
-  class XMLElement;
+class XMLElement;
 }
 
 class Checkbox : public GUI {

@@ -18,7 +18,6 @@ public:
   void handleMouseMovement(const vec2& pos);
 
 private:
-
   void setDefaultOptions();
 
   int parseOptionstoCFG();

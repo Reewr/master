@@ -9,7 +9,7 @@ class Texture;
 class Text;
 
 namespace tinyxml2 {
-  class XMLElement;
+class XMLElement;
 }
 
 class Inputbox : public GUI {
@@ -41,8 +41,8 @@ public:
 private:
   Texture* mTextBox;
   Texture* mInputBox;
-  Text* mText;
-  Text* mInputBoxText;
+  Text*    mText;
+  Text*    mInputBoxText;
 
   Rect mInputBoxRect;
   bool mInputIsVisible;

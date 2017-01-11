@@ -2,15 +2,15 @@
 
 #include <tinyxml2.h>
 
+#include "../GLSL/Program.hpp"
 #include "../Graphical/Text.hpp"
 #include "../Graphical/Texture.hpp"
 #include "../Utils/Asset.hpp"
-#include "../GLSL/Program.hpp"
 
 Checkbox::Checkbox(const std::string box, const vec2& pos) : mIsTicked(false) {
   mBoundingBox = Rect(pos, vec2(21, 21));
   mSquare      = new Texture(box.c_str());
-  mTick        = new Text(mFont, "", vec2(pos.x, pos.y-3), 20);
+  mTick        = new Text(mFont, "", vec2(pos.x, pos.y - 3), 20);
   mTick->setColor(Text::WHITE);
   mSquare->recalculateGeometry(mBoundingBox);
 }
@@ -35,7 +35,7 @@ Checkbox::Checkbox(const std::string box, const vec2& pos) : mIsTicked(false) {
  */
 Checkbox* Checkbox::fromXML(tinyxml2::XMLElement* element) {
 
-  vec2 position;
+  vec2        position;
   const char* check = element->Attribute("check");
 
   if (element->QueryFloatAttribute("x", &position.x) != 0) {

@@ -30,7 +30,7 @@ GL::Rectangle::~Rectangle() {
  *   Whether or not this should utilize counter-clockwise rendering
  */
 void GL::Rectangle::change(const Rect& rect, bool isCCW) {
-  mRect = rect;
+  mRect  = rect;
   mIsCCW = isCCW;
   setup();
 }
@@ -65,32 +65,33 @@ void GL::Rectangle::change(const vec2& p, const vec2& s, bool isCCW) {
  * FIXME: Optimize
  */
 void GL::Rectangle::setup() {
-  if(IBO != 0) glDeleteBuffers(1, &IBO);
-  if(VBO != 0) glDeleteBuffers(1, &VBO);
-  if(VAO != 0) glDeleteVertexArrays(1, &VAO);
+  if (IBO != 0)
+    glDeleteBuffers(1, &IBO);
+  if (VBO != 0)
+    glDeleteBuffers(1, &VBO);
+  if (VAO != 0)
+    glDeleteVertexArrays(1, &VAO);
 
   std::vector<vec4> coords;
 
-  if(mIsCCW) {
+  if (mIsCCW) {
     coords.push_back(vec4(0, 0, 1, 0));
     coords.push_back(vec4(1, 1, 0, 1));
-  }
-  else {
+  } else {
     coords.push_back(vec4(0, 1, 1, 1));
     coords.push_back(vec4(1, 0, 0, 0));
   }
 
-  GLfloat vertices[] = {
-    mRect.topleft.x,       mRect.bottomright().y, coords[0].x, coords[0].y,
-    mRect.bottomright().x, mRect.bottomright().y, coords[0].z, coords[0].w,
-    mRect.bottomright().x, mRect.topleft.y,       coords[1].x, coords[1].y,
-    mRect.topleft.x,       mRect.topleft.y,       coords[1].z, coords[1].w
-  };
+  GLfloat vertices[] = { mRect.topleft.x,       mRect.bottomright().y,
+                         coords[0].x,           coords[0].y,
+                         mRect.bottomright().x, mRect.bottomright().y,
+                         coords[0].z,           coords[0].w,
+                         mRect.bottomright().x, mRect.topleft.y,
+                         coords[1].x,           coords[1].y,
+                         mRect.topleft.x,       mRect.topleft.y,
+                         coords[1].z,           coords[1].w };
 
-  GLuint elements[] = {
-    0, 1, 2,
-    2, 3, 0
-  };
+  GLuint elements[] = { 0, 1, 2, 2, 3, 0 };
 
   glGenBuffers(1, &IBO);
   glGenBuffers(1, &VBO);
@@ -103,10 +104,18 @@ void GL::Rectangle::setup() {
   glEnableVertexAttribArray(0);
   glEnableVertexAttribArray(1);
   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GL_FLOAT), 0);
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(GL_FLOAT), (void*)(2*sizeof(GL_FLOAT)));
+  glVertexAttribPointer(1,
+                        2,
+                        GL_FLOAT,
+                        GL_FALSE,
+                        4 * sizeof(GL_FLOAT),
+                        (void*) (2 * sizeof(GL_FLOAT)));
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+               sizeof(elements),
+               elements,
+               GL_STATIC_DRAW);
 
   glBindVertexArray(0);
 }

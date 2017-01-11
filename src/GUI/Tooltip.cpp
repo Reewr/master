@@ -1,19 +1,21 @@
 #include "Tooltip.hpp"
 
-#include "../Graphical/Texture.hpp"
-#include "../Graphical/Text.hpp"
-#include "../Utils/Utils.hpp"
-#include "../Utils/CFG.hpp"
 #include "../GLSL/Program.hpp"
+#include "../Graphical/Text.hpp"
+#include "../Graphical/Texture.hpp"
+#include "../Utils/CFG.hpp"
+#include "../Utils/Utils.hpp"
 
 Tooltip::Tooltip() {
   mBoundingBox = Rect(0, 0, 100, 60);
-  mOffset = vec2(0, 0);
-  mBackground = new Texture(TEMP::getPath(TEMP::OPTSMENU));
-  mActiveText = new Text(mFont, "",
-                        mBoundingBox.topleft,
-                        10,
-                        Text::WHITE, mBoundingBox.size);
+  mOffset      = vec2(0, 0);
+  mBackground  = new Texture(TEMP::getPath(TEMP::OPTSMENU));
+  mActiveText  = new Text(mFont,
+                         "",
+                         mBoundingBox.topleft,
+                         10,
+                         Text::WHITE,
+                         mBoundingBox.size);
 }
 
 /**

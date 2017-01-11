@@ -2,9 +2,9 @@
 
 #include "../OpenGLHeaders.hpp"
 
+#include "../GUIMenu/Console.hpp"
 #include "../Input.hpp"
 #include "../Utils/Asset.hpp"
-#include "../GUIMenu/Console.hpp"
 #include "../Utils/Utils.hpp"
 
 Master::Master(Asset* asset, Input* input) : mInput(input), mAsset(asset) {
@@ -24,9 +24,11 @@ void Master::drawGUI() {
   mConsole->draw(mDeltaTime);
 }
 
-void Master::mouseMovementCB(double, double) { }
-void Master::mouseScrollCB(double, double) { }
-int Master::mouseButtonCB(int, int, int) { return State::NOCHANGE; }
+void Master::mouseMovementCB(double, double) {}
+void Master::mouseScrollCB(double, double) {}
+int  Master::mouseButtonCB(int, int, int) {
+  return State::NOCHANGE;
+}
 int Master::keyboardCB(int key, int, int action, int mods) {
   int stateChange = State::NOCHANGE;
 

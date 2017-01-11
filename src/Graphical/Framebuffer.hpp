@@ -13,7 +13,7 @@ class Texture;
 class CFG;
 
 namespace GL {
-  class Rectangle;
+class Rectangle;
 }
 
 class Framebuffer {
@@ -40,7 +40,7 @@ public:
   Framebuffer(std::string vs,
               std::string fs,
               const vec2& frameSize,
-              bool depth = false);
+              bool        depth = false);
 
   ~Framebuffer();
 
@@ -73,41 +73,61 @@ public:
   //! and setting the viewport back to normal
   void finalize();
 
-  void doQuad(GL::Rectangle* inQuad,
-              Program* p,
+  void doQuad(GL::Rectangle*               inQuad,
+              Program*                     p,
               const std::vector<Texture*>& t,
-              unsigned int tStart = 0);
+              unsigned int                 tStart = 0);
 
-  void doQuad(GL::Rectangle* inQuad, const std::vector<Texture*>& t, unsigned int tStart = 0);
-  void doQuad(Program* p, const std::vector<Texture*>& t, unsigned int tStart = 0);
+  void doQuad(GL::Rectangle*               inQuad,
+              const std::vector<Texture*>& t,
+              unsigned int                 tStart = 0);
+  void
+  doQuad(Program* p, const std::vector<Texture*>& t, unsigned int tStart = 0);
   void doQuad(const std::vector<Texture*>& t, unsigned int tStart = 0);
 
-  void nonClearQuad(GL::Rectangle* inQuad, Program* p, const std::vector<Texture*>& t, unsigned int tStart = 0);
-  void nonClearQuad(GL::Rectangle* inQuad, const std::vector<Texture*>& t, unsigned int tStart = 0);
-  void nonClearQuad(Program* p, const std::vector<Texture*>& t, unsigned int tStart = 0);
+  void nonClearQuad(GL::Rectangle*               inQuad,
+                    Program*                     p,
+                    const std::vector<Texture*>& t,
+                    unsigned int                 tStart = 0);
+  void nonClearQuad(GL::Rectangle*               inQuad,
+                    const std::vector<Texture*>& t,
+                    unsigned int                 tStart = 0);
+  void nonClearQuad(Program*                     p,
+                    const std::vector<Texture*>& t,
+                    unsigned int                 tStart = 0);
   void nonClearQuad(const std::vector<Texture*>& t, unsigned int tStart = 0);
 
   void queueStart();
-  void queueQuad(GL::Rectangle* inQuad, Program * p, const std::vector<Texture*>& t, unsigned int tStart = 0);
-  void queueQuad(GL::Rectangle* inQuad, const std::vector<Texture*>& t, unsigned int tStart = 0);
-  void queueQuad(Program* p, const std::vector<Texture*>& t, unsigned int tStart = 0);
+  void queueQuad(GL::Rectangle*               inQuad,
+                 Program*                     p,
+                 const std::vector<Texture*>& t,
+                 unsigned int                 tStart = 0);
+  void queueQuad(GL::Rectangle*               inQuad,
+                 const std::vector<Texture*>& t,
+                 unsigned int                 tStart = 0);
+  void queueQuad(Program*                     p,
+                 const std::vector<Texture*>& t,
+                 unsigned int                 tStart = 0);
   void queueQuad(const std::vector<Texture*>& t, unsigned int tStart = 0);
   void queueEnd();
 
   std::vector<float> getPixels(const Rect& r, GLenum type = GL_RED);
   float getPixel(const vec2& pos, GLenum type = GL_RED);
-  void printPixels(const Rect& r, GLenum type = GL_RED, std::string name = "Framebuffer");
+  void printPixels(const Rect& r,
+                   GLenum      type = GL_RED,
+                   std::string name = "Framebuffer");
   void clear();
   void save(std::string filename);
   void copy(Texture* toCopy);
 
-  Program* program();
-  Texture* texture();
+  Program*       program();
+  Texture*       texture();
   GL::Rectangle* quad();
 
   bool isInitialized();
 
-  static void init(CFG* cfg, std::string screenshotLoc = "./media/Screenshots/");
+  static void init(CFG*        cfg,
+                   std::string screenshotLoc = "./media/Screenshots/");
   static void deinit();
   static void initScreenshot();
   static void takeScreenshot();
@@ -115,6 +135,7 @@ public:
 
   static Program* copyProgram;
   static Program* clearProgram;
+
 private:
   void setup();
   /* void color(); */
@@ -135,10 +156,10 @@ private:
   Texture*       mTexture;
   GLuint         mFrameBuffer;
 
-  static int numSS;
+  static int         numSS;
   static std::string ssLoc;
-  static Program* drawProgram;
-  static CFG* cfg;
+  static Program*    drawProgram;
+  static CFG*        cfg;
 };
 
 #endif

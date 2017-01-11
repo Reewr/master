@@ -1,12 +1,12 @@
 #include "Dropdown.hpp"
 
-#include <tinyxml2.h>
 #include <iterator>
+#include <tinyxml2.h>
 
-#include "../Graphical/Texture.hpp"
-#include "../Graphical/Text.hpp"
-#include "../Utils/Utils.hpp"
 #include "../GLSL/Program.hpp"
+#include "../Graphical/Text.hpp"
+#include "../Graphical/Texture.hpp"
+#include "../Utils/Utils.hpp"
 
 /**
  * @brief
@@ -19,7 +19,8 @@
  * @param position
  *   Dropdown position
  */
-Dropdown::Dropdown(const std::vector<std::string>& options, const vec2& position) {
+Dropdown::Dropdown(const std::vector<std::string>& options,
+                   const vec2&                     position) {
   mBox         = new Texture(TEMP::getPath(TEMP::DROPDOWN));
   mOptionsList = new Texture(TEMP::getPath(TEMP::BLACK));
 
@@ -27,8 +28,8 @@ Dropdown::Dropdown(const std::vector<std::string>& options, const vec2& position
   hasChanged(false);
 
   mIsOptionsListVisible = false;
-  mMouseOption = -1;
-  mBoundingBox = Rect(position, vec2(0, 0));
+  mMouseOption          = -1;
+  mBoundingBox          = Rect(position, vec2(0, 0));
 
   // Padding on the top
   addOption("-----");
@@ -43,7 +44,7 @@ Dropdown::Dropdown(const std::vector<std::string>& options, const vec2& position
 
   // Add sizes together, assuming each element is ~25px
   mBigBoxRect = Rect(mBoundingBox.topleft,
-                     mBoundingBox.size + vec2(0, (mOptions.size())*25));
+                     mBoundingBox.size + vec2(0, (mOptions.size()) * 25));
 
   mBox->recalculateGeometry(mBoundingBox);
   mOptionsList->recalculateGeometry(mBigBoxRect);
@@ -67,7 +68,7 @@ Dropdown::Dropdown(const std::vector<std::string>& options, const vec2& position
  * @return
  *   a newly allocated dropdown that has to be deleted manually
  */
-Dropdown* Dropdown::fromXML(tinyxml2::XMLElement *element) {
+Dropdown* Dropdown::fromXML(tinyxml2::XMLElement* element) {
   if (element == nullptr) {
     throw Error("XMLElement is null");
   }
@@ -84,7 +85,7 @@ Dropdown* Dropdown::fromXML(tinyxml2::XMLElement *element) {
   }
 
   std::vector<std::string> strOptions;
-  tinyxml2::XMLElement* options = element->FirstChildElement();
+  tinyxml2::XMLElement*    options = element->FirstChildElement();
 
   for (; options != nullptr; options = options->NextSiblingElement()) {
     const char* option = options->Attribute("name");
@@ -248,10 +249,10 @@ void Dropdown::setActiveItem(const vec2& position) {
   for (unsigned int i = 0; i < mOptions.size(); i++) {
     if (mOptions[i]->isInside(position)) {
       // Ignore the padding element
-      if(i == 0)
+      if (i == 0)
         return;
 
-      mActiveOption = i;
+      mActiveOption         = i;
       mIsOptionsListVisible = false;
       setActiveOptionPosition();
       hasChanged(true);
@@ -329,7 +330,7 @@ void Dropdown::setActiveOptionPosition() {
     return;
 
   Text* selected = mOptions[mActiveOption];
-  int y = mBoundingBox.topleft.y + mOffset.y - selected->position().y;
+  int   y        = mBoundingBox.topleft.y + mOffset.y - selected->position().y;
   mActiveOptionPosition = vec2(selected->offset().x, y);
 }
 
@@ -360,7 +361,7 @@ void Dropdown::setPosition(const vec2& position) {
 void Dropdown::setOffset(const vec2& offset) {
   mOffset = offset;
 
-  for(unsigned int i = 0; i < mOptions.size(); i++)
+  for (unsigned int i = 0; i < mOptions.size(); i++)
     mOptions[i]->setOffset(offset);
 
   setActiveOptionPosition();

@@ -6,10 +6,9 @@ struct Asset;
 //! Fully Virtual class utilized by StateGame and StateMenu
 class State {
 public:
-
   enum {
     QUITALL = -2,
-    QUIT = -1,
+    QUIT    = -1,
     INIT,
     MAINMENU,
     GAME,
@@ -29,7 +28,7 @@ public:
 protected:
   State();
 
-  virtual void draw3D() = 0;
+  virtual void draw3D()  = 0;
   virtual void drawGUI() = 0;
 
   float mDeltaTime;

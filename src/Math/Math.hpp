@@ -1,8 +1,8 @@
 #ifndef MATH_HPP
 #define MATH_HPP
 
-#include <iostream>
 #include <cmath>
+#include <iostream>
 
 #include "basic/basic.hpp"
 
@@ -22,8 +22,8 @@
 #include "mat3/mat3.tpp"
 #include "mat4/mat4.tpp"
 
+#include "extra/MVP.hpp"
 #include "extra/camera.hpp"
 #include "extra/print.hpp"
-#include "extra/MVP.hpp"
 
 #endif

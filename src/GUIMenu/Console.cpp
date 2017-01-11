@@ -2,12 +2,12 @@
 
 #include "../OpenGLHeaders.hpp"
 
-#include "../Math/Math.hpp"
+#include "../GLSL/Program.hpp"
 #include "../Graphical/GL/Rectangle.hpp"
 #include "../Graphical/Text.hpp"
 #include "../Graphical/Texture.hpp"
-#include "../GLSL/Program.hpp"
 #include "../Input.hpp"
+#include "../Math/Math.hpp"
 #include "../State/State.hpp"
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
@@ -22,7 +22,7 @@ GConsole::GConsole(Input* input) {
   // Specific program for the console since the console
   // is just drawn in black with alpha
   mProgram = new Program("shaders/GUI/ColorRect.vsfs", 0);
-  mProgram->bindAttribs({"position", "texcoord"}, {0, 1});
+  mProgram->bindAttribs({ "position", "texcoord" }, { 0, 1 });
   mProgram->link();
   mProgram->setUniform("screenRes", mCFG->graphics.res, "guiOffset", vec2());
   mProgram->setUniform("guiColor", vec4(0, 0, 0, 0.7));
@@ -68,7 +68,7 @@ int GConsole::handleKeyInput(const int key, const int, const int mods) {
   if (!isBackspace && (key < 46 || key > 90))
     return State::NOCHANGE;
 
-  bool hasShift         = mods & GLFW_MOD_SHIFT;
+  bool        hasShift  = mods & GLFW_MOD_SHIFT;
   std::string character = Input::keyStrings[key];
 
   switch (key) {
@@ -76,7 +76,7 @@ int GConsole::handleKeyInput(const int key, const int, const int mods) {
       if (mCurrentText.length() > 0)
         mCurrentText.pop_back();
     case GLFW_KEY_ENTER:
-      //performCommand();
+    // performCommand();
     default:
       mCurrentText.append(hasShift ? Utils::toUpper(character) : character);
   }

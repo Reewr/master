@@ -2,38 +2,34 @@
 
 #include <tinyxml2.h>
 
-#include "../Graphical/Texture.hpp"
-#include "../Graphical/Text.hpp"
-#include "../Utils/Utils.hpp"
-#include "../Utils/CFG.hpp"
 #include "../GLSL/Program.hpp"
+#include "../Graphical/Text.hpp"
+#include "../Graphical/Texture.hpp"
+#include "../Utils/CFG.hpp"
+#include "../Utils/Utils.hpp"
 
 Inputbox::Inputbox(const Rect& r, const std::string text) {
   mTextBox  = new Texture(TEMP::getPath(TEMP::OPTSMENU));
   mInputBox = new Texture(TEMP::getPath(TEMP::SLIDER));
 
-  mInputBoxRect = Rect(
-    vec2(mCFG->graphics.res.x * 0.50 - 200, mCFG->graphics.res.y * 0.50 - 25),
-    vec2(400, 50)
-  );
+  mInputBoxRect = Rect(vec2(mCFG->graphics.res.x * 0.50 - 200,
+                            mCFG->graphics.res.y * 0.50 - 25),
+                       vec2(400, 50));
   mBoundingBox = r;
 
-  mText = new Text(mFont, text, {0, 0}, 15);
+  mText = new Text(mFont, text, { 0, 0 }, 15);
   mText->setColor(Text::WHITE);
 
-  vec2 textPos(
-    mBoundingBox.middle().x - mText->box().middle().x,
-    mBoundingBox.middle().y - mText->box().middle().y
-  );
+  vec2 textPos(mBoundingBox.middle().x - mText->box().middle().x,
+               mBoundingBox.middle().y - mText->box().middle().y);
 
   mText->setPosition(textPos);
 
   mInputBoxText = new Text(mFont, "Please input keybinding", vec2(0, 0), 15);
   mInputBoxText->setColor(Text::WHITE);
-  textPos = vec2(
-    mInputBoxRect.topleft.x + 200 - mInputBoxText->box().middle().x,
-    mInputBoxRect.topleft.y
-  );
+  textPos =
+    vec2(mInputBoxRect.topleft.x + 200 - mInputBoxText->box().middle().x,
+         mInputBoxRect.topleft.y);
 
   mInputBoxText->setPosition(textPos);
   mTextBox->recalculateGeometry(mBoundingBox);
@@ -59,7 +55,7 @@ Inputbox* Inputbox::fromXML(tinyxml2::XMLElement* element) {
     throw Error("XMLElement is null");
   }
 
-  Rect rect;
+  Rect        rect;
   const char* text = element->Attribute("text");
 
   if (text == nullptr) {
@@ -111,10 +107,9 @@ bool Inputbox::changeText(const std::string text, const bool forceChange) {
 
   mText->setPosition(vec2(0, 0));
   mText->setText(text);
-  mText->setPosition(vec2(
-    mBoundingBox.middle().x - mText->box().bottomright().x / 2,
-    mBoundingBox.middle().y - mText->box().bottomright().y / 2)
-  );
+  mText->setPosition(
+    vec2(mBoundingBox.middle().x - mText->box().bottomright().x / 2,
+         mBoundingBox.middle().y - mText->box().bottomright().y / 2));
 
   mInputIsVisible = false;
   return true;

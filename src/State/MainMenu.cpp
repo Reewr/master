@@ -1,33 +1,36 @@
 #include "MainMenu.hpp"
 
-#include "../Utils/Asset.hpp"
-#include "../Utils/Utils.hpp"
-#include "../Graphical/Texture.hpp"
-#include "../Graphical/Framebuffer.hpp"
-#include "../Graphical/GL/Rectangle.hpp"
-#include "../GUIMenu/OptionsMenu.hpp"
 #include "../GUI/Menu.hpp"
 #include "../GUI/Window.hpp"
+#include "../GUIMenu/OptionsMenu.hpp"
+#include "../Graphical/Framebuffer.hpp"
+#include "../Graphical/GL/Rectangle.hpp"
+#include "../Graphical/Texture.hpp"
 #include "../Input.hpp"
+#include "../Utils/Asset.hpp"
+#include "../Utils/Utils.hpp"
 
 MainMenu::MainMenu(Asset* asset, Input* input) {
   mAsset = asset;
   mInput = input;
 
-  mMenu = new Window("NONE", Rect(
-    vec2(asset->cfg.graphics.res.x - 200, asset->cfg.graphics.res.y - 225),
-    vec2(asset->cfg.graphics.res.x, asset->cfg.graphics.res.y))
-  );
+  mMenu = new Window("NONE",
+                     Rect(vec2(asset->cfg.graphics.res.x - 200,
+                               asset->cfg.graphics.res.y - 225),
+                          vec2(asset->cfg.graphics.res.x,
+                               asset->cfg.graphics.res.y)));
   mMenu->isVisible(true);
   mMenu->addMenu("MainMenu",
-    {"Master Thesis", "Start Game", "Options", "Exit"}, {0, 0},
-    {20, 50, Menu::VERTICAL, Text::WHITE}
-  );
+                 { "Master Thesis", "Start Game", "Options", "Exit" },
+                 { 0, 0 },
+                 { 20, 50, Menu::VERTICAL, Text::WHITE });
 
   mOptionsMenu = new OptionsMenu(input);
-  mBackground = new Window(TEMP::getPath(TEMP::SPACE), Rect(
-    0, 0, asset->cfg.graphics.res.x, asset->cfg.graphics.res.y)
-  );
+  mBackground  = new Window(TEMP::getPath(TEMP::SPACE),
+                           Rect(0,
+                                0,
+                                asset->cfg.graphics.res.x,
+                                asset->cfg.graphics.res.y));
   mBackground->isVisible(true);
   log("MainMenu: Initialized successfully...");
 }
@@ -58,7 +61,7 @@ void MainMenu::drawGUI() {
 }
 
 int MainMenu::handleMenuActionInput() {
-  switch(mMenu->menu("MainMenu")->getActiveMenu()) {
+  switch (mMenu->menu("MainMenu")->getActiveMenu()) {
     case 0:
       return State::MASTER_THESIS;
     case 1:
@@ -78,7 +81,7 @@ int MainMenu::keyboardCB(int key, int, int action, int) {
     return State::NOCHANGE;
 
   if (mMenu->isVisible()) {
-    if(key == GLFW_KEY_ENTER)
+    if (key == GLFW_KEY_ENTER)
       return handleMenuActionInput();
     else
       mMenu->menu("MainMenu")->setActiveMenuKeyboard(key);
@@ -86,9 +89,9 @@ int MainMenu::keyboardCB(int key, int, int action, int) {
 
   int retOpt = mOptionsMenu->handleKeyInput(key, action);
 
-  if(retOpt == 0)
+  if (retOpt == 0)
     mMenu->isVisible(true);
-  else if(retOpt == State::REFRESH || retOpt == State::WINREFRESH)
+  else if (retOpt == State::REFRESH || retOpt == State::WINREFRESH)
     return retOpt;
 
   return State::NOCHANGE;
@@ -109,8 +112,7 @@ int MainMenu::mouseButtonCB(int button, int action, int) {
     if (retOpt == 0) {
       mMenu->isVisible(true);
       return State::NOCHANGE;
-    }
-    else if(retOpt == State::REFRESH || retOpt == State::WINREFRESH)
+    } else if (retOpt == State::REFRESH || retOpt == State::WINREFRESH)
       return retOpt;
   }
   return State::NOCHANGE;

@@ -2,22 +2,22 @@
 
 #include <tinyxml2.h>
 
-#include "Slider.hpp"
-#include "Dropdown.hpp"
 #include "Checkbox.hpp"
+#include "Dropdown.hpp"
 #include "Inputbox.hpp"
+#include "Slider.hpp"
 
-#include "../Graphical/Texture.hpp"
+#include "../GLSL/Program.hpp"
 #include "../Graphical/Text.hpp"
+#include "../Graphical/Texture.hpp"
 #include "../Utils/Asset.hpp"
 #include "../Utils/Utils.hpp"
-#include "../GLSL/Program.hpp"
 
 Window::Window() {
   mTex   = NULL;
   mTitle = NULL;
 
-  mBoundingBox = Rect({0, 0}, {0, 0});
+  mBoundingBox = Rect({ 0, 0 }, { 0, 0 });
 }
 
 Window::Window(std::string texFilename, Rect r) {
@@ -37,10 +37,11 @@ void handleGUIElement(Window* winodw, tinyxml2::XMLElement* element);
 void handleMenuElement(Window* window, tinyxml2::XMLElement* element) {
   tinyxml2::XMLElement* itemElement = element->FirstChildElement();
 
-  for(; itemElement != nullptr; itemElement = itemElement->NextSiblingElement()) {
+  for (; itemElement != nullptr;
+       itemElement = itemElement->NextSiblingElement()) {
     tinyxml2::XMLElement* child = itemElement->FirstChildElement();
 
-    for(; child != nullptr; child = child->NextSiblingElement()) {
+    for (; child != nullptr; child = child->NextSiblingElement()) {
       handleGUIElement(window, child);
     }
   }
@@ -55,8 +56,8 @@ void handleGUIElement(Window* window, tinyxml2::XMLElement* element) {
     throw Error("XMLElement: '" + type + "' has no name attribute");
   }
 
-  std::string name = std::string(cStrName);
-  GUI *widget      = nullptr;
+  std::string name   = std::string(cStrName);
+  GUI*        widget = nullptr;
 
   if (type == "guidropdown") {
     widget = Dropdown::fromXML(element);
@@ -91,9 +92,10 @@ Window* Window::fromXML(tinyxml2::XMLElement* element) {
     throw Error("XMLElement has no attribute 'name'");
   }
 
-  std::string texture = std::string(cStrTexture == nullptr ? "NONE" : cStrTexture);
-  std::string name    = std::string(cStrName);
-  std::string title   = std::string(cStrTitle == nullptr ? "" : cStrTitle);
+  std::string texture =
+    std::string(cStrTexture == nullptr ? "NONE" : cStrTexture);
+  std::string name  = std::string(cStrName);
+  std::string title = std::string(cStrTitle == nullptr ? "" : cStrTitle);
 
   Window* window = new Window();
 
@@ -108,7 +110,8 @@ Window* Window::fromXML(tinyxml2::XMLElement* element) {
     return window;
   }
 
-  for(; childElement != nullptr; childElement = childElement->NextSiblingElement()) {
+  for (; childElement != nullptr;
+       childElement = childElement->NextSiblingElement()) {
     handleGUIElement(window, childElement);
   }
 
@@ -119,7 +122,7 @@ Window::~Window() {
   if (mTex != NULL)
     delete mTex;
 
-  if(mTitle != NULL)
+  if (mTitle != NULL)
     delete mTitle;
 
   Utils::deleteMap(mMenues);
@@ -130,18 +133,23 @@ Window::~Window() {
   Utils::deleteMap(mInputboxes);
 }
 
-int Window::handleKeyInput(int, int) {return -1;}
-int Window::handleMouseButton(int, int) {return -1;}
-int Window::handleAction() {return -1;}
+int Window::handleKeyInput(int, int) {
+  return -1;
+}
+int Window::handleMouseButton(int, int) {
+  return -1;
+}
+int Window::handleAction() {
+  return -1;
+}
 
 void Window::addTitle(std::string s) {
   if (mTitle != NULL)
     delete mTitle;
 
   mTitle = new Text(mFont, s, vec2(0, 0), 40);
-  mTitle->setPosition(vec2(
-    mBoundingBox.middle().x - mTitle->box().middle().x,
-    mBoundingBox.topleft.y + 20));
+  mTitle->setPosition(vec2(mBoundingBox.middle().x - mTitle->box().middle().x,
+                           mBoundingBox.topleft.y + 20));
   mTitle->setColor(mTex != NULL ? Text::WHITE : Text::BLACK);
 }
 
@@ -149,7 +157,7 @@ void Window::addWindow(std::string name, Rect r, std::string tex) {
   if (mWindows.count(name))
     delete mWindows[name];
 
-  r = Rect(mBoundingBox.topleft + r.topleft, r.size);
+  r              = Rect(mBoundingBox.topleft + r.topleft, r.size);
   mWindows[name] = new Window(tex, r);
 }
 
@@ -208,19 +216,19 @@ void Window::add(std::string name, GUI* widget) {
   }
 }
 
-void Window::addMenu(std::string name,
+void Window::addMenu(std::string                     name,
                      const std::vector<std::string>& names,
-                     const vec2& pos,
-                     const Menu::MenuSettings& m) {
+                     const vec2&                     pos,
+                     const Menu::MenuSettings&       m) {
   if (mMenues.count(name))
     delete mMenues[name];
-  vec2 newPos = mBoundingBox.topleft + pos;
+  vec2 newPos   = mBoundingBox.topleft + pos;
   mMenues[name] = new Menu(names, newPos, m);
 }
 
-void Window::addMenuItem(std::string name,
-                         std::string text,
-                         const vec2& pos,
+void Window::addMenuItem(std::string               name,
+                         std::string               text,
+                         const vec2&               pos,
                          const Menu::MenuSettings& m) {
 
   if (!mMenues.count(name))
@@ -232,17 +240,17 @@ void Window::addMenuItem(std::string name,
 void Window::addSlider(std::string name, vec2 pos, float scale) {
   if (mSliders.count(name))
     delete mSliders[name];
-  pos = mBoundingBox.topleft + pos;
+  pos            = mBoundingBox.topleft + pos;
   mSliders[name] = new Slider(pos, scale);
 }
 
-void Window::addDropdown(std::string name,
+void Window::addDropdown(std::string              name,
                          std::vector<std::string> options,
-                         vec2 pos) {
+                         vec2                     pos) {
   if (mDropdowns.count(name))
     delete mDropdowns[name];
 
-  pos = mBoundingBox.topleft + pos;
+  pos              = mBoundingBox.topleft + pos;
   mDropdowns[name] = new Dropdown(options, pos);
   sortDropdowns();
 }
@@ -251,7 +259,7 @@ void Window::addCheckbox(std::string name, std::string box, vec2 pos) {
   if (mCheckboxes.count(name))
     delete mCheckboxes[name];
 
-  pos = mBoundingBox.topleft + pos;
+  pos               = mBoundingBox.topleft + pos;
   mCheckboxes[name] = new Checkbox(box, pos);
 }
 
@@ -259,7 +267,7 @@ void Window::addInputbox(std::string name, Rect r, std::string text) {
   if (mInputboxes.count(name))
     delete mInputboxes[name];
 
-  r = Rect(mBoundingBox.topleft + r.topleft, r.size);
+  r                 = Rect(mBoundingBox.topleft + r.topleft, r.size);
   mInputboxes[name] = new Inputbox(r, text);
 }
 
@@ -357,10 +365,10 @@ std::map<std::string, Window*> Window::windows() {
 void Window::sortDropdowns() {
   mDrawDropdowns.clear();
 
-  for(auto a : mDropdowns)
+  for (auto a : mDropdowns)
     mDrawDropdowns.push_back(a.second);
 
-  mDrawDropdowns.sort([](Dropdown* a, Dropdown* b){
+  mDrawDropdowns.sort([](Dropdown* a, Dropdown* b) {
     return a->box().topleft.y > b->box().topleft.y;
   });
 }

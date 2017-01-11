@@ -4,8 +4,8 @@
 #include <string>
 
 #include "../GUI/Window.hpp"
-#include "../Math/Math.hpp"
 #include "../Import/UILoader.hpp"
+#include "../Math/Math.hpp"
 
 class Input;
 
@@ -19,7 +19,7 @@ public:
 
 private:
   Import::UILoader mUiLoader;
-  Input* mInput;
+  Input*           mInput;
 };
 
 #endif

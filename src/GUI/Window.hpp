@@ -1,14 +1,14 @@
 #ifndef GUI_WINDOW_HPP
 #define GUI_WINDOW_HPP
 
-#include <vector>
 #include <list>
 #include <map>
 #include <string>
+#include <vector>
 
+#include "../Math/MathCD.hpp"
 #include "GUI.hpp"
 #include "Menu.hpp"
-#include "../Math/MathCD.hpp"
 
 class Slider;
 class Text;
@@ -18,7 +18,7 @@ class Inputbox;
 struct Texture;
 
 namespace tinyxml2 {
-  class XMLElement;
+class XMLElement;
 }
 
 //! Window is a GUI class that creates a block to act as a window on the screen
@@ -44,14 +44,14 @@ public:
 
   //! Add a GUI object to the window.
   void addWindow(std::string name, Rect r, std::string tex = "NONE");
-  void addMenu(std::string name,
+  void addMenu(std::string                     name,
                const std::vector<std::string>& names,
-               const vec2& startPos,
-               const Menu::MenuSettings& m = Menu::MenuSettings());
+               const vec2&                     startPos,
+               const Menu::MenuSettings&       m = Menu::MenuSettings());
 
-  void addMenuItem(std::string name,
-                   std::string text,
-                   const vec2& pos,
+  void addMenuItem(std::string               name,
+                   std::string               text,
+                   const vec2&               pos,
                    const Menu::MenuSettings& m = Menu::MenuSettings());
 
   void addSlider(std::string name, vec2 pos, float scale = 1);
@@ -70,12 +70,12 @@ public:
   Window* window(std::string name);
 
   //! Returns a map of different things
-  std::map<std::string, Menu*> menues();
-  std::map<std::string, Slider*> sliders();
+  std::map<std::string, Menu*>     menues();
+  std::map<std::string, Slider*>   sliders();
   std::map<std::string, Dropdown*> dropdowns();
   std::map<std::string, Checkbox*> checkboxes();
   std::map<std::string, Inputbox*> inputboxes();
-  std::map<std::string, Window*> windows();
+  std::map<std::string, Window*>   windows();
 
   virtual int handleKeyInput(int key, int action);
   virtual int handleMouseButton(int button, int action);
@@ -89,9 +89,9 @@ protected:
 
   std::list<Dropdown*> mDrawDropdowns;
 
-  std::map<std::string, Menu*> mMenues;
-  std::map<std::string, Slider*> mSliders;
-  std::map<std::string, Window*> mWindows;
+  std::map<std::string, Menu*>     mMenues;
+  std::map<std::string, Slider*>   mSliders;
+  std::map<std::string, Window*>   mWindows;
   std::map<std::string, Dropdown*> mDropdowns;
   std::map<std::string, Checkbox*> mCheckboxes;
   std::map<std::string, Inputbox*> mInputboxes;

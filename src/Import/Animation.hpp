@@ -7,14 +7,13 @@
 
 namespace Import {
 
-  struct Animation : XML {
-    int n = 0;
-    int l = 0;
-    std::vector<float> fs;
+struct Animation : XML {
+  int                n = 0;
+  int                l = 0;
+  std::vector<float> fs;
 
-    Animation (const char* filePath);
-  };
-
+  Animation(const char* filePath);
+};
 }
 
 #endif

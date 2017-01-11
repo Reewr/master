@@ -9,7 +9,6 @@ struct MVP {
   mat4 proj;
 
   constexpr operator mat4();
-
 };
 
 #include "MVP.tpp"

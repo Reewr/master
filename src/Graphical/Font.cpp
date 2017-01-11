@@ -3,7 +3,7 @@
 #include "../GLSL/Program.hpp"
 #include "../Utils/Utils.hpp"
 
-int Font::numFonts = 0;
+int        Font::numFonts = 0;
 FT_Library Font::fontLib;
 
 Font::Glyph::Glyph() {}
@@ -66,8 +66,10 @@ Font::~Font() {
  * @param size
  */
 void Font::loadFromFile(const std::string& filename, int size) {
-  if (mPages.count(size) > 0) return;
-  if (FT_New_Face(fontLib, filename.c_str(), 0, &mFace)) return;
+  if (mPages.count(size) > 0)
+    return;
+  if (FT_New_Face(fontLib, filename.c_str(), 0, &mFace))
+    return;
 
   mFilename = filename;
   mPages[size];
@@ -78,8 +80,8 @@ void Font::loadFromFile(const std::string& filename, int size) {
 
   int rowW = 0;
   int rowH = 0;
-  int w = 0;
-  int h = 0;
+  int w    = 0;
+  int h    = 0;
 
   // goes through the different characters, loading them
   // into memory and figuring out the size of the texture
@@ -125,14 +127,13 @@ void Font::loadFromFile(const std::string& filename, int size) {
 
     if (offsetX + g->bitmap.width + 1 >= 1024) {
       offsetY += rowH;
-      rowH = 0;
+      rowH    = 0;
       offsetX = 0;
     }
 
-    page.texture.changeSubTex(
-      vec2(offsetX, offsetY), vec2(g->bitmap.width, g->bitmap.rows),
-      g->bitmap.buffer
-    );
+    page.texture.changeSubTex(vec2(offsetX, offsetY),
+                              vec2(g->bitmap.width, g->bitmap.rows),
+                              g->bitmap.buffer);
 
     page.glyphs[i] = Font::Glyph(g, vec2(offsetX, offsetY), vec2(w, h));
 

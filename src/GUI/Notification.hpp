@@ -11,17 +11,14 @@ class Texture;
 
 class Notification : public GUI {
 public:
-
   //! Types of Notifications
-  enum {
-    LOWPOWER,
-    IDLEROBOT
-  };
+  enum { LOWPOWER, IDLEROBOT };
 
   //! Default constructor
   Notification();
 
-  //! Constructor where rect = position and size and about = type of notification
+  //! Constructor where rect = position and size and about = type of
+  //! notification
   Notification(const Rect& rect, const int about, const bool isMinimized);
 
   //! Deletes glBuffer
@@ -54,8 +51,8 @@ private:
 
   Texture* mNotTex;
   Texture* mIcon;
-  Text* mButtonText;
-  Text* mText;
+  Text*    mButtonText;
+  Text*    mText;
 
   vec2 mNewPos;
 };

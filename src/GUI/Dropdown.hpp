@@ -4,19 +4,18 @@
 #include <string>
 #include <vector>
 
-#include "GUI.hpp"
 #include "../Math/MathCD.hpp"
+#include "GUI.hpp"
 
 class Texture;
 class Text;
 
 namespace tinyxml2 {
-  class XMLElement;
+class XMLElement;
 }
 
 class Dropdown : public GUI {
 public:
-
   //! Creates a dropbox with predetermined textures for dropboxes.
   Dropdown(const std::vector<std::string>& options, const vec2& position);
 
@@ -70,7 +69,7 @@ private:
 
   Texture* mBox;
   Texture* mOptionsList;
-  vec2 mActiveOptionPosition;
+  vec2     mActiveOptionPosition;
 
   std::vector<Text*> mOptions;
 

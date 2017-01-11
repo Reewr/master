@@ -1,7 +1,7 @@
 #include "Menu.hpp"
 
-#include <tinyxml2.h>
 #include "../OpenGLHeaders.hpp"
+#include <tinyxml2.h>
 
 #include "../Graphical/Text.hpp"
 #include "../Utils/Asset.hpp"
@@ -38,7 +38,9 @@ Menu::Menu() {
  * @param m
  *   The settings for the menu item
  */
-Menu::Menu(const std::string text, const vec2& position, const MenuSettings& m) {
+Menu::Menu(const std::string   text,
+           const vec2&         position,
+           const MenuSettings& m) {
   mActiveMenu = -1;
   isVisible(true);
   addMenuItem(text, position, m);
@@ -61,8 +63,8 @@ Menu::Menu(const std::string text, const vec2& position, const MenuSettings& m) 
  *   The settings for the menu items
  */
 Menu::Menu(const std::vector<std::string>& names,
-           const vec2& startPosition,
-           const MenuSettings& m) {
+           const vec2&                     startPosition,
+           const MenuSettings&             m) {
   mActiveMenu = -1;
   isVisible(true);
   addMenuItems(names, startPosition, m);
@@ -74,7 +76,8 @@ Menu::Menu(const std::vector<std::string>& names,
  *
  *   Syntax:
  *
- *   <guimenu name="Graphics" x="55" y="35" size="15" ori="1" offset="0" color="1">
+ *   <guimenu name="Graphics" x="55" y="35" size="15" ori="1" offset="0"
+ * color="1">
  *     <item name="Resolution x="55" y="35"/>
  *     <item name="Vsync x="225" y="35"/>
  *     <item name="Display Mode x="575" y="35"/>
@@ -106,7 +109,8 @@ Menu* Menu::fromXML(tinyxml2::XMLElement* element) {
 
   // retrieve the menu settins, setting default if they dont
   // exists
-  auto getMenuSettings = [](tinyxml2::XMLElement* innerElement) -> MenuSettings {
+  auto getMenuSettings =
+    [](tinyxml2::XMLElement* innerElement) -> MenuSettings {
     MenuSettings ms;
 
     if (innerElement->QueryFloatAttribute("size", &ms.size) != 0) {
@@ -129,9 +133,9 @@ Menu* Menu::fromXML(tinyxml2::XMLElement* element) {
   };
 
   // Menu settings
-  MenuSettings mainMs = getMenuSettings(element);
-  vec2 mainPosition   = getPosition(element);
-  const char* name    = element->Attribute("name");
+  MenuSettings mainMs       = getMenuSettings(element);
+  vec2         mainPosition = getPosition(element);
+  const char*  name         = element->Attribute("name");
 
   if (name == nullptr) {
     throw Error("XMLElement has no attribute 'name'");
@@ -142,10 +146,11 @@ Menu* Menu::fromXML(tinyxml2::XMLElement* element) {
 
   // Go through each child item, if they exist,
   // and do exactly the same as we did above
-  for (; childElement != nullptr; childElement = childElement->NextSiblingElement()) {
-    MenuSettings ms  = getMenuSettings(childElement);
-    const char* name = childElement->Attribute("name");
-    vec2 position    = getPosition(childElement);
+  for (; childElement != nullptr;
+       childElement = childElement->NextSiblingElement()) {
+    MenuSettings ms       = getMenuSettings(childElement);
+    const char*  name     = childElement->Attribute("name");
+    vec2         position = getPosition(childElement);
 
     if (name == nullptr) {
       throw Error("XMLElement has no attribute 'name'");
@@ -158,7 +163,7 @@ Menu* Menu::fromXML(tinyxml2::XMLElement* element) {
 }
 
 Menu::~Menu() {
-  for(unsigned int i = 0; i < mMenuItems.size(); i++)
+  for (unsigned int i = 0; i < mMenuItems.size(); i++)
     delete mMenuItems[i];
 
   mMenuItems.clear();
@@ -179,8 +184,8 @@ Menu::~Menu() {
  * @param m
  *   The menu settings to use
  */
-void Menu::addMenuItem(const std::string text,
-                       const vec2& position,
+void Menu::addMenuItem(const std::string   text,
+                       const vec2&         position,
                        const MenuSettings& m) {
   Text* item = new Text(mFont, text, position, m.size);
   item->setColor(m.color);
@@ -205,8 +210,8 @@ void Menu::addMenuItem(const std::string text,
  *   The menu settings to use
  */
 void Menu::addMenuItems(const std::vector<std::string>& texts,
-                        const vec2& startPosition,
-                        const MenuSettings& m) {
+                        const vec2&                     startPosition,
+                        const MenuSettings&             m) {
   mBoundingBox.topleft = startPosition;
 
   for (unsigned int i = 0; i < texts.size(); i++) {
@@ -215,15 +220,15 @@ void Menu::addMenuItems(const std::vector<std::string>& texts,
 
     if (mMenuItems.size() >= 1) {
       Text* lastElement = mMenuItems.back();
-      vec2 bottomRight  = lastElement->box().bottomright();
+      vec2  bottomRight = lastElement->box().bottomright();
 
       if (mMenuItems.size() >= 1 && m.ori == VERTICAL)
-        newY = bottomRight.y + m.offset/2;
+        newY = bottomRight.y + m.offset / 2;
       else if (mMenuItems.size() >= 1 && m.ori == HORIZONTAL)
         newX = bottomRight.x + m.offset;
     }
 
-    addMenuItem(texts[i], {newX, newY}, m);
+    addMenuItem(texts[i], { newX, newY }, m);
   }
 }
 
@@ -240,7 +245,8 @@ void Menu::addMenuItems(const std::vector<std::string>& texts,
  * @return index
  */
 int Menu::isInsideMenuElement(const vec2& position) const {
-  if (!isVisible()) return -1;
+  if (!isVisible())
+    return -1;
 
   for (unsigned int i = 0; i < mMenuItems.size(); i++) {
     if (mMenuItems[i]->isInside(position))
@@ -281,13 +287,15 @@ void Menu::setActiveMenu(const int index) {
  * @param key
  */
 void Menu::setActiveMenuKeyboard(const int key) {
-  if (!isVisible()) return;
+  if (!isVisible())
+    return;
 
   int activeMenu = -2;
 
   if (key == GLFW_KEY_UP) {
-    int size   = mMenuItems.size() - 1;
-    activeMenu = mActiveMenu == -1 || mActiveMenu == 0 ? size - 1 : mActiveMenu - 1;
+    int size = mMenuItems.size() - 1;
+    activeMenu =
+      mActiveMenu == -1 || mActiveMenu == 0 ? size - 1 : mActiveMenu - 1;
   } else if (key == GLFW_KEY_DOWN) {
     int size   = mMenuItems.size() - 1;
     activeMenu = mActiveMenu == size || mActiveMenu == -1 ? 0 : size - 1;
@@ -329,8 +337,9 @@ int Menu::getActiveMenu() const {
  * @param float
  */
 void Menu::draw(float) const {
-  if (!isVisible()) return;
+  if (!isVisible())
+    return;
 
-  for(unsigned int i = 0; i < mMenuItems.size(); i++)
+  for (unsigned int i = 0; i < mMenuItems.size(); i++)
     mMenuItems[i]->draw();
 }

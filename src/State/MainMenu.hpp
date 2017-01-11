@@ -22,20 +22,21 @@ public:
   //! Runs all the functions that needs updating (animations, draw etc)
   void update(float deltaTime);
 
-  //! If keyboard input indicates that there is a state change, return int of state
+  //! If keyboard input indicates that there is a state change, return int of
+  //! state
   int keyboardCB(int key, int scan, int action, int mods);
 
   //!
   void mouseMovementCB(double x, double y);
 
-  //! If mouse input indicates that there is a state change, returns int of state
+  //! If mouse input indicates that there is a state change, returns int of
+  //! state
   int mouseButtonCB(int button, int action, int mods);
 
   //!
   void mouseScrollCB(double offsetx, double offsety);
 
 protected:
-
   int handleMenuActionInput();
 
   void draw3D();

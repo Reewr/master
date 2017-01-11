@@ -8,12 +8,13 @@
 #include "../Utils/Utils.hpp"
 #include "XML.hpp"
 
-std::vector<std::string> split (std::string s, std::string delims) {
-  std::vector<std::string> ws = {""};
+std::vector<std::string> split(std::string s, std::string delims) {
+  std::vector<std::string> ws = { "" };
 
-  for (const auto& c: s) {
+  for (const auto& c : s) {
     if (delims.find(c) != std::string::npos) {
-      if (ws.back() == "") continue;
+      if (ws.back() == "")
+        continue;
       ws.push_back("");
     } else {
       ws.back() += c;
@@ -26,19 +27,19 @@ std::vector<std::string> split (std::string s, std::string delims) {
   return ws;
 }
 
-std::vector<float> map_to_float (std::vector<std::string> ws) {
+std::vector<float> map_to_float(std::vector<std::string> ws) {
   std::vector<float> fs;
   fs.resize(ws.size());
 
   for (unsigned int i = 0; i < ws.size(); i++)
-    fs[i] = atof(ws[i].c_str());
+    fs[i]             = atof(ws[i].c_str());
 
   return fs;
 }
 
-Import::Animation::Animation (const char* filePath) : XML(filePath) {
-  Error err = "Error while parsing '" + std::string(filePath) + "'.";
-  int success = tinyxml2::XMLError::XML_SUCCESS;
+Import::Animation::Animation(const char* filePath) : XML(filePath) {
+  Error err     = "Error while parsing '" + std::string(filePath) + "'.";
+  int   success = tinyxml2::XMLError::XML_SUCCESS;
 
   tinyxml2::XMLElement* root = this->doc->RootElement();
 
@@ -51,7 +52,7 @@ Import::Animation::Animation (const char* filePath) : XML(filePath) {
     throw err;
   }
 
-  fs.resize(n*l + l);
+  fs.resize(n * l + l);
   float* ptr = &fs[0];
 
   tinyxml2::XMLElement* frame = root->FirstChildElement("frame");
@@ -62,18 +63,18 @@ Import::Animation::Animation (const char* filePath) : XML(filePath) {
     }
 
     float t = 0;
-    if (frame->QueryFloatAttribute ("time", &t) != success) {
+    if (frame->QueryFloatAttribute("time", &t) != success) {
       fatalError("missing or malformed time attribute in anim file");
       throw err;
     }
     *ptr = t;
     ptr++;
 
-    std::string s = frame->GetText();
+    std::string        s = frame->GetText();
     std::vector<float> f = map_to_float(split(s, " \n\t"));
 
     for (int j = 0; j < n; ++j) {
-      if (f.size() <= (size_t)j) {
+      if (f.size() <= (size_t) j) {
         fatalError("incomplete frame data in anim file");
         throw err;
       }
@@ -82,8 +83,8 @@ Import::Animation::Animation (const char* filePath) : XML(filePath) {
       ptr++;
     }
 
-    if (f.size() > (size_t)n)
-      warning ("excessive frame data in '",filePath,"'");
+    if (f.size() > (size_t) n)
+      warning("excessive frame data in '", filePath, "'");
 
     frame = frame->NextSiblingElement("frame");
   }

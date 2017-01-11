@@ -1,11 +1,11 @@
 #include "XML.hpp"
 
-#include <tinyxml2.h>
 #include <sstream>
+#include <tinyxml2.h>
 
 #include "../Utils/Utils.hpp"
 
-Import::XML::XML (const char* filePath) {
+Import::XML::XML(const char* filePath) {
   doc = new tinyxml2::XMLDocument();
   doc->LoadFile(filePath);
 
@@ -23,6 +23,6 @@ Import::XML::XML (const char* filePath) {
   }
 }
 
-Import::XML::~XML () {
+Import::XML::~XML() {
   delete doc;
 }

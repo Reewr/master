@@ -3,8 +3,8 @@
 
 #include <string>
 
-#include "GUI.hpp"
 #include "../Math/Math.hpp"
+#include "GUI.hpp"
 
 class Text;
 class Texture;

@@ -1,8 +1,8 @@
 #ifndef ENGINE_HPP
 #define ENGINE_HPP
 
-#include <string>
 #include <stack>
+#include <string>
 
 #include "OpenGLHeaders.hpp"
 
@@ -36,10 +36,10 @@ public:
   void updateState(float deltaTime);
 
   //! Initializes the engine and creates the first state
-  bool initialize(int argc,
+  bool initialize(int   argc,
                   char* argv[],
-                  int isRefresh = State::INIT,
-                  int initState = State::MAINMENU);
+                  int   isRefresh = State::INIT,
+                  int   initState = State::MAINMENU);
 
   //! Sends the input to current state. If current state returns an int
   //! of value [0-1] changes state.
@@ -58,7 +58,6 @@ public:
   void runLoop();
 
 protected:
-
   //! Initializesers of the different libraries that are being used
   bool initGLFW();
   bool initOpenGLBindings();
@@ -78,10 +77,10 @@ protected:
 
   std::string cfgPath;
 
-  State *current;
-  Input *input;
-  GLFWwindow *window;
-  Asset *asset;
+  State*      current;
+  Input*      input;
+  GLFWwindow* window;
+  Asset*      asset;
 };
 
 #endif

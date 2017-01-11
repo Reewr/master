@@ -1,9 +1,9 @@
 #ifndef GRAPHICAL_FONT_HPP
 #define GRAPHICAL_FONT_HPP
 
+#include <map>
 #include <string>
 #include <vector>
-#include <map>
 
 #include "../OpenGLHeaders.hpp"
 
@@ -19,7 +19,6 @@ class Program;
 
 class Font {
 public:
-
   //! Represents a character within the font.
   struct Glyph {
     Glyph();
@@ -56,22 +55,20 @@ public:
   Texture& getTexture(int size);
 
 private:
-
   struct Page {
     Page();
-    vec2 texSize;
+    vec2    texSize;
     Texture texture;
-    vec2 metrics;
+    vec2    metrics;
     std::map<char, Glyph> glyphs;
   };
 
   std::map<unsigned int, Page> mPages;
   std::string mFilename;
-  FT_Face mFace;
+  FT_Face     mFace;
 
-  static int numFonts;
+  static int        numFonts;
   static FT_Library fontLib;
-
 };
 
 #endif

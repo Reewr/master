@@ -2,9 +2,9 @@
 
 #include <tinyxml2.h>
 
-#include "../Graphical/Texture.hpp"
-#include "../Graphical/Text.hpp"
 #include "../GLSL/Program.hpp"
+#include "../Graphical/Text.hpp"
+#include "../Graphical/Texture.hpp"
 #include "../Utils/Utils.hpp"
 
 Slider::Slider(const vec2& pos, const float scale, const std::string valSign) {
@@ -15,8 +15,8 @@ Slider::Slider(const vec2& pos, const float scale, const std::string valSign) {
   mValSign    = valSign;
 
   mBoundingBox = Rect(pos, mBackground->getSize() * scale);
-  mButtonRect = Rect(pos, mButton->getSize() * scale);
-  mButtonRect.topleft.y -= mButtonRect.size.y/2;
+  mButtonRect  = Rect(pos, mButton->getSize() * scale);
+  mButtonRect.topleft.y -= mButtonRect.size.y / 2;
 
   mBackground->recalculateGeometry(mBoundingBox);
   mButton->recalculateGeometry(mButtonRect);
@@ -29,8 +29,8 @@ Slider* Slider::fromXML(tinyxml2::XMLElement* element) {
     throw Error("XMLElement is null");
   }
 
-  vec2 position;
-  float scale;
+  vec2        position;
+  float       scale;
   const char* valueSign = element->Attribute("scale");
 
   if (element->QueryFloatAttribute("x", &position.x) != 0) {
@@ -97,7 +97,8 @@ float Slider::moveSlider(const vec2& position) {
   mButtonOffset.x = x - mBoundingBox.topleft.x - mButtonRect.size.x / 2;
 
   // Find out what value we should display
-  float value = mButtonOffset.x / (mBoundingBox.size.x - mButtonRect.size.x / 2);
+  float value =
+    mButtonOffset.x / (mBoundingBox.size.x - mButtonRect.size.x / 2);
   setSlider(min(max(value, 0), 1));
   hasChanged(true);
 
@@ -116,10 +117,10 @@ void Slider::setSlider(float value) {
   if (value < 0 || value > 1)
     return;
 
-  float pos = value * (mBoundingBox.size.x - mButtonRect.size.x / 2);
+  float pos     = value * (mBoundingBox.size.x - mButtonRect.size.x / 2);
   mButtonOffset = vec2(pos, mButtonOffset.y);
   mInfo->setPosition(vec2(mBoundingBox.bottomright().x + 10,
-                          mBoundingBox.topleft.y - mBoundingBox.size.y/2));
+                          mBoundingBox.topleft.y - mBoundingBox.size.y / 2));
   mInfo->setText(Utils::toStr(int(value * 100)) + mValSign);
   mValue = value;
 }
@@ -141,13 +142,13 @@ float Slider::value() const {
  * @param float
  */
 void Slider::draw(float) {
-  if(!mIsVisible)
+  if (!mIsVisible)
     return;
 
   mGUIProgram->bind();
   mGUIProgram->setUniform("guiOffset", mOffset);
   mBackground->draw();
-  mGUIProgram->setUniform("guiOffset", mOffset+mButtonOffset);
+  mGUIProgram->setUniform("guiOffset", mOffset + mButtonOffset);
   mButton->draw();
   mInfo->draw();
 }

@@ -4,11 +4,11 @@ mat3::operator float*() {
   return m;
 }
 
-float& mat3::operator[] (int n) {
+float& mat3::operator[](int n) {
   return m[n];
 }
 
-mat3& mat3::operator+= (const mat3& n) {
+mat3& mat3::operator+=(const mat3& n) {
   m[0] += n[0];
   m[1] += n[1];
   m[2] += n[2];
@@ -20,7 +20,7 @@ mat3& mat3::operator+= (const mat3& n) {
   m[8] += n[8];
   return *this;
 }
-mat3& mat3::operator+= (float s) {
+mat3& mat3::operator+=(float s) {
   m[0] += s;
   m[1] += s;
   m[2] += s;
@@ -33,7 +33,7 @@ mat3& mat3::operator+= (float s) {
   return *this;
 }
 
-mat3& mat3::operator-= (const mat3& n) {
+mat3& mat3::operator-=(const mat3& n) {
   m[0] -= n[0];
   m[1] -= n[1];
   m[2] -= n[2];
@@ -45,7 +45,7 @@ mat3& mat3::operator-= (const mat3& n) {
   m[8] -= n[8];
   return *this;
 }
-mat3& mat3::operator-= (float s) {
+mat3& mat3::operator-=(float s) {
   m[0] -= s;
   m[1] -= s;
   m[2] -= s;
@@ -58,7 +58,7 @@ mat3& mat3::operator-= (float s) {
   return *this;
 }
 
-mat3& mat3::operator*= (float s) {
+mat3& mat3::operator*=(float s) {
   m[0] *= s;
   m[1] *= s;
   m[2] *= s;
@@ -71,7 +71,7 @@ mat3& mat3::operator*= (float s) {
   return *this;
 }
 
-mat3& mat3::operator/= (float s) {
+mat3& mat3::operator/=(float s) {
   m[0] /= s;
   m[1] /= s;
   m[2] /= s;
@@ -84,7 +84,7 @@ mat3& mat3::operator/= (float s) {
   return *this;
 }
 
-mat3& mat3::operator= (const mat3& n) {
+mat3& mat3::operator=(const mat3& n) {
   m[0] = n[0];
   m[1] = n[1];
   m[2] = n[2];
@@ -97,15 +97,15 @@ mat3& mat3::operator= (const mat3& n) {
   return *this;
 }
 
-mat3& mat3::identity () {
+mat3& mat3::identity() {
   *this = identity3();
   return *this;
 }
-mat3& mat3::transpose () {
+mat3& mat3::transpose() {
   *this = ::transpose(*this);
   return *this;
 }
-mat3& mat3::inverse () {
+mat3& mat3::inverse() {
   *this = ::inverse(*this);
   return *this;
 }

@@ -17,7 +17,7 @@ public:
   virtual bool isInside(const vec2& pos) const;
 
   //! Check whether the GUI element is visible or not
-  virtual bool isVisible()   const;
+  virtual bool isVisible() const;
 
   //! Check whether the GUI element is clickable or not
   virtual bool isClickable() const;
@@ -66,8 +66,8 @@ protected:
   bool mHasChanged;
   bool mIsMouseOver;
 
-  static CFG* mCFG;
-  static Font* mFont;
+  static CFG*     mCFG;
+  static Font*    mFont;
   static Program* mGUIProgram;
 };
 

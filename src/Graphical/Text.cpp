@@ -2,39 +2,39 @@
 
 #include <vector>
 
-#include "../Graphical/Font.hpp"
 #include "../GLSL/Program.hpp"
+#include "../Graphical/Font.hpp"
 #include "../Utils/CFG.hpp"
 
-Text::Text(Font* font,
+Text::Text(Font*              font,
            const std::string& text,
-           const vec2& position,
-           int size,
-           int color,
-           const vec2& limit) {
-  mTextFont = font;
-  mLimit = limit;
-  mIsLimitOn = limit.x != 0 || limit.y != 0;
-  mText = text;
-  mVBO = 0;
-  mVAO = 0;
+           const vec2&        position,
+           int                size,
+           int                color,
+           const vec2&        limit) {
+  mTextFont            = font;
+  mLimit               = limit;
+  mIsLimitOn           = limit.x != 0 || limit.y != 0;
+  mText                = text;
+  mVBO                 = 0;
+  mVAO                 = 0;
   mBoundingBox.topleft = position;
   isVisible(true);
 
-  mCharacterSize = size;
-  mColor.current = vec3();
-  mColor.previous = vec3();
+  mCharacterSize          = size;
+  mColor.current          = vec3();
+  mColor.previous         = vec3();
   mColor.currentEnumColor = 0;
-  mColor.prevEnumColor = 0;
+  mColor.prevEnumColor    = 0;
   setColor(color);
   recalculateGeometry();
 }
 
 Text::~Text() {
-  if(mVBO != 0)
+  if (mVBO != 0)
     glDeleteBuffers(1, &mVBO);
 
-  if(mVAO != 0)
+  if (mVAO != 0)
     glDeleteVertexArrays(1, &mVAO);
 }
 
@@ -60,7 +60,7 @@ void Text::setStyle(int style) {
  * @param limit
  */
 void Text::setLimit(const vec2& limit) {
-  mLimit = limit;
+  mLimit     = limit;
   mIsLimitOn = limit.x != 0 && limit.y != 0;
   recalculateGeometry();
 }
@@ -72,7 +72,7 @@ void Text::setLimit(const vec2& limit) {
  * @param text
  */
 void Text::setText(const std::string& text) {
-  if(mText == text)
+  if (mText == text)
     return;
 
   mText = text;
@@ -87,7 +87,7 @@ void Text::setText(const std::string& text) {
  * @param charSize
  */
 void Text::setSize(int charSize) {
-  if(charSize == mCharacterSize || charSize < 1)
+  if (charSize == mCharacterSize || charSize < 1)
     return;
 
   mCharacterSize = charSize;
@@ -134,19 +134,33 @@ int Text::getCharSize() {
  * @param color
  */
 void Text::setColor(int color) {
-  if(color == mColor.currentEnumColor)
+  if (color == mColor.currentEnumColor)
     return;
 
   vec3 newColor;
 
-  switch(color) {
-    case BLACK:  newColor = vec3(0.0, 0.0, 0.0); break;
-    case WHITE:  newColor = vec3(1.0, 1.0, 1.0); break;
-    case RED:    newColor = vec3(1.0, 0.0, 0.0); break;
-    case GREEN:  newColor = vec3(0.0, 1.0, 0.0); break;
-    case BLUE:   newColor = vec3(0.0, 0.0, 1.0); break;
-    case YELLOW: newColor = vec3(1.0, 1.0, 0.0); break;
-    default:     newColor = vec3(1.0, 1.0, 1.0); break;
+  switch (color) {
+    case BLACK:
+      newColor = vec3(0.0, 0.0, 0.0);
+      break;
+    case WHITE:
+      newColor = vec3(1.0, 1.0, 1.0);
+      break;
+    case RED:
+      newColor = vec3(1.0, 0.0, 0.0);
+      break;
+    case GREEN:
+      newColor = vec3(0.0, 1.0, 0.0);
+      break;
+    case BLUE:
+      newColor = vec3(0.0, 0.0, 1.0);
+      break;
+    case YELLOW:
+      newColor = vec3(1.0, 1.0, 0.0);
+      break;
+    default:
+      newColor = vec3(1.0, 1.0, 1.0);
+      break;
   }
 
   mColor.prevEnumColor    = mColor.currentEnumColor;
@@ -165,7 +179,7 @@ void Text::setColor(int color) {
  *   Or when the text is being highlighted due to mouse movements.
  */
 void Text::setPrevColor() {
-  int icur                = mColor.currentEnumColor;
+  int  icur               = mColor.currentEnumColor;
   vec3 vcur               = mColor.current;
   mColor.current          = mColor.previous;
   mColor.currentEnumColor = mColor.prevEnumColor;
@@ -180,19 +194,19 @@ void Text::setPrevColor() {
  *   that are used to draw the text
  */
 void Text::recalculateGeometry() {
-  if(mTextFont == nullptr)
+  if (mTextFont == nullptr)
     return;
 
   std::vector<vec4> coordinates;
 
   const vec2 texSize = mTextFont->getTextureSize(mCharacterSize);
-  vec2 tempPos = mBoundingBox.topleft;
+  vec2       tempPos = mBoundingBox.topleft;
   tempPos.y += mCharacterSize;
 
-  for(char c : mText) {
+  for (char c : mText) {
     const Font::Glyph g = mTextFont->getGlyph(c, mCharacterSize);
 
-    const float x2 =  tempPos.x + g.bitmapLoc.x;
+    const float x2 = tempPos.x + g.bitmapLoc.x;
     const float y2 = -tempPos.y + g.bitmapLoc.y;
 
     const float w = g.bitmapSize.x;
@@ -203,35 +217,36 @@ void Text::recalculateGeometry() {
 
     bool isNewline    = c == '\n';
     bool isWhitespace = c == ' ';
-    bool isAboveLimit = mIsLimitOn && tempPos.x > mBoundingBox.topleft.x + mLimit.x;
+    bool isAboveLimit =
+      mIsLimitOn && tempPos.x > mBoundingBox.topleft.x + mLimit.x;
 
     if (isNewline || (isAboveLimit && isWhitespace)) {
       tempPos.x = mBoundingBox.topleft.x;
       tempPos.y += mCharacterSize * 2;
       continue;
-    } else if(!w || !h) {
+    } else if (!w || !h) {
       continue;
     }
 
     const float tx = g.tc.x + g.bitmapSize.x / texSize.x;
     const float ty = g.tc.y + g.bitmapSize.y / texSize.y;
 
-    coordinates.push_back({x2 + w, -y2, tx, g.tc.y});
-    coordinates.push_back({x2, -y2 + h, g.tc.x, ty});
-    coordinates.push_back({x2 + w, -y2 + h, tx, ty});
+    coordinates.push_back({ x2 + w, -y2, tx, g.tc.y });
+    coordinates.push_back({ x2, -y2 + h, g.tc.x, ty });
+    coordinates.push_back({ x2 + w, -y2 + h, tx, ty });
 
-    coordinates.push_back({x2, -y2 + h, g.tc.x, ty});
-    coordinates.push_back({x2 + w, -y2, tx, g.tc.y});
-    coordinates.push_back({x2, -y2, g.tc.x, g.tc.y});
+    coordinates.push_back({ x2, -y2 + h, g.tc.x, ty });
+    coordinates.push_back({ x2 + w, -y2, tx, g.tc.y });
+    coordinates.push_back({ x2, -y2, g.tc.x, g.tc.y });
 
     mBoundingBox.bottomright(vec2(x2 + w, -y2 + mCharacterSize));
   }
 
   mNumVertices = coordinates.size();
 
-  if(mVAO != 0)
+  if (mVAO != 0)
     glDeleteVertexArrays(1, &mVAO);
-  if(mVBO != 0)
+  if (mVBO != 0)
     glDeleteBuffers(1, &mVBO);
 
   glGenVertexArrays(1, &mVAO);
@@ -252,7 +267,7 @@ void Text::recalculateGeometry() {
                         GL_FLOAT,
                         GL_FALSE,
                         4 * sizeof(GL_FLOAT),
-                        (void*)(2*sizeof(GL_FLOAT)));
+                        (void*) (2 * sizeof(GL_FLOAT)));
   glBindVertexArray(0);
 }
 
@@ -262,7 +277,8 @@ void Text::recalculateGeometry() {
  *   the font used for the text is not null
  */
 void Text::draw() {
-  if(!isVisible() || mTextFont == nullptr) return;
+  if (!isVisible() || mTextFont == nullptr)
+    return;
 
   mGUIProgram->bind();
   mGUIProgram->setUniform("isText", true);

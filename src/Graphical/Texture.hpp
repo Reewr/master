@@ -1,14 +1,14 @@
 #ifndef TEXTURE_HPP
 #define TEXTURE_HPP
 
+#include <map>
 #include <string>
 #include <vector>
-#include <map>
 
 #include "../OpenGLHeaders.hpp"
 
-#include "GL/Rectangle.hpp"
 #include "../Math/MathCD.hpp"
+#include "GL/Rectangle.hpp"
 
 struct CFG;
 
@@ -25,8 +25,8 @@ struct Texture {
     std::map<int, std::map<int, vec4>> imageMap;
     GLuint textureID;
     GLuint sampler;
-    int count;
-    vec2 size;
+    int    count;
+    vec2   size;
   };
 
   //! Constructor - does nothing
@@ -42,7 +42,7 @@ struct Texture {
   Texture(const Texture& tex);
 
   //! Equals
-  Texture& operator= (const Texture& tex);
+  Texture& operator=(const Texture& tex);
 
   //! Loads a texture using SOIL. Can load .PNG
   bool loadTexture(std::string filename, bool isGUI = false);
@@ -58,7 +58,10 @@ struct Texture {
   unsigned char* loadEmptyTexture(const vec2& size, bool isReturn = false);
 
   //! Creates a texture out from data. NB: DOES NOT SET FILTERING
-  bool createTexture(const vec2& s, unsigned char* data = NULL, GLenum color = GL_RGBA, GLenum inColor = GL_RGBA);
+  bool createTexture(const vec2&    s,
+                     unsigned char* data    = NULL,
+                     GLenum         color   = GL_RGBA,
+                     GLenum         inColor = GL_RGBA);
 
   //! Changes texture colors at specific position with size
   void changeSubTex(const vec2& pos, const vec2& size, unsigned char* change);
@@ -125,15 +128,15 @@ private:
   void imageExists(std::string filename);
   std::string filename;
 
-  int mode;
+  int           mode;
   GL::Rectangle rect;
-  GLuint VBO;
-  GLuint IBO;
+  GLuint        VBO;
+  GLuint        IBO;
 
   static std::map<std::string, TexPair> textures;
   static std::map<unsigned int, GLuint> activeTextures;
   static GLuint activeTexture;
-  static CFG* cfg;
+  static CFG*   cfg;
 };
 
 #endif

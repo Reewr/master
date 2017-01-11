@@ -7,12 +7,11 @@ class Text;
 class Input;
 
 namespace GL {
-  class Rectangle;
+class Rectangle;
 }
 
-class GConsole : public GUI{
+class GConsole : public GUI {
 public:
-
   //! Create console
   GConsole(Input* input);
   ~GConsole();
@@ -22,6 +21,7 @@ public:
 
   //! Draw the console
   void draw(float dt);
+
 private:
   std::string    mCurrentText;
   Text*          mText;

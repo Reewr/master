@@ -5,21 +5,21 @@
 
 #include "../OpenGLHeaders.hpp"
 
-#include "GUI.hpp"
 #include "../Math/MathCD.hpp"
+#include "GUI.hpp"
 
 class Texture;
 class Text;
 
 namespace tinyxml2 {
-  class XMLElement;
+class XMLElement;
 }
 
 class Slider : public GUI {
 public:
   //! Loads textures and calls recalculatesGeometry
-  Slider(const vec2& pos,
-         const float scale = 1,
+  Slider(const vec2&       pos,
+         const float       scale   = 1,
          const std::string valSign = "%");
 
   static Slider* fromXML(tinyxml2::XMLElement* element);
@@ -44,10 +44,10 @@ public:
 private:
   Texture* mBackground;
   Texture* mButton;
-  Text* mInfo;
+  Text*    mInfo;
 
-  float mScale;
-  float mValue;
+  float       mScale;
+  float       mValue;
   std::string mValSign;
 
   Rect mButtonRect;

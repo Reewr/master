@@ -28,7 +28,7 @@
  */
 int main(int argc, char* argv[]) {
 
-  DEBUG_MODE = new bool(true); //&asset->cfg.general.debug;
+  DEBUG_MODE    = new bool(true); //&asset->cfg.general.debug;
   ENABLE_COLORS = new bool(true);
 
   error("Testing");
@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
     if (!engine->initialize(argc, argv)) {
       throw Error("Engined failed to initialize");
     }
-  } catch (const Error &err) {
+  } catch (const Error& err) {
     fatalError(err.what());
     delete engine;
     return 1;
@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
   // runs the loop, exiting on any errors
   try {
     engine->runLoop();
-  } catch (const Error &err) {
+  } catch (const Error& err) {
     fatalError(err.what());
     delete engine;
     return 1;
