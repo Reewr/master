@@ -35,8 +35,8 @@ private:
   void draw3D();
   void drawGUI();
 
-  Input*    mInput;
-  Asset*    mAsset;
-  Console*  mConsole;
+  Input*   mInput;
+  Asset*   mAsset;
+  Console* mConsole;
 };
 #endif
