@@ -355,7 +355,6 @@ void Input::initialize() {
   addAction(MOVE_RIGHT, b->moveRight, "Move right");
   addAction(ROTATE, { GLFW_MOUSE_BUTTON_3 }, "Rotate");
   addAction(SCREENSHOT, b->screenshot, "Take screenshot");
-  addAction(HIDEGUI, b->hideGUI, "Hide GUI");
   addAction(CONSOLE, b->showConsole, "Show console");
 }
 

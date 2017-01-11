@@ -56,7 +56,6 @@ struct CFG {
     ActB rotate      = ActB(2);
     ActB showConsole = ActB();
     ActB screenshot  = ActB();
-    ActB hideGUI     = ActB();
   } bindings;
 
   struct Audio {
@@ -154,8 +153,6 @@ private:
 
          { "Bindings.screenshot", bindings.screenshot },
          { "Bindings.show_console", bindings.showConsole },
-         { "Bindings.hide_GUI", bindings.hideGUI },
-
 
          { "Audio.sfx_volume", audio.SFXVolume },
          { "Audio.music_volume", audio.musicVolume },
