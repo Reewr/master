@@ -1,5 +1,5 @@
-#ifndef GUIMENU_CONSOLE_HPP
-#define GUIMENU_CONSOLE_CPP
+#ifndef CONSOLE_CONSOLE_HPP
+#define CONSOLE_CONSOLE_CPP
 
 #include "../GUI/GUI.hpp"
 
@@ -10,11 +10,11 @@ namespace GL {
 class Rectangle;
 }
 
-class GConsole : public GUI {
+class Console : public GUI {
 public:
   //! Create console
-  GConsole(Input* input);
-  ~GConsole();
+  Console(Input* input);
+  ~Console();
 
   //! Handles the keys sent to console
   int handleKeyInput(const int key, const int action, const int mods);

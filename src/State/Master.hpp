@@ -4,7 +4,7 @@
 #include "State.hpp"
 
 class Input;
-class GConsole;
+class Console;
 struct Asset;
 
 class Master : public State {
@@ -35,6 +35,6 @@ private:
 
   Input*    mInput;
   Asset*    mAsset;
-  GConsole* mConsole;
+  Console*  mConsole;
 };
 #endif

@@ -2,13 +2,13 @@
 
 #include "../OpenGLHeaders.hpp"
 
-#include "../GUIMenu/Console.hpp"
+#include "../Console/Console.hpp"
 #include "../Input.hpp"
 #include "../Utils/Asset.hpp"
 #include "../Utils/Utils.hpp"
 
 Master::Master(Asset* asset, Input* input) : mInput(input), mAsset(asset) {
-  mConsole = new GConsole(input);
+  mConsole = new Console(input);
 }
 
 Master::~Master() {

@@ -12,7 +12,7 @@
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
 
-GConsole::GConsole(Input* input) {
+Console::Console(Input* input) {
   mCurrentText = "";
   mInput       = input;
   mBoundingBox = Rect(25, 25, 768, 400);
@@ -28,7 +28,7 @@ GConsole::GConsole(Input* input) {
   mProgram->setUniform("guiColor", vec4(0, 0, 0, 0.7));
 }
 
-GConsole::~GConsole() {
+Console::~Console() {
   delete mProgram;
   delete mRect;
 }
@@ -48,7 +48,7 @@ GConsole::~GConsole() {
  *
  * @return
  */
-int GConsole::handleKeyInput(const int key, const int, const int mods) {
+int Console::handleKeyInput(const int key, const int, const int mods) {
   if (!isVisible() && Input::keyStrings[key] == "|") {
     isVisible(true);
     return State::NOCHANGE;
@@ -85,7 +85,7 @@ int GConsole::handleKeyInput(const int key, const int, const int mods) {
   return State::NOCHANGE;
 }
 
-void GConsole::draw(float) {
+void Console::draw(float) {
   if (!isVisible())
     return;
 
