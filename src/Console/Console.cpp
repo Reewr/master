@@ -49,19 +49,18 @@ Console::~Console() {
  * @return
  */
 int Console::handleKeyInput(const int key, const int, const int mods) {
-  if (!isVisible() && Input::keyStrings[key] == "|") {
+  log(key, mInput->getKey(Input::CONSOLE).key1, isVisible());
+  if (!isVisible() && mInput->checkKey(Input::CONSOLE, key)) {
     isVisible(true);
-    return State::NOCHANGE;
+    return State::HANDLED_INPUT;
   } else if (!isVisible()) {
     return State::NOCHANGE;
   }
 
-
   if (key == GLFW_KEY_ESCAPE) {
     isVisible(false);
-    return State::NOCHANGE;
+    return State::HANDLED_INPUT;
   }
-
 
   bool isBackspace = key == Input::keyMap["backspace"];
 
@@ -75,14 +74,17 @@ int Console::handleKeyInput(const int key, const int, const int mods) {
     case GLFW_KEY_BACKSPACE:
       if (mCurrentText.length() > 0)
         mCurrentText.pop_back();
+      break;
     case GLFW_KEY_ENTER:
+      log("Info should perform action with '" + mCurrentText + "'");
+      break;
     // performCommand();
     default:
       mCurrentText.append(hasShift ? Utils::toUpper(character) : character);
   }
 
   mText->setText("> " + mCurrentText + "_");
-  return State::NOCHANGE;
+  return State::HANDLED_INPUT;
 }
 
 void Console::draw(float) {

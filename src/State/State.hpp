@@ -15,7 +15,8 @@ public:
     MASTER_THESIS,
     REFRESH,
     WINREFRESH,
-    NOCHANGE
+    NOCHANGE,
+    HANDLED_INPUT
   };
 
   virtual ~State();

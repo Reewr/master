@@ -54,7 +54,7 @@ struct CFG {
     ActB moveRight   = ActB(68);
     ActB pauseMenu   = ActB(256);
     ActB rotate      = ActB(2);
-    ActB showConsole = ActB();
+    ActB showConsole = ActB(96);
     ActB screenshot  = ActB();
   } bindings;
 

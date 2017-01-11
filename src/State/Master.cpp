@@ -37,8 +37,10 @@ int Master::keyboardCB(int key, int, int action, int mods) {
 
   log("Keypress: ", key, " equals: ", Input::keyStrings[key]);
 
-  if (mConsole->isVisible()) {
-    return mConsole->handleKeyInput(key, action, mods);
+  stateChange = mConsole->handleKeyInput(key, action, mods);
+
+  if (stateChange == State::HANDLED_INPUT) {
+    return State::NOCHANGE;
   }
 
   if (key == GLFW_KEY_ESCAPE) {
