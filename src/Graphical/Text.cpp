@@ -12,20 +12,21 @@ Text::Text(Font*              font,
            int                size,
            int                color,
            const vec2&        limit) {
-  mTextFont            = font;
-  mLimit               = limit;
-  mIsLimitOn           = limit.x != 0 || limit.y != 0;
-  mText                = text;
-  mVBO                 = 0;
-  mVAO                 = 0;
-  mBoundingBox.topleft = position;
-  isVisible(true);
+  mTextFont  = font;
+  mLimit     = limit;
+  mIsLimitOn = limit.x != 0 || limit.y != 0;
+  mText      = text;
+  mVBO       = 0;
+  mVAO       = 0;
 
+  mBoundingBox.topleft    = position;
   mCharacterSize          = size;
   mColor.current          = vec3();
   mColor.previous         = vec3();
   mColor.currentEnumColor = 0;
   mColor.prevEnumColor    = 0;
+
+  isVisible(true);
   setColor(color);
   recalculateGeometry();
 }
