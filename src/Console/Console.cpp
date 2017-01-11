@@ -49,7 +49,6 @@ Console::~Console() {
  * @return
  */
 int Console::handleKeyInput(const int key, const int, const int mods) {
-  log(key, mInput->getKey(Input::CONSOLE).key1, isVisible());
   if (!isVisible() && mInput->checkKey(Input::CONSOLE, key)) {
     isVisible(true);
     return State::HANDLED_INPUT;
