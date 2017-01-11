@@ -24,7 +24,11 @@ private:
 };
 
 namespace Utils {
+
+static std::map<unsigned int, std::string> utf8Characters;
+
 bool fileExists(const std::string& name);
+
 bool getGLError();
 void clearGLError();
 
@@ -47,6 +51,8 @@ void logTime(std::string loc);
 
 std::string toUpper(std::string s);
 std::string toLower(std::string s);
+
+std::string utf8toStr(unsigned int utf8);
 
 void rTrim(std::string& s);
 void lTrim(std::string& s);
