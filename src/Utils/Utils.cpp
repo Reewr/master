@@ -1,6 +1,7 @@
 #include "Utils.hpp"
 
 #include <algorithm>
+#include <chrono>
 #include <cstdio>
 #include <ctime>
 #include <fstream>
@@ -13,10 +14,10 @@ bool* DEBUG_MODE;
 bool* ENABLE_COLORS;
 float LOOP_LOGGER = 1000;
 
-static std::clock_t START     = std::clock();
-static int          MS_SECOND = 1000;
-static int          MS_MINUTE = 60 * MS_SECOND;
-static int          MS_HOUR   = 60 * MS_MINUTE;
+static auto START     = std::chrono::high_resolution_clock::now();
+static int  MS_SECOND = 1000;
+static int  MS_MINUTE = 60 * MS_SECOND;
+static int  MS_HOUR   = 60 * MS_MINUTE;
 
 static std::map<unsigned int, std::string> utf8Characters = {};
 
@@ -54,22 +55,26 @@ static std::map<unsigned int, std::string> utf8Characters = {};
 /* } */
 
 std::string timeSinceStart() {
-  double duration = (std::clock() - START) / (double) CLOCKS_PER_SEC;
-  int    ms       = duration * 1000;
-  int    minutes  = (double) ms / (double) MS_MINUTE;
-  ms -= minutes * MS_MINUTE;
+  auto   finish = std::chrono::high_resolution_clock::now();
+  double micro =
+    std::chrono::duration_cast<std::chrono::microseconds>(finish - START)
+      .count();
 
-  int seconds = (double) ms / (double) MS_SECOND;
-  ms -= seconds * MS_SECOND;
+  int ms = (double) micro / 1000.0;
+  micro -= ms * 1000;
+  int mins = (double) ms / (double) MS_MINUTE;
+  ms -= mins * MS_MINUTE;
 
-  std::string sMinutes =
-    (minutes < 10 ? "0" : "") + Utils::toStr(minutes) + "m";
-  std::string sSeconds =
-    (seconds < 10 ? "0" : "") + Utils::toStr(seconds) + "s";
+  int secs = (double) ms / (double) MS_SECOND;
+  ms -= secs * MS_SECOND;
+
+  std::string sMinutes = (mins < 10 ? "0" : "") + Utils::toStr(mins) + "m";
+  std::string sSeconds = (secs < 10 ? "0" : "") + Utils::toStr(secs) + "s";
   std::string sMs =
     (ms < 10 ? "00" : ms < 100 ? "0" : "") + Utils::toStr(ms) + "ms";
+  std::string sNano = Utils::toStr(micro) + "μs";
 
-  return "[" + sMinutes + " " + sSeconds + " " + sMs + "]";
+  return "[" + sMinutes + " " + sSeconds + " " + sMs + " " + sNano + "]";
 }
 
 /**

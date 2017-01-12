@@ -4,11 +4,13 @@
 #include "../GUI/Window.hpp"
 #include "../Import/UILoader.hpp"
 
+namespace Input {
 class Input;
+}
 
 class OptionsMenu : public Window {
 public:
-  OptionsMenu(Input* i);
+  OptionsMenu(Input::Input* i);
   bool hasChanged();
 
   void hasChanged(bool c);
@@ -29,7 +31,7 @@ private:
 
   int handleAction();
 
-  Input*           mInput;
+  Input::Input*    mInput;
   Window*          mActiveWindow;
   Import::UILoader mUiLoader;
 };

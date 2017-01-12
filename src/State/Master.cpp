@@ -7,7 +7,8 @@
 #include "../Utils/Asset.hpp"
 #include "../Utils/Utils.hpp"
 
-Master::Master(Asset* asset, Input* input) : mInput(input), mAsset(asset) {
+Master::Master(Asset* asset, Input::Input* input)
+    : mInput(input), mAsset(asset) {
   mConsole = new Console(input);
 }
 
@@ -39,8 +40,6 @@ int Master::keyboardCB(int key, int, int action, int mods) {
 
   if (action == GLFW_RELEASE)
     return stateChange;
-
-  log("Keypress: ", key, " equals: ", Input::keyStrings[key]);
 
   stateChange = mConsole->handleKeyInput(key, action, mods);
 

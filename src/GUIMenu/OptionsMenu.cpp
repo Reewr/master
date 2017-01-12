@@ -15,7 +15,7 @@
 #include "../Utils/Utils.hpp"
 
 
-OptionsMenu::OptionsMenu(Input* input) {
+OptionsMenu::OptionsMenu(Input::Input* input) {
   mActiveWindow = NULL;
   mInput        = input;
   mBoundingBox  = Rect(mCFG->graphics.res.x * 0.50 - 500,
@@ -121,7 +121,7 @@ int OptionsMenu::handleKeyInput(const int key, const int action) {
   }
 
   if (window("Keybindings")->isVisible()) {
-    std::string strKey          = mInput->glfwKeyToString(key);
+    std::string strKey          = Input::glfwKeyToString(key);
     std::string inputboxChanged = "";
 
     for (auto i : window("Keybindings")->inputboxes()) {
@@ -262,7 +262,7 @@ void OptionsMenu::setDefaultOptions() {
   au->slider("MusicVolume")->setSlider(mCFG->audio.musicVolume);
   au->slider("MasterVolume")->setSlider(mCFG->audio.masterVolume);
 
-  int action = Input::PAUSEMENU;
+  int action = Input::Action::PauseMenu;
   int index  = 0;
 
   for (unsigned int i = 0; i < kb->inputboxes().size(); i++) {

@@ -4,7 +4,10 @@
 #include "../GUI/GUI.hpp"
 
 class Text;
+
+namespace Input {
 class Input;
+}
 
 namespace GL {
 class Rectangle;
@@ -13,7 +16,7 @@ class Rectangle;
 class Console : public GUI {
 public:
   //! Create console
-  Console(Input* input);
+  Console(Input::Input* input);
   ~Console();
 
   //! Handles the keys sent to console
@@ -25,7 +28,7 @@ public:
 private:
   std::string    mCurrentText;
   Text*          mText;
-  Input*         mInput;
+  Input::Input*  mInput;
   Program*       mProgram;
   GL::Rectangle* mRect;
 };

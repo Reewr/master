@@ -8,7 +8,10 @@
 
 struct Asset;
 class Program;
+
+namespace Input {
 class Input;
+}
 
 struct Camera {
   vec3  target = { 0, 1.183, 0 };
@@ -33,11 +36,11 @@ struct Camera {
   Program* shadow;
   /* Program* model; */
 
-  Input* input;
+  Input::Input* input;
 
   MVP mvp;
 
-  Camera(Input* i, Program* shadow);
+  Camera(Input::Input* i, Program* shadow);
   /* Camera (Input* i, Program* shadow, Program* model); */
 
   mat4 updateViewMatrix();

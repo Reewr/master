@@ -8,7 +8,7 @@
 #include "../Utils/Asset.hpp"
 #include "../Utils/Utils.hpp"
 
-PauseMenu::PauseMenu(Input* i) {
+PauseMenu::PauseMenu(Input::Input* i) {
   mBoundingBox = Rect(mCFG->graphics.res.x * 0.5 - 300,
                       mCFG->graphics.res.y * 0.5 - 100,
                       600,
@@ -26,7 +26,7 @@ int PauseMenu::handleKeyInput(const int key, const int action) {
   if (isAnimating() || action != GLFW_PRESS)
     return State::NOCHANGE;
 
-  bool isPauseMenuKey = mInput->checkKey(Input::PAUSEMENU, key);
+  bool isPauseMenuKey = mInput->checkKey(Input::Action::PauseMenu, key);
   bool isEnterKey     = GLFW_KEY_ENTER == key;
 
   isVisible(isPauseMenuKey && !isVisible());

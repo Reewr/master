@@ -12,7 +12,7 @@
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
 
-Console::Console(Input* input) {
+Console::Console(Input::Input* input) {
   mCurrentText = "";
   mInput       = input;
   mBoundingBox = Rect(25, 25, 768, 400);
@@ -49,7 +49,7 @@ Console::~Console() {
  * @return
  */
 int Console::handleKeyInput(const int key, const int, const int mods) {
-  if (!isVisible() && mInput->checkKey(Input::CONSOLE, key)) {
+  if (!isVisible() && mInput->checkKey(Input::Action::Console, key)) {
     isVisible(true);
     return State::HANDLED_INPUT;
   } else if (!isVisible()) {
@@ -61,13 +61,12 @@ int Console::handleKeyInput(const int key, const int, const int mods) {
     return State::HANDLED_INPUT;
   }
 
-  bool isBackspace = key == Input::keyMap["backspace"];
+  bool isBackspace = key == GLFW_KEY_BACKSPACE;
 
   if (!isBackspace && (key < 46 || key > 90))
     return State::NOCHANGE;
 
-  bool        hasShift  = mods & GLFW_MOD_SHIFT;
-  std::string character = Input::keyStrings[key];
+  bool hasShift = mods & GLFW_MOD_SHIFT;
 
   switch (key) {
     case GLFW_KEY_BACKSPACE:
@@ -79,7 +78,7 @@ int Console::handleKeyInput(const int key, const int, const int mods) {
       break;
     // performCommand();
     default:
-      mCurrentText.append(hasShift ? Utils::toUpper(character) : character);
+      mCurrentText.append(hasShift ? Utils::toUpper("") : "");
   }
 
   mText->setText("> " + mCurrentText + "_");

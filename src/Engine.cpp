@@ -13,32 +13,44 @@
 #include "Utils/Utils.hpp"
 /* #include <3D/Spider.hpp> */
 /* #include <3D/Model.hpp> */
+#include "Input/Event.hpp"
 #include "Input/Input.hpp"
 
 // These functions are because of GLFW's callback. They call engine functions
-static void placementKeyboardCB(GLFWwindow* w, int k, int s, int a, int m) {
-  Engine* e = static_cast<Engine*>(glfwGetWindowUserPointer(w));
-  e->keyboardCB(k, s, a, m);
+static void placementKeyboardCB(GLFWwindow* w, int k, int, int a, int m) {
+  Engine*      e = static_cast<Engine*>(glfwGetWindowUserPointer(w));
+  Input::Event event(k, a, m);
+  e->sendEvent(event);
 }
 
 static void placementMouseMovementCB(GLFWwindow* w, double x, double y) {
-  Engine* e = static_cast<Engine*>(glfwGetWindowUserPointer(w));
-  e->mouseMovementCB(x, y);
+  Engine*      e = static_cast<Engine*>(glfwGetWindowUserPointer(w));
+  Input::Event event(vec2(x, y));
+  e->sendEvent(event);
 }
 
 static void placementMouseButtonCB(GLFWwindow* w, int b, int a, int m) {
   Engine* e = static_cast<Engine*>(glfwGetWindowUserPointer(w));
-  e->mouseButtonCB(b, a, m);
+
+  double x, y;
+  glfwGetCursorPos(w, &x, &y);
+
+  Input::Event event(vec2(x, y), b, a, m);
+  e->sendEvent(event);
 }
 
 static void placementMouseScrollCB(GLFWwindow* w, double ox, double oy) {
   Engine* e = static_cast<Engine*>(glfwGetWindowUserPointer(w));
-  e->mouseScrollCB(ox, oy);
+  double  x, y;
+  glfwGetCursorPos(w, &x, &y);
+  Input::Event event(vec2(x, y), vec2(ox, oy));
+  e->sendEvent(event);
 }
 
 static void placementCharCB(GLFWwindow* w, unsigned int codePoint) {
-  Engine* e = static_cast<Engine*>(glfwGetWindowUserPointer(w));
-  e->charCB(codePoint);
+  Engine*      e = static_cast<Engine*>(glfwGetWindowUserPointer(w));
+  Input::Event event(Utils::utf8toStr(codePoint));
+  e->sendEvent(event);
 }
 
 static void glfwErrorHandler(int, const char* k) {
@@ -106,7 +118,6 @@ bool Engine::initialize(int argc, char* argv[], int isRefresh, int initState) {
     // Set the callbacks to the different inputs. This has
     // to be done in weird way as glfw is a C library and does
     // not support lambdas with state
-    glfwSetWindowUserPointer(window, this);
     glfwSetKeyCallback(window, placementKeyboardCB);
     glfwSetScrollCallback(window, placementMouseScrollCB);
     glfwSetCursorPosCallback(window, placementMouseMovementCB);
@@ -123,7 +134,7 @@ bool Engine::initialize(int argc, char* argv[], int isRefresh, int initState) {
     glfwSwapInterval((asset->cfg.graphics.vsync) ? 1 : 0);
   }
 
-  input = new Input(window, &asset->cfg);
+  input = new Input::Input(window, &asset->cfg);
 
 
   GUI::init(&asset->cfg);
@@ -414,7 +425,10 @@ GLFWmonitor* Engine::getMonitor() {
   return monitor;
 }
 
-void Engine::sendInputs() {}
+void Engine::sendEvent(const Input::Event& event) {
+  if (current == nullptr)
+    return error("Current state is null");
+}
 
 /**
  * @brief
@@ -458,9 +472,10 @@ void Engine::runLoop() {
     LOOP_LOGGER += deltaTime;
     updateState(deltaTime);
 
+    glfwSetWindowUserPointer(window, this);
     glfwPollEvents();
-    sendInputs();
     glfwSwapBuffers(window);
+    log("Deltatime: ", deltaTime);
 
     if (LOOP_LOGGER > 1) {
       LOOP_LOGGER = 0;

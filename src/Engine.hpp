@@ -6,10 +6,14 @@
 
 #include "OpenGLHeaders.hpp"
 
+#include "Input/Event.hpp"
 #include "State/State.hpp"
 
 struct Asset;
+
+namespace Input {
 class Input;
+}
 
 //! Engine sorts out which state that is active
 class Engine {
@@ -58,6 +62,8 @@ public:
   //! Sends textual input to the current state
   void charCB(unsigned int codePoint);
 
+  void sendEvent(const Input::Event& event);
+
   void runLoop();
 
 protected:
@@ -68,8 +74,6 @@ protected:
   void initGL();
 
   GLFWmonitor* getMonitor();
-
-  void sendInputs();
 
   void deinitialize(bool isFullDeinit = true);
 
@@ -82,10 +86,10 @@ protected:
 
   std::string cfgPath;
 
-  State*      current;
-  Input*      input;
-  GLFWwindow* window;
-  Asset*      asset;
+  State*        current;
+  Input::Input* input;
+  GLFWwindow*   window;
+  Asset*        asset;
 };
 
 #endif

@@ -10,7 +10,7 @@
 #include "../Utils/Asset.hpp"
 #include "../Utils/Utils.hpp"
 
-MainMenu::MainMenu(Asset* asset, Input* input) {
+MainMenu::MainMenu(Asset* asset, Input::Input* input) {
   mAsset = asset;
   mInput = input;
 

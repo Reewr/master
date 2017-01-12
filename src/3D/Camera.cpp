@@ -11,7 +11,7 @@ void Camera::init(Asset* asset) {
 }
 
 /* Camera::Camera (Input* i, Program* shadow, Program* model) { */
-Camera::Camera(Input* i, Program* shadow) {
+Camera::Camera(Input::Input* i, Program* shadow) {
   this->shadow = shadow;
   /* this->model  = model; */
   light.day = 0;
@@ -111,19 +111,20 @@ void Camera::handleKeys(std::vector<int> actions, float dt) {
   vec3 strafe  = vec3(rotate_y(hrot + 90) * dir);
 
   for (unsigned int i = 0; i < actions.size(); i++) {
-    if (actions[i] == Input::MOVE_UP)
+    if (actions[i] == Input::Action::MoveUp)
       target += forward;
-    if (actions[i] == Input::MOVE_DOWN)
+    if (actions[i] == Input::Action::MoveDown)
       target -= forward;
 
-    if (actions[i] == Input::MOVE_LEFT)
+    if (actions[i] == Input::Action::MoveLeft)
       target += strafe;
-    if (actions[i] == Input::MOVE_RIGHT)
+    if (actions[i] == Input::Action::MoveRight)
       target -= strafe;
 
-    if (actions[i] == Input::ROTATE) {
-      vec2 press = input->getPressedCoord(input->getKey(Input::ROTATE).key1);
-      vec2 curr  = input->getMouseCoords();
+    if (actions[i] == Input::Action::Rotate) {
+      vec2 press =
+        input->getPressedCoord(input->getKey(Input::Action::Rotate).key1);
+      vec2 curr = input->getMouseCoords();
 
       float rsh =
         asset->cfg.camera.rotSpeed * (asset->cfg.camera.rotInvH ? -1 : 1);

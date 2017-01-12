@@ -3,13 +3,15 @@
 
 #include "State.hpp"
 
+namespace Input {
 class Input;
+}
 class Console;
 struct Asset;
 
 class Master : public State {
 public:
-  Master(Asset* asset, Input* input);
+  Master(Asset* asset, Input::Input* input);
 
   ~Master();
 
@@ -35,8 +37,8 @@ private:
   void draw3D();
   void drawGUI();
 
-  Input*   mInput;
-  Asset*   mAsset;
-  Console* mConsole;
+  Input::Input* mInput;
+  Asset*        mAsset;
+  Console*      mConsole;
 };
 #endif

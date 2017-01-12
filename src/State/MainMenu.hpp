@@ -8,13 +8,16 @@ class Window;
 class OptionsMenu;
 class Texture;
 class Framebuffer;
+
+namespace Input {
 class Input;
+}
 
 //! Main Menu. Guess what it handles? :D
 class MainMenu : public State {
 public:
   //! Only constructor. Initalizes the menu
-  MainMenu(Asset* asset, Input* input);
+  MainMenu(Asset* asset, Input::Input* input);
 
   //! Destructor
   ~MainMenu();
@@ -44,11 +47,11 @@ protected:
   void draw3D();
   void drawGUI();
 
-  Input*       mInput;
-  Asset*       mAsset;
-  Window*      mMenu;
-  Window*      mBackground;
-  OptionsMenu* mOptionsMenu;
+  Input::Input* mInput;
+  Asset*        mAsset;
+  Window*       mMenu;
+  Window*       mBackground;
+  OptionsMenu*  mOptionsMenu;
 };
 
 #endif
