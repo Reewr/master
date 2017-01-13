@@ -1,5 +1,4 @@
-#ifndef UTILS_CONFIG_HPP
-#define UTILS_CONFIG_HPP
+#pragma once
 
 #include <functional>
 #include <iostream>
@@ -177,5 +176,3 @@ private:
     });
   }
 };
-
-#endif

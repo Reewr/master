@@ -1,5 +1,4 @@
-#ifndef UTILS_ASSET_HPP
-#define UTILS_ASSET_HPP
+#pragma once
 
 #include "CFG.hpp"
 
@@ -9,5 +8,3 @@ class Asset {
 public:
   CFG cfg;
 };
-
-#endif

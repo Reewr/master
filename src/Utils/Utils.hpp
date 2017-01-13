@@ -1,5 +1,4 @@
-#ifndef UTILS_HPP
-#define UTILS_HPP
+#pragma once
 
 #include <iostream>
 #include <list>
@@ -122,5 +121,3 @@ std::string getPath(int i);
 
 
 #include "Utils.tpp"
-
-#endif
