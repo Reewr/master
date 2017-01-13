@@ -299,7 +299,7 @@ bool Program::checkErrors(const std::string&,
     // fprintf(stderr, "GL_ERROR @ %s: %s\n", place.c_str(),
     // gluErrorString(errorCheck));
     // std::cout << std::endl;
-    log("GLSL error.. Please see error above.");
+    error("GLSL error.. Please see error above.");
     throw Error("Program.cpp");
     return false;
   }
@@ -321,7 +321,7 @@ bool Program::checkProgram(const GLuint pro) {
       s += infoLog[i];
     error(s);
     glDeleteProgram(pro);
-    log("GLSL program error. Please see above.");
+    error("GLSL program error. Please see above.");
     throw Error("Program.cpp");
     return false;
   }

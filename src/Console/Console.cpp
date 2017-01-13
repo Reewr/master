@@ -52,7 +52,6 @@ Console::~Console() {
 void Console::input(const Input::Event& event) {
   bool isConsoleKey = mInput->checkKey(Input::Action::Console, event.key());
 
-  log(isConsoleKey, " ", mInput->getAction(event.key()), " ", event.key());
   if (!isVisible() && isConsoleKey) {
     isVisible(true);
     return event.stopPropgation();
