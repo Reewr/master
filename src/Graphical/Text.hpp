@@ -1,5 +1,4 @@
-#ifndef GRAPHICAL_TEXT_HPP
-#define GRAPHICAL_TEXT_HPP
+#pragma once
 
 #include <string>
 
@@ -89,5 +88,3 @@ private:
   vec2 mLimit;
   bool mIsLimitOn;
 };
-
-#endif

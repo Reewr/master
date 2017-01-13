@@ -1,5 +1,4 @@
-#ifndef ENGINE_HPP
-#define ENGINE_HPP
+#pragma once
 
 #include <stack>
 #include <string>
@@ -74,5 +73,3 @@ protected:
   GLFWwindow*   window;
   Asset*        asset;
 };
-
-#endif

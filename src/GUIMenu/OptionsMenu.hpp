@@ -1,5 +1,4 @@
-#ifndef GUIMENU_OPTIONSMENU_HPP
-#define GUIMENU_OPTIONSMENU_HPP
+#pragma once
 
 #include "../GUI/GUI.hpp"
 #include "../GUI/Window.hpp"
@@ -30,5 +29,3 @@ private:
   Window*          mActiveWindow;
   Import::UILoader mUiLoader;
 };
-
-#endif

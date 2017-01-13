@@ -1,5 +1,4 @@
-#ifndef GRAPHICAL_FONT_HPP
-#define GRAPHICAL_FONT_HPP
+#pragma once
 
 #include <map>
 #include <string>
@@ -70,5 +69,3 @@ private:
   static int        numFonts;
   static FT_Library fontLib;
 };
-
-#endif

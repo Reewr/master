@@ -1,5 +1,4 @@
-#ifndef STATE_MAINMENU_HPP
-#define STATE_MAINMENU_HPP
+#pragma once
 
 #include "State.hpp"
 
@@ -37,5 +36,3 @@ protected:
   Input::Input* mInput;
   Asset*        mAsset;
 };
-
-#endif

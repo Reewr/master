@@ -1,5 +1,4 @@
-#ifndef INPUT_HPP
-#define INPUT_HPP
+#pragma once
 
 #include <functional>
 #include <map>
@@ -120,4 +119,3 @@ private:
   CFG*        cfg;
 };
 }
-#endif

@@ -1,5 +1,4 @@
-#ifndef IMPORT_XML_HPP
-#define IMPORT_XML_HPP
+#pragma once
 
 namespace tinyxml2 {
 struct XMLDocument;
@@ -14,5 +13,3 @@ struct XML {
   tinyxml2::XMLDocument* doc;
 };
 }
-
-#endif

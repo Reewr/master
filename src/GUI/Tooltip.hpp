@@ -1,5 +1,4 @@
-#ifndef GUI_TOOLTIP_HPP
-#define GUI_TOOLTIP_HPP
+#pragma once
 
 #include <string>
 
@@ -27,5 +26,3 @@ private:
   Text*    mActiveText;
   Texture* mBackground;
 };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef GUI_WINDOW_HPP
-#define GUI_WINDOW_HPP
+#pragma once
 
 #include <list>
 #include <map>
@@ -104,5 +103,3 @@ protected:
   std::map<std::string, Checkbox*> mCheckboxes;
   std::map<std::string, Inputbox*> mInputboxes;
 };
-
-#endif

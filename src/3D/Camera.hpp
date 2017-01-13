@@ -1,5 +1,4 @@
-#ifndef THREED_CAMERA_HPP
-#define THREED_CAMERA_HPP
+#pragma once
 
 #include <string>
 #include <vector>
@@ -60,5 +59,3 @@ struct Camera {
   static Asset* asset;
   static void init(Asset* asset);
 };
-
-#endif

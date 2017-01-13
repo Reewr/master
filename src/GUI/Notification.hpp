@@ -1,5 +1,4 @@
-#ifndef GUI_NOTIFICATION_HPP
-#define GUI_NOTIFICATION_HPP
+#pragma once
 
 #include <vector>
 
@@ -56,5 +55,3 @@ private:
 
   vec2 mNewPos;
 };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef GUI_HPP
-#define GUI_HPP
+#pragma once
 
 #include "../Math/MathCD.hpp"
 #include <functional>
@@ -84,5 +83,3 @@ protected:
   static Font*    mFont;
   static Program* mGUIProgram;
 };
-
-#endif

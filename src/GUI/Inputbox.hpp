@@ -1,5 +1,4 @@
-#ifndef GUI_INPUTBOX_HPP
-#define GUI_INPUTBOX_HPP
+#pragma once
 
 #include <string>
 
@@ -57,5 +56,3 @@ private:
   Rect mInputBoxRect;
   bool mInputIsVisible;
 };
-
-#endif
