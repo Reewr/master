@@ -1,7 +1,13 @@
-#ifndef STATE_STATE_HPP
-#define STATE_STATE_HPP
+#pragma once
+
+#include <vector>
 
 struct Asset;
+class GUI;
+
+namespace Input {
+class Event;
+}
 
 //! Fully Virtual class utilized by StateGame and StateMenu
 class State {
@@ -20,12 +26,8 @@ public:
   };
 
   virtual ~State();
-  virtual void update(float deltaTime) = 0;
-  virtual int keyboardCB(int key, int scan, int action, int mods) = 0;
-  virtual void mouseMovementCB(double x, double y) = 0;
-  virtual int mouseButtonCB(int button, int action, int mods) = 0;
-  virtual void mouseScrollCB(double offsetx, double offsety) = 0;
-  virtual void charCB(unsigned int codepoint) = 0;
+  virtual void update(float deltaTime)          = 0;
+  virtual void input(const Input::Event& event) = 0;
 
 protected:
   State();
@@ -33,7 +35,6 @@ protected:
   virtual void draw3D()  = 0;
   virtual void drawGUI() = 0;
 
-  float mDeltaTime;
+  float             mDeltaTime;
+  std::vector<GUI*> mGUIElements;
 };
-
-#endif

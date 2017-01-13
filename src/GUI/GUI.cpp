@@ -2,6 +2,7 @@
 
 #include "../GLSL/Program.hpp"
 #include "../Graphical/Font.hpp"
+#include "../Input/Event.hpp"
 #include "../Math/Math.hpp"
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
@@ -48,6 +49,23 @@ bool GUI::isMouseOver() const {
 bool GUI::hasChanged() const {
   return mHasChanged;
 }
+
+void GUI::input(const Input::Event& event) {
+  if (!isVisible())
+    return;
+
+  if (mInputHandler)
+    return mInputHandler(event);
+
+  defaultInputHandler(event);
+}
+
+void GUI::setInputHandler(
+  std::function<void(const Input::Event& event)> handler) {
+  mInputHandler = handler;
+}
+
+void GUI::defaultInputHandler(const Input::Event&) {}
 
 void GUI::isVisible(bool v) {
   mIsVisible = v;

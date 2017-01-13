@@ -10,6 +10,7 @@
 #include "../GLSL/Program.hpp"
 #include "../Graphical/Text.hpp"
 #include "../Graphical/Texture.hpp"
+#include "../Input/Event.hpp"
 #include "../Utils/Asset.hpp"
 #include "../Utils/Utils.hpp"
 
@@ -360,6 +361,118 @@ std::map<std::string, Inputbox*> Window::inputboxes() {
 
 std::map<std::string, Window*> Window::windows() {
   return mWindows;
+}
+
+void Window::hasChanged(bool c) {
+  for (auto x : mDropdowns)
+    x.second->hasChanged(c);
+
+  for (auto x : mSliders)
+    x.second->hasChanged(c);
+
+  for (auto x : mCheckboxes)
+    x.second->hasChanged(c);
+
+  for (auto x : mInputboxes)
+    x.second->hasChanged(c);
+
+  for (auto x : mMenues)
+    x.second->hasChanged(c);
+
+  for (auto x : mWindows)
+    x.second->hasChanged(c);
+}
+
+bool Window::hasChanged() const {
+  for (auto x : mDropdowns) {
+    if (x.second->hasChanged())
+      return true;
+  }
+
+  for (auto x : mSliders) {
+    if (x.second->hasChanged())
+      return true;
+  }
+
+  for (auto x : mCheckboxes) {
+    if (x.second->hasChanged())
+      return true;
+  }
+
+  for (auto x : mInputboxes) {
+    if (x.second->hasChanged())
+      return true;
+  }
+
+  for (auto x : mMenues) {
+    if (x.second->hasChanged())
+      return true;
+  }
+
+  for (auto x : mWindows) {
+    if (x.second->hasChanged())
+      return true;
+  }
+
+  return false;
+}
+
+/**
+ * @brief
+ *
+ *  The default handler for the Dropbox is called whenever input()
+ *  is called. This can be overriden by setting a handler using
+ *  setInputHandler()
+ *
+ *  The input handler set through this function can also
+ *  call the default input handler, if the context is avaible.
+ *
+ * @param event
+ *
+ * @return
+ */
+void Window::defaultInputHandler(const Input::Event& event) {
+  for (auto x : mDropdowns) {
+    x.second->input(event);
+
+    if (event.hasBeenHandled())
+      return;
+  }
+
+  for (auto x : mSliders) {
+    x.second->input(event);
+
+    if (event.hasBeenHandled())
+      return;
+  }
+
+  for (auto x : mCheckboxes) {
+    x.second->input(event);
+
+    if (event.hasBeenHandled())
+      return;
+  }
+
+  for (auto x : mInputboxes) {
+    x.second->input(event);
+
+    if (event.hasBeenHandled())
+      return;
+  }
+
+  for (auto x : mMenues) {
+    x.second->input(event);
+
+    if (event.hasBeenHandled())
+      return;
+  }
+
+  for (auto x : mWindows) {
+    x.second->input(event);
+
+    if (event.hasBeenHandled())
+      return;
+  }
 }
 
 void Window::sortDropdowns() {

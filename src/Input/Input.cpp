@@ -118,8 +118,12 @@ bool Input::checkKey(int desiredAction, int glfwKey) {
  * @return
  */
 int Input::getAction(int glfwKey) {
+  if (glfwKey == GLFW_KEY_UNKNOWN)
+    return Action::NotBound;
+
   if (glfwKeys.count(glfwKey))
     return glfwKeys[glfwKey];
+
   return Action::NotBound;
 }
 

@@ -1,5 +1,4 @@
-#ifndef GUI_MENU_HPP
-#define GUI_MENU_HPP
+#pragma once
 
 #include <vector>
 
@@ -30,7 +29,7 @@ public:
 
   //! Constructor that creates a menu item with name at pos with character size:
   //! zie
-  Menu(const std::string   name,
+  Menu(const std::string&  name,
        const vec2&         pos,
        const MenuSettings& m = MenuSettings());
 
@@ -46,13 +45,18 @@ public:
   ~Menu();
 
   //! :)
-  void draw(float deltaTime) const;
+  void draw(float deltaTime);
+
+  //! Can be called to do the default actions by using
+  //! setInputHandler. Is also called by default if setInputHandler
+  //! is never called.
+  void defaultInputHandler(const Input::Event& event);
 
   //! Returns index if inside any of the menuItems, -1 otherwise.
   int isInsideMenuElement(const vec2& pos) const;
 
   //! Adds 1 menu item at pos
-  void addMenuItem(const std::string   name,
+  void addMenuItem(const std::string&  name,
                    const vec2&         pos,
                    const MenuSettings& m = MenuSettings());
 
@@ -62,10 +66,10 @@ public:
                     const MenuSettings&             m = MenuSettings());
 
   //! Sets the active menuItem - turns it yellow
-  void setActiveMenu(const int i);
+  bool setActiveMenu(const int i);
 
   //! Does the same as above, but with keyboard
-  void setActiveMenuKeyboard(const int key);
+  bool setActiveMenuKeyboard(const int key);
 
   //! Returns the index of the active menu item
   int getActiveMenu() const;
@@ -79,5 +83,3 @@ private:
   vec2               mAnimationDistance;
   std::vector<Text*> mMenuItems;
 };
-
-#endif

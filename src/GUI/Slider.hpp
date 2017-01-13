@@ -1,5 +1,4 @@
-#ifndef GUI_SLIDER_HPP
-#define GUI_SLIDER_HPP
+#pragma once
 
 #include <string>
 
@@ -18,14 +17,19 @@ class XMLElement;
 class Slider : public GUI {
 public:
   //! Loads textures and calls recalculatesGeometry
-  Slider(const vec2&       pos,
-         const float       scale   = 1,
-         const std::string valSign = "%");
+  Slider(const vec2&        pos,
+         const float        scale   = 1,
+         const std::string& valSign = "%");
 
   static Slider* fromXML(tinyxml2::XMLElement* element);
 
   //! Deletes textures
   ~Slider();
+
+  //! Can be called to do the default actions by using
+  //! setInputHandler. Is also called by default if setInputHandler
+  //! is never called.
+  void defaultInputHandler(const Input::Event& event);
 
   //! Changing the offset of all items
   void setOffset(const vec2& offset);
@@ -33,7 +37,7 @@ public:
   float value() const;
 
   //! Moves the slider on the X axis
-  float moveSlider(const vec2& position);
+  bool moveSlider(const vec2& position);
 
   //! Sets the slider to a specific position based a value
   void setSlider(float s);
@@ -53,5 +57,3 @@ private:
   Rect mButtonRect;
   vec2 mButtonOffset;
 };
-
-#endif

@@ -182,110 +182,6 @@ void Engine::updateState(float deltaTime) {
 
 /**
  * @brief
- *   This is the callback that is called for each key that
- *   is pressed after glfwPollEvents()
- *
- *   This function calls the current state (if it exists)
- *   and expects it to return a state. It may change
- *   the state depending on what is returned
- *
- * @param key
- *   Glfw key code
- *
- * @param scan
- *
- * @param action
- *   Whether it was a key press or a key release
- *
- * @param mods
- *   Which mods are activated
- */
-void Engine::keyboardCB(int key, int scan, int action, int mods) {
-  if (current == nullptr)
-    return error("Engine: Failed at keyboardCB - Current == nullptr");
-
-  int stateBack = current->keyboardCB(key, scan, action, mods);
-  if (stateBack != states.top() && stateBack != State::NOCHANGE)
-    changeState(stateBack);
-}
-
-/**
- * @brief
- *   This is the callback that is called when the mouse
- *   is moved after glfwPollEvents()
- *
- * @param x
- *   X position of the mouse in screen position
- *
- * @param y
- *   Y position of the mouse in screen position
- */
-void Engine::mouseMovementCB(double x, double y) {
-  if (current == nullptr)
-    return error("Engine: Failed at mouseMovementCB - Current == nullptr");
-
-  current->mouseMovementCB(x, y);
-}
-
-/**
- * @brief
- *   This is called whenever glfw detects a mouse click after
- *   glfwPollEvents is called
- *
- * @psaram button
- *   Which mouse button was clicked
- *
- * @param action
- *   Whether it was release or press
- *
- * @param mods
- *   Which mod keys are pressed
- */
-void Engine::mouseButtonCB(int button, int action, int mods) {
-  if (current == nullptr) {
-    return error("Engine: Failed at mouseButtonCB - CURRENT == nullptr");
-  }
-
-  int stateBack = current->mouseButtonCB(button, action, mods);
-  if (stateBack != states.top() && stateBack != State::NOCHANGE)
-    changeState(stateBack);
-}
-
-/**
- * @brief
- *   This is called whenever the user scrolls after
- *   glfwPollEvents() is called.
- *
- * @param offsetx
- * @param offsety
- */
-void Engine::mouseScrollCB(double offsetx, double offsety) {
-  if (current == nullptr)
-    return error("Engine: Failed at mouseScrollCB - Current == NULL");
-
-  current->mouseScrollCB(offsetx, offsety);
-}
-
-/**
- * @brief
- *   This is called whenever there is text sent to the menu.
- *   It may be sent whenever key callbacks are also sent, so you
- *   should beware of that.
- *
- *   The codepoint represents a unicode character and can be converted
- *   using utils::utf8toStr()
- *
- * @param codePoint
- */
-void Engine::charCB(unsigned int codePoint) {
-  if (current == nullptr)
-    return error("Engine: Failed at charCB - Current == NULL");
-
-  current->charCB(codePoint);
-}
-
-/**
- * @brief
  *   Sets the error callback and initializes GLFW.
  *   Returns false if things arent initialized correctly
  *
@@ -428,6 +324,12 @@ GLFWmonitor* Engine::getMonitor() {
 void Engine::sendEvent(const Input::Event& event) {
   if (current == nullptr)
     return error("Current state is null");
+
+  current->input(event);
+
+  if (event.state() != State::NOCHANGE) {
+    changeState(event.state());
+  }
 }
 
 /**
@@ -475,7 +377,6 @@ void Engine::runLoop() {
     glfwSetWindowUserPointer(window, this);
     glfwPollEvents();
     glfwSwapBuffers(window);
-    log("Deltatime: ", deltaTime);
 
     if (LOOP_LOGGER > 1) {
       LOOP_LOGGER = 0;

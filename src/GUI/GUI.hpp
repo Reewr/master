@@ -2,10 +2,15 @@
 #define GUI_HPP
 
 #include "../Math/MathCD.hpp"
+#include <functional>
 
 class CFG;
 class Font;
 class Program;
+
+namespace Input {
+class Event;
+}
 
 //! Fully Virtual class used by all GUI elements.
 class GUI {
@@ -40,6 +45,13 @@ public:
   virtual void isAnimating(bool a);
   virtual void isMouseOver(bool m);
 
+  virtual void input(const Input::Event& event);
+
+  virtual void
+  setInputHandler(std::function<void(const Input::Event& event)> handler);
+
+  virtual void defaultInputHandler(const Input::Event& event);
+
   virtual const Rect& box() const;
   virtual const vec2& position() const;
   virtual const vec2& size() const;
@@ -65,6 +77,8 @@ protected:
   bool mIsMinimized;
   bool mHasChanged;
   bool mIsMouseOver;
+
+  std::function<void(const Input::Event& event)> mInputHandler;
 
   static CFG*     mCFG;
   static Font*    mFont;

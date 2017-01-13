@@ -45,23 +45,6 @@ public:
                   int   isRefresh = State::INIT,
                   int   initState = State::MAINMENU);
 
-  //! Sends the input to current state. If current state returns an int
-  //! of value [0-1] changes state.
-  void keyboardCB(int key, int scan, int action, int mods);
-
-  //! Sends the input to the current state.
-  void mouseMovementCB(double x, double y);
-
-  //! Sends the input to the current state. If current state returns an
-  //! int of value [0-1] changes state.
-  void mouseButtonCB(int button, int action, int mods);
-
-  //! Sends the input to the current state.
-  void mouseScrollCB(double offsetx, double offsety);
-
-  //! Sends textual input to the current state
-  void charCB(unsigned int codePoint);
-
   void sendEvent(const Input::Event& event);
 
   void runLoop();

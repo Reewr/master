@@ -5,6 +5,8 @@
 #include "../GLSL/Program.hpp"
 #include "../Graphical/Text.hpp"
 #include "../Graphical/Texture.hpp"
+#include "../Input/Event.hpp"
+#include "../Input/Input.hpp"
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
 
@@ -117,6 +119,38 @@ bool Inputbox::changeText(const std::string text, const bool forceChange) {
 
 /**
  * @brief
+ *
+ *  The default handler for the Dropbox is called whenever input()
+ *  is called. This can be overriden by setting a handler using
+ *  setInputHandler()
+ *
+ *  The input handler set through this function can also
+ *  call the default input handler, if the context is avaible.
+ *
+ * @param event
+ *
+ * @return
+ */
+void Inputbox::defaultInputHandler(const Input::Event& event) {
+  if (event.buttonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
+
+    if (showInputbox(event.position()))
+      event.stopPropgation();
+
+    return;
+  }
+
+  if (event == Input::Event::Type::KeyPress && mInputIsVisible) {
+    if (changeText(Input::glfwKeyToString(event.key())))
+      event.stopPropgation();
+    return;
+  }
+
+  return;
+}
+
+/**
+ * @brief
  *   Returns the text stored in the input
  *
  * @return
@@ -132,8 +166,10 @@ std::string Inputbox::text() const {
  *
  * @param position
  */
-void Inputbox::showInputbox(const vec2& position) {
+bool Inputbox::showInputbox(const vec2& position) {
   mInputIsVisible = isInside(position);
+
+  return mInputIsVisible;
 }
 
 /**

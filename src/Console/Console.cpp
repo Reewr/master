@@ -6,6 +6,7 @@
 #include "../Graphical/GL/Rectangle.hpp"
 #include "../Graphical/Text.hpp"
 #include "../Graphical/Texture.hpp"
+#include "../Input/Event.hpp"
 #include "../Input/Input.hpp"
 #include "../Math/Math.hpp"
 #include "../State/State.hpp"
@@ -48,41 +49,42 @@ Console::~Console() {
  *
  * @return
  */
-int Console::handleKeyInput(const int key, const int, const int mods) {
-  if (!isVisible() && mInput->checkKey(Input::Action::Console, key)) {
+void Console::input(const Input::Event& event) {
+  bool isConsoleKey = mInput->checkKey(Input::Action::Console, event.key());
+
+  log(isConsoleKey, " ", mInput->getAction(event.key()), " ", event.key());
+  if (!isVisible() && isConsoleKey) {
     isVisible(true);
-    return State::HANDLED_INPUT;
-  } else if (!isVisible()) {
-    return State::NOCHANGE;
+    return event.stopPropgation();
   }
 
-  if (key == GLFW_KEY_ESCAPE) {
+  if (!isVisible()) {
+    return;
+  }
+
+  if (event.keyPressed(GLFW_KEY_ESCAPE)) {
     isVisible(false);
-    return State::HANDLED_INPUT;
+    return event.stopPropgation();
   }
 
-  bool isBackspace = key == GLFW_KEY_BACKSPACE;
+  if (event.key() == GLFW_KEY_BACKSPACE) {
+    if (mCurrentText.length() > 0)
+      mCurrentText.pop_back();
 
-  if (!isBackspace && (key < 46 || key > 90))
-    return State::NOCHANGE;
-
-  bool hasShift = mods & GLFW_MOD_SHIFT;
-
-  switch (key) {
-    case GLFW_KEY_BACKSPACE:
-      if (mCurrentText.length() > 0)
-        mCurrentText.pop_back();
-      break;
-    case GLFW_KEY_ENTER:
-      log("Info should perform action with '" + mCurrentText + "'");
-      break;
-    // performCommand();
-    default:
-      mCurrentText.append(hasShift ? Utils::toUpper("") : "");
+    mText->setText("> " + mCurrentText + "_");
+    return event.stopPropgation();
   }
 
-  mText->setText("> " + mCurrentText + "_");
-  return State::HANDLED_INPUT;
+  if (event.keyPressed(GLFW_KEY_ENTER)) {
+    log("Info should perform action with '" + mCurrentText + "'");
+    return event.stopPropgation();
+  }
+
+  if (event == Input::Event::Type::CharacterInput) {
+    mCurrentText.append(event.character());
+    mText->setText("> " + mCurrentText + "_");
+    return event.stopPropgation();
+  }
 }
 
 void Console::draw(float) {

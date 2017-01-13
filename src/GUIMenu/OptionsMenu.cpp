@@ -9,6 +9,7 @@
 #include "../GUI/Inputbox.hpp"
 #include "../GUI/Slider.hpp"
 #include "../Graphical/Texture.hpp"
+#include "../Input/Event.hpp"
 #include "../Input/Input.hpp"
 #include "../State/State.hpp"
 #include "../Utils/Asset.hpp"
@@ -66,117 +67,58 @@ OptionsMenu::OptionsMenu(Input::Input* input) {
       ->addInputbox("Input" + Utils::toStr(i), Rect(place, vec2(200, 25)), "");
   }
 
+  mInputHandler = [&](const Input::Event& e) {
+    if (!isVisible() || isAnimating())
+      return;
+
+    if (e == Input::Event::Type::MousePress && !isInside(e.position())) {
+      isVisible(false);
+      return;
+    }
+
+    defaultInputHandler(e);
+
+    bool isEnterOrEsc =
+      e.keyPressed(GLFW_KEY_ENTER) || e.buttonPressed(GLFW_MOUSE_BUTTON_LEFT);
+
+    if (isEnterOrEsc && handleAction(e)) {
+      e.stopPropgation();
+      return;
+    }
+
+    if (e.keyPressed(GLFW_KEY_ESCAPE)) {
+      isVisible(false);
+      e.stopPropgation();
+      return;
+    }
+
+    // handle the specific case where an inputbox has changed
+    // and overridden some other keybinding. Need to clear that specific
+    // keybinding.
+    if (e.hasBeenHandled() && e.prevType() == Input::Event::Type::KeyPress) {
+      std::string strKey          = Input::glfwKeyToString(e.key());
+      std::string inputboxChanged = "";
+
+      for (auto i : window("Keybindings")->inputboxes()) {
+        if (i.second->hasChanged())
+          inputboxChanged = i.first;
+      }
+
+      if (inputboxChanged != "") {
+        for (auto i : window("Keybindings")->inputboxes()) {
+          if (i.first != inputboxChanged && i.second->text() == strKey)
+            i.second->changeText("unbound", true);
+        }
+      }
+    }
+  };
+
   setDefaultOptions();
 }
 
-bool OptionsMenu::hasChanged() {
-  for (auto w : windows()) {
-    for (auto d : w.second->dropdowns()) {
-      if (d.second->hasChanged())
-        return true;
-    }
-    for (auto i : w.second->inputboxes()) {
-      if (i.second->hasChanged())
-        return true;
-    }
-    for (auto s : w.second->sliders()) {
-      if (s.second->hasChanged())
-        return true;
-    }
-    for (auto c : w.second->checkboxes()) {
-      if (c.second->hasChanged())
-        return true;
-    }
-  }
-  return false;
-}
-
-void OptionsMenu::hasChanged(bool c) {
-  for (auto w : windows()) {
-
-    for (auto d : w.second->dropdowns())
-      d.second->hasChanged(c);
-
-    for (auto i : w.second->inputboxes())
-      i.second->hasChanged(c);
-
-    for (auto s : w.second->sliders())
-      s.second->hasChanged(c);
-
-    for (auto ch : w.second->checkboxes())
-      ch.second->hasChanged(c);
-  }
-}
-
-int OptionsMenu::handleKeyInput(const int key, const int action) {
-  if (!isVisible() || isAnimating() || action != GLFW_PRESS)
-    return State::NOCHANGE;
-
-  if (key == GLFW_KEY_ENTER)
-    return handleAction();
-
-  if (key == GLFW_KEY_ESCAPE) {
-    isVisible(false);
-    return 0;
-  }
-
-  if (window("Keybindings")->isVisible()) {
-    std::string strKey          = Input::glfwKeyToString(key);
-    std::string inputboxChanged = "";
-
-    for (auto i : window("Keybindings")->inputboxes()) {
-      if (i.second->changeText(strKey))
-        inputboxChanged = i.first;
-    }
-
-    if (inputboxChanged != "") {
-      for (auto i : window("Keybindings")->inputboxes()) {
-        if (i.first != inputboxChanged && i.second->text() == strKey)
-          i.second->changeText("unbound", true);
-      }
-    }
-  } else
-    menu("Category")->setActiveMenuKeyboard(key);
-
-  return State::NOCHANGE;
-}
-
-int OptionsMenu::handleMouseButton(const int, const int action) {
-  if (!isVisible() || isAnimating() || action != GLFW_PRESS)
-    return State::NOCHANGE;
-
-  vec2 mosPos = mInput->getMouseCoords();
-
-  if (!isInside(mosPos)) {
-    isVisible(false);
-    return 0;
-  }
-
-  setActiveMenuItem("Category", mosPos);
-  return handleAction();
-}
-
-void OptionsMenu::handleMouseMovement(const vec2& pos) {
-  setActiveMenuItem("Category", pos);
-
-  if (window("Audio")->isVisible()) {
-    for (auto s : window("Audio")->sliders())
-      if (mInput->isMousePressed(GLFW_MOUSE_BUTTON_LEFT))
-        s.second->moveSlider(pos);
-  }
-
-  if (window("Graphics")->isVisible())
-    for (auto d : window("Graphics")->dropdowns())
-      d.second->setMouseOverItem(d.second->isInsideDropItem(pos));
-
-  if (window("Game")->isVisible())
-    for (auto d : window("Game")->dropdowns())
-      d.second->setMouseOverItem(d.second->isInsideDropItem(pos));
-}
-
-int OptionsMenu::handleAction() {
-  vec2        mosPos     = mInput->getMouseCoords();
+bool OptionsMenu::handleAction(const Input::Event& event) {
   std::string nextWindow = "";
+  log("I has event", menu("Category")->getActiveMenu());
 
   switch (menu("Category")->getActiveMenu()) {
     case 0:
@@ -194,13 +136,17 @@ int OptionsMenu::handleAction() {
     case 4:
       nextWindow = "Mouse";
       break;
-    case 5:
+    case 5: {
       isVisible(false);
-      return parseOptionstoCFG();
+      int stateChange = parseOptionstoCFG();
+      if (stateChange != 0)
+        event.sendStateChange(stateChange);
+      return true;
+    }
     case 6:
       setDefaultOptions();
       isVisible(false);
-      return 0;
+      return true;
   }
 
   if (nextWindow != "") {
@@ -208,19 +154,11 @@ int OptionsMenu::handleAction() {
       mActiveWindow->isVisible(false);
     addTitle(nextWindow);
     mActiveWindow = window(nextWindow);
-  }
-
-  if (mActiveWindow != NULL) {
     mActiveWindow->isVisible(true);
-    for (auto d : mActiveWindow->dropdowns())
-      d.second->setActiveItem(mosPos);
-    for (auto s : mActiveWindow->sliders())
-      s.second->moveSlider(mosPos);
-    for (auto i : mActiveWindow->inputboxes())
-      i.second->showInputbox(mosPos);
+    return true;
   }
 
-  return State::NOCHANGE;
+  return false;
 }
 
 void OptionsMenu::setDefaultOptions() {

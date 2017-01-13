@@ -1,5 +1,4 @@
-#ifndef GUI_CHECKBOX_HPP
-#define GUI_CHECKBOX_HPP
+#pragma once
 
 #include <string>
 
@@ -13,11 +12,15 @@ namespace tinyxml2 {
 class XMLElement;
 }
 
+namespace Input {
+class Input;
+}
+
 class Checkbox : public GUI {
 public:
   //! Creates a checkbox where box is the filename
   //! to the texture used
-  Checkbox(const std::string box, const vec2& pos);
+  Checkbox(const std::string& box, const vec2& pos);
 
   //! Load the checkbox from XML
   static Checkbox* fromXML(tinyxml2::XMLElement* element);
@@ -26,18 +29,21 @@ public:
 
   //! If position is inside the checkbox, it will
   //! either set it selected or unselected
-  void setSelected(const vec2& pos);
+  bool setSelected(const vec2& pos);
 
   //! Sets the offset of the GUI
   void setOffset(const vec2& of);
 
+  //! Can be called to do the default actions by using
+  //! setInputHandler. Is also called by default if setInputHandler
+  //! is never called.
+  void defaultInputHandler(const Input::Event& event);
+
   // Draws the box
-  void draw(float deltaTime) const;
+  void draw(float deltaTime);
 
 private:
   bool     mIsTicked;
   Text*    mTick;
   Texture* mSquare;
 };
-
-#endif

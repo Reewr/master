@@ -11,6 +11,7 @@ class Framebuffer;
 
 namespace Input {
 class Input;
+class Event;
 }
 
 //! Main Menu. Guess what it handles? :D
@@ -25,21 +26,7 @@ public:
   //! Runs all the functions that needs updating (animations, draw etc)
   void update(float deltaTime);
 
-  //! If keyboard input indicates that there is a state change, return int of
-  //! state
-  int keyboardCB(int key, int scan, int action, int mods);
-
-  //!
-  void mouseMovementCB(double x, double y);
-
-  //! If mouse input indicates that there is a state change, returns int of
-  //! state
-  int mouseButtonCB(int button, int action, int mods);
-
-  //!
-  void mouseScrollCB(double offsetx, double offsety);
-
-  void charCB(unsigned int codepoint);
+  void input(const Input::Event& event);
 
 protected:
   int handleMenuActionInput();
@@ -49,9 +36,6 @@ protected:
 
   Input::Input* mInput;
   Asset*        mAsset;
-  Window*       mMenu;
-  Window*       mBackground;
-  OptionsMenu*  mOptionsMenu;
 };
 
 #endif

@@ -1,10 +1,10 @@
-#ifndef STATE_MASTER_HPP
-#define STATE_MASTER_HPP
+#pragma once
 
 #include "State.hpp"
 
 namespace Input {
 class Input;
+class Event;
 }
 class Console;
 struct Asset;
@@ -17,21 +17,7 @@ public:
 
   void update(float deltaTime);
 
-  //! If keyboard input indicates that there is a state change, return int of
-  //! state
-  int keyboardCB(int key, int scan, int action, int mods);
-
-  //!
-  void mouseMovementCB(double x, double y);
-
-  //! If mouse input indicates that there is a state change, returns int of
-  //! state
-  int mouseButtonCB(int button, int action, int mods);
-
-  //!
-  void mouseScrollCB(double offsetx, double offsety);
-
-  void charCB(unsigned int codepoint);
+  void input(const Input::Event& event);
 
 private:
   void draw3D();
@@ -41,4 +27,3 @@ private:
   Asset*        mAsset;
   Console*      mConsole;
 };
-#endif

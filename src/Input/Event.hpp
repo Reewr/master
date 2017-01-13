@@ -18,13 +18,14 @@ class Event {
 public:
   //! Describes the type of events that exists
   enum Type {
+    Consumed = -1,
     MouseMovement,
     MousePress,
     MouseRelease,
     MouseScroll,
     KeyPress,
     KeyRelease,
-    CharacterInput
+    CharacterInput,
   };
 
   //! Calling this constructor tells the Event that it is of either
@@ -45,6 +46,9 @@ public:
   //! Lastly, the CharacterInput event only consists of a single character
   Event(std::string s);
   ~Event();
+
+  bool operator==(int type) const;
+  bool operator!=(int type) const;
 
   //! Returns the type of event
   int type() const;
@@ -67,6 +71,16 @@ public:
   //! Synonomous for key() but makes more sense in the
   //! case of mouse button
   int button() const;
+
+  //! This is a simplification for checking for buttons. It firstly
+  //! checks that it is a key press event and then
+  //! compares the code to the key given.
+  bool keyPressed(int glfwKey) const;
+
+  //! This is a simplification for checking for buttons. It firstly
+  //! checks that it is a mouse press event and then
+  //! compares the code to the key given.
+  bool buttonPressed(int glfwKey) const;
 
   //! Returns the mouse position, this only make sense to use if
   //! the event is a mouse event.
@@ -92,22 +106,44 @@ public:
   //! event
   bool scrollDown() const;
 
-  //! Tells the Event that you want to change the state
-  void sendStateChange(int stateChange) const;
+  // Checks if the event has been handled
+  bool hasBeenHandled() const;
+
+  // Returns the character if the type is Type::CharacterInput, otherwise
+  // it returns an empty string
+  std::string character() const;
+
+  // If `stopPropagation` is called, it will change the type to equal
+  // Event::Type::Consumed. This means that all == or type() calls
+  // will be false when compared other Event::Type enums.
+  //
+  // In order to know what the previous state was, you can use this
+  // function.
+  //
+  // Calling this prior to stopPropgation will throw an error
+  int prevType() const;
 
   // Returns the stored handled state. By default this is NOCHANGE
   int state() const;
 
+  //! Tells the Event that you want to change the state
+  void sendStateChange(int stateChange) const;
+
+  //! Calling this function will stop the propegation of events,
+  //! This sets the state to Consumed.
+  void stopPropgation() const;
+
 private:
   int mKeyCode;
   int mMods;
-  int mType;
 
   std::string mCharacter;
 
   vec2 mPosition;
   vec2 mScroll;
 
+  mutable int mPrev;
+  mutable int mType;
   mutable int mHandledState;
 };
 }
