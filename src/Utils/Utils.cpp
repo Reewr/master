@@ -279,7 +279,6 @@ void tlog() {
     log();
 }
 
-
 std::string TEMP::getPath(int i) {
   switch (i) {
     case OPTSMENU:
@@ -315,7 +314,7 @@ std::string TEMP::getPath(int i) {
     case XMLRES:
       return "./media/XML/GUIResources.xml";
     case FONT:
-      return "./media/Fonts/neuropolitical.ttf";
+      return "./media/Fonts/DejaVuSansMono.ttf";
     default:
       return "./media/Textures/debug.png";
   }
