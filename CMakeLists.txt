@@ -89,6 +89,10 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/bullet/src)
 # to root
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR})
 
+# Find and add mmm
+SET_OPTION(BUILD_MMM_TESTS OFF)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/mmm)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/mmm/src)
 
 # =======================================
 # Project files
@@ -181,15 +185,7 @@ set(DDDGP_CPP
   ${SRC_DIR}/Import/XML.cpp
 
   # src/Math
-  # TODO: Remove in favour of MMM
   ${SRC_DIR}/Math/MathCD.cpp
-  ${SRC_DIR}/Math/extra/camera.cpp
-  ${SRC_DIR}/Math/extra/print.cpp
-  ${SRC_DIR}/Math/mat3/mat3.cpp
-  ${SRC_DIR}/Math/mat4/mat4.cpp
-  ${SRC_DIR}/Math/vec2/vec2.cpp
-  ${SRC_DIR}/Math/vec3/vec3.cpp
-  ${SRC_DIR}/Math/vec4/vec4.cpp
 
   # src/State
   ${SRC_DIR}/State/MainMenu.cpp
@@ -252,19 +248,8 @@ set(DDDGP_HPP
   ${SRC_DIR}/Import/XML.hpp
 
   # src/Math
-  # TODO: Remove in favour of MMM
   ${SRC_DIR}/Math/Math.hpp
   ${SRC_DIR}/Math/MathCD.hpp
-  ${SRC_DIR}/Math/basic/basic.hpp
-  ${SRC_DIR}/Math/extra/MVP.hpp
-  ${SRC_DIR}/Math/extra/camera.hpp
-  ${SRC_DIR}/Math/extra/print.hpp
-  ${SRC_DIR}/Math/mat3/mat3.hpp
-  ${SRC_DIR}/Math/mat4/mat4.hpp
-  ${SRC_DIR}/Math/swizzle/swizzle.hpp
-  ${SRC_DIR}/Math/vec2/vec2.hpp
-  ${SRC_DIR}/Math/vec3/vec3.hpp
-  ${SRC_DIR}/Math/vec4/vec4.hpp
 
   # src/State
   ${SRC_DIR}/State/MainMenu.hpp
