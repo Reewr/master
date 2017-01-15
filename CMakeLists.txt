@@ -85,18 +85,19 @@ SET_OPTION(BUILD_UNIT_TESTS OFF)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/bullet)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/bullet/src)
 
-# Set this later so ASSIMP doesnt add the binary files
-# to root
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR})
-
 # Find and add mmm
 SET_OPTION(BUILD_MMM_TESTS OFF)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/mmm)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/mmm/src)
 
+
 # =======================================
 # Project files
 # =======================================
+
+# Set this later so ASSIMP doesnt add the binary files
+# to root
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR})
 
 message("=========================================")
 message("-- Building ${CMAKE_BUILD_TYPE}")
