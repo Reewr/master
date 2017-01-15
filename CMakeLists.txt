@@ -83,7 +83,7 @@ SET_OPTION(BUILD_EXTRAS OFF)
 SET_OPTION(BUILD_UNIT_TESTS OFF)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/bullet)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}./deps/bullet/src)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/bullet/src)
 
 # Set this later so ASSIMP doesnt add the binary files
 # to root
