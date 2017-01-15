@@ -5,12 +5,14 @@
 #include "../GLSL/Program.hpp"
 #include "../Graphical/Text.hpp"
 #include "../Graphical/Texture.hpp"
+#include "../Input/Event.hpp"
 #include "../Utils/Asset.hpp"
 
-Checkbox::Checkbox(const std::string box, const vec2& pos) : mIsTicked(false) {
+Checkbox::Checkbox(const std::string& box, const vec2& pos) : mIsTicked(false) {
   mBoundingBox = Rect(pos, vec2(21, 21));
   mSquare      = new Texture(box.c_str());
   mTick        = new Text(mFont, "", vec2(pos.x, pos.y - 3), 20);
+
   mTick->setColor(Text::WHITE);
   mSquare->recalculateGeometry(mBoundingBox);
 }
@@ -67,11 +69,15 @@ Checkbox::~Checkbox() {
  * @param position
  *   screen position
  */
-void Checkbox::setSelected(const vec2& position) {
-  if (isInside(position)) {
+bool Checkbox::setSelected(const vec2& position) {
+  bool inside = isInside(position);
+
+  if (inside) {
     mTick->setText((mIsTicked) ? "" : "X");
     mIsTicked = !mIsTicked;
   }
+
+  return inside;
 }
 
 /**
@@ -84,6 +90,28 @@ void Checkbox::setSelected(const vec2& position) {
 void Checkbox::setOffset(const vec2& offset) {
   mOffset = offset;
   mTick->setOffset(offset);
+}
+
+/**
+ * @brief
+ *
+ *  The default handler for the Dropbox is called whenever input()
+ *  is called. This can be overriden by setting a handler using
+ *  setInputHandler()
+ *
+ *  The input handler set through this function can also
+ *  call the default input handler, if the context is avaible.
+ *
+ * @param event
+ *
+ * @return
+ */
+void Checkbox::defaultInputHandler(const Input::Event& event) {
+  if (event.buttonPressed(GLFW_MOUSE_BUTTON_LEFT))
+    return;
+
+  if (setSelected(event.position()))
+    event.stopPropgation();
 }
 
 /**

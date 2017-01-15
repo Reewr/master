@@ -1,5 +1,4 @@
-#ifndef IMPORT_ANIMATION_HPP
-#define IMPORT_ANIMATION_HPP
+#pragma once
 
 #include "XML.hpp"
 
@@ -15,5 +14,3 @@ struct Animation : XML {
   Animation(const char* filePath);
 };
 }
-
-#endif

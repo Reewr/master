@@ -1,5 +1,4 @@
-#ifndef TEXTURE_HPP
-#define TEXTURE_HPP
+#pragma once
 
 #include <map>
 #include <string>
@@ -139,5 +138,3 @@ private:
   static GLuint activeTexture;
   static CFG*   cfg;
 };
-
-#endif

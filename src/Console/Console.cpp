@@ -6,13 +6,14 @@
 #include "../Graphical/GL/Rectangle.hpp"
 #include "../Graphical/Text.hpp"
 #include "../Graphical/Texture.hpp"
-#include "../Input.hpp"
+#include "../Input/Event.hpp"
+#include "../Input/Input.hpp"
 #include "../Math/Math.hpp"
 #include "../State/State.hpp"
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
 
-Console::Console(Input* input) {
+Console::Console(Input::Input* input) {
   mCurrentText = "";
   mInput       = input;
   mBoundingBox = Rect(25, 25, 768, 400);
@@ -48,43 +49,41 @@ Console::~Console() {
  *
  * @return
  */
-int Console::handleKeyInput(const int key, const int, const int mods) {
-  log(key, mInput->getKey(Input::CONSOLE).key1, isVisible());
-  if (!isVisible() && mInput->checkKey(Input::CONSOLE, key)) {
+void Console::input(const Input::Event& event) {
+  bool isConsoleKey = mInput->checkKey(Input::Action::Console, event.key());
+
+  if (!isVisible() && isConsoleKey) {
     isVisible(true);
-    return State::HANDLED_INPUT;
-  } else if (!isVisible()) {
-    return State::NOCHANGE;
+    return event.stopPropgation();
   }
 
-  if (key == GLFW_KEY_ESCAPE) {
+  if (!isVisible()) {
+    return;
+  }
+
+  if (event.keyPressed(GLFW_KEY_ESCAPE)) {
     isVisible(false);
-    return State::HANDLED_INPUT;
+    return event.stopPropgation();
   }
 
-  bool isBackspace = key == Input::keyMap["backspace"];
+  if (event.key() == GLFW_KEY_BACKSPACE) {
+    if (mCurrentText.length() > 0)
+      mCurrentText.pop_back();
 
-  if (!isBackspace && (key < 46 || key > 90))
-    return State::NOCHANGE;
-
-  bool        hasShift  = mods & GLFW_MOD_SHIFT;
-  std::string character = Input::keyStrings[key];
-
-  switch (key) {
-    case GLFW_KEY_BACKSPACE:
-      if (mCurrentText.length() > 0)
-        mCurrentText.pop_back();
-      break;
-    case GLFW_KEY_ENTER:
-      log("Info should perform action with '" + mCurrentText + "'");
-      break;
-    // performCommand();
-    default:
-      mCurrentText.append(hasShift ? Utils::toUpper(character) : character);
+    mText->setText("> " + mCurrentText + "_");
+    return event.stopPropgation();
   }
 
-  mText->setText("> " + mCurrentText + "_");
-  return State::HANDLED_INPUT;
+  if (event.keyPressed(GLFW_KEY_ENTER)) {
+    log("Info should perform action with '" + mCurrentText + "'");
+    return event.stopPropgation();
+  }
+
+  if (event == Input::Event::Type::CharacterInput) {
+    mCurrentText.append(event.character());
+    mText->setText("> " + mCurrentText + "_");
+    return event.stopPropgation();
+  }
 }
 
 void Console::draw(float) {

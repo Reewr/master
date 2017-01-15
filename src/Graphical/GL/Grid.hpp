@@ -1,5 +1,4 @@
-#ifndef GRAPHICAL_GL_GRID_HPP
-#define GRAPHICAL_GL_GRID_HPP
+#pragma once
 
 #include <vector>
 
@@ -29,5 +28,3 @@ protected:
   unsigned int indicesSize;
 };
 }
-
-#endif

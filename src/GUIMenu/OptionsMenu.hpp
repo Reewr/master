@@ -1,21 +1,17 @@
-#ifndef GUIMENU_OPTIONSMENU_HPP
-#define GUIMENU_OPTIONSMENU_HPP
+#pragma once
 
+#include "../GUI/GUI.hpp"
 #include "../GUI/Window.hpp"
 #include "../Import/UILoader.hpp"
 
+namespace Input {
 class Input;
+class Event;
+}
 
 class OptionsMenu : public Window {
 public:
-  OptionsMenu(Input* i);
-  bool hasChanged();
-
-  void hasChanged(bool c);
-
-  int handleKeyInput(const int key, const int action);
-  int handleMouseButton(const int key, const int action);
-  void handleMouseMovement(const vec2& pos);
+  OptionsMenu(Input::Input* i);
 
 private:
   void setDefaultOptions();
@@ -27,11 +23,9 @@ private:
   void parseAudioOptions();
   void parseKeybindingOptions();
 
-  int handleAction();
+  bool handleAction(const Input::Event& event);
 
-  Input*           mInput;
+  Input::Input*    mInput;
   Window*          mActiveWindow;
   Import::UILoader mUiLoader;
 };
-
-#endif

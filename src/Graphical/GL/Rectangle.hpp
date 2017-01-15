@@ -1,5 +1,4 @@
-#ifndef GRAPHICAL_GL_RECTANGLE_HPP
-#define GRAPHICAL_GL_RECTANGLE_HPP
+#pragma once
 
 #include "../../Math/MathCD.hpp"
 #include "Shape.hpp"
@@ -45,5 +44,3 @@ private:
   bool mIsCCW;
 };
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef GRAPHICAL_GL_GRID_3D_HPP
-#define GRAPHICAL_GL_GRID_3D_HPP
+#pragma once
 
 #include "../../Math/Math.hpp"
 #include "Grid.hpp"
@@ -29,5 +28,3 @@ protected:
                          const std::vector<int>&    i);
 };
 }
-
-#endif

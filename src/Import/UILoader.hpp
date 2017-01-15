@@ -1,5 +1,4 @@
-#ifndef IMPORT_UILOADER_HPP
-#define IMPORT_UILOADER_HPP
+#pragma once
 
 #include <string>
 #include <tinyxml2.h>
@@ -48,5 +47,3 @@ private:
   int                   errorID;
 };
 }
-
-#endif

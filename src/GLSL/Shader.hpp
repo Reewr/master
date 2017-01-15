@@ -1,5 +1,4 @@
-#ifndef GLSL_SHADER_HPP
-#define GLSL_SHADER_HPP
+#pragma once
 
 #include <string>
 
@@ -35,5 +34,3 @@ struct Shader {
   std::string filename;
   std::string type;
 };
-
-#endif

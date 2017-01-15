@@ -1,5 +1,4 @@
-#ifndef GUI_DROPDOWN_HPP
-#define GUI_DROPDOWN_HPP
+#pragma once
 
 #include <string>
 #include <vector>
@@ -24,6 +23,11 @@ public:
 
   static Dropdown* fromXML(tinyxml2::XMLElement* element);
 
+  //! Can be called to do the default actions by using
+  //! setInputHandler. Is also called by default if setInputHandler
+  //! is never called.
+  void defaultInputHandler(const Input::Event& event);
+
   //! Returns true if inside the big box with all the options
   bool isInsideOptionsList(const vec2& position) const;
 
@@ -34,7 +38,8 @@ public:
   void setMouseOverItem(int i);
 
   //! Sets active item based on position
-  void setActiveItem(const vec2& position);
+  //! Returns true if something changed
+  bool setActiveItem(const vec2& position);
 
   //! Sets active item based on string
   void setActiveItem(std::string text);
@@ -80,5 +85,3 @@ private:
 
   Rect mBigBoxRect;
 };
-
-#endif

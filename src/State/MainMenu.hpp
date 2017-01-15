@@ -1,5 +1,4 @@
-#ifndef STATE_MAINMENU_HPP
-#define STATE_MAINMENU_HPP
+#pragma once
 
 #include "State.hpp"
 
@@ -8,13 +7,17 @@ class Window;
 class OptionsMenu;
 class Texture;
 class Framebuffer;
+
+namespace Input {
 class Input;
+class Event;
+}
 
 //! Main Menu. Guess what it handles? :D
 class MainMenu : public State {
 public:
   //! Only constructor. Initalizes the menu
-  MainMenu(Asset* asset, Input* input);
+  MainMenu(Asset* asset, Input::Input* input);
 
   //! Destructor
   ~MainMenu();
@@ -22,21 +25,7 @@ public:
   //! Runs all the functions that needs updating (animations, draw etc)
   void update(float deltaTime);
 
-  //! If keyboard input indicates that there is a state change, return int of
-  //! state
-  int keyboardCB(int key, int scan, int action, int mods);
-
-  //!
-  void mouseMovementCB(double x, double y);
-
-  //! If mouse input indicates that there is a state change, returns int of
-  //! state
-  int mouseButtonCB(int button, int action, int mods);
-
-  //!
-  void mouseScrollCB(double offsetx, double offsety);
-
-  void charCB(unsigned int codepoint);
+  void input(const Input::Event& event);
 
 protected:
   int handleMenuActionInput();
@@ -44,11 +33,6 @@ protected:
   void draw3D();
   void drawGUI();
 
-  Input*       mInput;
-  Asset*       mAsset;
-  Window*      mMenu;
-  Window*      mBackground;
-  OptionsMenu* mOptionsMenu;
+  Input::Input* mInput;
+  Asset*        mAsset;
 };
-
-#endif

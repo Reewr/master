@@ -1,5 +1,4 @@
-#ifndef GUI_INPUTBOX_HPP
-#define GUI_INPUTBOX_HPP
+#pragma once
 
 #include <string>
 
@@ -10,6 +9,10 @@ class Text;
 
 namespace tinyxml2 {
 class XMLElement;
+}
+
+namespace Input {
+class Event;
 }
 
 class Inputbox : public GUI {
@@ -25,12 +28,18 @@ public:
   //! Returns the current text that is on the input box
   std::string text() const;
 
+  //! Can be called to do the default actions by using
+  //! setInputHandler. Is also called by default if setInputHandler
+  //! is never called.
+  void defaultInputHandler(const Input::Event& event);
+
   //! Changes the text if the input box is visible. if forcechange is true,
   //!  changes the text.
   bool changeText(const std::string w, const bool forceChange = false);
 
   //! Show the inputbox if the click is within the smaller inputbox
-  void showInputbox(const vec2& position);
+  //! True if the click was inside
+  bool showInputbox(const vec2& position);
 
   //! Sets the offset and all the elements in Inputbox
   void setOffset(const vec2& of);
@@ -47,5 +56,3 @@ private:
   Rect mInputBoxRect;
   bool mInputIsVisible;
 };
-
-#endif

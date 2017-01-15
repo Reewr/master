@@ -6,6 +6,7 @@
 #include "../GLSL/Program.hpp"
 #include "../Graphical/Text.hpp"
 #include "../Graphical/Texture.hpp"
+#include "../Input/Event.hpp"
 #include "../Utils/Utils.hpp"
 
 /**
@@ -108,6 +109,38 @@ Dropdown::~Dropdown() {
 
 /**
  * @brief
+ *
+ *  The default handler for the Dropbox is called whenever input()
+ *  is called. This can be overriden by setting a handler using
+ *  setInputHandler()
+ *
+ *  The input handler set through this function can also
+ *  call the default input handler, if the context is avaible.
+ *
+ * @param event
+ */
+void Dropdown::defaultInputHandler(const Input::Event& event) {
+  if (!isVisible())
+    return;
+
+  if (event.buttonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
+    if (setActiveItem(event.position())) {
+      event.stopPropgation();
+    }
+
+    return;
+  }
+
+  if (!mIsOptionsListVisible)
+    return;
+
+  if (event == Input::Event::Type::MouseMovement) {
+    setMouseOverItem(isInsideDropItem(event.position()));
+  }
+}
+
+/**
+ * @brief
  *   Adds an option to the options list by creating
  *   a new text object and setting the positions
  *   based on the number of options already created.
@@ -163,6 +196,7 @@ bool Dropdown::isInsideOptionsList(const vec2& position) const {
  *   index, -1 if no match
  */
 int Dropdown::isInsideDropItem(const vec2& position) const {
+  log(position, " ", mBigBoxRect.topleft, " ", mBigBoxRect.bottomright());
   // if the dropbox isnt open, we always return -1
   if (!mIsOptionsListVisible || !isInsideOptionsList(position)) {
     return -1;
@@ -222,13 +256,18 @@ void Dropdown::setMouseOverItem(const int index) {
  * @param position
  *   screen position
  */
-void Dropdown::setActiveItem(const vec2& position) {
+bool Dropdown::setActiveItem(const vec2& position) {
   // Close the dropdown if inside the button and its open,
   // else open it
   if (isInside(position)) {
     mIsOptionsListVisible = !mIsOptionsListVisible;
     setMouseOverItem(-1);
-    return;
+    return true;
+  }
+
+  // If the big box isnt visible, there's nothing to click
+  if (!mIsOptionsListVisible) {
+    return false;
   }
 
   // If the click is outside the large box, we close
@@ -236,12 +275,7 @@ void Dropdown::setActiveItem(const vec2& position) {
   if (!isInsideOptionsList(position)) {
     mIsOptionsListVisible = false;
     setMouseOverItem(-1);
-    return;
-  }
-
-  // If the big box isnt visible, there's nothing to click
-  if (!mIsOptionsListVisible) {
-    return;
+    return false;
   }
 
   // Go through all the elements, find the match (if any)
@@ -250,16 +284,18 @@ void Dropdown::setActiveItem(const vec2& position) {
     if (mOptions[i]->isInside(position)) {
       // Ignore the padding element
       if (i == 0)
-        return;
+        return true;
 
       mActiveOption         = i;
       mIsOptionsListVisible = false;
       setActiveOptionPosition();
       hasChanged(true);
       setMouseOverItem(-1);
-      return;
+      return true;
     }
   }
+
+  return false;
 }
 
 /**
@@ -366,7 +402,6 @@ void Dropdown::setOffset(const vec2& offset) {
 
   setActiveOptionPosition();
 }
-
 
 /**
  * @brief

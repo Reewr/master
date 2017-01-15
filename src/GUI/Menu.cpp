@@ -4,6 +4,7 @@
 #include <tinyxml2.h>
 
 #include "../Graphical/Text.hpp"
+#include "../Input/Event.hpp"
 #include "../Utils/Asset.hpp"
 #include "../Utils/Utils.hpp"
 
@@ -38,7 +39,7 @@ Menu::Menu() {
  * @param m
  *   The settings for the menu item
  */
-Menu::Menu(const std::string   text,
+Menu::Menu(const std::string&  text,
            const vec2&         position,
            const MenuSettings& m) {
   mActiveMenu = -1;
@@ -171,6 +172,39 @@ Menu::~Menu() {
 
 /**
  * @brief
+ *
+ *  The default handler for the Dropbox is called whenever input()
+ *  is called. This can be overriden by setting a handler using
+ *  setInputHandler()
+ *
+ *  The input handler set through this function can also
+ *  call the default input handler, if the context is avaible.
+ *
+ * @param event
+ *
+ * @return
+ */
+void Menu::defaultInputHandler(const Input::Event& event) {
+  if (!isVisible())
+    return;
+
+  if (event == Input::Event::Type::MouseMovement) {
+    if (setActiveMenu(isInsideMenuElement(event.position())))
+      event.stopPropgation();
+
+    return;
+  }
+
+  if (event == Input::Event::Type::KeyPress) {
+    if (setActiveMenuKeyboard(event.key()))
+      event.stopPropgation();
+
+    return;
+  }
+}
+
+/**
+ * @brief
  *   Adds a new menu item to the list, using the position
  *   given. Only uses the size and color of the menu
  *   settings.
@@ -184,7 +218,7 @@ Menu::~Menu() {
  * @param m
  *   The menu settings to use
  */
-void Menu::addMenuItem(const std::string   text,
+void Menu::addMenuItem(const std::string&  text,
                        const vec2&         position,
                        const MenuSettings& m) {
   Text* item = new Text(mFont, text, position, m.size);
@@ -263,9 +297,9 @@ int Menu::isInsideMenuElement(const vec2& position) const {
  *
  * @param index
  */
-void Menu::setActiveMenu(const int index) {
+bool Menu::setActiveMenu(const int index) {
   if (!isVisible() && index != -1)
-    return;
+    return false;
 
   if (mActiveMenu != -1 && mActiveMenu != index) {
     mMenuItems[mActiveMenu]->setPrevColor();
@@ -276,6 +310,8 @@ void Menu::setActiveMenu(const int index) {
   }
 
   mActiveMenu = index;
+
+  return false;
 }
 
 /**
@@ -286,9 +322,9 @@ void Menu::setActiveMenu(const int index) {
  *
  * @param key
  */
-void Menu::setActiveMenuKeyboard(const int key) {
+bool Menu::setActiveMenuKeyboard(const int key) {
   if (!isVisible())
-    return;
+    return false;
 
   int activeMenu = -2;
 
@@ -302,8 +338,10 @@ void Menu::setActiveMenuKeyboard(const int key) {
   }
 
   if (activeMenu != -2) {
-    setActiveMenu(activeMenu);
+    return setActiveMenu(activeMenu);
   }
+
+  return false;
 }
 
 /**

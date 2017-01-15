@@ -1,5 +1,4 @@
-#ifndef GRAPHICAL_FRAMEBUFER_HPP
-#define GRAPHICAL_FRAMEBUFER_HPP
+#pragma once
 
 #include <string>
 #include <vector>
@@ -138,8 +137,6 @@ public:
 
 private:
   void setup();
-  /* void color(); */
-  /* void depth(); */
 
   bool failCheck();
   void checkFramebuffer();
@@ -161,5 +158,3 @@ private:
   static Program*    drawProgram;
   static CFG*        cfg;
 };
-
-#endif

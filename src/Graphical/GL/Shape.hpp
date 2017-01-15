@@ -1,5 +1,4 @@
-#ifndef GRAPHICAL_GL_SHAPE_HPP
-#define GRAPHICAL_GL_SHAPE_HPP
+#pragma once
 
 #include "../../OpenGLHeaders.hpp"
 
@@ -17,5 +16,3 @@ protected:
   GLuint VAO = 0;
 };
 }
-
-#endif

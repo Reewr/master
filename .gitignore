@@ -4,3 +4,4 @@ lib
 tags
 DDDGP
 bin
+compile_commands.json

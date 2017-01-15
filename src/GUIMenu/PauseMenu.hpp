@@ -7,19 +7,20 @@
 #include "../Import/UILoader.hpp"
 #include "../Math/Math.hpp"
 
+namespace Input {
 class Input;
+class Event;
+}
 
 class PauseMenu : public Window {
 public:
-  PauseMenu(Input* i);
+  PauseMenu(Input::Input* i);
 
-  int handleKeyInput(const int key, const int action);
-  int handleMouseButton(const int key, const int action);
-  int handleAction();
+  void input(const Input::Event& event);
 
 private:
   Import::UILoader mUiLoader;
-  Input*           mInput;
+  Input::Input*    mInput;
 };
 
 #endif

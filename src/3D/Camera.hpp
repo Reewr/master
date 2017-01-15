@@ -1,5 +1,4 @@
-#ifndef THREED_CAMERA_HPP
-#define THREED_CAMERA_HPP
+#pragma once
 
 #include <string>
 #include <vector>
@@ -8,7 +7,10 @@
 
 class Asset;
 class Program;
+
+namespace Input {
 class Input;
+}
 
 struct Camera {
   vec3  target = { 0, 1.183, 0 };
@@ -35,13 +37,13 @@ struct Camera {
   Program* shadow;
   /* Program* model; */
 
-  Input* input;
+  Input::Input* input;
 
   mat4 model = mat4::identity;
   mat4 view  = mat4::identity;
   mat4 proj  = mat4::identity;
 
-  Camera(Input* i, Program* shadow);
+  Camera(Input::Input* i, Program* shadow);
   /* Camera (Input* i, Program* shadow, Program* model); */
 
   mat4 updateViewMatrix();
@@ -61,5 +63,3 @@ struct Camera {
   static Asset* asset;
   static void init(Asset* asset);
 };
-
-#endif

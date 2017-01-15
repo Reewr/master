@@ -1,5 +1,4 @@
-#ifndef GUI_WINDOW_HPP
-#define GUI_WINDOW_HPP
+#pragma once
 
 #include <list>
 #include <map>
@@ -36,6 +35,11 @@ public:
 
   // :)
   void draw(float deltaTime);
+
+  //! Can be called to do the default actions by using
+  //! setInputHandler. Is also called by default if setInputHandler
+  //! is never called.
+  void defaultInputHandler(const Input::Event& event);
 
   //! Adds a title to the middle-top of the window
   void addTitle(std::string s);
@@ -81,6 +85,9 @@ public:
   virtual int handleMouseButton(int button, int action);
   virtual int handleAction();
 
+  bool hasChanged() const;
+  void hasChanged(bool c);
+
 protected:
   void sortDropdowns();
 
@@ -96,5 +103,3 @@ protected:
   std::map<std::string, Checkbox*> mCheckboxes;
   std::map<std::string, Inputbox*> mInputboxes;
 };
-
-#endif

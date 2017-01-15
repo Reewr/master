@@ -1,19 +1,18 @@
-#ifndef GRAPHICAL_TEXT_HPP
-#define GRAPHICAL_TEXT_HPP
+#pragma once
 
 #include <string>
 
 #include "../OpenGLHeaders.hpp"
 
-#include "../Math/MathCD.hpp"
 #include "../GUI/GUI.hpp"
+#include "../Math/MathCD.hpp"
 
 class Font;
 class CFG;
 class Program;
 
 //! Text class needs a pointer to a Font object to work.
-class Text  : public GUI {
+class Text : public GUI {
 public:
   //! Enums for Text Color - use these if you want to change color of the text
   enum { BLACK, WHITE, RED, GREEN, BLUE, YELLOW };
@@ -22,12 +21,12 @@ public:
   enum { BOLD, UNDERLINE, ITALIC };
 
   //! Only takes a pointer to a Font. Do NOT destroy the font object.
-  Text(Font* font,
+  Text(Font*              font,
        const std::string& text,
-       const vec2& position,
-       int size = 30,
-       int color = BLACK,
-       const vec2& limit = vec2());
+       const vec2&        position,
+       int                size  = 30,
+       int                color = BLACK,
+       const vec2&        limit = vec2());
 
   //! Deconstructor
   ~Text();
@@ -71,8 +70,8 @@ private:
   struct {
     vec3 current;
     vec3 previous;
-    int currentEnumColor;
-    int prevEnumColor;
+    int  currentEnumColor;
+    int  prevEnumColor;
   } mColor;
 
   int mNumVertices;
@@ -89,5 +88,3 @@ private:
   vec2 mLimit;
   bool mIsLimitOn;
 };
-
-#endif

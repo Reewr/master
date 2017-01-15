@@ -5,9 +5,10 @@
 #include "../GLSL/Program.hpp"
 #include "../Graphical/Text.hpp"
 #include "../Graphical/Texture.hpp"
+#include "../Input/Event.hpp"
 #include "../Utils/Utils.hpp"
 
-Slider::Slider(const vec2& pos, const float scale, const std::string valSign) {
+Slider::Slider(const vec2& pos, const float scale, const std::string& valSign) {
   mBackground = new Texture(TEMP::getPath(TEMP::SLIDER));
   mButton     = new Texture(TEMP::getPath(TEMP::SLIDERB));
   mInfo       = new Text(mFont, "", pos, 15, Text::WHITE);
@@ -60,6 +61,29 @@ Slider::~Slider() {
 
 /**
  * @brief
+ *
+ *  The default handler for the Dropbox is called whenever input()
+ *  is called. This can be overriden by setting a handler using
+ *  setInputHandler()
+ *
+ *  The input handler set through this function can also
+ *  call the default input handler, if the context is avaible.
+ *
+ * @param event
+ *
+ * @return
+ */
+void Slider::defaultInputHandler(const Input::Event& e) {
+  if (!isVisible())
+    return;
+
+  if (e.buttonPressed(GLFW_MOUSE_BUTTON_LEFT) && moveSlider(e.position())) {
+    e.stopPropgation();
+  }
+}
+
+/**
+ * @brief
  *   Sets the offset of the slider and all
  *   its sub elements
  *
@@ -83,9 +107,9 @@ void Slider::setOffset(const vec2& offset) {
  *
  * @return the new value
  */
-float Slider::moveSlider(const vec2& position) {
+bool Slider::moveSlider(const vec2& position) {
   if (!isInside(position)) {
-    return -1;
+    return false;
   }
 
   int x = position.x;
@@ -102,7 +126,7 @@ float Slider::moveSlider(const vec2& position) {
   setSlider(min(max(value, 0), 1));
   hasChanged(true);
 
-  return mValue;
+  return true;
 }
 
 /**

@@ -1,6 +1,7 @@
 #include "Utils.hpp"
 
 #include <algorithm>
+#include <chrono>
 #include <cstdio>
 #include <ctime>
 #include <fstream>
@@ -13,10 +14,12 @@ bool* DEBUG_MODE;
 bool* ENABLE_COLORS;
 float LOOP_LOGGER = 1000;
 
-static std::clock_t START     = std::clock();
-static int          MS_SECOND = 1000;
-static int          MS_MINUTE = 60 * MS_SECOND;
-static int          MS_HOUR   = 60 * MS_MINUTE;
+static auto START     = std::chrono::high_resolution_clock::now();
+static int  MS_SECOND = 1000;
+static int  MS_MINUTE = 60 * MS_SECOND;
+static int  MS_HOUR   = 60 * MS_MINUTE;
+
+static std::map<unsigned int, std::string> utf8Characters = {};
 
 /* Utils::Time::Time(double s) { */
 /*   ms = s * 1000; */
@@ -52,22 +55,26 @@ static int          MS_HOUR   = 60 * MS_MINUTE;
 /* } */
 
 std::string timeSinceStart() {
-  double duration = (std::clock() - START) / (double) CLOCKS_PER_SEC;
-  int    ms       = duration * 1000;
-  int    minutes  = (double) ms / (double) MS_MINUTE;
-  ms -= minutes * MS_MINUTE;
+  auto   finish = std::chrono::high_resolution_clock::now();
+  double micro =
+    std::chrono::duration_cast<std::chrono::microseconds>(finish - START)
+      .count();
 
-  int seconds = (double) ms / (double) MS_SECOND;
-  ms -= seconds * MS_SECOND;
+  int ms = (double) micro / 1000.0;
+  micro -= ms * 1000;
+  int mins = (double) ms / (double) MS_MINUTE;
+  ms -= mins * MS_MINUTE;
 
-  std::string sMinutes =
-    (minutes < 10 ? "0" : "") + Utils::toStr(minutes) + "m";
-  std::string sSeconds =
-    (seconds < 10 ? "0" : "") + Utils::toStr(seconds) + "s";
+  int secs = (double) ms / (double) MS_SECOND;
+  ms -= secs * MS_SECOND;
+
+  std::string sMinutes = (mins < 10 ? "0" : "") + Utils::toStr(mins) + "m";
+  std::string sSeconds = (secs < 10 ? "0" : "") + Utils::toStr(secs) + "s";
   std::string sMs =
     (ms < 10 ? "00" : ms < 100 ? "0" : "") + Utils::toStr(ms) + "ms";
+  std::string sNano = Utils::toStr(micro) + "μs";
 
-  return "[" + sMinutes + " " + sSeconds + " " + sMs + "]";
+  return "[" + sMinutes + " " + sSeconds + " " + sMs + " " + sNano + "]";
 }
 
 /**
@@ -118,6 +125,46 @@ std::string Utils::toUpper(std::string s) {
   std::transform(s.begin(), s.end(), s.begin(), toupper);
 
   return s;
+}
+
+/**
+ * @brief
+ *   Takes an unsigned integer that represent a unicode character
+ *   and turns it into a string. This function uses a map to cache
+ *   the answer so it can be run multiple times on the same integer
+ *   without the performance hit.
+ *
+ * @param codepoint
+ *
+ * @return
+ */
+std::string Utils::utf8toStr(unsigned int codepoint) {
+  if (utf8Characters.count(codepoint))
+    return utf8Characters[codepoint];
+
+  std::string out;
+
+  // this code has been taken from:
+  // https://stackoverflow.com/questions/19968705/unsigned-integer-as-utf-8-value
+  if (codepoint <= 0x7f)
+    out.append(1, static_cast<char>(codepoint));
+  else if (codepoint <= 0x7ff) {
+    out.append(1, static_cast<char>(0xc0 | ((codepoint >> 6) & 0x1f)));
+    out.append(1, static_cast<char>(0x80 | (codepoint & 0x3f)));
+  } else if (codepoint <= 0xffff) {
+    out.append(1, static_cast<char>(0xe0 | ((codepoint >> 12) & 0x0f)));
+    out.append(1, static_cast<char>(0x80 | ((codepoint >> 6) & 0x3f)));
+    out.append(1, static_cast<char>(0x80 | (codepoint & 0x3f)));
+  } else {
+    out.append(1, static_cast<char>(0xf0 | ((codepoint >> 18) & 0x07)));
+    out.append(1, static_cast<char>(0x80 | ((codepoint >> 12) & 0x3f)));
+    out.append(1, static_cast<char>(0x80 | ((codepoint >> 6) & 0x3f)));
+    out.append(1, static_cast<char>(0x80 | (codepoint & 0x3f)));
+  }
+
+  utf8Characters[codepoint] = out;
+
+  return out;
 }
 
 /**
@@ -232,7 +279,6 @@ void tlog() {
     log();
 }
 
-
 std::string TEMP::getPath(int i) {
   switch (i) {
     case OPTSMENU:
@@ -268,7 +314,7 @@ std::string TEMP::getPath(int i) {
     case XMLRES:
       return "./media/XML/GUIResources.xml";
     case FONT:
-      return "./media/Fonts/neuropolitical.ttf";
+      return "./media/Fonts/DejaVuSansMono.ttf";
     default:
       return "./media/Textures/debug.png";
   }

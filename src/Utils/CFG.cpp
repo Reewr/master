@@ -5,7 +5,7 @@
 #include <iomanip>
 #include <sstream>
 
-#include "../Input.hpp"
+#include "../Input/Input.hpp"
 #include "Utils.hpp"
 
 ActB::ActB(int k1, int k2) {

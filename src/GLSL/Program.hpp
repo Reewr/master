@@ -1,5 +1,4 @@
-#ifndef GLSL_PROGRAM_HPP
-#define GLSL_PROGRAM_HPP
+#pragma once
 
 #include <map>
 #include <string>
@@ -126,5 +125,3 @@ private:
 };
 
 #include <GLSL/Program.tpp>
-
-#endif

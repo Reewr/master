@@ -1,5 +1,4 @@
-#ifndef INPUT_HPP
-#define INPUT_HPP
+#pragma once
 
 #include <functional>
 #include <map>
@@ -15,6 +14,18 @@ struct ActB;
 struct GLFWwindow;
 class CFG;
 
+
+namespace Input {
+
+// Massive maps that contain a key to string and string to key
+// representation of every available glfw key.
+extern std::map<int, std::string> keyStrings;
+extern std::map<std::string, int> keyMap;
+
+//! Returns the string representation of a key
+std::string glfwKeyToString(int glfwKey);
+
+
 /**
  * @brief
  *   Keys is a representation of an action together with two keys.
@@ -27,9 +38,17 @@ struct Keys {
   int key1, key2;
 };
 
-struct InputFunc {
-  int                      isPressed;
-  std::function<int(void)> func;
+//! Actions
+enum Action {
+  NotBound = -1,
+  PauseMenu,
+  MoveUp,
+  MoveDown,
+  MoveLeft,
+  MoveRight,
+  Rotate,
+  Screenshot,
+  Console
 };
 
 class Input {
@@ -46,7 +65,7 @@ public:
   int getAction(int glfwKey);
 
   //! Sets the action to be bound to 2x GLFW_KEY_*
-  void setKey(int action, int glfwKey1 = NOT_BOUND, int glfwKey2 = NOT_BOUND);
+  void setKey(int action, int glfwKey1 = NotBound, int glfwKey2 = NotBound);
 
   //! Unbinds actions bound to a GLFW_KEY_*
   void unbindExisting(int glfwKey);
@@ -72,9 +91,6 @@ public:
   //! Returns the string representation for an action
   std::vector<std::string> getActionsString();
 
-  //! Returns the string representation of a key
-  std::string glfwKeyToString(int glfwKey);
-
   //! Returns the string representation of two keys for an action
   std::vector<std::string> getActionKeysToString(int action);
 
@@ -92,43 +108,15 @@ public:
   //! the string representation of that action
   void addAction(int action, Keys k, std::string text = "");
 
-  //! Adds a callback function to a specific key
-  void
-  addKeyCB(int key, std::function<int(void)>&& f, int isPressed = GLFW_PRESS);
-
-  //! Performs the callback that is assigned to a spesific key, if any.
-  int doKeyCB(int key, int action);
-
-  //! Clears all the previously set keybindings
-  void resetKeyCB();
-
-  //! Actions
-  enum {
-    NOT_BOUND = -1,
-    PAUSEMENU,
-    MOVE_UP,
-    MOVE_DOWN,
-    MOVE_LEFT,
-    MOVE_RIGHT,
-    ROTATE,
-    SCREENSHOT,
-    CONSOLE
-  };
-
-  // Massive maps that contain a key to string and string to key
-  // representation of every available glfw key.
-  static std::map<int, std::string> keyStrings;
-  static std::map<std::string, int> keyMap;
-
 private:
   // used to store the functions received through addKeyCB()
-  std::map<int, InputFunc> functionCalls;
-  std::map<int, Keys>      keys;
-  std::map<int, int>       glfwKeys;
-  std::map<int, vec2>      pressedCoords;
+  std::map<int, Keys> keys;
+  std::map<int, int>  glfwKeys;
+  std::map<int, vec2> pressedCoords;
   std::vector<std::string> actionsString;
 
   GLFWwindow* window;
   CFG*        cfg;
 };
-#endif
+
+}
