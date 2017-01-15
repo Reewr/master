@@ -20,16 +20,6 @@ build_dddgp() {
     build_type="Debug"
   fi
 
-  # Currently our project only runs with g++, so we force
-  # cmake to use g++ / gcc by setting export flags.
-  # TODO: Remove these lines once project compiles with clang
-  local tmpcc tmpcxx
-  tmpcc=$CC
-  tmpcxx=$CXX
-
-  export CC="gcc"
-  export CXX="g++"
-
   # Run different command based on
   # whether ninja is available.
   #
@@ -56,12 +46,6 @@ build_dddgp() {
       make
     fi
   fi
-
-  # Due to forcing the environmental variables we have
-  # to set them back to normal
-  # TODO: Something Something, remove this when clang++ compiles
-  export CC=$tmpcc
-  export CXX=$tmpcxx
 }
 
 # Prints the usage of the binary
