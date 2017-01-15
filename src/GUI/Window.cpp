@@ -271,7 +271,7 @@ void Window::addInputbox(std::string name, Rect r, std::string text) {
   mInputboxes[name] = new Inputbox(r, text);
 }
 
-void Window::setOffset(vec2 offset) {
+void Window::setOffset(const vec2& offset) {
   if (mTitle != NULL)
     mTitle->setOffset(offset);
 

@@ -32,7 +32,7 @@ public:
 
   ~Window();
 
-  void setOffset(vec2 offset);
+  void setOffset(const vec2& offset);
 
   // :)
   void draw(float deltaTime);
