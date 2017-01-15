@@ -98,7 +98,7 @@ The following flags are available:
 EOF
 }
 
-# Runs clang on all the files one by one, outputting only
+# Runs clang-format on all the files one by one, outputting only
 # if a file was changed.
 # Also supports an interactive mode that shows the changes
 # that are to be done and asks for confirmation before
