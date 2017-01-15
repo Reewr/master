@@ -217,12 +217,12 @@ bool Program::setGLUniform(GLint loc, const vec4& v) {
 }
 
 bool Program::setGLUniform(GLint loc, const mat3& m) {
-  glUniformMatrix3fv(loc, 1, GL_TRUE, m.m);
+  glUniformMatrix3fv(loc, 1, GL_TRUE, m.rawdata);
   return checkErrors("setGLUniform(mat3): ", filenames);
 }
 
 bool Program::setGLUniform(GLint loc, const mat4& m) {
-  glUniformMatrix4fv(loc, 1, GL_TRUE, m.m);
+  glUniformMatrix4fv(loc, 1, GL_TRUE, m.rawdata);
   return checkErrors("setGLUniform(mat4): ", filenames);
 }
 
