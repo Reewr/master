@@ -15,7 +15,6 @@ class CFG;
 //! can load .PNG & .dds. Can also draw simple squared texture
 class Texture {
 public:
-
   //! Textures to load - MODE
   enum { GUI, TEXTURE, DDS, CUBE, MAP, EMPTY };
   enum { CUBENORMAL, CUBEREFLECTION };

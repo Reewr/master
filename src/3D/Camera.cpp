@@ -32,8 +32,10 @@ mat4 Camera::updateViewMatrix() {
 }
 
 mat4 Camera::updateProjMatrix() {
-  return perspective<float>(
-    67.f, asset->cfg.graphics.aspect, 0.1f, asset->cfg.graphics.viewDistance);
+  return perspective<float>(67.f,
+                            asset->cfg.graphics.aspect,
+                            0.1f,
+                            asset->cfg.graphics.viewDistance);
 }
 
 void Camera::setLightMVPUniform(Program* p, std::string name) {

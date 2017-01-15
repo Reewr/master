@@ -3,8 +3,8 @@
 #include "../OpenGLHeaders.hpp"
 
 #include "../Graphical/Texture.hpp"
-#include "../Input/Input.hpp"
 #include "../Input/Event.hpp"
+#include "../Input/Input.hpp"
 #include "../State/State.hpp"
 #include "../Utils/Asset.hpp"
 #include "../Utils/Utils.hpp"
@@ -35,7 +35,7 @@ void PauseMenu::input(const Input::Event& event) {
   bool isClick = event.keyPressed(GLFW_KEY_ENTER) ||
                  event.buttonPressed(GLFW_MOUSE_BUTTON_LEFT);
   if (isClick) {
-    switch(menu("PauseOptions")->getActiveMenu()) {
+    switch (menu("PauseOptions")->getActiveMenu()) {
       case 0:
         isVisible(false);
         return event.stopPropgation();

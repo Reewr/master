@@ -118,5 +118,4 @@ private:
   GLFWwindow* window;
   CFG*        cfg;
 };
-
 }
