@@ -17,9 +17,9 @@ Camera::Camera(Input* i, Program* shadow) {
   light.day = 0;
   input     = i;
 
-  mvp.proj = updateProjMatrix();
+  proj = updateProjMatrix();
 
-  /* model->setUniform("proj", mvp.proj); */
+  /* model->setUniform("proj", proj); */
 
   update(0);
 }
@@ -32,53 +32,51 @@ mat4 Camera::updateViewMatrix() {
 }
 
 mat4 Camera::updateProjMatrix() {
-  return perspective(67,
-                     asset->cfg.graphics.aspect,
-                     0.1,
-                     asset->cfg.graphics.viewDistance);
+  return perspective<float>(
+    67.f, asset->cfg.graphics.aspect, 0.1f, asset->cfg.graphics.viewDistance);
 }
 
 void Camera::setLightMVPUniform(Program* p, std::string name) {
-  p->setUniform(name, (mat4) light.mvp);
+  p->setUniform(name, light.proj * light.view * light.model);
 }
 
 void Camera::setLightMVPUniforms(Program* p, std::string name) {
-  p->setUniform(name + ".model", light.mvp.model);
+  p->setUniform(name + ".model", light.model);
   setLightMPUniforms(p, name);
 }
 
 void Camera::setLightMPUniforms(Program* p, std::string name) {
-  p->setUniform(name + ".view", light.mvp.view);
-  p->setUniform(name + ".proj", light.mvp.proj);
+  p->setUniform(name + ".view", light.view);
+  p->setUniform(name + ".proj", light.proj);
 }
 void Camera::setMVPUniform(Program* p, std::string name) {
-  p->setUniform(name, (mat4) mvp);
+  p->setUniform(name, proj * view * model);
 }
 
 void Camera::setMVPUniforms(Program* p, std::string name) {
-  p->setUniform(name + ".model", mvp.model);
-  p->setUniform(name + ".view", mvp.view);
-  p->setUniform(name + ".proj", mvp.proj);
+  p->setUniform(name + ".model", model);
+  p->setUniform(name + ".view", view);
+  p->setUniform(name + ".proj", proj);
 }
 
 void Camera::update(float) {
-  mvp.view = updateViewMatrix();
+  view = updateViewMatrix();
 
   // light.day -= light.speed * dt;
   mat4 lt = rotate_z(light.day) * rotate_y(hrot);
   vec3 lp = target + vec3(lt * vec4(0, height, 0, 1));
   vec3 lu = vec3(lt * vec4(0, 0, -1, 0));
 
-  light.mvp.view = lookAt(lp, target, lu);
+  light.view = lookAt(lp, target, lu);
   // float h = height;
-  // light.mvp.proj = ortho (-5*height, 5*height, -5*height, 5*height,
+  // light.proj = ortho (-5*height, 5*height, -5*height, 5*height,
   // -5*height, 5*height);
-  light.mvp.proj = ortho(-7.f, 7.f, -7.f, 7.f, -7.f, 7.f);
-  light.dir      = normalize(lp - target);
+  light.proj = ortho(-7.f, 7.f, -7.f, 7.f, -7.f, 7.f);
+  light.dir  = normalize(lp - target);
 
   setLightMPUniforms(shadow);
   /* setLightMPUniforms(model); */
-  /* model->setUniform ("view", mvp.view); */
+  /* model->setUniform ("view", view); */
   /* model->setUniform ("dir", light.dir); */
   // terrain->setUniform("lightDir", ld);
 

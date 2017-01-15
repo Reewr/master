@@ -27,7 +27,9 @@ struct Camera {
     vec3  color   = { 1, 1, 1 };
     float ambient = 0.2;
     vec3  dir;
-    MVP   mvp;
+    mat4  model   = mat4::identity;
+    mat4  view    = mat4::identity;
+    mat4  proj    = mat4::identity;
   } light;
 
   Program* shadow;
@@ -35,7 +37,9 @@ struct Camera {
 
   Input* input;
 
-  MVP mvp;
+  mat4 model = mat4::identity;
+  mat4 view  = mat4::identity;
+  mat4 proj  = mat4::identity;
 
   Camera(Input* i, Program* shadow);
   /* Camera (Input* i, Program* shadow, Program* model); */
