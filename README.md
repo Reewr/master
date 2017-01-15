@@ -4,10 +4,6 @@ This repository contains the master thesis for Alexander Imenes and Svein Inge A
 
 The repository contains several folders, most of which are essential to the code itself. Below is a short explanation of each of the directories
 
-**cmake**
-
-This folder contains files that are needed for building the project with Cmake. You will find some specific module files that help to find the difference modules needed for the project
-
 **config**
 
 This folder contains the .ini file that is used to set the different options used by the game engine. It contains anything from graphical options to keybindings.
@@ -60,7 +56,7 @@ This project utilizes seven (7) different dependencies for release builds and ei
 - [Bullet3](http://bulletphysics.org/wordpress/)
 - [Assimp](http://www.assimp.org)
 
-The licenses for each dependency can be found in the [deps](./deps) folder, except for `assimp` that has to be installed globally on the system when building.
+The licenses for each dependency can be found in the [deps](./deps) folder
 
 
 
