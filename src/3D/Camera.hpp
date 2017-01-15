@@ -6,7 +6,7 @@
 
 #include "../Math/Math.hpp"
 
-struct Asset;
+class Asset;
 class Program;
 class Input;
 

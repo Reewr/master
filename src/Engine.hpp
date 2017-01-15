@@ -8,7 +8,7 @@
 
 #include "State/State.hpp"
 
-struct Asset;
+class Asset;
 class Input;
 
 //! Engine sorts out which state that is active

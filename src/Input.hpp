@@ -10,7 +10,7 @@
 
 #include "Math/Math.hpp"
 
-struct Asset;
+class Asset;
 struct ActB;
 struct GLFWwindow;
 class CFG;

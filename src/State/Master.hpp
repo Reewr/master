@@ -5,7 +5,7 @@
 
 class Input;
 class Console;
-struct Asset;
+class Asset;
 
 class Master : public State {
 public:

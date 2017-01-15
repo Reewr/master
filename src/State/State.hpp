@@ -1,7 +1,7 @@
 #ifndef STATE_STATE_HPP
 #define STATE_STATE_HPP
 
-struct Asset;
+class Asset;
 
 //! Fully Virtual class utilized by StateGame and StateMenu
 class State {
