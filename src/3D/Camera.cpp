@@ -73,7 +73,7 @@ void Camera::update(float) {
   // float h = height;
   // light.mvp.proj = ortho (-5*height, 5*height, -5*height, 5*height,
   // -5*height, 5*height);
-  light.mvp.proj = ortho(-7, 7, -7, 7, -7, 7);
+  light.mvp.proj = ortho(-7.f, 7.f, -7.f, 7.f, -7.f, 7.f);
   light.dir      = normalize(lp - target);
 
   setLightMPUniforms(shadow);
