@@ -411,7 +411,7 @@ void Dropdown::setOffset(const vec2& offset) {
  *
  * @param float delta time, not used in this case
  */
-void Dropdown::draw(const float) {
+void Dropdown::draw(float) {
   if (!isVisible())
     return;
 
