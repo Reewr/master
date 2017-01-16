@@ -3,6 +3,7 @@
 #include <string>
 
 #include "../Math/Math.hpp"
+#include "../Input/Input.hpp"
 
 namespace Input {
 
@@ -30,21 +31,21 @@ public:
 
   //! Calling this constructor tells the Event that it is of either
   //! a KeyPress or KeyRelease event
-  Event(int key, int action, int mods);
+  Event(Input* i, int key, int action, int mods);
 
   //! Calling this constructor tells the Event that it is of either
   //! a MousePress or MouseRelease event
-  Event(const vec2& mousePosition, int key, int action, int mods);
+  Event(Input* i, const vec2& mousePosition, int key, int action, int mods);
 
   //! Calling this constructor tells the Event that it is of MouseScroll event
-  Event(const vec2& mousePosition, const vec2& scrollOffset);
+  Event(Input* i, const vec2& mousePosition, const vec2& scrollOffset);
 
   //! Calling the constructor without any additional information than the mouse
   //! position indicates that it is a MouseMovement event
-  Event(const vec2& mousePosition);
+  Event(Input* i, const vec2& mousePosition);
 
   //! Lastly, the CharacterInput event only consists of a single character
-  Event(std::string s);
+  Event(Input* i, std::string s);
   ~Event();
 
   bool operator==(int type) const;
@@ -71,6 +72,11 @@ public:
   //! Synonomous for key() but makes more sense in the
   //! case of mouse button
   int button() const;
+
+  //! Checks if the event matches an Action defined by Input::Action.
+  //! This is technically a wrapper around the Input class, since a
+  //! lot of handlers that handles inputs will need to check actions.
+  bool isAction(Action a);
 
   //! This is a simplification for checking for buttons. It firstly
   //! checks that it is a key press event and then
@@ -141,6 +147,8 @@ private:
 
   vec2 mPosition;
   vec2 mScroll;
+
+  Input* mInput;
 
   mutable int mPrev;
   mutable int mType;
