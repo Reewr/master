@@ -33,7 +33,7 @@ Event::Event(Input* i, int key, int action, int mods)
     , mPosition(-1, -1)
     , mScroll(0, 0)
     , mInput(i)
-    , mHandledState(State::NOCHANGE) {
+    , mHandledState(States::NoChange) {
   mType      = action == GLFW_PRESS ? Type::KeyPress : Type::KeyRelease;
   mCharacter = glfwKeyToString(key);
 }
@@ -66,7 +66,7 @@ Event::Event(Input* i, const vec2& mousePosition, int key, int action, int mods)
     , mPosition(mousePosition)
     , mScroll(0, 0)
     , mInput(i)
-    , mHandledState(State::NOCHANGE) {
+    , mHandledState(States::NoChange) {
   mType      = action == GLFW_PRESS ? Type::MousePress : Type::MouseRelease;
   mCharacter = glfwKeyToString(key);
 }
@@ -96,7 +96,7 @@ Event::Event(Input* i, const vec2& mousePosition, const vec2& scrollOffset)
     , mScroll(scrollOffset)
     , mInput(i)
     , mType(Type::MouseScroll)
-    , mHandledState(State::NOCHANGE) {}
+    , mHandledState(States::NoChange) {}
 
 /**
  * @brief
@@ -116,7 +116,7 @@ Event::Event(Input* i, const vec2& mousePosition)
     , mScroll(0, 0)
     , mInput(i)
     , mType(Type::MouseMovement)
-    , mHandledState(State::NOCHANGE) {}
+    , mHandledState(States::NoChange) {}
 
 /**
  * @brief
@@ -135,7 +135,7 @@ Event::Event(Input* i, std::string s)
     , mScroll(0, 0)
     , mInput(i)
     , mType(Type::CharacterInput)
-    , mHandledState(State::NOCHANGE) {
+    , mHandledState(States::NoChange) {
   mCharacter = s;
 }
 
@@ -175,6 +175,19 @@ bool Event::operator==(int type) const {
  */
 bool Event::operator!=(int type) const {
   return mType != type;
+}
+
+/**
+ * @brief
+ *   Checks whether the event matches an action. Uses the input manager
+ *   to determine what keys is needed to trigger that action.
+ *
+ * @param a
+ *
+ * @return
+ */
+bool Event::isAction(Action a) const {
+  return mInput != nullptr && mInput->checkKey(a, mKeyCode);
 }
 
 /**
@@ -260,7 +273,7 @@ int Event::button() const {
  *   Returns the state that is stored. This value represents whether
  *   or not a stateChange will happen when the event is over.
  *
- *   This defaults to `State::NOCHANGE` and can be changed through
+ *   This defaults to `States::NoChange` and can be changed through
  *   sendStateChange()
  *
  * @return
@@ -419,7 +432,7 @@ int Event::prevType() const {
  * @param stateChange
  */
 void Event::sendStateChange(int stateChange) const {
-  if (stateChange == State::NOCHANGE)
+  if (stateChange == States::NoChange)
     return;
 
   mHandledState = stateChange;

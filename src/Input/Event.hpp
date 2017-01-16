@@ -76,7 +76,7 @@ public:
   //! Checks if the event matches an Action defined by Input::Action.
   //! This is technically a wrapper around the Input class, since a
   //! lot of handlers that handles inputs will need to check actions.
-  bool isAction(Action a);
+  bool isAction(Action a) const;
 
   //! This is a simplification for checking for buttons. It firstly
   //! checks that it is a key press event and then
