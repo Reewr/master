@@ -87,7 +87,7 @@ void Text::setText(const std::string& text) {
  *
  * @param charSize
  */
-void Text::setSize(int charSize) {
+void Text::setTextSize(int charSize) {
   if (charSize == mCharacterSize || charSize < 1)
     return;
 

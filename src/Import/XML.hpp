@@ -1,7 +1,7 @@
 #pragma once
 
 namespace tinyxml2 {
-struct XMLDocument;
+class XMLDocument;
 }
 
 namespace Import {

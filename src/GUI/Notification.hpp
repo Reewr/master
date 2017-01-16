@@ -44,7 +44,6 @@ private:
   float mAnimationTime;
   float mCurrentTime;
   float mWaitTime;
-  float mCloseTimer;
 
   Rect mIconRect;
 

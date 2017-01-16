@@ -8,8 +8,7 @@
 #include "../Utils/Asset.hpp"
 #include "../Utils/Utils.hpp"
 
-Master::Master(Asset* asset, Input::Input* input)
-    : mInput(input), mAsset(asset) {
+Master::Master(Asset*, Input::Input* input) {
   mConsole = new Console(input);
 }
 

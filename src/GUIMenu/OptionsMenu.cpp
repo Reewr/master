@@ -81,7 +81,7 @@ OptionsMenu::OptionsMenu(Input::Input* input) {
     bool isEnterOrEsc =
       e.keyPressed(GLFW_KEY_ENTER) || e.buttonPressed(GLFW_MOUSE_BUTTON_LEFT);
 
-    if (isEnterOrEsc && handleAction(e)) {
+    if (isEnterOrEsc && handleOptionsAction(e)) {
       e.stopPropgation();
       return;
     }
@@ -116,7 +116,7 @@ OptionsMenu::OptionsMenu(Input::Input* input) {
   setDefaultOptions();
 }
 
-bool OptionsMenu::handleAction(const Input::Event& event) {
+bool OptionsMenu::handleOptionsAction(const Input::Event& event) {
   std::string nextWindow = "";
   log("I has event", menu("Category")->getActiveMenu());
 

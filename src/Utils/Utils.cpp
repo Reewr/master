@@ -17,7 +17,6 @@ float LOOP_LOGGER = 1000;
 static auto START     = std::chrono::high_resolution_clock::now();
 static int  MS_SECOND = 1000;
 static int  MS_MINUTE = 60 * MS_SECOND;
-static int  MS_HOUR   = 60 * MS_MINUTE;
 
 static std::map<unsigned int, std::string> utf8Characters = {};
 

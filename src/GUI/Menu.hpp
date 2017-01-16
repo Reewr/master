@@ -78,7 +78,6 @@ public:
   void setOffset(const vec2& offset);
 
 private:
-  float              mAnimationTime;
   int                mActiveMenu;
   vec2               mAnimationDistance;
   std::vector<Text*> mMenuItems;

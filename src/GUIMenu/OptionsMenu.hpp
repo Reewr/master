@@ -23,7 +23,7 @@ private:
   void parseAudioOptions();
   void parseKeybindingOptions();
 
-  bool handleAction(const Input::Event& event);
+  bool handleOptionsAction(const Input::Event& event);
 
   Input::Input*    mInput;
   Window*          mActiveWindow;

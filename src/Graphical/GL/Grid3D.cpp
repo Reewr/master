@@ -17,7 +17,7 @@ GL::Grid3D::Grid3D(const vec2& size) {
 
 GL::Grid3D::~Grid3D() {}
 
-void GL::Grid3D::setup(bool skipOpenGL) {
+void GL::Grid3D::setup() {
   dVector<vec3>  vertices(size.y, vector<vec3>(size.x));
   dVector<vec3>  normals(size.y, vector<vec3>(size.x));
   dVector<vec2>  texCoords(size.y, vector<vec2>(size.x));
@@ -35,8 +35,8 @@ void GL::Grid3D::setup(bool skipOpenGL) {
       vertexData.push_back({ vertices[y][x], texCoords[y][x], normals[y][x] });
     }
   }
-  if (!skipOpenGL)
-    setupOpenGLArrays(vertexData, indices);
+
+  setupOpenGLArrays(vertexData, indices);
 }
 
 void GL::Grid3D::generateVertices(dVector<vec3>& v, dVector<vec2>& t) {

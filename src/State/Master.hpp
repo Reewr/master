@@ -23,7 +23,7 @@ private:
   void draw3D();
   void drawGUI();
 
-  Input::Input* mInput;
-  Asset*        mAsset;
+  /* Input::Input* mInput; */
+  /* Asset*        mAsset; */
   Console*      mConsole;
 };

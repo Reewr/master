@@ -44,7 +44,7 @@ public:
   void setText(const std::string& s);
 
   //! Changes size. Note: If font does not have the size, creates it. Taxing
-  void setSize(int charSize);
+  void setTextSize(int charSize);
 
   //! Changes the color on next rendering (and from there on.)
   void setColor(int c);

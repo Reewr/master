@@ -17,7 +17,7 @@ public:
   Grid3D(const vec2& size);
   ~Grid3D();
 
-  void setup(bool skipOpenGL = false);
+  void setup();
   void generateVertices(std::vector<std::vector<vec3>>& vertices,
                         std::vector<std::vector<vec2>>& texcoords);
   void generateNormals(const std::vector<std::vector<vec3>>& vertices,
