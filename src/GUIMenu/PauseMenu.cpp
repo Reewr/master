@@ -43,7 +43,7 @@ void PauseMenu::input(const Input::Event& event) {
         isVisible(false);
         return event.stopPropgation();
       case 2:
-        event.sendStateChange(State::QUIT);
+        event.sendStateChange(States::Quit);
         return event.stopPropgation();
     }
   }
