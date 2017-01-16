@@ -9,7 +9,7 @@
 #include "../Math/Math.hpp"
 #include "../Utils/Utils.hpp"
 
-struct Shader;
+class Shader;
 class fstream;
 
 //! Contains GLSL-Program and lets you load shaders,

@@ -461,8 +461,8 @@ bool Framebuffer::isInitialized() {
   return false;
 }
 
-void Framebuffer::init(CFG* cfg, std::string screenshotLoc) {
-  Framebuffer::cfg = cfg;
+void Framebuffer::init(CFG* c, std::string screenshotLoc) {
+  Framebuffer::cfg = c;
   ssLoc            = screenshotLoc;
   numSS            = 0;
   drawProgram      = new Program("shaders/GUI/GUI.vsfs", 0);

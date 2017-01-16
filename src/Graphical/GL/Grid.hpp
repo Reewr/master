@@ -22,9 +22,10 @@ protected:
   void setupOpenGLArrays(const std::vector<vec4>& v, const std::vector<int>& i);
   void generateVertices(std::vector<vec4>& vertices);
   void generateTriIndices(std::vector<int>& indices);
-  vec2         size;
-  vec2         cellSize;
-  int          countTriangles;
-  unsigned int indicesSize;
+
+  vec2         mSize;
+  vec2         mCellSize;
+  int          mCountTriangles;
+  unsigned int mIndicesSize;
 };
 }

@@ -31,27 +31,37 @@ std::string loadTextfile(const std::string& filename) {
   return content;
 }
 
-Shader::Shader() {
-  id       = 0;
-  filename = "Unknown";
-}
+Shader::Shader() : mId(0) , mFilename("Unknown"){ }
 
 Shader::Shader(const std::string& filename) {
-  id             = loadShader(filename);
-  this->filename = filename;
+  mId       = loadShader(filename);
+  mFilename = filename;
 }
 
 Shader::Shader(const std::string& src,
                bool               isFragment,
                const std::string& fname) {
-  id             = fromSource(src, isFragment, fname);
-  this->filename = fname;
+  mId       = fromSource(src, isFragment, fname);
+  mFilename = fname;
 }
 
 Shader::~Shader() {
-  if (id == 0)
+  if (mId == 0)
     return;
-  glDeleteShader(id);
+
+  glDeleteShader(mId);
+}
+
+std::string Shader::filename() const {
+  return mFilename;
+}
+
+std::string Shader::type() const {
+  return mType;
+}
+
+GLuint Shader::id() const {
+  return mId;
 }
 
 GLuint Shader::fromSource(const std::string& src,

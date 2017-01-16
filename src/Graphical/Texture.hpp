@@ -123,8 +123,7 @@ private:
   bool loadDDS();
   bool loadTexture();
   void loadCube();
-  //! Throws new error if filepath does not exist.
-  void imageExists(std::string filename);
+
   std::string filename;
 
   int           mode;

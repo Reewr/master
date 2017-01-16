@@ -11,20 +11,20 @@ template <typename T>
 using vector = std::vector<T>;
 
 GL::Grid3D::Grid3D(const vec2& size) {
-  this->size = size;
+  mSize = size;
   // this->change(size);
 }
 
 GL::Grid3D::~Grid3D() {}
 
 void GL::Grid3D::setup() {
-  dVector<vec3>  vertices(size.y, vector<vec3>(size.x));
-  dVector<vec3>  normals(size.y, vector<vec3>(size.x));
-  dVector<vec2>  texCoords(size.y, vector<vec2>(size.x));
+  dVector<vec3>  vertices(mSize.y, vector<vec3>(mSize.x));
+  dVector<vec3>  normals(mSize.y, vector<vec3>(mSize.x));
+  dVector<vec2>  texCoords(mSize.y, vector<vec2>(mSize.x));
   vector<int>    indices;
   vector<Vertex> vertexData;
-  vertexData.reserve(size.x * size.y);
-  indices.reserve((size.y - 1) * (size.x * 2) + (size.y - 1));
+  vertexData.reserve(mSize.x * mSize.y);
+  indices.reserve((mSize.y - 1) * (mSize.x * 2) + (mSize.y - 1));
 
   generateVertices(vertices, texCoords);
   generateNormals(vertices, normals);
@@ -41,10 +41,10 @@ void GL::Grid3D::setup() {
 
 void GL::Grid3D::generateVertices(dVector<vec3>& v, dVector<vec2>& t) {
   /* Noise::Simplex simp(5, 0.65, 4.0/size.x, 2); */
-  for (int y = 0; y < size.y - 1; y++) {
-    vec2 s = vec2(0, y / (size.y - 1));
-    for (int x = 0; x < size.x - 1; x++) {
-      s.x       = x / (size.x - 1);
+  for (int y = 0; y < mSize.y - 1; y++) {
+    vec2 s = vec2(0, y / (mSize.y - 1));
+    for (int x = 0; x < mSize.x - 1; x++) {
+      s.x       = x / (mSize.x - 1);
       v[y][x]   = vec3(-0.5 + s.x, 0, -0.5 + s.y);
       t[y][x]   = s;
       v[y][x].y = 0;
@@ -53,11 +53,11 @@ void GL::Grid3D::generateVertices(dVector<vec3>& v, dVector<vec2>& t) {
 }
 
 void GL::Grid3D::generateNormals(const dVector<vec3>& v, dVector<vec3>& n) {
-  dVector<vec3> normals1(size.y - 1, vector<vec3>(size.x - 1));
-  dVector<vec3> normals2(size.y - 1, vector<vec3>(size.x - 1));
+  dVector<vec3> normals1(mSize.y - 1, vector<vec3>(mSize.x - 1));
+  dVector<vec3> normals2(mSize.y - 1, vector<vec3>(mSize.x - 1));
 
-  for (int y = 0; y < size.y - 1; y++) {
-    for (int x = 0; x < size.x - 1; x++) {
+  for (int y = 0; y < mSize.y - 1; y++) {
+    for (int x = 0; x < mSize.x - 1; x++) {
       vec3 triangleNorm0 =
         cross(v[y][x] - v[y + 1][x], v[y + 1][x] - v[y + 1][x + 1]);
       vec3 triangleNorm1 =
@@ -66,8 +66,8 @@ void GL::Grid3D::generateNormals(const dVector<vec3>& v, dVector<vec3>& n) {
       normals2[y][x] = normalize(triangleNorm1);
     }
   }
-  for (int i = 0; i < size.y; i++) {
-    for (int j = 0; j < size.x; j++) {
+  for (int i = 0; i < mSize.y; i++) {
+    for (int j = 0; j < mSize.x; j++) {
       vec3 finNormal = vec3(0, 0, 0);
 
       if (j != 0 && i != 0) {
@@ -75,15 +75,15 @@ void GL::Grid3D::generateNormals(const dVector<vec3>& v, dVector<vec3>& n) {
         finNormal += normals2[i - 1][j - 1];
       }
 
-      if (i != 0 && j != size.x - 1)
+      if (i != 0 && j != mSize.x - 1)
         finNormal += normals1[i - 1][j];
 
-      if (i != size.y - 1 && j != size.x - 1) {
+      if (i != mSize.y - 1 && j != mSize.x - 1) {
         finNormal += normals1[i][j];
         finNormal += normals2[i][j];
       }
 
-      if (i != size.y - 1 && j != 0)
+      if (i != mSize.y - 1 && j != 0)
         finNormal += normals2[i][j - 1];
 
       n[i][j] = normalize(finNormal);

@@ -5,7 +5,8 @@
 #include "../OpenGLHeaders.hpp"
 
 //! Contains and loads the GLSL-Shaders
-struct Shader {
+class Shader {
+public:
   //! Default Constructor
   Shader();
 
@@ -26,11 +27,18 @@ struct Shader {
   //! .vs);
   GLuint loadShader(const std::string& filename);
 
+  std::string filename() const;
+  std::string type() const;
+  GLuint id() const;
+
+
+private:
+
   //! Checks a shader for errors. If errors occure, calls handleShaderErrors
   static bool checkShader(const GLuint id, const std::string& filename);
 
   //! Shader ID. Used by OpenGL to get the shader from memory.
-  GLuint      id;
-  std::string filename;
-  std::string type;
+  GLuint      mId;
+  std::string mFilename;
+  std::string mType;
 };

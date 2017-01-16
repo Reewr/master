@@ -87,11 +87,12 @@ bool Program::createProgram(const Shader& frag,
   if (program != 0)
     glDeleteProgram(program);
   program = 0;
-  filenames.push_back(frag.filename);
-  filenames.push_back(vertex.filename);
+  filenames.push_back(frag.filename());
+  filenames.push_back(vertex.filename());
 
   program = glCreateProgram();
-  if (program == 0 || frag.id == 0 || vertex.id == 0)
+
+  if (program == 0 || frag.id() == 0 || vertex.id() == 0)
     throw Error("Failed to create program");
 
   if (!addShader(frag) || !addShader(vertex))
@@ -125,8 +126,8 @@ bool Program::addShader(const Shader& sh) {
   if (program == 0) {
     program = glCreateProgram();
   }
-  glAttachShader(program, sh.id);
-  checkErrors("addShader()", { sh.type });
+  glAttachShader(program, sh.id());
+  checkErrors("addShader()", { sh.type() });
   return true;
 }
 

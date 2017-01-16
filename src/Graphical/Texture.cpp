@@ -31,7 +31,6 @@ Texture::Texture(std::string filename, int mode) {
     return;
   }
   if (mode < MAP) {
-    imageExists(filename);
     loadTexture(filename, (mode == GUI));
   } else if (mode == MAP)
     loadMap(filename);
@@ -128,13 +127,13 @@ GLuint Texture::getGLTexture() {
   return textures[filename].textureID;
 }
 
-GLuint Texture::generateGLTexture(std::string filename) {
-  if (textures.count(filename))
+GLuint Texture::generateGLTexture(std::string fname) {
+  if (textures.count(fname))
     return 0;
-  textures[filename];
-  glGenTextures(1, &textures[filename].textureID);
-  glGenSamplers(1, &textures[filename].sampler);
-  return textures[filename].textureID;
+  textures[fname];
+  glGenTextures(1, &textures[fname].textureID);
+  glGenSamplers(1, &textures[fname].sampler);
+  return textures[fname].textureID;
 }
 
 /**
@@ -144,8 +143,8 @@ GLuint Texture::generateGLTexture(std::string filename) {
  *
  * @param rect
  */
-void Texture::recalculateGeometry(const Rect& rect) {
-  this->rect.change(rect, false);
+void Texture::recalculateGeometry(const Rect& r) {
+  rect.change(r, false);
 }
 
 /**
@@ -159,22 +158,22 @@ void Texture::draw() {
   rect.draw();
 }
 
-bool Texture::loadTexture(std::string filename, bool isGUI) {
-  if (textures.count(filename))
+bool Texture::loadTexture(std::string fname, bool isGUI) {
+  if (textures.count(fname))
     return true;
 
-  textures[filename];
+  textures[fname];
   mode = (isGUI) ? GUI : TEXTURE;
-  glGenTextures(1, &textures[filename].textureID);
-  glGenSamplers(1, &textures[filename].sampler);
+  glGenTextures(1, &textures[fname].textureID);
+  glGenSamplers(1, &textures[fname].sampler);
   bind(0);
 
-  if (filename.substr(filename.size() - 4) == ".dds")
+  if (fname.substr(fname.size() - 4) == ".dds")
     loadDDS();
   else
     loadTexture();
 
-  textures[filename].count += 1;
+  textures[fname].count += 1;
   return true;
 }
 
@@ -267,8 +266,8 @@ bool Texture::loadCubeTexture(const std::vector<std::string>& filenames) {
   return true;
 }
 
-bool Texture::loadMap(std::string filename) {
-  this->filename = filename;
+bool Texture::loadMap(std::string fname) {
+  filename = fname;
   textures[filename];
   mode = MAP;
   int            width;
@@ -361,7 +360,7 @@ void Texture::changeSubTex(const vec2&    pos,
                   change);
 }
 
-void Texture::saveTexture(std::string filename, const vec2& size) {
+void Texture::saveTexture(std::string fname, const vec2& size) {
   const long     imageSize = size.x * size.y * 3;
   unsigned char* data      = new unsigned char[imageSize];
   bind(0);
@@ -395,13 +394,13 @@ void Texture::saveTexture(std::string filename, const vec2& size) {
     data[i]     = data[i] + 25;
   }
 
-  std::fstream f(filename, std::ios::out | std::ios::binary);
+  std::fstream f(fname, std::ios::out | std::ios::binary);
   f.write(reinterpret_cast<char*>(header), sizeof(char) * 18);
   f.write(reinterpret_cast<char*>(data), sizeof(char) * imageSize);
   f.close();
   delete[] data;
   data = NULL;
-  log("Saved texture to: '", filename, "'");
+  log("Saved texture to: '", fname, "'");
 }
 
 void Texture::freeImageMap() {
@@ -463,17 +462,6 @@ Texture& Texture::generateMipmaps(GLenum target) {
     throw Error("Failed to generateMipmaps");
 
   return *this;
-}
-
-void Texture::imageExists(std::string filename) {
-  std::ifstream fs(filename);
-  bool          exists     = false;
-  exists                   = fs.is_open();
-  std::string errorMessage = "Cannot open image: " + filename;
-  if (!exists)
-    throw Error(errorMessage.c_str());
-  else
-    fs.close();
 }
 
 void Texture::unbindAll() {

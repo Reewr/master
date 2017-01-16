@@ -6,8 +6,8 @@
 #include "../Utils/Utils.hpp"
 
 Asset* Camera::asset = nullptr;
-void Camera::init(Asset* asset) {
-  Camera::asset = asset;
+void Camera::init(Asset* a) {
+  Camera::asset = a;
 }
 
 /* Camera::Camera (Input* i, Program* shadow, Program* model) { */

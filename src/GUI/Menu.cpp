@@ -150,14 +150,14 @@ Menu* Menu::fromXML(tinyxml2::XMLElement* element) {
   for (; childElement != nullptr;
        childElement = childElement->NextSiblingElement()) {
     MenuSettings ms       = getMenuSettings(childElement);
-    const char*  name     = childElement->Attribute("name");
+    const char*  chName   = childElement->Attribute("name");
     vec2         position = getPosition(childElement);
 
-    if (name == nullptr) {
+    if (chName == nullptr) {
       throw Error("XMLElement has no attribute 'name'");
     }
 
-    menu->addMenuItem(std::string(name), position, ms);
+    menu->addMenuItem(std::string(chName), position, ms);
   }
 
   return menu;

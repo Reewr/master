@@ -40,10 +40,7 @@ MainMenu::MainMenu(Asset* asset, Input::Input* input) {
     background, menu, optionsMenu,
   };
 
-  auto handler = [&](const Input::Event& event) {
-    Window* menu = static_cast<Window*>(mGUIElements[1]);
-    GUI*    opts = mGUIElements[2];
-
+  auto handler = [&, menu, optionsMenu](const Input::Event& event) {
     if (!menu->isVisible() || menu->isAnimating())
       return;
 
@@ -64,7 +61,7 @@ MainMenu::MainMenu(Asset* asset, Input::Input* input) {
           event.stopPropgation();
           break;
         case 2:
-          opts->isVisible(true);
+          optionsMenu->isVisible(true);
           menu->isVisible(false);
           event.stopPropgation();
           break;
