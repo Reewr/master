@@ -17,13 +17,14 @@ class Event;
 class MainMenu : public State {
 public:
   //! Only constructor. Initalizes the menu
-  MainMenu(Asset* asset, Input::Input* input);
+  MainMenu(Asset* asset);
 
   //! Destructor
   ~MainMenu();
 
   //! Runs all the functions that needs updating (animations, draw etc)
   void update(float deltaTime);
+  void draw(float deltaTime);
 
   void input(const Input::Event& event);
 
@@ -33,6 +34,5 @@ protected:
   void draw3D();
   void drawGUI();
 
-  Input::Input* mInput;
-  Asset*        mAsset;
+  Asset* mAsset;
 };

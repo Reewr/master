@@ -11,16 +11,16 @@
 #include "../Utils/Asset.hpp"
 #include "../Utils/Utils.hpp"
 
-MainMenu::MainMenu(Asset* asset, Input::Input* input) {
+MainMenu::MainMenu(Asset* asset) {
   mAsset = asset;
-  mInput = input;
 
-  GUI*    optionsMenu = new OptionsMenu(input);
-  Window* menu        = new Window("NONE",
-                            Rect(vec2(asset->cfg.graphics.res.x - 200,
-                                      asset->cfg.graphics.res.y - 225),
-                                 vec2(asset->cfg.graphics.res.x,
-                                      asset->cfg.graphics.res.y)));
+  OptionsMenu* opts = new OptionsMenu(asset->input());
+  CFG* cfg          = asset->cfg();
+  Window* menu      = new Window("NONE",
+                            Rect(vec2(cfg->graphics.res.x - 200,
+                                      cfg->graphics.res.y - 225),
+                                 vec2(cfg->graphics.res.x,
+                                      cfg->graphics.res.y)));
   menu->isVisible(true);
   menu->addMenu("MainMenu",
                 { "Master Thesis", "Start Game", "Options", "Exit" },
@@ -31,16 +31,14 @@ MainMenu::MainMenu(Asset* asset, Input::Input* input) {
   GUI* background = new Window(TEMP::getPath(TEMP::SPACE),
                                Rect(0,
                                     0,
-                                    asset->cfg.graphics.res.x,
-                                    asset->cfg.graphics.res.y));
+                                    cfg->graphics.res.x,
+                                    cfg->graphics.res.y));
   background->isVisible(true);
 
   // Order is important
-  mGUIElements = {
-    background, menu, optionsMenu,
-  };
+  mGUIElements = { background, menu, opts };
 
-  auto handler = [&, menu, optionsMenu](const Input::Event& event) {
+  auto handler = [&, opts, menu](const Input::Event& event) {
     if (!menu->isVisible() || menu->isAnimating())
       return;
 
@@ -53,20 +51,20 @@ MainMenu::MainMenu(Asset* asset, Input::Input* input) {
         event.buttonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
       switch (menu->menu("MainMenu")->getActiveMenu()) {
         case 0:
-          event.sendStateChange(State::MASTER_THESIS);
+          event.sendStateChange(States::MasterThesis);
           event.stopPropgation();
           break;
         case 1:
-          event.sendStateChange(State::GAME);
+          event.sendStateChange(States::Game);
           event.stopPropgation();
           break;
         case 2:
-          optionsMenu->isVisible(true);
+          opts->isVisible(true);
           menu->isVisible(false);
           event.stopPropgation();
           break;
         case 3:
-          event.sendStateChange(State::GAME);
+          event.sendStateChange(States::Quit);
           event.stopPropgation();
           break;
       }
@@ -86,6 +84,9 @@ void MainMenu::update(float deltaTime) {
   mDeltaTime = deltaTime;
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glClearColor(0, 0.4, 0.7, 1);
+}
+
+void MainMenu::draw(float) {
   draw3D();
   drawGUI();
 }

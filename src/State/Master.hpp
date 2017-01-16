@@ -11,11 +11,13 @@ class Asset;
 
 class Master : public State {
 public:
-  Master(Asset* asset, Input::Input* input);
+  Master(Asset* asset);
 
   ~Master();
 
   void update(float deltaTime);
+
+  void draw(float deltaTime);
 
   void input(const Input::Event& event);
 
@@ -25,5 +27,4 @@ private:
 
   /* Input::Input* mInput; */
   /* Asset*        mAsset; */
-  Console*      mConsole;
 };

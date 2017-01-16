@@ -8,12 +8,9 @@
 #include "../Utils/Asset.hpp"
 #include "../Utils/Utils.hpp"
 
-Master::Master(Asset*, Input::Input* input) {
-  mConsole = new Console(input);
-}
+Master::Master(Asset*) { }
 
 Master::~Master() {
-  delete mConsole;
 }
 
 void Master::draw3D() {
@@ -22,22 +19,25 @@ void Master::draw3D() {
 
 void Master::drawGUI() {
   glDisable(GL_DEPTH_TEST);
-  mConsole->draw(mDeltaTime);
 }
 
 void Master::input(const Input::Event& event) {
-  mConsole->input(event);
+  if (event.isAction(Input::Action::Console)) {
+    event.sendStateChange(States::Console);
+    event.stopPropgation();
+  }
 
   if (event.keyPressed(GLFW_KEY_ESCAPE)) {
-    event.sendStateChange(State::QUIT);
+    event.sendStateChange(States::Quit);
     event.stopPropgation();
   }
 }
 
 void Master::update(float deltaTime) {
   mDeltaTime = deltaTime;
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glClearColor(0, 0.4, 0.7, 1);
+}
+
+void Master::draw(float) {
   draw3D();
   drawGUI();
 }

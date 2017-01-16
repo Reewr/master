@@ -12,26 +12,33 @@
 #include "../State/State.hpp"
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
+#include "../Utils/Asset.hpp"
 
-Console::Console(Input::Input* input) {
+Console::Console(Asset* asset) {
+  vec2 res = asset->cfg()->graphics.res;
+  mAsset = asset;
   mCurrentText = "";
-  mInput       = input;
-  mBoundingBox = Rect(25, 25, 768, 400);
+  mBoundingBox = Rect(0, 0, res.x, res.y / 2);
   mRect        = new GL::Rectangle(mBoundingBox);
-  mText        = new Text(mFont, "> _", vec2(30, 395), 20, Text::WHITE);
+  mText        = new Text(mFont, "> _", vec2(10, res.y / 2), 20, Text::WHITE);
 
   // Specific program for the console since the console
   // is just drawn in black with alpha
   mProgram = new Program("shaders/GUI/ColorRect.vsfs", 0);
   mProgram->bindAttribs({ "position", "texcoord" }, { 0, 1 });
   mProgram->link();
-  mProgram->setUniform("screenRes", mCFG->graphics.res, "guiOffset", vec2());
+  mProgram->setUniform("screenRes", res, "guiOffset", vec2());
   mProgram->setUniform("guiColor", vec4(0, 0, 0, 0.7));
 }
 
 Console::~Console() {
   delete mProgram;
   delete mRect;
+  delete mText;
+  delete mError;
+
+  for (auto a : mHistory)
+    delete a;
 }
 
 /**
@@ -50,7 +57,7 @@ Console::~Console() {
  * @return
  */
 void Console::input(const Input::Event& event) {
-  bool isConsoleKey = mInput->checkKey(Input::Action::Console, event.key());
+  bool isConsoleKey = mAsset->input()->checkKey(Input::Action::Console, event.key());
 
   if (!isVisible() && isConsoleKey) {
     isVisible(true);

@@ -19,13 +19,13 @@
 // These functions are because of GLFW's callback. They call engine functions
 static void placementKeyboardCB(GLFWwindow* w, int k, int, int a, int m) {
   Engine*      e = static_cast<Engine*>(glfwGetWindowUserPointer(w));
-  Input::Event event(k, a, m);
+  Input::Event event(e->input(), k, a, m);
   e->sendEvent(event);
 }
 
 static void placementMouseMovementCB(GLFWwindow* w, double x, double y) {
   Engine*      e = static_cast<Engine*>(glfwGetWindowUserPointer(w));
-  Input::Event event(vec2(x, y));
+  Input::Event event(e->input(), vec2(x, y));
   e->sendEvent(event);
 }
 
@@ -35,7 +35,7 @@ static void placementMouseButtonCB(GLFWwindow* w, int b, int a, int m) {
   double x, y;
   glfwGetCursorPos(w, &x, &y);
 
-  Input::Event event(vec2(x, y), b, a, m);
+  Input::Event event(e->input(), vec2(x, y), b, a, m);
   e->sendEvent(event);
 }
 
@@ -43,13 +43,13 @@ static void placementMouseScrollCB(GLFWwindow* w, double ox, double oy) {
   Engine* e = static_cast<Engine*>(glfwGetWindowUserPointer(w));
   double  x, y;
   glfwGetCursorPos(w, &x, &y);
-  Input::Event event(vec2(x, y), vec2(ox, oy));
+  Input::Event event(e->input(), vec2(x, y), vec2(ox, oy));
   e->sendEvent(event);
 }
 
 static void placementCharCB(GLFWwindow* w, unsigned int codePoint) {
   Engine*      e = static_cast<Engine*>(glfwGetWindowUserPointer(w));
-  Input::Event event(Utils::utf8toStr(codePoint));
+  Input::Event event(e->input(), Utils::utf8toStr(codePoint));
   e->sendEvent(event);
 }
 
@@ -58,7 +58,7 @@ static void glfwErrorHandler(int, const char* k) {
 }
 
 Engine::Engine(std::string cfgPath) {
-  this->cfgPath = cfgPath;
+  mCFGPath = cfgPath;
 }
 
 Engine::~Engine() {
@@ -67,20 +67,30 @@ Engine::~Engine() {
 
 /**
  * @brief
+ *   Returns the input manager
+ *
+ * @return
+ */
+Input::Input* Engine::input() {
+  return mInput;
+}
+
+/**
+ * @brief
  *   Initializes the engine by first loading the configuration
  *   file, followed by doing some set of operations depending on
  *   `isRefresh`.
  *
- *   If `isRefresh` is an enum of State::INIT, it will assume
+ *   If `isRefresh` is an enum of States::Init, it will assume
  *   that this is the first time this function runs and therefore
  *   initialize all the libraries and classes that are needed.
  *
- *   If `isRefresh` is an enum of State::Refresh, it will
+ *   If `isRefresh` is an enum of States::Refresh, it will
  *   assume that this is not the first time calling this function
  *   and it will only update window size, viewport and swap intervals
  *   together with recreating audio and input classes
  *
- *   Lastly, if `isRefresh` is State::INIT, it will also add
+ *   Lastly, if `isRefresh` is States::Init, it will also add
  *   a new state to the state stack, effectively creating
  *   a new state of the type given.
  *
@@ -94,23 +104,26 @@ Engine::~Engine() {
  *   An enum describing the type of initialization
  *
  * @param initState
- *   The state to create, if isRefresh is `State::INIT`
+ *   The state to create, if isRefresh is `States::Init`
  *
  * @return
  *  returns true if everything goes according to the plan,
  *  else false
  */
 bool Engine::initialize(int argc, char* argv[], int isRefresh, int initState) {
-  asset = new Asset();
 
+  mCFG = new CFG();
+  mAsset = new Asset(mCFG);
+  mAsset->setEngine(this);
   // Load the configuration file
-  asset->cfg.assimilate(cfgPath.c_str());
-  if (isRefresh == State::INIT)
-    asset->cfg.assimilate(argc, argv);
+  mCFG->assimilate(mCFGPath);
+
+  if (isRefresh == States::Init)
+    mCFG->assimilate(argc, argv);
 
   // Init the different libraries if
   // this is the first init call
-  if (isRefresh != State::REFRESH) {
+  if (isRefresh != States::Refresh) {
     if (!initGLFW() || !initWindow() || !initOpenGLBindings())
       return false;
     initGL();
@@ -118,66 +131,38 @@ bool Engine::initialize(int argc, char* argv[], int isRefresh, int initState) {
     // Set the callbacks to the different inputs. This has
     // to be done in weird way as glfw is a C library and does
     // not support lambdas with state
-    glfwSetKeyCallback(window, placementKeyboardCB);
-    glfwSetScrollCallback(window, placementMouseScrollCB);
-    glfwSetCursorPosCallback(window, placementMouseMovementCB);
-    glfwSetMouseButtonCallback(window, placementMouseButtonCB);
-    glfwSetCharCallback(window, placementCharCB);
+    glfwSetKeyCallback(mWindow, placementKeyboardCB);
+    glfwSetScrollCallback(mWindow, placementMouseScrollCB);
+    glfwSetCursorPosCallback(mWindow, placementMouseMovementCB);
+    glfwSetMouseButtonCallback(mWindow, placementMouseButtonCB);
+    glfwSetCharCallback(mWindow, placementCharCB);
   } else {
     // Else we just readjust the window
     // based on the settings given
-    window = glfwGetCurrentContext();
-    glfwSetWindowSize(window,
-                      (int) asset->cfg.graphics.res.x,
-                      (int) asset->cfg.graphics.res.y);
-    glViewport(0, 0, asset->cfg.graphics.res.x, asset->cfg.graphics.res.y);
-    glfwSwapInterval((asset->cfg.graphics.vsync) ? 1 : 0);
+    mWindow = glfwGetCurrentContext();
+    glfwSetWindowSize(mWindow,
+                      (int) mCFG->graphics.res.x,
+                      (int) mCFG->graphics.res.y);
+    glViewport(0, 0, mCFG->graphics.res.x, mCFG->graphics.res.y);
+    glfwSwapInterval((mCFG->graphics.vsync) ? 1 : 0);
   }
 
-  input = new Input::Input(window, &asset->cfg);
+  mInput = new Input::Input(mWindow, mCFG);
+  mAsset->setInput(mInput);
 
-
-  GUI::init(&asset->cfg);
-  Texture::init(&asset->cfg);
+  GUI::init(mAsset->cfg());
+  Texture::init(mAsset->cfg());
   /* Spider::init(); */
   /* Model::init(&asset->cfg); */
-  Framebuffer::init(&asset->cfg);
+  Framebuffer::init(mAsset->cfg());
   Framebuffer::printFramebufferLimits();
 
-  if (isRefresh == State::INIT) {
-    states.push(initState);
-
-    // Create the correct state based on the enum given
-    if (initState == State::MAINMENU)
-      current = new MainMenu(asset, input);
-    else if (initState == State::MASTER_THESIS) {
-      current = new Master(asset, input);
-    }
-    /* } else if (initState == State::GAME) { */
-    /*   current = new Game(asset, input); */
-    /* } */
+  if (isRefresh == States::Init) {
+    changeState(initState);
   }
 
   log("Engine: Initialized successfully...");
   return true;
-}
-
-/**
- * @brief
- *   This function is expected to be called each time you
- *   want the state to perform an update. A lot of functionality
- *   depends on this function as all the draw calls are performed
- *   within the states update function.
- *
- * @param deltaTime
- *   The time since last update call
- */
-void Engine::updateState(float deltaTime) {
-  if (current != NULL) {
-    current->update(deltaTime);
-  } else {
-    error("Engine::Failed at updateState - Current == NULL");
-  }
 }
 
 /**
@@ -220,8 +205,15 @@ bool Engine::initOpenGLBindings() {
   return true;
 }
 
+/**
+ * @brief
+ *   This function initializes the GLFW window with the correct
+ *   settings based on what it can find in the CFG.
+ *
+ * @return
+ */
 bool Engine::initWindow() {
-  CFG* cfg = &asset->cfg;
+  CFG* cfg = mAsset->cfg();
 
   // Set version we want
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -242,20 +234,20 @@ bool Engine::initWindow() {
 
   // get monitor, may be null, but thats okay since glfw supports it
   GLFWmonitor* monitor = getMonitor();
-  window               = glfwCreateWindow(cfg->graphics.res.x,
+  mWindow              = glfwCreateWindow(cfg->graphics.res.x,
                             cfg->graphics.res.y,
                             "DDDGP",
                             monitor,
                             NULL);
 
-  if (!window) {
+  if (!mWindow) {
     error("Engine: Could not open window with GLFW. Check GLFW error messages");
     glfwTerminate();
     return false;
   }
 
   // Make the window our openGL context
-  glfwMakeContextCurrent(window);
+  glfwMakeContextCurrent(mWindow);
 
   // Set vsync if set by config
   glfwSwapInterval((cfg->graphics.vsync) ? 1 : 0);
@@ -269,7 +261,7 @@ bool Engine::initWindow() {
  *   Initialize OpenGL with the settings that we need.
  */
 void Engine::initGL() {
-  glViewport(0, 0, asset->cfg.graphics.res.x, asset->cfg.graphics.res.y);
+  glViewport(0, 0, mCFG->graphics.res.x, mCFG->graphics.res.y);
   glEnable(GL_BLEND);
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -299,35 +291,34 @@ GLFWmonitor* Engine::getMonitor() {
   int                monitorCount;
   GLFWmonitor*       monitor   = NULL;
   const GLFWvidmode* videoMode = NULL;
-  CFG                cfg       = asset->cfg;
   GLFWmonitor**      monitors  = glfwGetMonitors(&monitorCount);
 
   // if we are running fullscreen, we gotta use the correct monitor
-  if (cfg.graphics.winMode == 2) {
+  if (mCFG->graphics.winMode == 2) {
 
     // if the user has selected a monitor and its
     // below the max number of monitors we use it,
     // otherwise use primary
-    if (cfg.graphics.monitor < monitorCount)
-      monitor = monitors[cfg.graphics.monitor];
+    if (mCFG->graphics.monitor < monitorCount)
+      monitor = monitors[mCFG->graphics.monitor];
     else
       monitor = glfwGetPrimaryMonitor();
 
     // since its fullscreen, we get the resolution of the monitor
     videoMode        = glfwGetVideoMode(monitor);
-    cfg.graphics.res = vec2(videoMode->width, videoMode->height);
+    mCFG->graphics.res = vec2(videoMode->width, videoMode->height);
   }
 
   return monitor;
 }
 
 void Engine::sendEvent(const Input::Event& event) {
-  if (current == nullptr)
+  if (mCurrent == nullptr)
     return error("Current state is null");
 
-  current->input(event);
+  mCurrent->input(event);
 
-  if (event.state() != State::NOCHANGE) {
+  if (event.state() != States::NoChange) {
     changeState(event.state());
   }
 }
@@ -346,9 +337,13 @@ void Engine::deinitialize(bool isFullDeinit) {
   /* Spider::deinit(); */
   Framebuffer::deinit();
 
-  asset->cfg.writetoFile("config/config.ini");
-  delete asset;
-  delete input;
+  mCFG->writetoFile("config/config.ini");
+  delete mAsset;
+  delete mInput;
+  delete mCFG;
+
+  if (mCurrent != nullptr)
+    delete mCurrent;
 
   if (isFullDeinit)
     glfwTerminate();
@@ -366,17 +361,28 @@ void Engine::runLoop() {
   // Used to check the difference between the loops
   static float startTime = glfwGetTime();
 
-  while (!glfwWindowShouldClose(window)) {
+  while (!glfwWindowShouldClose(mWindow)) {
     float currentTime = glfwGetTime();
     float deltaTime   = currentTime - startTime;
     startTime         = currentTime;
 
     LOOP_LOGGER += deltaTime;
-    updateState(deltaTime);
+    // Update the stack if available
+    if (mCurrent != nullptr)
+      mCurrent->update(deltaTime);
+    else
+      error("Engine::Failed at update due to no states");
 
-    glfwSetWindowUserPointer(window, this);
+    // Clear everything
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClearColor(0, 0.4, 0.7, 1);
+
+    if (mCurrent != nullptr)
+      mCurrent->draw(deltaTime);
+
+    glfwSetWindowUserPointer(mWindow, this);
     glfwPollEvents();
-    glfwSwapBuffers(window);
+    glfwSwapBuffers(mWindow);
 
     if (LOOP_LOGGER > 1) {
       LOOP_LOGGER = 0;
@@ -395,14 +401,13 @@ void Engine::runLoop() {
  *   resources before reloading them.
  */
 void Engine::refreshState(bool isWinRefresh) {
-  int type = isWinRefresh ? State::WINREFRESH : State::REFRESH;
+  int type = isWinRefresh ? States::WinRefresh : States::Refresh;
   deinitialize(isWinRefresh);
 
   if (!initialize(0, NULL, type)) {
     throw Error("Engine failed to refresh!");
   }
 }
-
 /**
  * @brief
  *   Changes the state to a new state specified by `newState`.
@@ -411,55 +416,44 @@ void Engine::refreshState(bool isWinRefresh) {
  */
 void Engine::changeState(int newState) {
   switch (newState) {
-    case State::QUITALL:
-      while (!states.empty())
-        states.pop();
+    case States::QuitAll:
+      while (!mActiveStates.empty())
+        mActiveStates.pop();
       return;
-    case State::QUIT:
-      states.pop();
+    case States::Quit:
+      mActiveStates.pop();
       break;
-    case State::REFRESH:
+    case States::Refresh:
       refreshState(false);
       break;
-    case State::WINREFRESH:
+    case States::WinRefresh:
       refreshState(true);
       break;
     default:
-      states.push(newState);
+      mActiveStates.push(newState);
       break;
   }
-  createState();
-}
 
-/**
- * @brief
- *   Creates the state that is at the top of the state stack. Deletes
- *   the current state if that exists
- */
-void Engine::createState() {
-  if (current != nullptr) {
-    delete current;
-    current = nullptr;
-  }
+  if (mActiveStates.size() == 0)
+    return closeWindow();
 
-  if (states.size() == 0) {
-    closeWindow();
-    return;
-  }
+  if (mCurrent != nullptr)
+    delete mCurrent;
 
-  switch (states.top()) {
-    case State::MAINMENU:
-      current = new MainMenu(asset, input);
+  switch (mActiveStates.top()) {
+    case States::MainMenu:
+      mCurrent = new class MainMenu(mAsset);
       break;
-    /* case State::GAME    : current = new Game(asset, input); break; */
-    case State::MASTER_THESIS:
-      current = new Master(asset, input);
+    case States::Game:
+      throw Error("Tried to make game. THROW FIT. (╯°□°）╯︵ ┻━┻)");
+    case States::MasterThesis:
+      mCurrent = new Master(mAsset);
       break;
     default:
-      error("Tried to make state that does not exist: ", states.top());
-      closeWindow();
-      return;
+      throw Error("Tried to non-existant state. THROW FIT. (╯°□°）╯︵ ┻━┻)");
   }
+
+  mAsset->setState(mCurrent);
 }
 
 /**
@@ -470,5 +464,5 @@ void Engine::createState() {
  */
 void Engine::closeWindow() {
   log("Now closing GLFW window..");
-  glfwSetWindowShouldClose(window, GL_TRUE);
+  glfwSetWindowShouldClose(mWindow, GL_TRUE);
 }

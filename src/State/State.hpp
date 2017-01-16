@@ -33,13 +33,11 @@ public:
   virtual ~State();
   virtual void update(float deltaTime)          = 0;
   virtual void input(const Input::Event& event) = 0;
-  virtual bool isTransparent() = 0;
   virtual void draw(float deltaTime) = 0;
 
 protected:
   State();
 
-  bool              mTransparent;
   float             mDeltaTime;
   std::vector<GUI*> mGUIElements;
 };

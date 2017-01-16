@@ -41,12 +41,14 @@ public:
   //! Initializes the engine and creates the first state
   bool initialize(int   argc,
                   char* argv[],
-                  int   isRefresh = State::INIT,
-                  int   initState = State::MAINMENU);
+                  int   isRefresh = States::Init,
+                  int   initState = States::MainMenu);
 
   void sendEvent(const Input::Event& event);
 
   void runLoop();
+
+  Input::Input* input();
 
 protected:
   //! Initializesers of the different libraries that are being used
@@ -64,12 +66,13 @@ protected:
   void createState();
   void closeWindow();
 
-  std::stack<int> states;
+  std::stack<int> mActiveStates;
 
-  std::string cfgPath;
+  std::string mCFGPath;
 
-  State*        current;
-  Input::Input* input;
-  GLFWwindow*   window;
-  Asset*        asset;
+  CFG*          mCFG;
+  State*        mCurrent;
+  Input::Input* mInput;
+  GLFWwindow*   mWindow;
+  Asset*        mAsset;
 };

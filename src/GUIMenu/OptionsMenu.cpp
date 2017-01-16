@@ -144,6 +144,7 @@ bool OptionsMenu::handleOptionsAction(const Input::Event& event) {
       return true;
     }
     case 6:
+      log("Something");
       setDefaultOptions();
       isVisible(false);
       return true;
@@ -219,7 +220,7 @@ int OptionsMenu::parseOptionstoCFG() {
   parseAudioOptions();
   parseKeybindingOptions();
   hasChanged(false);
-  if (graphicalChanged == State::NOCHANGE)
+  if (graphicalChanged == States::NoChange)
     return 0;
   return graphicalChanged;
 }
@@ -282,7 +283,7 @@ int OptionsMenu::parseGraphicsOptions() {
   }
 
   if (!hasChanged)
-    return State::NOCHANGE;
+    return States::NoChange;
 
   // Graphical settings being set
   int index = opts["Resolution"].find("x");
@@ -306,5 +307,5 @@ int OptionsMenu::parseGraphicsOptions() {
 
   bool shouldRefresh = g->dropdown("Aliasing")->hasChanged() ||
                        g->dropdown("DisplayMode")->hasChanged();
-  return shouldRefresh ? State::WINREFRESH : State::REFRESH;
+  return shouldRefresh ? States::WinRefresh : States::Refresh;
 }
