@@ -147,6 +147,7 @@ bool OptionsMenu::handleOptionsAction(const Input::Event& event) {
       log("Something");
       setDefaultOptions();
       isVisible(false);
+      event.sendStateChange(States::OptionsMenuClose);
       return true;
   }
 

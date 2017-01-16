@@ -109,7 +109,11 @@ void MainMenu::input(const Input::Event& event) {
       break;
   }
 
-  if (!mGUIElements[1]->isVisible() && !mGUIElements[2]->isVisible()) {
-    mGUIElements[1]->isVisible(true);
+  switch (event.state()) {
+    case States::OptionsMenuClose:
+      event.sendStateChange(States::NoChange);
+      mGUIElements[2]->isVisible(false);
+      mGUIElements[1]->isVisible(true);
+    break;
   }
 }

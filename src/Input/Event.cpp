@@ -432,9 +432,6 @@ int Event::prevType() const {
  * @param stateChange
  */
 void Event::sendStateChange(int stateChange) const {
-  if (stateChange == States::NoChange)
-    return;
-
   mHandledState = stateChange;
 }
 

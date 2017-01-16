@@ -22,11 +22,6 @@ void Master::drawGUI() {
 }
 
 void Master::input(const Input::Event& event) {
-  if (event.isAction(Input::Action::Console)) {
-    event.sendStateChange(States::Console);
-    event.stopPropgation();
-  }
-
   if (event.keyPressed(GLFW_KEY_ESCAPE)) {
     event.sendStateChange(States::Quit);
     event.stopPropgation();
