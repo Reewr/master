@@ -167,7 +167,7 @@ int CFG::get_num_params(const Prop& p) {
   return -1;
 }
 
-void CFG::assimilate(const char* filepath) {
+void CFG::assimilate(const std::string& filepath) {
 
   log("cfg: assimilating '", filepath, "'");
 

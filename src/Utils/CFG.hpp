@@ -76,7 +76,7 @@ public:
   std::string getProp(const Prop& p);
 
   //! merges the default cfg with settings from a config file
-  void assimilate(const char* filepath);
+  void assimilate(const std::string& filepath);
 
   //! merges the default cfg with settings from command line
   void assimilate(int argc, char* argv[]);
