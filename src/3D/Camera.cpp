@@ -5,18 +5,12 @@
 #include "../Utils/Asset.hpp"
 #include "../Utils/Utils.hpp"
 
-Asset* Camera::asset = nullptr;
-void Camera::init(Asset* a) {
-  Camera::asset = a;
-}
-
 /* Camera::Camera (Input* i, Program* shadow, Program* model) { */
-Camera::Camera(Input::Input* i, Program* shadow) {
+Camera::Camera(Asset* a, Program* shadow) {
   this->shadow = shadow;
+  asset = a;
   /* this->model  = model; */
   light.day = 0;
-  input     = i;
-
   proj = updateProjMatrix();
 
   /* model->setUniform("proj", proj); */
@@ -33,9 +27,9 @@ mat4 Camera::updateViewMatrix() {
 
 mat4 Camera::updateProjMatrix() {
   return perspective<float>(67.f,
-                            asset->cfg.graphics.aspect,
+                            asset->cfg()->graphics.aspect,
                             0.1f,
-                            asset->cfg.graphics.viewDistance);
+                            asset->cfg()->graphics.viewDistance);
 }
 
 void Camera::setLightMVPUniform(Program* p, std::string name) {
@@ -97,41 +91,43 @@ void Camera::update(float) {
 }
 
 void Camera::zoom(int sign) {
-  sign = asset->cfg.camera.zoomInv ^ (sign > 0) ? -1 : 1;
-  height += asset->cfg.camera.zoomSpeed * sign;
+  CFG* cfg = asset->cfg();
+
+  sign = cfg->camera.zoomInv ^ (sign > 0) ? -1 : 1;
+  height += cfg->camera.zoomSpeed * sign;
   if (height > 40)
     height = 40;
   if (height < 0.2)
     height = 0.2;
 }
 
-void Camera::handleKeys(std::vector<int> actions, float dt) {
-  vec4 dir     = vec4(0, 0, -1, 0) * speed * dt;
-  vec3 forward = vec3(rotate_y(hrot) * dir);
-  vec3 strafe  = vec3(rotate_y(hrot + 90) * dir);
+/* void Camera::handleKeys(const Input::Event& event, float dt) { */
+/*   vec4 dir     = vec4(0, 0, -1, 0) * speed * dt; */
+/*   vec3 forward = vec3(rotate_y(hrot) * dir); */
+/*   vec3 strafe  = vec3(rotate_y(hrot + 90) * dir); */
+/*   CFG* cfg     = asset->cfg(); */
+/*   Input::Input* input = asset->input(); */
 
-  for (unsigned int i = 0; i < actions.size(); i++) {
-    if (actions[i] == Input::Action::MoveUp)
-      target += forward;
-    if (actions[i] == Input::Action::MoveDown)
-      target -= forward;
+/*   if (event.isAction(Input::Action::MoveUp)) */
+/*     target += forward; */
+/*   if (event.isAction(Input::Action::MoveDown)) */
+/*     target -= forward; */
 
-    if (actions[i] == Input::Action::MoveLeft)
-      target += strafe;
-    if (actions[i] == Input::Action::MoveRight)
-      target -= strafe;
+/*   if (event.isAction(Input::Action::MoveLeft)) */
+/*     target += strafe; */
+/*   if (event.isAction(Input::Action::MoveRight)) */
+/*     target -= strafe; */
 
-    if (actions[i] == Input::Action::Rotate) {
-      vec2 press =
-        input->getPressedCoord(input->getKey(Input::Action::Rotate).key1);
-      vec2 curr = input->getMouseCoords();
+/*   if (event.isAction(Input::Action::Rotate)) { */
+/*     vec2 press = */
+/*       event->getPressedCoord(input->getKey(Input::Action::Rotate).key1); */
+/*     vec2 curr = input->getMouseCoords(); */
 
-      float rsh =
-        asset->cfg.camera.rotSpeed * (asset->cfg.camera.rotInvH ? -1 : 1);
-      float rsv =
-        asset->cfg.camera.rotSpeed * (asset->cfg.camera.rotInvV ? -1 : 1);
-      hrot = p_hrot + (curr - press).x / asset->cfg.graphics.res.x * rsh;
-      vrot = p_vrot + (curr - press).y / asset->cfg.graphics.res.y * rsv;
-    }
-  }
-}
+/*     float rsh = */
+/*       cfg->camera.rotSpeed * (cfg->camera.rotInvH ? -1 : 1); */
+/*     float rsv = */
+/*       cfg->camera.rotSpeed * (cfg->camera.rotInvV ? -1 : 1); */
+/*     hrot = p_hrot + (curr - press).x / cfg->graphics.res.x * rsh; */
+/*     vrot = p_vrot + (curr - press).y / cfg->graphics.res.y * rsv; */
+/*   } */
+/* } */

@@ -12,7 +12,9 @@ namespace Input {
 class Input;
 }
 
-struct Camera {
+class Camera {
+public:
+  Asset* asset;
   vec3  target = { 0, 1.183, 0 };
   float height = 2;
 
@@ -37,13 +39,11 @@ struct Camera {
   Program* shadow;
   /* Program* model; */
 
-  Input::Input* input;
-
   mat4 model = mat4::identity;
   mat4 view  = mat4::identity;
   mat4 proj  = mat4::identity;
 
-  Camera(Input::Input* i, Program* shadow);
+  Camera(Asset* a, Program* shadow);
   /* Camera (Input* i, Program* shadow, Program* model); */
 
   mat4 updateViewMatrix();
@@ -58,8 +58,5 @@ struct Camera {
   void update(float dt);
   void zoom(int sign);
 
-  void handleKeys(std::vector<int> actions, float dt);
-
-  static Asset* asset;
-  static void init(Asset* asset);
+  /* void handleKeys(std::vector<int> actions, float dt); */
 };
