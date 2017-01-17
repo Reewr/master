@@ -418,7 +418,7 @@ void Engine::changeState(int newState) {
     case States::QuitAll:
       while (!mActiveStates.empty())
         mActiveStates.pop();
-      return;
+      break;
     case States::Quit:
       mActiveStates.pop();
       break;
