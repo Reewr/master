@@ -22,15 +22,12 @@
  */
 Dropdown::Dropdown(const std::vector<std::string>& options,
                    const vec2&                     position) {
-  mBox         = new Texture(TEMP::getPath(TEMP::DROPDOWN));
-  mOptionsList = new Texture(TEMP::getPath(TEMP::BLACK));
-
-  isVisible(true);
-  hasChanged(false);
-
+  mBox                  = new Texture(TEMP::getPath(TEMP::DROPDOWN));
+  mOptionsList          = new Texture(TEMP::getPath(TEMP::BLACK));
+  mIsVisible            = true;
   mIsOptionsListVisible = false;
   mMouseOption          = -1;
-  mBoundingBox          = Rect(position, vec2(0, 0));
+  mBoundingBox          = Rect(position, vec2(0, 25));
 
   // Padding on the top
   addOption("-----");
@@ -45,8 +42,9 @@ Dropdown::Dropdown(const std::vector<std::string>& options,
 
   // Add sizes together, assuming each element is ~25px
   mBigBoxRect = Rect(mBoundingBox.topleft,
-                     mBoundingBox.size + vec2(0, (mOptions.size()) * 25));
+                     mBoundingBox.size + vec2(0, mOptions.size() * 25));
 
+  log(options[0], " ", mBoundingBox.topleft, " ", mBoundingBox.size, " ");
   mBox->recalculateGeometry(mBoundingBox);
   mOptionsList->recalculateGeometry(mBigBoxRect);
   setActiveOptionPosition();
@@ -123,7 +121,7 @@ void Dropdown::defaultInputHandler(const Input::Event& event) {
   if (!isVisible())
     return;
 
-  if (event.buttonPressed(GLFW_MOUSE_BUTTON_LEFT)) {
+  if (event.buttonPressed(GLFW_MOUSE_BUTTON_1)) {
     if (setActiveItem(event.position())) {
       event.stopPropgation();
     }
@@ -149,17 +147,15 @@ void Dropdown::defaultInputHandler(const Input::Event& event) {
  *   the dropbox
  *
  * @param text the text to show on the option
- * @param size the size of the text
  */
 void Dropdown::addOption(const std::string text) {
   float height    = (mOptions.size() + 1) * 25;
-  vec2  optionPos = vec2(10, height);
+  vec2  optionPos = vec2(5, height);
   Text* option    = new Text(mFont, text, vec2(0, 0), 15);
   vec2  size      = option->size();
 
-  if (mBoundingBox.size.x < size.x) {
-    mBoundingBox.size.x = size.x;
-  }
+  mBoundingBox.size.x = max(mBoundingBox.size.x, size.x);
+  mBoundingBox.size.y = max(mBoundingBox.size.y, size.y);
 
   option->setPosition(mBoundingBox.topleft + optionPos);
   option->setColor(Text::WHITE);
@@ -196,7 +192,6 @@ bool Dropdown::isInsideOptionsList(const vec2& position) const {
  *   index, -1 if no match
  */
 int Dropdown::isInsideDropItem(const vec2& position) const {
-  log(position, " ", mBigBoxRect.topleft, " ", mBigBoxRect.bottomright());
   // if the dropbox isnt open, we always return -1
   if (!mIsOptionsListVisible || !isInsideOptionsList(position)) {
     return -1;
@@ -260,6 +255,7 @@ bool Dropdown::setActiveItem(const vec2& position) {
   // Close the dropdown if inside the button and its open,
   // else open it
   if (isInside(position)) {
+    log("Inside, should: ", mIsOptionsListVisible);
     mIsOptionsListVisible = !mIsOptionsListVisible;
     setMouseOverItem(-1);
     return true;
