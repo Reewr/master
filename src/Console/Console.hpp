@@ -70,6 +70,7 @@ private:
   // When a command has been executed, add it to history
   void addHistory();
 
+  bool  mPrevInputOpened;
   float mErrorDisplayed;
 
   std::string    mCurrentText;

@@ -244,6 +244,7 @@ void Console::input(const Input::Event& event) {
     mAsset->input()->checkKey(Input::Action::Console, event.key());
 
   if (!isVisible() && isConsoleKey) {
+    mPrevInputOpened = true;
     isVisible(true);
     return event.stopPropgation();
   }
@@ -257,7 +258,7 @@ void Console::input(const Input::Event& event) {
     return event.stopPropgation();
   }
 
-  if (event.keyPressed(GLFW_KEY_BACKSPACE)) {
+  if (event.isKeyHeldDown(GLFW_KEY_BACKSPACE)) {
     if (mCurrentText.length() > 0)
       mCurrentText.pop_back();
 
@@ -270,9 +271,11 @@ void Console::input(const Input::Event& event) {
     return event.stopPropgation();
   }
 
-  if (event == Input::Event::Type::CharacterInput) {
+  if (event == Input::Event::Type::CharacterInput && !mPrevInputOpened) {
     setText(mCurrentText + event.character());
     return event.stopPropgation();
+  } else if (event == Input::Event::Type::CharacterInput) {
+    mPrevInputOpened = false;
   }
 }
 
