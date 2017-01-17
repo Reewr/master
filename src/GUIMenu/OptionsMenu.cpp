@@ -72,7 +72,8 @@ OptionsMenu::OptionsMenu(Input::Input* input) {
       return;
 
     if (e == Input::Event::Type::MousePress && !isInside(e.position())) {
-      isVisible(false);
+      e.sendStateChange(States::OptionsMenuClose);
+      e.stopPropgation();
       return;
     }
 
@@ -87,7 +88,7 @@ OptionsMenu::OptionsMenu(Input::Input* input) {
     }
 
     if (e.keyPressed(GLFW_KEY_ESCAPE)) {
-      isVisible(false);
+      e.sendStateChange(States::OptionsMenuClose);
       e.stopPropgation();
       return;
     }
@@ -118,7 +119,6 @@ OptionsMenu::OptionsMenu(Input::Input* input) {
 
 bool OptionsMenu::handleOptionsAction(const Input::Event& event) {
   std::string nextWindow = "";
-  log("I has event", menu("Category")->getActiveMenu());
 
   switch (menu("Category")->getActiveMenu()) {
     case 0:
