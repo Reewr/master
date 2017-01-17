@@ -165,8 +165,7 @@ GLint Program::getUniformLocation(const std::string& uni) {
   if (loc != -1)
     uniLocations[uni] = loc;
   else {
-    // tlog(filenames[0], ", ", filenames[1], " - " + uni + " does not exist in
-    // shader.");
+     tlog(filenames[0], ", ", filenames[1], " - " + uni + " does not exist in shader.");
     return loc;
   }
   checkErrors("getUniformLocation(): " + uni, filenames);
@@ -180,6 +179,11 @@ GLint Program::getAttribLocation(const std::string& attrib) {
   GLint loc = glGetAttribLocation(program, attrib.c_str());
   checkErrors("getAttribLocation(): " + attrib, filenames);
   return loc;
+}
+
+bool Program::setGLUniform(GLint loc, const bool b) {
+  glUniform1i(loc, (int) b);
+  return checkErrors("setGLUniform(bool): ", filenames);
 }
 
 bool Program::setGLUniform(GLint loc, const int i) {
@@ -289,17 +293,16 @@ std::map<std::string, std::string> Program::loadVSFS(const std::string& fsvs) {
   return source;
 }
 
-bool Program::checkErrors(const std::string&,
+bool Program::checkErrors(const std::string& place,
                           const std::vector<std::string>& filenames) {
   GLenum errorCheck = glGetError();
   if (errorCheck != GL_NO_ERROR) {
     std::cout << "Error below in these: ";
     for (std::string s : filenames)
       std::cout << s + ", ";
-    // std::cout << std::endl;
-    // fprintf(stderr, "GL_ERROR @ %s: %s\n", place.c_str(),
-    // gluErrorString(errorCheck));
-    // std::cout << std::endl;
+    std::cout << std::endl;
+    fprintf(stderr, "GL_ERROR @ %s: %i\n", place.c_str(), errorCheck);
+    std::cout << std::endl;
     error("GLSL error.. Please see error above.");
     throw Error("Program.cpp");
     return false;

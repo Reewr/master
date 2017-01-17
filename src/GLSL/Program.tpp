@@ -14,6 +14,7 @@ bool Program::setUniforms(const std::vector<std::string>& unis,
     error("setUniforms: size is not equal");
     return false;
   }
+
   for (unsigned int i = 0; i < unis.size(); i++) {
     if (!setUniform(unis[i], t[i]))
       return false;

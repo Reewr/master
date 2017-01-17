@@ -99,6 +99,7 @@ public:
                           const std::vector<std::string>& files = {});
 
 private:
+  bool setGLUniform(GLint loc, const bool b);
   bool setGLUniform(GLint loc, const int i);
   bool setGLUniform(GLint loc, const int i, const int j);
   bool setGLUniform(GLint loc, const float f);
