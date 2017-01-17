@@ -28,15 +28,8 @@ MainMenu::MainMenu(Asset* asset) {
                 { 20, 50, Menu::VERTICAL, Text::WHITE });
 
 
-  GUI* background = new Window(TEMP::getPath(TEMP::SPACE),
-                               Rect(0,
-                                    0,
-                                    cfg->graphics.res.x,
-                                    cfg->graphics.res.y));
-  background->isVisible(true);
-
   // Order is important
-  mGUIElements = { background, menu, opts };
+  mGUIElements = { menu, opts };
 
   auto handler = [&, opts, menu](const Input::Event& event) {
     if (!menu->isVisible() || menu->isAnimating())
@@ -112,8 +105,8 @@ void MainMenu::input(const Input::Event& event) {
   switch (event.state()) {
     case States::OptionsMenuClose:
       event.sendStateChange(States::NoChange);
-      mGUIElements[2]->isVisible(false);
-      mGUIElements[1]->isVisible(true);
+      mGUIElements[1]->isVisible(false);
+      mGUIElements[0]->isVisible(true);
     break;
   }
 }
