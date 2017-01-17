@@ -37,6 +37,14 @@ Console::Console(Asset* asset) {
   mProgram->link();
   mProgram->setUniform("screenRes", res, "guiOffset", vec2());
   mProgram->setUniform("guiColor", vec4(0, 0, 0, 0.9));
+
+  // Add default commands
+  addCommand("game.exit", [](Asset*,
+                             const Input::Event& event,
+                             const std::string& input) {
+    event.sendStateChange(States::QuitAll);
+    return "";
+  });
 }
 
 Console::~Console() {
@@ -170,6 +178,7 @@ void Console::doCommand(const Input::Event& event) {
     return setError("No such command '" + command + "'");
 
   std::string output = mCommands[command](mAsset, event, parameters);
+  log("Console: ", command, " - Output: ", output);
 
   if (output != "")
     return setError(output);
