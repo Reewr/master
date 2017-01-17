@@ -29,11 +29,10 @@ public:
 
   std::string filename() const;
   std::string type() const;
-  GLuint id() const;
+  GLuint      id() const;
 
 
 private:
-
   //! Checks a shader for errors. If errors occure, calls handleShaderErrors
   static bool checkShader(const GLuint id, const std::string& filename);
 

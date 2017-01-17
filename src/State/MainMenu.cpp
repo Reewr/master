@@ -1,12 +1,12 @@
 #include "MainMenu.hpp"
 
+#include "../Console/Console.hpp"
 #include "../GUI/Menu.hpp"
 #include "../GUI/Window.hpp"
 #include "../GUIMenu/OptionsMenu.hpp"
 #include "../Graphical/Framebuffer.hpp"
 #include "../Graphical/GL/Rectangle.hpp"
 #include "../Graphical/Texture.hpp"
-#include "../Console/Console.hpp"
 #include "../Input/Event.hpp"
 #include "../Input/Input.hpp"
 #include "../Utils/Asset.hpp"
@@ -16,13 +16,12 @@ MainMenu::MainMenu(Asset* asset) {
   mAsset = asset;
 
   Console*     console = new Console(asset);
-  OptionsMenu* opts = new OptionsMenu(asset->input());
-  CFG* cfg          = asset->cfg();
-  Window* menu      = new Window("NONE",
-                            Rect(vec2(cfg->graphics.res.x - 200,
-                                      cfg->graphics.res.y - 225),
-                                 vec2(cfg->graphics.res.x,
-                                      cfg->graphics.res.y)));
+  OptionsMenu* opts    = new OptionsMenu(asset->input());
+  CFG*         cfg     = asset->cfg();
+  Window*      menu =
+    new Window("NONE",
+               Rect(vec2(cfg->graphics.res.x - 200, cfg->graphics.res.y - 225),
+                    vec2(cfg->graphics.res.x, cfg->graphics.res.y)));
   menu->isVisible(true);
   menu->addMenu("MainMenu",
                 { "Master Thesis", "Start Game", "Options", "Exit" },
@@ -116,6 +115,6 @@ void MainMenu::input(const Input::Event& event) {
       event.sendStateChange(States::NoChange);
       mGUIElements[1]->isVisible(false);
       mGUIElements[0]->isVisible(true);
-    break;
+      break;
   }
 }

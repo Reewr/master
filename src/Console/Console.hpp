@@ -32,9 +32,9 @@ public:
   //
   // The return type is a string. If the string is not empty, it is
   // considered to be an error string that will be shown to the user
-  using Handler = std::function<std::string(Asset* asset,
+  using Handler = std::function<std::string(Asset*              asset,
                                             const Input::Event& event,
-                                            const std::string& input)>;
+                                            const std::string&  input)>;
 
   //! Create console
   Console(Asset* asset);
@@ -43,8 +43,7 @@ public:
   //! Adds a command to the console that can be invoked
   //! using the name followed by ().
   //! Ex: config.res(1024, 768)
-  void addCommand(const std::string& name,
-                  Handler h);
+  void addCommand(const std::string& name, Handler h);
 
   //! Sets an error on the console
   void setError(const std::string& message);
@@ -81,7 +80,7 @@ private:
   GL::Rectangle* mAutoCompleteBox;
   Asset*         mAsset;
 
-  bool mShowAutoComplete;
+  bool               mShowAutoComplete;
   std::vector<Text*> mAutoComplete;
   std::vector<Text*> mHistory;
 

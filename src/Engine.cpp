@@ -112,7 +112,7 @@ Input::Input* Engine::input() {
  */
 bool Engine::initialize(int argc, char* argv[], int isRefresh, int initState) {
 
-  mCFG = new CFG();
+  mCFG   = new CFG();
   mAsset = new Asset(mCFG);
   // Load the configuration file
   mCFG->assimilate(mCFGPath);
@@ -234,10 +234,10 @@ bool Engine::initWindow() {
   // get monitor, may be null, but thats okay since glfw supports it
   GLFWmonitor* monitor = getMonitor();
   mWindow              = glfwCreateWindow(cfg->graphics.res.x,
-                            cfg->graphics.res.y,
-                            "DDDGP",
-                            monitor,
-                            NULL);
+                             cfg->graphics.res.y,
+                             "DDDGP",
+                             monitor,
+                             NULL);
 
   if (!mWindow) {
     error("Engine: Could not open window with GLFW. Check GLFW error messages");
@@ -304,7 +304,7 @@ GLFWmonitor* Engine::getMonitor() {
       monitor = glfwGetPrimaryMonitor();
 
     // since its fullscreen, we get the resolution of the monitor
-    videoMode        = glfwGetVideoMode(monitor);
+    videoMode          = glfwGetVideoMode(monitor);
     mCFG->graphics.res = vec2(videoMode->width, videoMode->height);
   }
 

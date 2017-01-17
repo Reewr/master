@@ -10,9 +10,9 @@
 #include "../Input/Input.hpp"
 #include "../Math/Math.hpp"
 #include "../State/State.hpp"
+#include "../Utils/Asset.hpp"
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
-#include "../Utils/Asset.hpp"
 
 Console::Console(Asset* asset) {
   vec2 res      = asset->cfg()->graphics.res;
@@ -162,7 +162,7 @@ void Console::doCommand(const Input::Event& event) {
   if (endBracket != mCurrentText.size() - 1)
     return setError("Commands must end with a closing bracket");
 
-  std::string command = mCurrentText.substr(0, startBracket);
+  std::string command    = mCurrentText.substr(0, startBracket);
   std::string parameters = mCurrentText.substr(startBracket + 1, endBracket);
   parameters.pop_back();
 
@@ -225,7 +225,7 @@ void Console::setAutoComplete() {
   }
 
   if (box.size.y > 0 && index != 0) {
-    box.size.x = box.size.x + 10;
+    box.size.x        = box.size.x + 10;
     mShowAutoComplete = true;
     mAutoCompleteBox->change(box);
   } else {
@@ -240,7 +240,8 @@ void Console::setAutoComplete() {
  * @return
  */
 void Console::input(const Input::Event& event) {
-  bool isConsoleKey = mAsset->input()->checkKey(Input::Action::Console, event.key());
+  bool isConsoleKey =
+    mAsset->input()->checkKey(Input::Action::Console, event.key());
 
   if (!isVisible() && isConsoleKey) {
     isVisible(true);
@@ -306,7 +307,7 @@ void Console::draw() {
 
   if (mShowAutoComplete) {
     mAutoCompleteBox->draw();
-    for(auto a : mAutoComplete)
+    for (auto a : mAutoComplete)
       a->draw();
   }
 

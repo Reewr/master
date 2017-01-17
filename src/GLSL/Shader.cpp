@@ -31,7 +31,7 @@ std::string loadTextfile(const std::string& filename) {
   return content;
 }
 
-Shader::Shader() : mId(0) , mFilename("Unknown"){ }
+Shader::Shader() : mId(0), mFilename("Unknown") {}
 
 Shader::Shader(const std::string& filename) {
   mId       = loadShader(filename);

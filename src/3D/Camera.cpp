@@ -8,10 +8,10 @@
 /* Camera::Camera (Input* i, Program* shadow, Program* model) { */
 Camera::Camera(Asset* a, Program* shadow) {
   this->shadow = shadow;
-  asset = a;
+  asset        = a;
   /* this->model  = model; */
   light.day = 0;
-  proj = updateProjMatrix();
+  proj      = updateProjMatrix();
 
   /* model->setUniform("proj", proj); */
 

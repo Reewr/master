@@ -2,8 +2,8 @@
 
 #include <string>
 
-#include "../Math/Math.hpp"
 #include "../Input/Input.hpp"
+#include "../Math/Math.hpp"
 
 namespace Input {
 

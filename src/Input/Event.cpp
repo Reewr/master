@@ -461,5 +461,4 @@ void Event::stopPropgation() const {
   mPrev = mType;
   mType = Type::Consumed;
 }
-
 }

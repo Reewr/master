@@ -8,10 +8,9 @@
 #include "../Utils/Asset.hpp"
 #include "../Utils/Utils.hpp"
 
-Master::Master(Asset*) { }
+Master::Master(Asset*) {}
 
-Master::~Master() {
-}
+Master::~Master() {}
 
 void Master::draw3D() {
   glEnable(GL_DEPTH_TEST);

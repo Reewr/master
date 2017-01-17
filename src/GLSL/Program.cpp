@@ -165,7 +165,10 @@ GLint Program::getUniformLocation(const std::string& uni) {
   if (loc != -1)
     uniLocations[uni] = loc;
   else {
-     tlog(filenames[0], ", ", filenames[1], " - " + uni + " does not exist in shader.");
+    tlog(filenames[0],
+         ", ",
+         filenames[1],
+         " - " + uni + " does not exist in shader.");
     return loc;
   }
   checkErrors("getUniformLocation(): " + uni, filenames);
@@ -293,7 +296,7 @@ std::map<std::string, std::string> Program::loadVSFS(const std::string& fsvs) {
   return source;
 }
 
-bool Program::checkErrors(const std::string& place,
+bool Program::checkErrors(const std::string&              place,
                           const std::vector<std::string>& filenames) {
   GLenum errorCheck = glGetError();
   if (errorCheck != GL_NO_ERROR) {

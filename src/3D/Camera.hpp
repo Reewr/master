@@ -15,8 +15,8 @@ class Input;
 class Camera {
 public:
   Asset* asset;
-  vec3  target = { 0, 1.183, 0 };
-  float height = 2;
+  vec3   target = { 0, 1.183, 0 };
+  float  height = 2;
 
   float hrot   = 0;
   float vrot   = -45;
