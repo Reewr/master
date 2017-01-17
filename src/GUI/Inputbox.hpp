@@ -45,7 +45,7 @@ public:
   void setOffset(const vec2& of);
 
   //! Draws input box
-  void draw(float);
+  void draw();
 
 private:
   Texture* mTextBox;

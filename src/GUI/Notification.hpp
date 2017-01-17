@@ -26,7 +26,7 @@ public:
   void addNewNotification(const int reason);
 
   //! Draws the notification and deals with animations.
-  void draw(float deltaTime);
+  void draw();
   void drawIcon();
   void drawText();
 

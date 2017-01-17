@@ -43,7 +43,7 @@ public:
   void setSlider(float s);
 
   //! :)
-  void draw(float deltaTime);
+  void draw();
 
 private:
   Texture* mBackground;

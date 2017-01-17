@@ -61,7 +61,7 @@ public:
   void setOffset(const vec2& offset);
 
   //! Draws
-  void draw(float deltaTime);
+  void draw();
 
 private:
   //! Add an options to the dropbox

@@ -486,7 +486,7 @@ void Window::sortDropdowns() {
   });
 }
 
-void Window::draw(float deltaTime) {
+void Window::draw() {
   if (!isVisible())
     return;
 
@@ -497,22 +497,22 @@ void Window::draw(float deltaTime) {
   }
 
   for (auto m : mMenues)
-    m.second->draw(deltaTime);
+    m.second->draw();
 
   for (auto s : mSliders)
-    s.second->draw(deltaTime);
+    s.second->draw();
 
   for (auto d : mDrawDropdowns)
-    d->draw(deltaTime);
+    d->draw();
 
   for (auto c : mCheckboxes)
-    c.second->draw(deltaTime);
+    c.second->draw();
 
   for (auto i : mInputboxes)
-    i.second->draw(deltaTime);
+    i.second->draw();
 
   for (auto w : mWindows)
-    w.second->draw(deltaTime);
+    w.second->draw();
 
   if (mTitle != NULL)
     mTitle->draw();

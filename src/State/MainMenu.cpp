@@ -6,6 +6,7 @@
 #include "../Graphical/Framebuffer.hpp"
 #include "../Graphical/GL/Rectangle.hpp"
 #include "../Graphical/Texture.hpp"
+#include "../Console/Console.hpp"
 #include "../Input/Event.hpp"
 #include "../Input/Input.hpp"
 #include "../Utils/Asset.hpp"
@@ -14,6 +15,7 @@
 MainMenu::MainMenu(Asset* asset) {
   mAsset = asset;
 
+  Console*     console = new Console(asset);
   OptionsMenu* opts = new OptionsMenu(asset->input());
   CFG* cfg          = asset->cfg();
   Window* menu      = new Window("NONE",
@@ -29,11 +31,16 @@ MainMenu::MainMenu(Asset* asset) {
 
 
   // Order is important
-  mGUIElements = { menu, opts };
+  mGUIElements = { menu, opts, console };
 
-  auto handler = [&, opts, menu](const Input::Event& event) {
+  auto handler = [&, opts, menu, console](const Input::Event& event) {
     if (!menu->isVisible() || menu->isAnimating())
       return;
+
+    if (event.isAction(Input::Action::Console)) {
+      console->isVisible(true);
+      return event.stopPropgation();
+    }
 
     menu->defaultInputHandler(event);
 
@@ -91,7 +98,7 @@ void MainMenu::draw3D() {
 void MainMenu::drawGUI() {
   glDisable(GL_DEPTH_TEST);
   for (auto g : mGUIElements)
-    g->draw(mDeltaTime);
+    g->draw();
 }
 
 void MainMenu::input(const Input::Event& event) {

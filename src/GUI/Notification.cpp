@@ -108,9 +108,9 @@ void Notification::setOffset(const vec2& offset) {
   mButtonText->setOffset(offset);
 }
 
-void Notification::draw(float deltaTime) {
+void Notification::draw() {
   if (isAnimating())
-    runAnimation(deltaTime);
+    runAnimation(5);
 
   mGUIProgram->setUniform("guiOffset", mOffset);
   mNotTex->draw();

@@ -34,7 +34,7 @@ public:
   void setOffset(const vec2& offset);
 
   // :)
-  void draw(float deltaTime);
+  void draw();
 
   //! Can be called to do the default actions by using
   //! setInputHandler. Is also called by default if setInputHandler

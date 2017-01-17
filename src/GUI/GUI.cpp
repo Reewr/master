@@ -28,7 +28,7 @@ bool GUI::isInside(const vec2& pos) const {
 }
 
 void GUI::draw() {}
-void GUI::draw(float) {}
+void GUI::update(float) {}
 
 bool GUI::isVisible() const {
   return mIsVisible;

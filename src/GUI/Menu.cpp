@@ -374,7 +374,7 @@ int Menu::getActiveMenu() const {
  *
  * @param float
  */
-void Menu::draw(float) {
+void Menu::draw() {
   if (!isVisible())
     return;
 

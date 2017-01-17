@@ -191,7 +191,7 @@ void Inputbox::setOffset(const vec2& offset) {
  *
  * @param float
  */
-void Inputbox::draw(float) {
+void Inputbox::draw() {
   mGUIProgram->bind();
   mGUIProgram->setUniform("guiOffset", mOffset);
 

@@ -16,7 +16,7 @@ class GUI {
 public:
   virtual ~GUI();
   virtual void draw();
-  virtual void draw(float deltaTime);
+  virtual void update(float deltaTime);
 
   virtual bool isInside(const vec2& pos) const;
 

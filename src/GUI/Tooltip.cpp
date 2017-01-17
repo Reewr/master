@@ -71,7 +71,7 @@ void Tooltip::setOffset(const vec2& offset) {
  *
  * @param float
  */
-void Tooltip::draw(float) {
+void Tooltip::draw() {
   mGUIProgram->bind();
   mGUIProgram->setUniform("guiOffset", mOffset);
   mBackground->draw();

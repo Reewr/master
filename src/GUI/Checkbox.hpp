@@ -40,7 +40,7 @@ public:
   void defaultInputHandler(const Input::Event& event);
 
   // Draws the box
-  void draw(float deltaTime);
+  void draw();
 
 private:
   bool     mIsTicked;

@@ -165,7 +165,7 @@ float Slider::value() const {
  *
  * @param float
  */
-void Slider::draw(float) {
+void Slider::draw() {
   if (!mIsVisible)
     return;
 

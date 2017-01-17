@@ -120,7 +120,7 @@ void Checkbox::defaultInputHandler(const Input::Event& event) {
  *
  * @param float
  */
-void Checkbox::draw(float) {
+void Checkbox::draw() {
   mGUIProgram->bind();
   mGUIProgram->setUniform("guiOffset", mOffset);
   mSquare->draw();
