@@ -19,14 +19,15 @@ Console::Console(Asset* asset) {
   vec2 textPos  = vec2(10, res.y / 2 - 30);
   vec2 errorPos = vec2(10, res.y / 2);
 
-  mAsset           = asset;
-  mCurrentText     = "";
-  mBoundingBox     = Rect(0, 0, res.x, res.y / 2);
-  mRect            = new GL::Rectangle(mBoundingBox);
-  mAutoCompleteBox = new GL::Rectangle(Rect(0, 0, 0, 0));
-  mText            = new Text(mFont, "> _", textPos, 20, Text::WHITE);
-  mError           = new Text(mFont, "Error:", errorPos, 20, Text::RED);
-  mErrorDisplayed  = 0;
+  mShowAutoComplete = false;
+  mAsset            = asset;
+  mCurrentText      = "";
+  mBoundingBox      = Rect(0, 0, res.x, res.y / 2);
+  mRect             = new GL::Rectangle(mBoundingBox);
+  mAutoCompleteBox  = new GL::Rectangle(Rect(0, 0, 0, 0));
+  mText             = new Text(mFont, "> _", textPos, 20, Text::WHITE);
+  mError            = new Text(mFont, "Error:", errorPos, 20, Text::RED);
+  mErrorDisplayed   = 0;
 
   mError->isVisible(false);
 
