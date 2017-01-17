@@ -46,6 +46,20 @@ Console::Console(Asset* asset) {
     event.sendStateChange(States::QuitAll);
     return "";
   });
+
+  addCommand("config.res", [](Asset* asset,
+                              const Input::Event& event,
+                              const std::string& input) -> std::string {
+    vec2 res = asset->cfg()->graphics.res;
+    if (input.size() == 0)
+      return "[" + Utils::toStr(res.x) + ", " + Utils::toStr(res.y) + "]";
+    return std::string("");
+  });
+
+  addCommand("game.throw", [](Asset*, const Input::Event&, const std::string&) {
+    throw std::invalid_argument("Something went wrong");
+    return "";
+  });
 }
 
 Console::~Console() {
@@ -176,13 +190,20 @@ void Console::doCommand(const Input::Event& event) {
   if (mCommands.count(command) == 0)
     return setError("No such command '" + command + "'");
 
-  std::string output = mCommands[command](mAsset, event, parameters);
-  log("Console: ", command, " - Output: ", output);
+  std::string output = "";
 
-  if (output != "")
-    return setError(output);
+  try {
+    output = mCommands[command](mAsset, event, parameters);
+  } catch (const std::invalid_argument& e) {
+    setError(command + ": " + e.what());
+  }
 
-  addHistory();
+  if (output.size() != 0) {
+    addHistory(mCurrentText + ": " + output);
+  } else {
+    addHistory(mCurrentText);
+  }
+
   setText("");
 }
 

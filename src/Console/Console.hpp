@@ -31,7 +31,10 @@ public:
   // The input is whatever is put in between the brackets.
   //
   // The return type is a string. If the string is not empty, it is
-  // considered to be an error string that will be shown to the user
+  // considered to be the output that will be shown to the user
+  //
+  // Should you need to display an error, throw an std::invalid_argument
+  // error. This will displayed to the console.
   using Handler = std::function<std::string(Asset*              asset,
                                             const Input::Event& event,
                                             const std::string&  input)>;
