@@ -60,15 +60,15 @@ public:
   //! Draw the console
   void draw();
 
+  // When a command has been executed, add it to history
+  void addHistory(const std::string& text);
+
 private:
   // Checks if the command is legal, prints error if not.
   void doCommand(const Input::Event& event);
 
   // Sets the autocomplete by checking the current string
   void setAutoComplete();
-
-  // When a command has been executed, add it to history
-  void addHistory();
 
   bool  mPrevInputOpened;
   float mErrorDisplayed;

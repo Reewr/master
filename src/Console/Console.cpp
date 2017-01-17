@@ -117,9 +117,9 @@ void Console::setError(const std::string& message) {
  *   A text element will gradiually be moved upwards until
  *   it is outside of the screen, at which point it will be hidden
  */
-void Console::addHistory() {
+void Console::addHistory(const std::string& text) {
   vec2  pos = vec2(10, mAsset->cfg()->graphics.res.y / 2 - 60);
-  Text* t   = new Text(mFont, mCurrentText, pos, 20, Text::WHITE);
+  Text* t   = new Text(mFont, text, pos, 20, Text::WHITE);
 
   t->isVisible(true);
 
@@ -133,8 +133,6 @@ void Console::addHistory() {
     a->setOffset(newPos);
     index--;
   }
-
-  log("Adding ", mCurrentText, " to history");
 
   mHistory.push_back(t);
 }
