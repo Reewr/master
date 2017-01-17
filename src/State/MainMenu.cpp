@@ -82,8 +82,10 @@ MainMenu::~MainMenu() {
 
 void MainMenu::update(float deltaTime) {
   mDeltaTime = deltaTime;
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glClearColor(0, 0.4, 0.7, 1);
+
+  for (auto i = mGUIElements.rbegin(); i != mGUIElements.rend(); ++i) {
+    (*i)->update(deltaTime);
+  }
 }
 
 void MainMenu::draw(float) {
