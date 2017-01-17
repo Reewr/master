@@ -47,7 +47,7 @@ Console::Console(Asset* asset) {
     return "";
   });
 
-  addCommand("config.res", [](Asset* asset,
+  addCommand("config.graphics.res", [](Asset* asset,
                               const Input::Event& event,
                               const std::string& input) -> std::string {
     vec2 res = asset->cfg()->graphics.res;
