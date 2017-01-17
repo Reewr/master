@@ -8,7 +8,7 @@ class Program;
 class CFG;
 
 namespace Input {
-class Event;
+  class Event;
 }
 
 //! Fully Virtual class used by all GUI elements.

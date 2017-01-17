@@ -5,8 +5,8 @@
 #include "../Import/UILoader.hpp"
 
 namespace Input {
-class Input;
-class Event;
+  class Input;
+  class Event;
 }
 
 class OptionsMenu : public Window {

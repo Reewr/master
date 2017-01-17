@@ -17,7 +17,7 @@ class Inputbox;
 class Texture;
 
 namespace tinyxml2 {
-class XMLElement;
+  class XMLElement;
 }
 
 //! Window is a GUI class that creates a block to act as a window on the screen

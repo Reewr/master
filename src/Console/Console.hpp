@@ -13,12 +13,12 @@ class Asset;
 
 
 namespace Input {
-class Input;
-class Event;
+  class Input;
+  class Event;
 }
 
 namespace GL {
-class Rectangle;
+  class Rectangle;
 }
 
 class Console : public GUI {

@@ -8,8 +8,8 @@
 #include "../Math/Math.hpp"
 
 namespace Input {
-class Input;
-class Event;
+  class Input;
+  class Event;
 }
 
 class PauseMenu : public Window {

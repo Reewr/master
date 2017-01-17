@@ -11,7 +11,7 @@ class Texture;
 class Text;
 
 namespace tinyxml2 {
-class XMLElement;
+  class XMLElement;
 }
 
 class Slider : public GUI {

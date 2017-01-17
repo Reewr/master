@@ -6,25 +6,25 @@ class Asset;
 class GUI;
 
 namespace Input {
-class Event;
+  class Event;
 }
 
 namespace States {
-enum {
-  QuitAll = -2,
-  Quit    = -1,
-  Init,
-  OptionsMenuClose,
-  OptionsMenuOpen,
-  PauseMenuOpen,
-  PauseMenuClose,
-  MainMenu,
-  Game,
-  MasterThesis,
-  Refresh,
-  WinRefresh,
-  NoChange
-};
+  enum {
+    QuitAll = -2,
+    Quit    = -1,
+    Init,
+    OptionsMenuClose,
+    OptionsMenuOpen,
+    PauseMenuOpen,
+    PauseMenuClose,
+    MainMenu,
+    Game,
+    MasterThesis,
+    Refresh,
+    WinRefresh,
+    NoChange
+  };
 }
 
 //! Fully Virtual class utilized by StateGame and StateMenu

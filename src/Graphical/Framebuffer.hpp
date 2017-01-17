@@ -12,7 +12,7 @@ class Texture;
 class CFG;
 
 namespace GL {
-class Rectangle;
+  class Rectangle;
 }
 
 class Framebuffer {

@@ -11,7 +11,7 @@
 class Asset;
 
 namespace Input {
-class Input;
+  class Input;
 }
 
 //! Engine sorts out which state that is active

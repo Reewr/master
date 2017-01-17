@@ -1,15 +1,15 @@
 #pragma once
 
 namespace tinyxml2 {
-class XMLDocument;
+  class XMLDocument;
 }
 
 namespace Import {
 
-struct XML {
-  XML(const char* filePath);
-  virtual ~XML();
+  struct XML {
+    XML(const char* filePath);
+    virtual ~XML();
 
-  tinyxml2::XMLDocument* doc;
-};
+    tinyxml2::XMLDocument* doc;
+  };
 }

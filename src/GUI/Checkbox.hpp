@@ -9,11 +9,11 @@ class Text;
 class Texture;
 
 namespace tinyxml2 {
-class XMLElement;
+  class XMLElement;
 }
 
 namespace Input {
-class Input;
+  class Input;
 }
 
 class Checkbox : public GUI {

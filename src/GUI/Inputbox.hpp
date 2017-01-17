@@ -8,11 +8,11 @@ class Texture;
 class Text;
 
 namespace tinyxml2 {
-class XMLElement;
+  class XMLElement;
 }
 
 namespace Input {
-class Event;
+  class Event;
 }
 
 class Inputbox : public GUI {

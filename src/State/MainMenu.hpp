@@ -9,8 +9,8 @@ class Texture;
 class Framebuffer;
 
 namespace Input {
-class Input;
-class Event;
+  class Input;
+  class Event;
 }
 
 //! Main Menu. Guess what it handles? :D

@@ -24,52 +24,52 @@ private:
 
 namespace Utils {
 
-static std::map<unsigned int, std::string> utf8Characters;
+  static std::map<unsigned int, std::string> utf8Characters;
 
-bool fileExists(const std::string& name);
+  bool fileExists(const std::string& name);
 
-bool getGLError();
-void clearGLError();
+  bool getGLError();
+  void clearGLError();
 
-void logTimeStart(std::string name    = "TimeStart",
-                  bool        isMS    = true,
-                  bool        isPrint = true);
-double logTimeEnd();
-
-void glLogTimeStart(std::string name    = "glTimeStart",
+  void logTimeStart(std::string name    = "TimeStart",
                     bool        isMS    = true,
                     bool        isPrint = true);
-double glLogTimeEnd();
+  double logTimeEnd();
 
-void lineLog();
-template <typename... Ts>
-void lineLog(Ts... args);
+  void glLogTimeStart(std::string name    = "glTimeStart",
+                      bool        isMS    = true,
+                      bool        isPrint = true);
+  double glLogTimeEnd();
 
-void logTimeNoEnd();
-void logTime(std::string loc);
+  void lineLog();
+  template <typename... Ts>
+  void lineLog(Ts... args);
 
-std::string toUpper(std::string s);
-std::string toLower(std::string s);
+  void logTimeNoEnd();
+  void logTime(std::string loc);
 
-std::string utf8toStr(unsigned int utf8);
+  std::string toUpper(std::string s);
+  std::string toLower(std::string s);
 
-void rTrim(std::string& s);
-void lTrim(std::string& s);
-void trim(std::string& s);
+  std::string utf8toStr(unsigned int utf8);
 
-template <typename N>
-std::string toStr(N n);
+  void rTrim(std::string& s);
+  void lTrim(std::string& s);
+  void trim(std::string& s);
 
-void logPercent(int percent, std::string msg = "");
+  template <typename N>
+  std::string toStr(N n);
 
-template <typename V>
-void deleteVec(std::vector<V*>& vec);
+  void logPercent(int percent, std::string msg = "");
 
-template <typename V>
-void deleteList(std::list<V*>& list);
+  template <typename V>
+  void deleteVec(std::vector<V*>& vec);
 
-template <typename K, typename V>
-void deleteMap(std::map<K, V*>& map);
+  template <typename V>
+  void deleteList(std::list<V*>& list);
+
+  template <typename K, typename V>
+  void deleteMap(std::map<K, V*>& map);
 }
 
 //! print fatal error regardless of DEBUG_MODE
@@ -97,26 +97,26 @@ template <typename... Ts>
 void tlog(Ts... args);
 
 namespace TEMP {
-enum {
-  OPTSMENU,
-  DROPDOWN,
-  SLIDER,
-  SLIDERB,
-  SPACE,
-  TERRAIN,
-  TREE,
-  BLACK,
-  POWERI,
-  ROCKI,
-  PLANKI,
-  COGSI,
-  WIREI,
-  XMLOPT,
-  XMLBUILD,
-  XMLRES,
-  FONT
-};
-std::string getPath(int i);
+  enum {
+    OPTSMENU,
+    DROPDOWN,
+    SLIDER,
+    SLIDERB,
+    SPACE,
+    TERRAIN,
+    TREE,
+    BLACK,
+    POWERI,
+    ROCKI,
+    PLANKI,
+    COGSI,
+    WIREI,
+    XMLOPT,
+    XMLBUILD,
+    XMLRES,
+    FONT
+  };
+  std::string getPath(int i);
 }
 
 

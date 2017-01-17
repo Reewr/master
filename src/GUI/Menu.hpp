@@ -6,7 +6,7 @@
 #include "GUI.hpp"
 
 namespace tinyxml2 {
-class XMLElement;
+  class XMLElement;
 }
 
 class Menu : public GUI {

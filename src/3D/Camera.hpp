@@ -9,7 +9,7 @@ class Asset;
 class Program;
 
 namespace Input {
-class Input;
+  class Input;
 }
 
 class Camera {

@@ -1,62 +1,62 @@
 
 namespace _utils_detail {
 
-template <typename T>
-void fatalError(T arg) {
-  std::cout << arg << std::endl;
-}
+  template <typename T>
+  void fatalError(T arg) {
+    std::cout << arg << std::endl;
+  }
 
-template <typename T, typename... Ts>
-void fatalError(T arg, Ts... args) {
-  std::cout << arg;
-  fatalError(args...);
-}
+  template <typename T, typename... Ts>
+  void fatalError(T arg, Ts... args) {
+    std::cout << arg;
+    fatalError(args...);
+  }
 
-template <typename T>
-void error(T arg) {
-  std::cout << arg << std::endl;
-}
+  template <typename T>
+  void error(T arg) {
+    std::cout << arg << std::endl;
+  }
 
-template <typename T, typename... Ts>
-void error(T arg, Ts... args) {
-  std::cout << arg;
-  error(args...);
-}
+  template <typename T, typename... Ts>
+  void error(T arg, Ts... args) {
+    std::cout << arg;
+    error(args...);
+  }
 
-template <typename T>
-void warning(T arg) {
-  std::cout << arg << std::endl;
-}
+  template <typename T>
+  void warning(T arg) {
+    std::cout << arg << std::endl;
+  }
 
-template <typename T, typename... Ts>
-void warning(T arg, Ts... args) {
-  std::cout << arg;
-  warning(args...);
-}
+  template <typename T, typename... Ts>
+  void warning(T arg, Ts... args) {
+    std::cout << arg;
+    warning(args...);
+  }
 
-template <typename T>
-void log(T arg) {
-  std::cout << arg << std::endl;
-}
+  template <typename T>
+  void log(T arg) {
+    std::cout << arg << std::endl;
+  }
 
-template <typename T, typename... Ts>
-void log(T arg, Ts... args) {
-  std::cout << arg;
-  log(args...);
-}
+  template <typename T, typename... Ts>
+  void log(T arg, Ts... args) {
+    std::cout << arg;
+    log(args...);
+  }
 
-void lineLog();
+  void lineLog();
 
-template <typename T, typename... Ts>
-void lineLog(T arg, Ts... args) {
-  std::cout << arg << std::flush;
-  lineLog(args...);
-}
+  template <typename T, typename... Ts>
+  void lineLog(T arg, Ts... args) {
+    std::cout << arg << std::flush;
+    lineLog(args...);
+  }
 
-template <typename T>
-void _tlog(T x) {
-  std::cout << x;
-}
+  template <typename T>
+  void _tlog(T x) {
+    std::cout << x;
+  }
 }
 
 template <typename... Ts>
@@ -106,14 +106,14 @@ void log(Ts... args) {
 }
 
 namespace Utils {
-template <typename... Ts>
-void lineLog(Ts... args) {
-  if (DEBUG_MODE && *DEBUG_MODE) {
-    _utils_detail::lineLog(std::string(250, '\r'));
-    Utils::logTimeNoEnd();
-    _utils_detail::lineLog(args...);
+  template <typename... Ts>
+  void lineLog(Ts... args) {
+    if (DEBUG_MODE && *DEBUG_MODE) {
+      _utils_detail::lineLog(std::string(250, '\r'));
+      Utils::logTimeNoEnd();
+      _utils_detail::lineLog(args...);
+    }
   }
-}
 }
 
 template <typename... Ts>
