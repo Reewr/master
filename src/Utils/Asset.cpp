@@ -1,17 +1,7 @@
 #include "Asset.hpp"
 #include "Utils.hpp"
 
-Asset::Asset(CFG* c)
-    : mCFG(c)
-    , mInput(nullptr)
-    , mEngine(nullptr)
-    , mState(nullptr) {}
-
-Asset::Asset(CFG* c, Input::Input* i, Engine* e, State* s)
-    : mCFG(c)
-    , mInput(i)
-    , mEngine(e)
-    , mState(s) {}
+Asset::Asset(CFG* c) : mCFG(c), mInput(nullptr) {}
 
 CFG* Asset::cfg() {
   if (mCFG == nullptr)
@@ -25,30 +15,10 @@ Input::Input* Asset::input() {
   return mInput;
 }
 
-Engine* Asset::engine() {
-  if (mEngine == nullptr)
-    throw Error("Tried to access Engine when nullptr");
-  return mEngine;
-}
-
-State* Asset::state() {
-  if (mState == nullptr)
-    throw Error("Tried to access State when nullptr");
-  return mState;
-}
-
 void Asset::setCFG(CFG* c) {
   mCFG = c;
 }
 
 void Asset::setInput(Input::Input* i) {
   mInput = i;
-}
-
-void Asset::setEngine(Engine* e) {
-  mEngine = e;
-}
-
-void Asset::setState(State* s) {
-  mState = s;
 }

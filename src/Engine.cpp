@@ -114,7 +114,6 @@ bool Engine::initialize(int argc, char* argv[], int isRefresh, int initState) {
 
   mCFG = new CFG();
   mAsset = new Asset(mCFG);
-  mAsset->setEngine(this);
   // Load the configuration file
   mCFG->assimilate(mCFGPath);
 
@@ -442,7 +441,7 @@ void Engine::changeState(int newState) {
 
   switch (mActiveStates.top()) {
     case States::MainMenu:
-      mCurrent = new class MainMenu(mAsset);
+      mCurrent = new MainMenu(mAsset);
       break;
     case States::Game:
       throw Error("Tried to make game. THROW FIT. (╯°□°）╯︵ ┻━┻)");
@@ -452,8 +451,6 @@ void Engine::changeState(int newState) {
     default:
       throw Error("Tried to non-existant state. THROW FIT. (╯°□°）╯︵ ┻━┻)");
   }
-
-  mAsset->setState(mCurrent);
 }
 
 /**
