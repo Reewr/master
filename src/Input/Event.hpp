@@ -78,6 +78,9 @@ public:
   //! lot of handlers that handles inputs will need to check actions.
   bool isAction(Action a) const;
 
+  //! Checks if a key is continually held down
+  bool isKeyHeldDown(int key) const;
+
   //! This is a simplification for checking for buttons. It firstly
   //! checks that it is a key press event and then
   //! compares the code to the key given.

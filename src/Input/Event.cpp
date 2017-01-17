@@ -192,6 +192,19 @@ bool Event::isAction(Action a) const {
 
 /**
  * @brief
+ *   Checks if the key is held down. This check with GLFW
+ *   whether the key is held down or not.
+ *
+ * @param key
+ *
+ * @return
+ */
+bool Event::isKeyHeldDown(int key) const {
+  return mInput != nullptr && mInput->isKeyPressed(key);
+}
+
+/**
+ * @brief
  *   Returns the type of the event
  *
  * @return
