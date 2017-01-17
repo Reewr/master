@@ -40,26 +40,28 @@ Console::Console(Asset* asset) {
   mProgram->setUniform("guiColor", vec4(0, 0, 0, 0.9));
 
   // Add default commands
-  addCommand("game.exit", [](Asset*,
-                             const Input::Event& event,
-                             const std::string& input) {
+  auto onGameExit = [](Asset*, const Input::Event& event, const std::string&) {
     event.sendStateChange(States::QuitAll);
     return "";
-  });
+  };
 
-  addCommand("config.graphics.res", [](Asset* asset,
-                              const Input::Event& event,
-                              const std::string& input) -> std::string {
-    vec2 res = asset->cfg()->graphics.res;
-    if (input.size() == 0)
-      return "[" + Utils::toStr(res.x) + ", " + Utils::toStr(res.y) + "]";
-    return std::string("");
-  });
+  auto onCFGRes =
+    [](Asset* asset, const Input::Event& event, const std::string& input) {
+      vec2 res = asset->cfg()->graphics.res;
+      if (input.size() == 0)
+        return "[" + Utils::toStr(res.x) + ", " + Utils::toStr(res.y) + "]";
 
-  addCommand("game.throw", [](Asset*, const Input::Event&, const std::string&) {
+      return std::string("");
+    };
+
+  auto onThrow = [](Asset*, const Input::Event&, const std::string&) {
     throw std::invalid_argument("Something went wrong");
     return "";
-  });
+  };
+
+  addCommand("game.exit", onGameExit);
+  addCommand("config.graphics.res", onCFGRes);
+  addCommand("game.throw", onThrow);
 }
 
 Console::~Console() {
