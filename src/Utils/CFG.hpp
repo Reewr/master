@@ -39,7 +39,7 @@ public:
     bool debug = false;
   } general;
 
-  struct {
+  struct Camera {
     float rotSpeed  = 360;
     bool  rotInvH   = false;
     bool  rotInvV   = false;
