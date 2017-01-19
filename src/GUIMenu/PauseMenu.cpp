@@ -8,6 +8,7 @@
 #include "../State/State.hpp"
 #include "../Utils/Asset.hpp"
 #include "../Utils/Utils.hpp"
+#include "../Utils/CFG.hpp"
 
 PauseMenu::PauseMenu(Input::Input* i) {
   mBoundingBox = Rect(mCFG->graphics.res.x * 0.5 - 300,

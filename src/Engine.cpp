@@ -11,6 +11,7 @@
 #include "State/Master.hpp"
 #include "Utils/Asset.hpp"
 #include "Utils/Utils.hpp"
+#include "Utils/CFG.hpp"
 /* #include <3D/Spider.hpp> */
 /* #include <3D/Model.hpp> */
 #include "Input/Event.hpp"

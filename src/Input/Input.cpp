@@ -3,6 +3,7 @@
 #include "OpenGLHeaders.hpp"
 
 #include "Utils/Asset.hpp"
+#include "Utils/CFG.hpp"
 
 namespace Input {
 
