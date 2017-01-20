@@ -6,55 +6,33 @@
 
 GLuint Program::activeProgram = 0;
 
-Program::Program() {
-  isLinked = false;
-  isUsable = false;
-  program  = 0;
-}
+Program::Program() {}
 
 Program::Program(const Shader& frag, const Shader& vertex, const bool link) {
-  isLinked = false;
-  isUsable = false;
-  program  = 0;
   createProgram(frag, vertex, link);
 }
 
 Program::Program(const std::string& fs, const Shader& vertex, const bool link) {
-  isLinked = false;
-  isUsable = false;
-  program  = 0;
   createProgram(fs, vertex, link);
 }
 
 Program::Program(const Shader& frag, const std::string& vs, const bool link) {
-  isLinked = false;
-  isUsable = false;
-  program  = 0;
   createProgram(frag, vs, link);
 }
 
 Program::Program(const std::string& fs,
                  const std::string& vs,
                  const bool         link) {
-  isLinked = false;
-  isUsable = false;
-  program  = 0;
   createProgram(fs, vs, link);
 }
 
 Program::Program(const std::string& fsvs, int link) {
-  isLinked = false;
-  isUsable = false;
-  program  = 0;
   createProgram(fsvs, link);
 }
 
 Program::~Program() {
   if (program != 0)
     glDeleteProgram(program);
-  program = 0;
-  filenames.clear();
-  uniLocations.clear();
 }
 
 bool Program::createProgram(const std::string& fs,
@@ -86,6 +64,7 @@ bool Program::createProgram(const Shader& frag,
   isLinked = false;
   if (program != 0)
     glDeleteProgram(program);
+
   program = 0;
   filenames.push_back(frag.filename());
   filenames.push_back(vertex.filename());
@@ -111,15 +90,6 @@ bool Program::createProgram(const std::string& fsvs, int link) {
   Shader vs(srcs["VERTEX"], false, fsvs);
   bool   linkage = (link == 0);
   return createProgram(fs, vs, linkage);
-}
-
-void Program::deleteProgram() {
-  if (program != 0) {
-    glDeleteProgram(program);
-    isLinked = false;
-    isUsable = false;
-    program  = 0;
-  }
 }
 
 bool Program::addShader(const Shader& sh) {

@@ -51,8 +51,6 @@ public:
 
   bool createProgram(const std::string& fsvs, int link = 1);
 
-  void deleteProgram();
-
   //! Adds a shader to the current program
   bool addShader(const Shader& sh);
   bool addShader(const std::string& sh);
@@ -119,10 +117,10 @@ private:
   std::map<std::string, int> uniLocations;
   std::vector<std::string> filenames;
 
-  GLuint program;
+  GLuint program = 0;
 
-  bool isLinked;
-  bool isUsable;
+  bool isLinked = false;
+  bool isUsable = false;
 };
 
 #include <GLSL/Program.tpp>
