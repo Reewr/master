@@ -75,7 +75,7 @@ void Font::loadFromFile(const std::string& filename, int size) {
   mPages[size];
   Page& page = mPages[size];
 
-  FT_Set_Pixel_Sizes(mFace, 0, size);
+  FT_Set_Char_Size(mFace, size * 64, 0, 96, 0);
   FT_GlyphSlot g = mFace->glyph;
 
   unsigned int rowW = 0;
