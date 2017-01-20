@@ -44,7 +44,6 @@ Dropdown::Dropdown(const std::vector<std::string>& options,
   mBigBoxRect = Rect(mBoundingBox.topleft,
                      mBoundingBox.size + vec2(0, mOptions.size() * 25));
 
-  log(options[0], " ", mBoundingBox.topleft, " ", mBoundingBox.size, " ");
   mBox->recalculateGeometry(mBoundingBox);
   mOptionsList->recalculateGeometry(mBigBoxRect);
   setActiveOptionPosition();
@@ -255,7 +254,6 @@ bool Dropdown::setActiveItem(const vec2& position) {
   // Close the dropdown if inside the button and its open,
   // else open it
   if (isInside(position)) {
-    log("Inside, should: ", mIsOptionsListVisible);
     mIsOptionsListVisible = !mIsOptionsListVisible;
     setMouseOverItem(-1);
     return true;
