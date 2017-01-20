@@ -12,6 +12,7 @@
 #include "../Utils/Asset.hpp"
 #include "../Utils/Utils.hpp"
 #include "../Utils/CFG.hpp"
+#include "../Lua/Lua.hpp"
 
 MainMenu::MainMenu(Asset* asset) {
   mAsset = asset;
@@ -72,6 +73,7 @@ MainMenu::MainMenu(Asset* asset) {
   };
 
   menu->setInputHandler(handler);
+  mAsset->lua()->add(console);
   log("MainMenu: Initialized successfully...");
 }
 

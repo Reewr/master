@@ -12,6 +12,7 @@
 #include "Utils/Asset.hpp"
 #include "Utils/Utils.hpp"
 #include "Utils/CFG.hpp"
+#include "Lua/Lua.hpp"
 /* #include <3D/Spider.hpp> */
 /* #include <3D/Model.hpp> */
 #include "Input/Event.hpp"
@@ -148,7 +149,11 @@ bool Engine::initialize(int argc, char* argv[], int isRefresh, int initState) {
   }
 
   mInput = new Input::Input(mWindow, mCFG);
+  mLua   = new Lua::Lua();
+
+  mLua->add(mCFG);
   mAsset->setInput(mInput);
+  mAsset->setLua(mLua);
 
   GUI::init(mAsset->cfg());
   Texture::init(mAsset->cfg());
@@ -341,6 +346,7 @@ void Engine::deinitialize(bool isFullDeinit) {
   delete mAsset;
   delete mInput;
   delete mCFG;
+  delete mLua;
 
   if (mCurrent != nullptr)
     delete mCurrent;

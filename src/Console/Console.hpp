@@ -49,7 +49,13 @@ public:
   void addCommand(const std::string& name, Handler h);
 
   //! Sets an error on the console
-  void setError(const std::string& message);
+  void error(const std::string& message);
+
+  //! Logs an error to the console
+  void log(const std::string &message);
+
+  //! Logs a yellow warning to the console
+  void warn(const std::string& message);
 
   // Input handler
   void input(const Input::Event& event);
@@ -63,22 +69,20 @@ public:
   //! Draw the console
   void draw();
 
-  // When a command has been executed, add it to history
-  void addHistory(const std::string& text);
-
 private:
   // Checks if the command is legal, prints error if not.
   void doCommand(const Input::Event& event);
+
+  // Internal to add text
+  void addHistory(Text* text);
 
   // Sets the autocomplete by checking the current string
   void setAutoComplete();
 
   bool  mPrevInputOpened;
-  float mErrorDisplayed;
 
   std::string    mCurrentText;
   Text*          mText;
-  Text*          mError;
   Program*       mProgram;
   GL::Rectangle* mRect;
   GL::Rectangle* mAutoCompleteBox;

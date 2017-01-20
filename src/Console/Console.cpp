@@ -1,6 +1,7 @@
 #include "Console.hpp"
 
 #include "../OpenGLHeaders.hpp"
+#include <sol.hpp>
 
 #include "../GLSL/Program.hpp"
 #include "../Graphical/GL/Rectangle.hpp"
@@ -13,23 +14,26 @@
 #include "../Utils/Asset.hpp"
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
+#include "../Lua/Lua.hpp"
 
 Console::Console(Asset* asset) {
   vec2 res      = asset->cfg()->graphics.res;
   vec2 textPos  = vec2(10, res.y / 2 - 30);
-  vec2 errorPos = vec2(10, res.y / 2);
 
+  ::log("I is console");
   mShowAutoComplete = false;
   mAsset            = asset;
   mCurrentText      = "";
   mBoundingBox      = Rect(0, 0, res.x, res.y / 2);
   mRect             = new GL::Rectangle(mBoundingBox);
   mAutoCompleteBox  = new GL::Rectangle(Rect(0, 0, 0, 0));
-  mText             = new Text(mFont, "> _", textPos, 20, Text::WHITE);
-  mError            = new Text(mFont, "Error:", errorPos, 20, Text::RED);
-  mErrorDisplayed   = 0;
-
-  mError->isVisible(false);
+  mText             = new Text(mFont,
+                               "> _",
+                               textPos,
+                               12,
+                               Text::WHITE,
+                               vec2(mAsset->cfg()->graphics.res.x,
+                                    mAsset->cfg()->graphics.res.y));
 
   // Specific program for the console since the console
   // is just drawn in black with alpha
@@ -38,37 +42,12 @@ Console::Console(Asset* asset) {
   mProgram->link();
   mProgram->setUniform("screenRes", res, "guiOffset", vec2());
   mProgram->setUniform("guiColor", vec4(0, 0, 0, 0.9));
-
-  // Add default commands
-  auto onGameExit = [](Asset*, const Input::Event& event, const std::string&) {
-    event.sendStateChange(States::QuitAll);
-    return "";
-  };
-
-  auto onCFGRes =
-    [](Asset* asset, const Input::Event& event, const std::string& input) {
-      vec2 res = asset->cfg()->graphics.res;
-      if (input.size() == 0)
-        return "[" + Utils::toStr(res.x) + ", " + Utils::toStr(res.y) + "]";
-
-      return std::string("");
-    };
-
-  auto onThrow = [](Asset*, const Input::Event&, const std::string&) {
-    throw std::invalid_argument("Something went wrong");
-    return "";
-  };
-
-  addCommand("game.exit", onGameExit);
-  addCommand("config.graphics.res", onCFGRes);
-  addCommand("game.throw", onThrow);
 }
 
 Console::~Console() {
   delete mProgram;
   delete mRect;
   delete mText;
-  delete mError;
   delete mAutoCompleteBox;
 
   for (auto a : mAutoComplete)
@@ -104,23 +83,60 @@ void Console::addCommand(const std::string& name, Console::Handler h) {
     throw new Error("Must have namespace in name. Ex: config.res");
 
   mCommands[name] = h;
-  mAutoComplete.push_back(new Text(mFont, name, vec2(0, 0), 20, Text::WHITE));
+  mAutoComplete.push_back(new Text(mFont, name, vec2(0, 0), 12, Text::WHITE));
 }
 
 /**
  * @brief
- *   Sets an error just below where the user is typing in a
- *   red text that is displayed for three seconds before
- *   being hidden again. Will always have the words "Error: " infront
- *   of it.
+ *   Logs an error to the console. The error is red.
  *
  * @param message
  *   The message to display
  */
-void Console::setError(const std::string& message) {
-  mError->setText("Error: " + message);
-  mError->isVisible(true);
-  mErrorDisplayed = 3;
+void Console::error(const std::string& message) {
+  ::error("[Console] ", message);
+  addHistory(new Text(mFont,
+                      message,
+                      vec2(0, 0),
+                      12,
+                      Text::RED,
+                      vec2(mAsset->cfg()->graphics.res.x,
+                           mAsset->cfg()->graphics.res.y)));
+}
+
+/**
+ * @brief
+ *   Logs an error to the console. The error is red.
+ *
+ * @param message
+ *   The message to display
+ */
+void Console::warn(const std::string& message) {
+  ::warning("[Console] ", message);
+  addHistory(new Text(mFont,
+                      message,
+                      vec2(0, 0),
+                      12,
+                      Text::YELLOW,
+                      vec2(mAsset->cfg()->graphics.res.x,
+                           mAsset->cfg()->graphics.res.y)));
+}
+
+/**
+ * @brief
+ *   Logs a message to the console. The message is white.
+ *
+ * @param message
+ */
+void Console::log(const std::string& message) {
+  ::log("[Console] ", message);
+  addHistory(new Text(mFont,
+                      message,
+                      vec2(0, 0),
+                      12,
+                      Text::WHITE,
+                      vec2(mAsset->cfg()->graphics.res.x,
+                           mAsset->cfg()->graphics.res.y)));
 }
 
 /**
@@ -133,24 +149,23 @@ void Console::setError(const std::string& message) {
  *   A text element will gradiually be moved upwards until
  *   it is outside of the screen, at which point it will be hidden
  */
-void Console::addHistory(const std::string& text) {
-  vec2  pos = vec2(10, mAsset->cfg()->graphics.res.y / 2 - 60);
-  Text* t   = new Text(mFont, text, pos, 20, Text::WHITE);
+void Console::addHistory(Text* text) {
+  vec2 startPos = vec2(10, mAsset->cfg()->graphics.res.y / 2 - 30);
 
-  t->isVisible(true);
+  text->isVisible(true);
+  mHistory.push_back(text);
 
-  int index = mHistory.size();
-  for (auto a : mHistory) {
-    vec2 newPos = vec2(0, -index * 30);
+  for (auto a = mHistory.rbegin(); a < mHistory.rend(); a++) {
+    if (startPos.y < 0) {
+      (*a)->isVisible(false);
+      continue;
+    }
 
-    if (newPos.y + pos.y < 0)
-      a->isVisible(false);
+    const Rect& box = (*a)->box();
+    startPos = startPos - vec2(0, box.size.y + 5);
 
-    a->setOffset(newPos);
-    index--;
+    (*a)->setOffset(startPos);
   }
-
-  mHistory.push_back(t);
 }
 
 /**
@@ -173,37 +188,12 @@ void Console::addHistory(const std::string& text) {
  * @param event
  */
 void Console::doCommand(const Input::Event& event) {
-  size_t startBracket = mCurrentText.find_first_of("(");
-  size_t endBracket   = mCurrentText.find_last_of(")");
-
-  if (startBracket == std::string::npos)
-    return setError("Commands must use brackets");
-
-  if (startBracket > endBracket)
-    return setError("Bracket alignment incorrect");
-
-  if (endBracket != mCurrentText.size() - 1)
-    return setError("Commands must end with a closing bracket");
-
-  std::string command    = mCurrentText.substr(0, startBracket);
-  std::string parameters = mCurrentText.substr(startBracket + 1, endBracket);
-  parameters.pop_back();
-
-  if (mCommands.count(command) == 0)
-    return setError("No such command '" + command + "'");
-
-  std::string output = "";
-
   try {
-    output = mCommands[command](mAsset, event, parameters);
-  } catch (const std::invalid_argument& e) {
-    setError(command + ": " + e.what());
-  }
-
-  if (output.size() != 0) {
-    addHistory(mCurrentText + ": " + output);
-  } else {
-    addHistory(mCurrentText);
+    log("> " + mCurrentText);
+    mAsset->lua()->engine["currentEvent"] = &event;
+    mAsset->lua()->engine.script(mCurrentText);
+  } catch (const sol::error& e) {
+    error(e.what());
   }
 
   setText("");
@@ -318,16 +308,7 @@ void Console::input(const Input::Event& event) {
  *
  * @param deltaTime
  */
-void Console::update(float deltaTime) {
-  if (mErrorDisplayed > 0)
-    mErrorDisplayed = mErrorDisplayed - deltaTime;
-
-
-  if (mErrorDisplayed <= 0 && mError->isVisible()) {
-    mError->isVisible(false);
-    mErrorDisplayed = 0;
-  }
-}
+void Console::update(float deltaTime) {}
 
 /**
  * @brief Draw!
@@ -346,7 +327,6 @@ void Console::draw() {
   }
 
   mText->draw();
-  mError->draw();
 
   for (auto a : mHistory) {
     a->draw();

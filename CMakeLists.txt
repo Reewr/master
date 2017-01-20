@@ -90,6 +90,11 @@ SET_OPTION(BUILD_MMM_TESTS OFF)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/mmm)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/mmm/src)
 
+# Find and add LUA51
+find_package(Lua51 REQUIRED)
+
+# Include sol2
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/sol2)
 
 # =======================================
 # Project files
@@ -108,7 +113,7 @@ message("=========================================")
 include_directories(src)
 
 # We must require C++11
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -129,6 +134,8 @@ set(WARN_FLAGS "${WARN_FLAGS} -Wcast-qual -Wno-cast-align")
 set(WARN_FLAGS "${WARN_FLAGS} -Wwrite-strings -Wsign-compare")
 set(WARN_FLAGS "${WARN_FLAGS} -Wmissing-declarations")
 set(WARN_FLAGS "${WARN_FLAGS} -Wredundant-decls -Wunreachable-code -Winline")
+set(WARN_FLAGS "${WARN_FLAGS} -ferror-limit=1")
+set(WARN_FLAGS "${WARN_FLAGS} -ftemplate-depth=512")
 #set(WARN_FLAGS "${WARN_FLAGS} -pedantic-errors")
 
 #set(WARN_FLAGS "${WARN_FLAGS} -float-equal -Wundef -Wconversion")
@@ -153,6 +160,17 @@ set(DDDGP_CPP
   # src/Input
   ${SRC_DIR}/Input/Input.cpp
   ${SRC_DIR}/Input/Event.cpp
+
+  # src/Lua
+  ${SRC_DIR}/Lua/CFG.cpp
+  ${SRC_DIR}/Lua/Console.cpp
+  ${SRC_DIR}/Lua/Engine.cpp
+  ${SRC_DIR}/Lua/Event.cpp
+  ${SRC_DIR}/Lua/Lua.cpp
+  ${SRC_DIR}/Lua/State.cpp
+  ${SRC_DIR}/Lua/Math.cpp
+  ${SRC_DIR}/Lua/Font.cpp
+  ${SRC_DIR}/Lua/Text.cpp
 
   # src/GLSL
   ${SRC_DIR}/GLSL/Program.cpp
@@ -220,6 +238,17 @@ set(DDDGP_HPP
   ${SRC_DIR}/Input/Input.hpp
   ${SRC_DIR}/Input/Event.hpp
 
+  # src/Lua
+  ${SRC_DIR}/Lua/CFG.hpp
+  ${SRC_DIR}/Lua/Console.hpp
+  ${SRC_DIR}/Lua/Engine.hpp
+  ${SRC_DIR}/Lua/Event.hpp
+  ${SRC_DIR}/Lua/Lua.hpp
+  ${SRC_DIR}/Lua/State.hpp
+  ${SRC_DIR}/Lua/Math.hpp
+  ${SRC_DIR}/Lua/Font.hpp
+  ${SRC_DIR}/Lua/Text.hpp
+
   # src/GLSL
   ${SRC_DIR}/GLSL/Program.hpp
   ${SRC_DIR}/GLSL/Shader.hpp
@@ -277,12 +306,13 @@ set(DDDGP_HPP
 
 # Add backward-cpp to the exectuable, but only do so
 # if the platform isnt windows
-if (NOT WIN32 AND CMAKE_BUILD_TYPE EQUAL "DEBUG")
-  add_executable(DDDGP ${DDDGP_CPP} ${DDDGP_HPP} ${BACKWARD_ENABLE})
-  add_backward(DDDGP)
-else (NOT WIN32)
-  add_executable(DDDGP ${DDDGP_CPP} ${DDDGP_HPP})
-endif ()
+#if (NOT WIN32 AND CMAKE_BUILD_TYPE EQUAL "DEBUG")
+#else (NOT WIN32)
+#  add_executable(DDDGP ${DDDGP_CPP} ${DDDGP_HPP})
+#endif ()
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/backward-cpp)
+add_executable(DDDGP ${DDDGP_CPP} ${DDDGP_HPP} ${BACKWARD_ENABLE})
+add_backward(DDDGP)
 
 # Find the libraries that we've just added since the CMake documentation
 # advises against using `set_link_directory`
@@ -307,6 +337,7 @@ find_library(BULLET_LIBRARY NAME bullet)
 # been made regarding this, but the maintainer / author said:
 # "No way to address / test. Would accept a PR"
 # ------------------------
+target_link_libraries(DDDGP ${LUA_LIBRARIES})
 target_link_libraries(DDDGP tinyxml2
                       ${CMAKE_CURRENT_SOURCE_DIR}/deps/tinyxml2/tinyxml2.cpp)
 target_link_libraries(DDDGP glfw ${GLFW_LIBRARIES})

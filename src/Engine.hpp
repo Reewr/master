@@ -5,13 +5,18 @@
 
 #include "OpenGLHeaders.hpp"
 
-#include "Input/Event.hpp"
 #include "State/State.hpp"
 
 class Asset;
+class CFG;
 
 namespace Input {
   class Input;
+  class Event;
+}
+
+namespace Lua {
+  class Lua;
 }
 
 //! Engine sorts out which state that is active
@@ -75,4 +80,5 @@ protected:
   Input::Input* mInput;
   GLFWwindow*   mWindow;
   Asset*        mAsset;
+  Lua::Lua*     mLua;
 };
