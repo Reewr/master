@@ -22,3 +22,6 @@
 [submodule "deps/mmm"]
 	path = deps/mmm
 	url = git@github.com:Thhethssmuz/mmm.git
+[submodule "deps/sol2"]
+	path = deps/sol2
+	url = git@github.com:ThePhD/sol2.git
