@@ -200,21 +200,21 @@ void Text::recalculateGeometry() {
 
   std::vector<vec4> coordinates;
 
+  float scale = 1;
   const vec2 texSize = mTextFont->getTextureSize(mCharacterSize);
-  vec2       tempPos = mBoundingBox.topleft;
-  tempPos.y += mCharacterSize;
+  vec2       tempPos = mBoundingBox.topleft + vec2(0, mCharacterSize);
 
   for (char c : mText) {
     const Font::Glyph g = mTextFont->getGlyph(c, mCharacterSize);
 
-    const float x2 = tempPos.x + g.bitmapLoc.x;
-    const float y2 = -tempPos.y + g.bitmapLoc.y;
+    const float x2 = tempPos.x + g.bitmapLoc.x / scale;
+    const float y2 = -tempPos.y + g.bitmapLoc.y / scale;
 
-    const float w = g.bitmapSize.x;
-    const float h = g.bitmapSize.y;
+    const float w = g.bitmapSize.x / scale;
+    const float h = g.bitmapSize.y / scale;
 
-    tempPos.x += g.advance.x;
-    tempPos.y += g.advance.y;
+    tempPos.x += g.advance.x / scale;
+    tempPos.y += g.advance.y / scale;
 
     bool isNewline    = c == '\n';
     bool isWhitespace = c == ' ';
@@ -232,13 +232,13 @@ void Text::recalculateGeometry() {
     const float tx = g.tc.x + g.bitmapSize.x / texSize.x;
     const float ty = g.tc.y + g.bitmapSize.y / texSize.y;
 
-    coordinates.push_back({ x2 + w, -y2, tx, g.tc.y });
-    coordinates.push_back({ x2, -y2 + h, g.tc.x, ty });
-    coordinates.push_back({ x2 + w, -y2 + h, tx, ty });
+    coordinates.push_back({ x2 + w, -y2    , tx    , g.tc.y });
+    coordinates.push_back({ x2    , -y2 + h, g.tc.x, ty });
+    coordinates.push_back({ x2 + w, -y2 + h, tx    , ty });
 
-    coordinates.push_back({ x2, -y2 + h, g.tc.x, ty });
-    coordinates.push_back({ x2 + w, -y2, tx, g.tc.y });
-    coordinates.push_back({ x2, -y2, g.tc.x, g.tc.y });
+    coordinates.push_back({ x2    , -y2 + h, g.tc.x, ty });
+    coordinates.push_back({ x2 + w, -y2    , tx    , g.tc.y });
+    coordinates.push_back({ x2    , -y2    , g.tc.x, g.tc.y });
 
     mBoundingBox.bottomright(vec2(x2 + w, -y2 + mCharacterSize));
   }
