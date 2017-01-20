@@ -1,7 +1,7 @@
 #include "Font.hpp"
 
-#include <sol.hpp>
 #include "../Graphical/Font.hpp"
+#include <sol.hpp>
 
 #include "Math.hpp"
 

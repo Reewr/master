@@ -200,7 +200,7 @@ void Text::recalculateGeometry() {
 
   std::vector<vec4> coordinates;
 
-  float scale = 1;
+  float      scale   = 1;
   const vec2 texSize = mTextFont->getTextureSize(mCharacterSize);
   vec2       tempPos = mBoundingBox.topleft + vec2(0, mCharacterSize);
 
@@ -232,13 +232,13 @@ void Text::recalculateGeometry() {
     const float tx = g.tc.x + g.bitmapSize.x / texSize.x;
     const float ty = g.tc.y + g.bitmapSize.y / texSize.y;
 
-    coordinates.push_back({ x2 + w, -y2    , tx    , g.tc.y });
-    coordinates.push_back({ x2    , -y2 + h, g.tc.x, ty });
-    coordinates.push_back({ x2 + w, -y2 + h, tx    , ty });
+    coordinates.push_back({ x2 + w, -y2, tx, g.tc.y });
+    coordinates.push_back({ x2, -y2 + h, g.tc.x, ty });
+    coordinates.push_back({ x2 + w, -y2 + h, tx, ty });
 
-    coordinates.push_back({ x2    , -y2 + h, g.tc.x, ty });
-    coordinates.push_back({ x2 + w, -y2    , tx    , g.tc.y });
-    coordinates.push_back({ x2    , -y2    , g.tc.x, g.tc.y });
+    coordinates.push_back({ x2, -y2 + h, g.tc.x, ty });
+    coordinates.push_back({ x2 + w, -y2, tx, g.tc.y });
+    coordinates.push_back({ x2, -y2, g.tc.x, g.tc.y });
 
     mBoundingBox.bottomright(vec2(x2 + w, -y2 + mCharacterSize));
   }

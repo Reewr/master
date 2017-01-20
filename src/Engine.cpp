@@ -7,12 +7,12 @@
 #include "Graphical/Framebuffer.hpp"
 #include "Graphical/Text.hpp"
 #include "Graphical/Texture.hpp"
+#include "Lua/Lua.hpp"
 #include "State/MainMenu.hpp"
 #include "State/Master.hpp"
 #include "Utils/Asset.hpp"
-#include "Utils/Utils.hpp"
 #include "Utils/CFG.hpp"
-#include "Lua/Lua.hpp"
+#include "Utils/Utils.hpp"
 /* #include <3D/Spider.hpp> */
 /* #include <3D/Model.hpp> */
 #include "Input/Event.hpp"

@@ -52,7 +52,7 @@ public:
   void error(const std::string& message);
 
   //! Logs an error to the console
-  void log(const std::string &message);
+  void log(const std::string& message);
 
   //! Logs a yellow warning to the console
   void warn(const std::string& message);
@@ -79,7 +79,7 @@ private:
   // Sets the autocomplete by checking the current string
   void setAutoComplete();
 
-  bool  mPrevInputOpened;
+  bool mPrevInputOpened;
 
   std::string    mCurrentText;
   Text*          mText;

@@ -1,25 +1,23 @@
 #include "Lua.hpp"
 
+#include "../Console/Console.hpp"
 #include "../Engine.hpp"
 #include "../Utils/CFG.hpp"
-#include "../Console/Console.hpp"
 #include "../Utils/Utils.hpp"
 
-#include "Math.hpp"
-#include "Font.hpp"
-#include "Text.hpp"
-#include "Event.hpp"
-#include "Engine.hpp"
-#include "Console.hpp"
 #include "CFG.hpp"
+#include "Console.hpp"
+#include "Engine.hpp"
+#include "Event.hpp"
+#include "Font.hpp"
+#include "Math.hpp"
 #include "State.hpp"
+#include "Text.hpp"
 
 #include <sol.hpp>
 
 namespace Lua {
-  Lua::Lua() {
-    reInitialize();
-  }
+  Lua::Lua() { reInitialize(); }
 
   Lua::~Lua() {}
 
@@ -36,8 +34,8 @@ namespace Lua {
     cfg_as_lua(engine);
     state_as_lua(engine);
 
-    std::string path = engine["package"]["path"];
-    std::string sep  = path.empty() ? "" : ";";
+    std::string path          = engine["package"]["path"];
+    std::string sep           = path.empty() ? "" : ";";
     engine["package"]["path"] = path + sep + "./lua/?.lua";
 
     engine.create_named_table("lua");
@@ -46,9 +44,7 @@ namespace Lua {
       loadFile(filename);
     };
 
-    engine["lua"]["reload"] = [&]() {
-      reInitialize();
-    };
+    engine["lua"]["reload"] = [&]() { reInitialize(); };
 
     loadFile("lua/main.lua");
   }
@@ -75,7 +71,7 @@ namespace Lua {
       return;
 
     engine["console"] = console;
-    hasConsole = true;
+    hasConsole        = true;
   }
 
   void Lua::add(CFG* cfg) {

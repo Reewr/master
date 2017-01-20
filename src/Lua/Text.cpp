@@ -1,17 +1,15 @@
 #include "Text.hpp"
 
-#include <sol.hpp>
 #include "../Graphical/Font.hpp"
 #include "../Graphical/Text.hpp"
+#include <sol.hpp>
 
 #include "Font.hpp"
 #include "Math.hpp"
 
 std::vector<std::pair<std::function<void(sol::state& state)>, std::string>>
-  text_dependencies = {
-    std::make_pair(&Lua::math_as_lua, "vec2"),
-    std::make_pair(&Lua::font_as_lua, "Font")
-  };
+  text_dependencies = { std::make_pair(&Lua::math_as_lua, "vec2"),
+                        std::make_pair(&Lua::font_as_lua, "Font") };
 
 void Lua::text_as_lua(sol::state& state) {
 
@@ -23,6 +21,7 @@ void Lua::text_as_lua(sol::state& state) {
       a.first(state);
   }
 
+  // clang-format off
   state["TextColor"] = state.create_table_with(
     "Black" , Text::BLACK,
     "White" , Text::WHITE,
@@ -55,4 +54,5 @@ void Lua::text_as_lua(sol::state& state) {
       "getCharSize" , &Text::getCharSize);
 
   state.set_usertype("Text", type);
+  // clang-format on
 }

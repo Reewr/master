@@ -1,10 +1,10 @@
 #include "Asset.hpp"
 
-#include "Utils.hpp"
-#include "CFG.hpp"
 #include "../Input/Input.hpp"
-#include "../State/State.hpp"
 #include "../Lua/Lua.hpp"
+#include "../State/State.hpp"
+#include "CFG.hpp"
+#include "Utils.hpp"
 
 Asset::Asset(CFG* c) : mCFG(c), mInput(nullptr) {}
 

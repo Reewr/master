@@ -3,4 +3,4 @@
 
 #include <sol.hpp>
 
-void Lua::engine_as_lua(sol::state&) { }
+void Lua::engine_as_lua(sol::state&) {}

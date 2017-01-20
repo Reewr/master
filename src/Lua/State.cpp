@@ -4,6 +4,7 @@
 #include <sol.hpp>
 
 void Lua::state_as_lua(sol::state& state) {
+  // clang-format off
   state["States"] = state.create_table_with(
     "QuitAll"         , States::QuitAll,
     "Quit"            , States::Quit,
@@ -18,4 +19,5 @@ void Lua::state_as_lua(sol::state& state) {
     "Refresh"         , States::Refresh,
     "WinRefresh"      , States::WinRefresh,
     "NoChange"        , States::NoChange);
+  // clang-format on
 }

@@ -1,7 +1,7 @@
 #include "Math.hpp"
 
-#include <sol.hpp>
 #include "../Math/Math.hpp"
+#include <sol.hpp>
 
 void Lua::math_as_lua(sol::state& state) {
 
@@ -12,9 +12,7 @@ void Lua::math_as_lua(sol::state& state) {
 
   sol::constructors<sol::types<int, int>, sol::types<float, float>> ctor;
 
-  sol::usertype<vec2> type(ctor,
-      "x", &vec2::x,
-      "y", &vec2::y);
+  sol::usertype<vec2> type(ctor, "x", &vec2::x, "y", &vec2::y);
 
   state.set_usertype("vec2", type);
 }

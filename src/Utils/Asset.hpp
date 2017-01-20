@@ -20,7 +20,7 @@ public:
 
   CFG*          cfg();
   Input::Input* input();
-  Lua::Lua* lua();
+  Lua::Lua*     lua();
 
   void setCFG(CFG* c);
   void setInput(Input::Input* i);

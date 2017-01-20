@@ -9,16 +9,16 @@
 #include "../Graphical/Texture.hpp"
 #include "../Input/Event.hpp"
 #include "../Input/Input.hpp"
+#include "../Lua/Lua.hpp"
 #include "../Math/Math.hpp"
 #include "../State/State.hpp"
 #include "../Utils/Asset.hpp"
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
-#include "../Lua/Lua.hpp"
 
 Console::Console(Asset* asset) {
-  vec2 res      = asset->cfg()->graphics.res;
-  vec2 textPos  = vec2(10, res.y / 2 - 30);
+  vec2 res     = asset->cfg()->graphics.res;
+  vec2 textPos = vec2(10, res.y / 2 - 30);
 
   ::log("I is console");
   mShowAutoComplete = false;
@@ -28,12 +28,12 @@ Console::Console(Asset* asset) {
   mRect             = new GL::Rectangle(mBoundingBox);
   mAutoCompleteBox  = new GL::Rectangle(Rect(0, 0, 0, 0));
   mText             = new Text(mFont,
-                               "> _",
-                               textPos,
-                               12,
-                               Text::WHITE,
-                               vec2(mAsset->cfg()->graphics.res.x,
-                                    mAsset->cfg()->graphics.res.y));
+                   "> _",
+                   textPos,
+                   12,
+                   Text::WHITE,
+                   vec2(mAsset->cfg()->graphics.res.x,
+                        mAsset->cfg()->graphics.res.y));
 
   // Specific program for the console since the console
   // is just drawn in black with alpha
@@ -162,7 +162,7 @@ void Console::addHistory(Text* text) {
     }
 
     const Rect& box = (*a)->box();
-    startPos = startPos - vec2(0, box.size.y + 5);
+    startPos        = startPos - vec2(0, box.size.y + 5);
 
     (*a)->setOffset(startPos);
   }
