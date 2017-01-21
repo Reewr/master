@@ -193,6 +193,8 @@ void Console::setText(const std::string& s) {
  *
  *   Also adjusts the autocompletion box to match width
  *   and height of the texts.
+ *
+ *   @TODO: Make this work with Lua
  */
 void Console::setAutoComplete() {
   return;
