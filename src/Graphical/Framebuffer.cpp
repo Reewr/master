@@ -479,9 +479,20 @@ void Framebuffer::init(CFG* c, std::string screenshotLoc) {
 }
 
 void Framebuffer::deinit() {
-  delete drawProgram;
-  delete clearProgram;
-  delete copyProgram;
+  if (drawProgram != nullptr) {
+    delete drawProgram;
+    drawProgram = nullptr;
+  }
+
+  if (clearProgram != nullptr) {
+    delete clearProgram;
+    clearProgram = nullptr;
+  }
+
+  if (copyProgram != nullptr) {
+    delete copyProgram;
+    copyProgram = nullptr;
+  }
 }
 
 void Framebuffer::initScreenshot() {
