@@ -343,13 +343,31 @@ void Engine::deinitialize(bool isFullDeinit) {
   Framebuffer::deinit();
 
   mCFG->writetoFile("config/config.ini");
-  delete mAsset;
-  delete mInput;
-  delete mCFG;
-  delete mLua;
 
-  if (mCurrent != nullptr)
+  if (mAsset != nullptr) {
+    delete mAsset;
+    mAsset = nullptr;
+  }
+
+  if (mInput != nullptr) {
+    delete mInput;
+    mInput = nullptr;
+  }
+
+  if (mCFG != nullptr) {
+    delete mCFG;
+    mCFG = nullptr;
+  }
+
+  if (mLua != nullptr) {
+    delete mLua;
+    mLua = nullptr;
+  }
+
+  if (mCurrent != nullptr) {
     delete mCurrent;
+    mCurrent = nullptr;
+  }
 
   if (isFullDeinit)
     glfwTerminate();
@@ -443,8 +461,10 @@ void Engine::changeState(int newState) {
   if (mActiveStates.size() == 0)
     return closeWindow();
 
-  if (mCurrent != nullptr)
+  if (mCurrent != nullptr) {
     delete mCurrent;
+    mCurrent = nullptr;
+  }
 
   switch (mActiveStates.top()) {
     case States::MainMenu:
