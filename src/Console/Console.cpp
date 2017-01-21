@@ -142,22 +142,16 @@ void Console::addHistory(Text* text) {
   }
 }
 
+void Console::addCharacter(const std::string& c) {
+  mCurrentText.insert(mLocation, c);
+  mLocation += c.size();
+  setText();
+}
+
 /**
  * @brief
- *   Checks the current text for errors, if any, prints error.
- *   If there are no errors and the text matches a command
- *   it will call that command with the text within the brackets.
- *
- *   Good commands:
- *
- *     config.res(100, 100))
- *     config.res.x(100)
- *     config.res.y(100)
- *
- *   Bad commands:
- *     config.res = 100
- *     config.res(10
- *     config.res)(
+ *   Tries to run the current inputted string in Lua, printing
+ *   any result / erorrs to the console
  *
  * @param event
  */
@@ -182,7 +176,31 @@ void Console::doCommand(const Input::Event& event) {
  */
 void Console::setText(const std::string& s) {
   mCurrentText = s;
-  mText->setText("> " + mCurrentText + "_");
+  mLocation = 0;
+  setText();
+}
+
+/**
+ * @brief
+ *   Internal version of setText("") that sets the text
+ *   to the internal stored value.
+ */
+void Console::setText() {
+  int size = mCurrentText.size();
+
+  if (mLocation > size)
+    mLocation = size;
+
+  if (mLocation < 0)
+    mLocation = 0;
+
+  if (mLocation == size)
+    return mText->setText("> " + mCurrentText + "_");
+
+  std::string before = mCurrentText.substr(0, mLocation);
+  std::string after = mCurrentText.substr(mLocation);
+
+  mText->setText("> " + before + "_" + after);
 }
 
 /**
@@ -233,42 +251,104 @@ void Console::setAutoComplete() {
  * @return
  */
 void Console::input(const Input::Event& event) {
-  bool isConsoleKey =
-    mAsset->input()->checkKey(Input::Action::Console, event.key());
-
-  if (!isVisible() && isConsoleKey) {
+  if (!isVisible() && event.isAction(Input::Action::Console)) {
     mPrevInputOpened = true;
     isVisible(true);
     return event.stopPropgation();
   }
 
-  if (!isVisible()) {
+  if (!isVisible())
     return;
+
+  if (event == Input::Event::Type::KeyPress) {
+    switch (event.key()) {
+      // Escape means close console
+      case GLFW_KEY_ESCAPE:
+        isVisible(false);
+        return event.stopPropgation();
+
+      // Enter means do command
+      case GLFW_KEY_ENTER:
+        doCommand(event);
+        return event.stopPropgation();
+
+      case GLFW_KEY_A:
+        if (event.hasCtrl()) {
+          mLocation = 0;
+          setText();
+          return event.stopPropgation();
+        }
+
+      case GLFW_KEY_E:
+        if (event.hasCtrl()) {
+          mLocation = mCurrentText.size();
+          setText();
+          return event.stopPropgation();
+        }
+    }
   }
 
-  if (event.keyPressed(GLFW_KEY_ESCAPE)) {
-    isVisible(false);
-    return event.stopPropgation();
-  }
-
+  // If backspace is held down, delete one character
+  // at the time, so keypress and keyrelease are not
+  // handled as two seperate events.
   if (event.isKeyHeldDown(GLFW_KEY_BACKSPACE)) {
-    if (mCurrentText.length() > 0)
-      mCurrentText.pop_back();
-
-    setText(mCurrentText);
+    deleteCharacter(GLFW_KEY_BACKSPACE);
     return event.stopPropgation();
   }
 
-  if (event.keyPressed(GLFW_KEY_ENTER)) {
-    doCommand(event);
+  // Handle delete the same as backspace since we support moving
+  if (event.isKeyHeldDown(GLFW_KEY_DELETE)) {
+    deleteCharacter(GLFW_KEY_DELETE);
+    return event.stopPropgation();
+  }
+
+  // If left arrow is held down, move left in the console
+  if (event.isKeyHeldDown(GLFW_KEY_LEFT)) {
+    mLocation = mLocation - 1;
+    setText();
+    return event.stopPropgation();
+  }
+
+  // if right arrow is held down, move right
+  if (event.isKeyHeldDown(GLFW_KEY_RIGHT)) {
+    mLocation = mLocation + 1;
+    setText();
     return event.stopPropgation();
   }
 
   if (event == Input::Event::Type::CharacterInput && !mPrevInputOpened) {
-    setText(mCurrentText + event.character());
+    addCharacter(event.character());
     return event.stopPropgation();
   } else if (event == Input::Event::Type::CharacterInput) {
     mPrevInputOpened = false;
+  }
+}
+
+/**
+ * @brief
+ *   Deletes a character using either backspace or delete.
+ *   Depending on which, it will try to delete either the character
+ *   behind the current position or infront of it
+ *
+ * @param whichKey
+ */
+void Console::deleteCharacter(int whichKey) {
+  size_t size = mCurrentText.size();
+
+  if (whichKey == GLFW_KEY_DELETE) {
+    if (mLocation == size)
+      return;
+
+    mCurrentText.erase(mLocation, 1);
+    setText();
+  }
+
+  if (whichKey == GLFW_KEY_BACKSPACE) {
+    if (mLocation == 0)
+      return;
+
+    mCurrentText.erase(mLocation - 1, 1);
+    setText();
   }
 }
 

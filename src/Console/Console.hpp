@@ -50,7 +50,15 @@ public:
   //! Draw the console
   void draw();
 
+  // Add a character to where the cursor is currently at
+  void addCharacter(const std::string& c);
+
 private:
+  // Internal set text, which is used whenever the text should be
+  // set to the stored text in mCurrentText
+  void setText();
+
+
   // Checks if the command is legal, prints error if not.
   void doCommand(const Input::Event& event);
 
@@ -60,10 +68,12 @@ private:
   // Sets the autocomplete by checking the current string
   void setAutoComplete();
 
+  void deleteCharacter(int whichKey);
+
   bool mPrevInputOpened;
 
   // Stores the location of the pointer
-  unsigned int   mLocation;
+  int mLocation;
 
   // Stores the text that the user inputs (command)
   std::string    mCurrentText;
