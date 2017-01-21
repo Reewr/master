@@ -122,6 +122,13 @@ void GUI::init(CFG* c) {
 }
 
 void GUI::deinit() {
-  delete mGUIProgram;
-  delete mFont;
+  if (mGUIProgram != nullptr) {
+    delete mGUIProgram;
+    mGUIProgram = nullptr;
+  }
+
+  if (mFont != nullptr) {
+    delete mFont;
+    mFont = nullptr;
+  }
 }
