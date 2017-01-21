@@ -58,7 +58,6 @@ private:
   // set to the stored text in mCurrentText
   void setText();
 
-
   // Checks if the command is legal, prints error if not.
   void doCommand(const Input::Event& event);
 
@@ -68,7 +67,13 @@ private:
   // Sets the autocomplete by checking the current string
   void setAutoComplete();
 
+  // deletes one character either infront or behind current
+  // position based on the key pressed
   void deleteCharacter(int whichKey);
+
+  // deletes one word either infront or behind the current
+  // position based on the key pressed
+  void deleteWord(int whichKey);
 
   bool mPrevInputOpened;
 

@@ -291,14 +291,16 @@ void Console::input(const Input::Event& event) {
   // If backspace is held down, delete one character
   // at the time, so keypress and keyrelease are not
   // handled as two seperate events.
-  if (event.isKeyHeldDown(GLFW_KEY_BACKSPACE)) {
-    deleteCharacter(GLFW_KEY_BACKSPACE);
-    return event.stopPropgation();
-  }
+  bool isBackspace = event.isKeyHeldDown(GLFW_KEY_BACKSPACE);
+  bool isDelete    = event.isKeyHeldDown(GLFW_KEY_DELETE);
 
-  // Handle delete the same as backspace since we support moving
-  if (event.isKeyHeldDown(GLFW_KEY_DELETE)) {
-    deleteCharacter(GLFW_KEY_DELETE);
+  if (isBackspace || isDelete) {
+    int key = isBackspace ? GLFW_KEY_BACKSPACE : GLFW_KEY_DELETE;
+
+    if (event.hasAlt())
+      deleteWord(key);
+    else
+      deleteCharacter(key);
     return event.stopPropgation();
   }
 
@@ -333,7 +335,7 @@ void Console::input(const Input::Event& event) {
  * @param whichKey
  */
 void Console::deleteCharacter(int whichKey) {
-  size_t size = mCurrentText.size();
+  int size = mCurrentText.size();
 
   if (whichKey == GLFW_KEY_DELETE) {
     if (mLocation == size)
@@ -341,6 +343,7 @@ void Console::deleteCharacter(int whichKey) {
 
     mCurrentText.erase(mLocation, 1);
     setText();
+    return;
   }
 
   if (whichKey == GLFW_KEY_BACKSPACE) {
@@ -348,6 +351,46 @@ void Console::deleteCharacter(int whichKey) {
       return;
 
     mCurrentText.erase(mLocation - 1, 1);
+    setText();
+    return;
+  }
+}
+
+static std::string NON_SEPERATORS =
+  "abcdefghijklmnopqrtstuvwxyzABCDEFGHIJKLMNOPQRTSTUVWXYZ";
+
+void Console::deleteWord(int whichKey) {
+  int size = mCurrentText.size();
+
+  if (whichKey == GLFW_KEY_DELETE) {
+    if (mLocation == size)
+      return;
+
+    size_t pos = mCurrentText.find_first_not_of(NON_SEPERATORS, mLocation);
+
+    if (pos == std::string::npos) {
+      mCurrentText = mCurrentText.substr(0, mLocation);
+    } {
+      mCurrentText = mCurrentText.substr(0, mLocation) + mCurrentText.substr(pos);
+    }
+
+    setText();
+    return;
+  }
+
+  if (whichKey == GLFW_KEY_BACKSPACE) {
+    if (mLocation == 0)
+      return;
+
+    size_t pos = mCurrentText.find_last_not_of(NON_SEPERATORS, mLocation);
+
+    if (pos == std::string::npos)
+      mCurrentText = mCurrentText.substr(mLocation);
+    else {
+      mCurrentText =
+        mCurrentText.substr(0, pos) + mCurrentText.substr(mLocation);
+    }
+
     setText();
   }
 }
