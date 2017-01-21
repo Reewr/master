@@ -16,18 +16,18 @@
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
 
-Console::Console(Asset* asset) {
+Console::Console(Asset* asset)
+    : mLocation(0)
+    , mCurrentText("")
+    , mAutoCompleteBox(new GL::Rectangle(Rect(0, 0, 0, 0)))
+    , mAsset(asset)
+    , mShowAutoComplete(false) {
   vec2 res     = asset->cfg()->graphics.res;
   vec2 textPos = vec2(10, res.y / 2 - 30);
+  mBoundingBox = Rect(0, 0, res.x, res.y / 2);
 
-  ::log("I is console");
-  mShowAutoComplete = false;
-  mAsset            = asset;
-  mCurrentText      = "";
-  mBoundingBox      = Rect(0, 0, res.x, res.y / 2);
-  mRect             = new GL::Rectangle(mBoundingBox);
-  mAutoCompleteBox  = new GL::Rectangle(Rect(0, 0, 0, 0));
-  mText             = new Text(mFont,
+  mRect = new GL::Rectangle(mBoundingBox);
+  mText = new Text(mFont,
                    "> _",
                    textPos,
                    12,
@@ -58,32 +58,6 @@ Console::~Console() {
 
   mAutoComplete.clear();
   mHistory.clear();
-  mCommands.clear();
-}
-
-/**
- * @brief
- *   This function adds a new command that can be invoked from
- *   the console using the given name.
- *
- *   All names should have a namespace followed by a `.`. Example:
- *   config.res
- *
- *   The return value of the Console::Handler function is a string,
- *   which when not empty, will print an error onto the screen.
- *
- * @param name
- *   Name of the function, is unique.
- *
- * @param h
- *   The handler itself.
- */
-void Console::addCommand(const std::string& name, Console::Handler h) {
-  if (name.find(".") == std::string::npos)
-    throw new Error("Must have namespace in name. Ex: config.res");
-
-  mCommands[name] = h;
-  mAutoComplete.push_back(new Text(mFont, name, vec2(0, 0), 12, Text::WHITE));
 }
 
 /**
@@ -209,7 +183,6 @@ void Console::doCommand(const Input::Event& event) {
 void Console::setText(const std::string& s) {
   mCurrentText = s;
   mText->setText("> " + mCurrentText + "_");
-  setAutoComplete();
 }
 
 /**
@@ -222,10 +195,7 @@ void Console::setText(const std::string& s) {
  *   and height of the texts.
  */
 void Console::setAutoComplete() {
-  if (mCommands.size() == 0 || mCurrentText.size() == 0) {
-    mShowAutoComplete = false;
-    return;
-  }
+  return;
 
   vec2 res      = mAsset->cfg()->graphics.res;
   Rect box      = Rect(5, res.y / 2 + 30, 0, 0);

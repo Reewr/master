@@ -25,28 +25,9 @@ class Console : public GUI {
 public:
   using Command = std::string;
 
-  // Typedefs a handler as a function that takes in an asset,
-  // which has access to a lot of stuff, followed by a string that is the input.
-  //
-  // The input is whatever is put in between the brackets.
-  //
-  // The return type is a string. If the string is not empty, it is
-  // considered to be the output that will be shown to the user
-  //
-  // Should you need to display an error, throw an std::invalid_argument
-  // error. This will displayed to the console.
-  using Handler = std::function<std::string(Asset*              asset,
-                                            const Input::Event& event,
-                                            const std::string&  input)>;
-
   //! Create console
   Console(Asset* asset);
   ~Console();
-
-  //! Adds a command to the console that can be invoked
-  //! using the name followed by ().
-  //! Ex: config.res(1024, 768)
-  void addCommand(const std::string& name, Handler h);
 
   //! Sets an error on the console
   void error(const std::string& message);
@@ -81,16 +62,21 @@ private:
 
   bool mPrevInputOpened;
 
+  // Stores the location of the pointer
+  unsigned int   mLocation;
+
+  // Stores the text that the user inputs (command)
   std::string    mCurrentText;
+
+  // This holds the text that is rendered on the screen
   Text*          mText;
-  Program*       mProgram;
   GL::Rectangle* mRect;
   GL::Rectangle* mAutoCompleteBox;
+
+  Program*       mProgram;
   Asset*         mAsset;
 
   bool               mShowAutoComplete;
   std::vector<Text*> mAutoComplete;
   std::vector<Text*> mHistory;
-
-  std::map<std::string, Handler> mCommands;
 };
