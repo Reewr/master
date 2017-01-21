@@ -7,7 +7,6 @@ void Lua::console_as_lua(sol::state& state) {
   // clang-format off
   state.new_usertype<Console>("GameConsole",
     "new"    , sol::no_constructor,
-    "setText", &Console::setText,
     "log"    , &Console::log,
     "error"  , &Console::error,
     "warn"   , &Console::warn);
