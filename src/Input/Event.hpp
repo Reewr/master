@@ -26,6 +26,7 @@ namespace Input {
       MouseScroll,
       KeyPress,
       KeyRelease,
+      KeyRepeat,
       CharacterInput,
     };
 
@@ -54,6 +55,9 @@ namespace Input {
 
     //! Returns the type of event
     int type() const;
+
+    //! Returns the event type as a string
+    std::string typeAsString() const;
 
     //! Checks whether the ALT modifier is pressed
     bool hasAlt() const;

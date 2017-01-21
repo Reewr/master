@@ -21,7 +21,7 @@ namespace Input {
    *   integers to represent the keys.
    *
    * @param action
-   *   The action, either GLFW_PRESS or GLFW_RELEASE
+   *   The action, either GLFW_PRESS, GLFW_RELEASE, GLFW_REPEAT
    *
    * @param mods
    *   The mods active at the time of the event indicated
@@ -34,7 +34,8 @@ namespace Input {
       , mScroll(0, 0)
       , mInput(i)
       , mHandledState(States::NoChange) {
-    mType      = action == GLFW_PRESS ? Type::KeyPress : Type::KeyRelease;
+    mType      = action == GLFW_PRESS ? Type::KeyPress :
+                 action == GLFW_RELEASE ? Type::KeyRelease : Type::KeyRepeat;
     mCharacter = glfwKeyToString(key);
   }
 
@@ -210,6 +211,38 @@ namespace Input {
    * @return
    */
   int Event::type() const { return mType; }
+
+  /**
+   * @brief
+   *   Returns the type of event as a string
+   *   which happens to be the name of the Enum
+   *
+   * @return
+   */
+  std::string Event::typeAsString() const {
+    switch (mType) {
+      case Type::Consumed:
+        return "Consumed";
+      case Type::CharacterInput:
+        return "CharacterInput";
+      case Type::KeyPress:
+        return "KeyPress";
+      case Type::KeyRelease:
+        return "KeyRelease";
+      case Type::KeyRepeat:
+        return "KeyRepeat";
+      case Type::MousePress:
+        return "MousePress";
+      case Type::MouseRelease:
+        return "MouseRelease";
+      case Type::MouseMovement:
+        return "MouseMovement";
+      case Type::MouseScroll:
+        return "MouseScroll";
+      default:
+        return "MISSING";
+    }
+  }
 
   /**
    * @brief
