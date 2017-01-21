@@ -257,8 +257,13 @@ void Console::input(const Input::Event& event) {
     return event.stopPropgation();
   }
 
-  if (!isVisible())
+  // Ignore all other events
+  bool acceptedEvent = event == Input::Event::Type::KeyPress ||
+                       event == Input::Event::Type::CharacterInput ||
+                       event == Input::Event::Type::KeyRepeat;
+  if (!isVisible() || !acceptedEvent) {
     return;
+  }
 
   if (event == Input::Event::Type::KeyPress) {
     switch (event.key()) {
@@ -278,6 +283,7 @@ void Console::input(const Input::Event& event) {
           setText();
           return event.stopPropgation();
         }
+        break;
 
       case GLFW_KEY_E:
         if (event.hasCtrl()) {
@@ -285,14 +291,23 @@ void Console::input(const Input::Event& event) {
           setText();
           return event.stopPropgation();
         }
+        break;
     }
+  }
+
+  if (event == Input::Event::Type::CharacterInput && !mPrevInputOpened) {
+    addCharacter(event.character());
+    return event.stopPropgation();
+  } else if (event == Input::Event::Type::CharacterInput) {
+    mPrevInputOpened = false;
+    return;
   }
 
   // If backspace is held down, delete one character
   // at the time, so keypress and keyrelease are not
   // handled as two seperate events.
-  bool isBackspace = event.isKeyHeldDown(GLFW_KEY_BACKSPACE);
-  bool isDelete    = event.isKeyHeldDown(GLFW_KEY_DELETE);
+  bool isBackspace = event.key() == GLFW_KEY_BACKSPACE;
+  bool isDelete    = event.key() == GLFW_KEY_DELETE;
 
   if (isBackspace || isDelete) {
     int key = isBackspace ? GLFW_KEY_BACKSPACE : GLFW_KEY_DELETE;
@@ -301,28 +316,22 @@ void Console::input(const Input::Event& event) {
       deleteWord(key);
     else
       deleteCharacter(key);
+
     return event.stopPropgation();
   }
 
   // If left arrow is held down, move left in the console
-  if (event.isKeyHeldDown(GLFW_KEY_LEFT)) {
+  if (event.key() == GLFW_KEY_LEFT) {
     mLocation = mLocation - 1;
     setText();
     return event.stopPropgation();
   }
 
   // if right arrow is held down, move right
-  if (event.isKeyHeldDown(GLFW_KEY_RIGHT)) {
+  if (event.key() == GLFW_KEY_RIGHT) {
     mLocation = mLocation + 1;
     setText();
     return event.stopPropgation();
-  }
-
-  if (event == Input::Event::Type::CharacterInput && !mPrevInputOpened) {
-    addCharacter(event.character());
-    return event.stopPropgation();
-  } else if (event == Input::Event::Type::CharacterInput) {
-    mPrevInputOpened = false;
   }
 }
 
