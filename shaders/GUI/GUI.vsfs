@@ -1,5 +1,5 @@
-#ifdef __VERTEX__
 
+#ifdef __VERTEX__
 #version 130
 
 in vec2 position;
@@ -19,7 +19,7 @@ void main() {
 
   newPos.x =  convertCoords(newPos.x, screenRes.x);
   newPos.y = -convertCoords(newPos.y, screenRes.y);
-  
+
   gl_Position = vec4(newPos, 0.0, 1.0);
 }
 
