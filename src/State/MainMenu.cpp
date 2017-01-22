@@ -22,13 +22,13 @@ MainMenu::MainMenu(Asset* asset) {
   CFG*         cfg     = asset->cfg();
   Window*      menu =
     new Window("NONE",
-               Rect(vec2(cfg->graphics.res.x - 200, cfg->graphics.res.y - 225),
+               Rect(vec2(cfg->graphics.res.x - 175, cfg->graphics.res.y - 175),
                     vec2(cfg->graphics.res.x, cfg->graphics.res.y)));
   menu->isVisible(true);
   menu->addMenu("MainMenu",
                 { "Master Thesis", "Start Game", "Options", "Exit" },
                 { 0, 0 },
-                { 20, 50, Menu::VERTICAL, Text::WHITE });
+                { 15, 50, Menu::VERTICAL, Text::WHITE });
 
 
   // Order is important
