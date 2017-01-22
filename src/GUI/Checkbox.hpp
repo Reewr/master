@@ -16,11 +16,15 @@ namespace Input {
   class Input;
 }
 
+namespace GL {
+  class Rectangle;
+}
+
 class Checkbox : public GUI {
 public:
   //! Creates a checkbox where box is the filename
   //! to the texture used
-  Checkbox(const std::string& box, const vec2& pos);
+  Checkbox(const vec2& pos);
 
   //! Load the checkbox from XML
   static Checkbox* fromXML(tinyxml2::XMLElement* element);
@@ -45,5 +49,5 @@ public:
 private:
   bool     mIsTicked;
   Text*    mTick;
-  Texture* mSquare;
+  GL::Rectangle* mSquare;
 };

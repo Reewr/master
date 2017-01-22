@@ -15,6 +15,8 @@
 #include "../Utils/Asset.hpp"
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
+#include "../Graphical/GL/Rectangle.hpp"
+#include "../Resource/ResourceManager.hpp"
 
 
 OptionsMenu::OptionsMenu(Input::Input* input) {
@@ -25,8 +27,8 @@ OptionsMenu::OptionsMenu(Input::Input* input) {
                       1000,
                       700);
 
-  mTex = new Texture(TEMP::getPath(TEMP::OPTSMENU));
-  mTex->recalculateGeometry(mBoundingBox);
+  mBackground = new GL::Rectangle(mBoundingBox);
+  mBackground->setTexture(mResourceManager->get<Texture>("Texture::Background"));
 
   addMenu("Category",
           { "Audio", "Game", "Graphics", "Keybindings", "Mouse" },

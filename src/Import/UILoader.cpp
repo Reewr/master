@@ -180,10 +180,9 @@ void Import::UILoader::handleSliderElement(tinyxml2::XMLElement* e, Window* w) {
 void Import::UILoader::handleCheckboxElement(tinyxml2::XMLElement* e,
                                              Window*               w) {
   std::string name = std::string(e->Attribute("name"));
-  std::string ch   = std::string(e->Attribute("check"));
   vec2        pos;
   getAttrib(e, "x", "y", pos);
-  w->addCheckbox(name, ch, pos);
+  w->addCheckbox(name, pos);
 }
 
 void Import::UILoader::handleInputboxElement(tinyxml2::XMLElement* e,

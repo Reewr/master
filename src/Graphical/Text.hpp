@@ -21,7 +21,7 @@ public:
   enum { BOLD, UNDERLINE, ITALIC };
 
   //! Only takes a pointer to a Font. Do NOT destroy the font object.
-  Text(Font*              font,
+  Text(const std::string& font,
        const std::string& text,
        const vec2&        position,
        int                size  = 30,
@@ -81,7 +81,7 @@ private:
   GLuint mVBO;
   GLuint mVAO;
 
-  Font* mTextFont;
+  std::shared_ptr<Font> mTextFont;
 
   std::string mText;
 

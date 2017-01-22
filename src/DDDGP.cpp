@@ -45,15 +45,15 @@ int main(int argc, char* argv[]) {
       throw Error("Engined failed to initialize");
     }
   } catch (const Error& err) {
-    fatalError(err.what());
+    fatalError("Init :: Threw an 'Error': ", err.what());
     delete engine;
     return 1;
   } catch (const char* s) {
-    fatalError("Threw an Error: ", s);
+    fatalError("Init :: Threw an const char* Error: ", s);
     delete engine;
     return 1;
   } catch (std::string s) {
-    fatalError("Threw an Error: ", s);
+    fatalError("Init :: Threw an std::string error: ", s);
     delete engine;
     return 1;
   }
@@ -62,15 +62,15 @@ int main(int argc, char* argv[]) {
   try {
     engine->runLoop();
   } catch (const Error& err) {
-    fatalError(err.what());
+    fatalError("Loop :: Threw an 'Error': ", err.what());
     delete engine;
     return 1;
   } catch (const char* s) {
-    fatalError("Threw an Error: ", s);
+    fatalError("Loop :: Threw an const char* Error: ", s);
     delete engine;
     return 1;
   } catch (std::string s) {
-    fatalError("Threw an Error: ", s);
+    fatalError("Loop :: Threw an std::string error: ", s);
     delete engine;
     return 1;
   }

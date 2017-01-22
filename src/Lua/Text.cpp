@@ -8,8 +8,7 @@
 #include "Math.hpp"
 
 std::vector<std::pair<std::function<void(sol::state& state)>, std::string>>
-  text_dependencies = { std::make_pair(&Lua::math_as_lua, "vec2"),
-                        std::make_pair(&Lua::font_as_lua, "Font") };
+  text_dependencies = { std::make_pair(&Lua::math_as_lua, "vec2") };
 
 void Lua::text_as_lua(sol::state& state) {
 
@@ -36,10 +35,10 @@ void Lua::text_as_lua(sol::state& state) {
     "Italic"   ,  Text::ITALIC);
 
   sol::constructors<
-    sol::types<Font*, std::string, vec2>,
-    sol::types<Font*, std::string, vec2, int>,
-    sol::types<Font*, std::string, vec2, int, int>,
-    sol::types<Font*, std::string, vec2, int, int, vec2>> ctor;
+    sol::types<std::string, std::string, vec2>,
+    sol::types<std::string, std::string, vec2, int>,
+    sol::types<std::string, std::string, vec2, int, int>,
+    sol::types<std::string, std::string, vec2, int, int, vec2>> ctor;
 
   sol::usertype<Text> type(ctor,
       "draw"        , &Text::draw,

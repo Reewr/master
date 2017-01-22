@@ -5,22 +5,31 @@
 #include "../GLSL/Program.hpp"
 #include "../Graphical/Text.hpp"
 #include "../Graphical/Texture.hpp"
+#include "../Graphical/GL/Rectangle.hpp"
+#include "../Resource/ResourceManager.hpp"
 #include "../Input/Event.hpp"
 #include "../Utils/Utils.hpp"
 
 Slider::Slider(const vec2& pos, const float scale, const std::string& valSign) {
-  mBackground = new Texture(TEMP::getPath(TEMP::SLIDER));
-  mButton     = new Texture(TEMP::getPath(TEMP::SLIDERB));
-  mInfo       = new Text(mFont, "", pos, 15, Text::WHITE);
+  mBackground = new GL::Rectangle();
+  mButton     = new GL::Rectangle();
+  mInfo       = new Text("Font::Dejavu", "", pos, 15, Text::WHITE);
   mScale      = scale;
   mValSign    = valSign;
 
-  mBoundingBox = Rect(pos, mBackground->getSize() * scale);
-  mButtonRect  = Rect(pos, mButton->getSize() * scale);
+  auto texBackground = mResourceManager->get<Texture>("Texture::Slider");
+  auto texButton     = mResourceManager->get<Texture>("Texture::SliderButton");
+
+  mBoundingBox = Rect(pos, texBackground->getSize() * scale);
+  mButtonRect  = Rect(pos, texButton->getSize() * scale);
   mButtonRect.topleft.y -= mButtonRect.size.y / 2;
 
-  mBackground->recalculateGeometry(mBoundingBox);
-  mButton->recalculateGeometry(mButtonRect);
+  mBackground->change(mBoundingBox);
+  mButton->change(mButtonRect);
+
+  mBackground->setTexture(texBackground);
+  mButton->setTexture(texButton);
+
   mButtonOffset = vec2(0, 0);
   isVisible(true);
 }

@@ -6,87 +6,52 @@
 
 #include <fstream>
 
-std::map<std::string, Texture::TexPair> Texture::textures;
-std::map<unsigned int, GLuint>          Texture::activeTextures;
+std::map<unsigned int, GLuint> Texture::activeTextures;
 GLuint Texture::activeTexture = 0;
 CFG*   Texture::cfg;
 
-Texture::TexPair::TexPair() {
-  textureID = 0;
-  sampler   = 0;
-  count     = 0;
-  size      = vec2(0, 0);
-}
+Texture::Texture()
+    : mMode(0), mTextureId(0), mSamplerId(0), mSize(0, 0) {}
 
-Texture::Texture() {
-  mode     = 0;
-  filename = "!";
-}
+void Texture::unload() {
+  if (activeTexture == mTextureId)
+    activeTexture = 0;
 
-Texture::Texture(std::string filename, int mode) {
-  this->filename = filename;
+  for (auto a : activeTextures)
+    if (a.second == mTextureId)
+      a.second = 0;
 
-  if (textures.count(filename)) {
-    textures[filename].count += 1;
-    return;
-  }
-  if (mode < MAP) {
-    loadTexture(filename, (mode == GUI));
-  } else if (mode == MAP)
-    loadMap(filename);
-}
+  if (mTextureId != 0)
+    glDeleteTextures(1, &mTextureId);
 
-Texture::Texture(const Texture& tex) {
-  filename = tex.filename;
-  VBO      = tex.VBO;
-  IBO      = tex.IBO;
-  mode     = tex.mode;
-  if (textures.count(filename)) {
-    textures[filename].count += 1;
-  }
-}
-
-Texture& Texture::operator=(const Texture& tex) {
-  filename = tex.filename;
-  VBO      = tex.VBO;
-  IBO      = tex.IBO;
-  if (textures.count(filename)) {
-    textures[filename].count += 1;
-  }
-  return *this;
+  if (mSamplerId != 0)
+    glDeleteSamplers(1, &mSamplerId);
 }
 
 Texture::~Texture() {
-  if (textures.count(filename)) {
-    textures[filename].count -= 1;
-    if (textures[filename].count <= 0) {
-      glDeleteTextures(1, &textures[filename].textureID);
-      glDeleteSamplers(1, &textures[filename].sampler);
-      textures.erase(filename);
-    }
-  }
+  if (mLoaded)
+    unload();
 }
 
 vec2 Texture::getSize() const {
-  if (textures.count(filename) > 0)
-    return textures[filename].size;
-  return vec2(0, 0);
+  return mSize;
 }
 
 bool Texture::isActive(unsigned int textureUnit) const {
   if (activeTextures[textureUnit] == 0)
     return false;
-  return (activeTextures[textureUnit] == textures[filename].textureID);
+
+  return activeTextures[textureUnit] == mTextureId;
 }
 
 void Texture::bind(unsigned int textureUnit) {
   if (isActive(textureUnit))
     return;
 
-  activeTextures[textureUnit] = textures[filename].textureID;
+  activeTextures[textureUnit] = mTextureId;
   glActiveTexture(GL_TEXTURE0 + textureUnit);
-  glBindTexture(GL_TEXTURE_2D, textures[filename].textureID);
-  glBindSampler(textureUnit, textures[filename].sampler);
+  glBindTexture(GL_TEXTURE_2D, mTextureId);
+  glBindSampler(textureUnit, mSamplerId);
 }
 
 void Texture::unbind(unsigned int textureUnit) {
@@ -99,81 +64,33 @@ void Texture::unbind(unsigned int textureUnit) {
   glBindSampler(textureUnit, 0);
 }
 
-void Texture::bindCube(unsigned int textureUnit) {
-  if (isActive(textureUnit))
-    return;
-  activeTextures[textureUnit] = textures[filename].textureID;
-  glActiveTexture(GL_TEXTURE0 + textureUnit);
-  glBindTexture(GL_TEXTURE_CUBE_MAP, textures[filename].textureID);
-  glBindSampler(textureUnit, textures[filename].sampler);
-}
-
-vec4 Texture::getPixelColors(int x, int y) {
-  if (mode != MAP && mode != EMPTY)
-    return vec4(0, 0, 0, 0);
-
-  if (textures[filename].imageMap.count(y) &&
-      textures[filename].imageMap[y].count(x)) {
-    return textures[filename].imageMap[y][x];
-  }
-  return vec4(0, 0, 0, 0);
-}
-
 GLuint Texture::getGLTexture() {
-  if (filename == "!")
-    return 0;
-  if (textures.count(filename) == 0)
-    return 0;
-  return textures[filename].textureID;
+  return mTextureId;
 }
 
-GLuint Texture::generateGLTexture(std::string fname) {
-  if (textures.count(fname))
-    return 0;
-  textures[fname];
-  glGenTextures(1, &textures[fname].textureID);
-  glGenSamplers(1, &textures[fname].sampler);
-  return textures[fname].textureID;
+GLuint Texture::generateGLTexture() {
+  if (mTextureId == 0) {
+    glGenTextures(1, &mTextureId);
+    glGenSamplers(1, &mSamplerId);
+  }
+
+  return mTextureId;
 }
 
-/**
- * @brief
- *   Recalculates the geometry of the rectangle associated
- *   with the texture by changing it to the given one.
- *
- * @param rect
- */
-void Texture::recalculateGeometry(const Rect& r) {
-  rect.change(r, false);
-}
-
-/**
- * @brief
- *   Draws the texture by binding it to slot 0 followed
- *   by drawing a rectangle, which effectively draws the texture
- *   onto a rectangle
- */
-void Texture::draw() {
-  bind(0);
-  rect.draw();
-}
-
-bool Texture::loadTexture(std::string fname, bool isGUI) {
-  if (textures.count(fname))
+bool Texture::load() {
+  if (mTextureId != 0)
     return true;
 
-  textures[fname];
-  mode = (isGUI) ? GUI : TEXTURE;
-  glGenTextures(1, &textures[fname].textureID);
-  glGenSamplers(1, &textures[fname].sampler);
+  mMode = TEXTURE;
+  glGenTextures(1, &mTextureId);
+  glGenSamplers(1, &mSamplerId);
   bind(0);
 
-  if (fname.substr(fname.size() - 4) == ".dds")
+  if (mFilename.substr(mFilename.size() - 4) == ".dds")
     loadDDS();
   else
     loadTexture();
 
-  textures[fname].count += 1;
   return true;
 }
 
@@ -181,7 +98,7 @@ bool Texture::loadTexture() {
   int            width, height;
   unsigned char* image;
 
-  image = SOIL_load_image(filename.c_str(), &width, &height, 0, SOIL_LOAD_RGBA);
+  image = SOIL_load_image(mFilename.c_str(), &width, &height, 0, SOIL_LOAD_RGBA);
 
   if (image == 0)
     throw Error("Failed to load SOIL_IMAGE");
@@ -199,105 +116,43 @@ bool Texture::loadTexture() {
   if (!Utils::getGLError())
     throw Error("Failed to load SOIL_IMAGE");
 
-  if (mode == TEXTURE) {
+  if (mMode == TEXTURE) {
     generateMipmaps();
     linearMipmap();
     // setSamplerFiltering(GL_TEXTURE_MAX_ANISOTROPY_EXT, cfg->graphics.aniso);
   }
-  if (mode == GUI) {
+  if (mMode == GUI) {
     linear();
     clampToEdge();
   }
+
   SOIL_free_image_data(image);
-  textures[filename].size = vec2(width, height);
+  mSize = vec2(width, height);
   return true;
 }
 
 bool Texture::loadDDS() {
-  mode = DDS;
-  textures[filename].textureID =
-    SOIL_load_OGL_texture(filename.c_str(),
+  mMode = DDS;
+  mTextureId =
+    SOIL_load_OGL_texture(mFilename.c_str(),
                           SOIL_LOAD_AUTO,
-                          textures[filename].textureID,
+                          mTextureId,
                           SOIL_FLAG_MIPMAPS | SOIL_FLAG_COMPRESS_TO_DXT);
-  if (textures[filename].textureID == 0 || !Utils::getGLError())
+
+  if (mTextureId == 0 || !Utils::getGLError())
     throw Error("Failed to load DDS image");
+
   linearMipmap();
   // if(cfg->graphics.aniso >= 1)
   //  setSamplerFiltering(GL_TEXTURE_MAX_ANISOTROPY_EXT, cfg->graphics.aniso);
-  textures[filename].size = vec2();
-  return true;
-}
-
-bool Texture::loadCubeTexture(const std::vector<std::string>& filenames) {
-  if (filenames.size() != 6)
-    return false;
-  unsigned char*      image;
-  int                 width, height;
-  std::vector<GLenum> types = {
-    GL_TEXTURE_CUBE_MAP_POSITIVE_X, GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
-    GL_TEXTURE_CUBE_MAP_POSITIVE_Y, GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
-    GL_TEXTURE_CUBE_MAP_POSITIVE_Z, GL_TEXTURE_CUBE_MAP_NEGATIVE_Z,
-  };
-  generateGLTexture(filenames[0]);
-  bindCube(0);
-  for (unsigned int i = 0; i < filenames.size(); i++) {
-    image =
-      SOIL_load_image(filenames[0].c_str(), &width, &height, 0, SOIL_LOAD_RGBA);
-    if (image == 0)
-      throw Error("Failed to load cubemap image.");
-    glTexImage2D(types[i],
-                 0,
-                 GL_RGBA8,
-                 width,
-                 height,
-                 0,
-                 GL_RGBA,
-                 GL_UNSIGNED_BYTE,
-                 image);
-    SOIL_free_image_data(image);
-  }
-  linear();
-  clampToEdge();
-  setSamplerFiltering(GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-  generateMipmaps(GL_TEXTURE_CUBE_MAP);
-  textures[filename].count += 1;
-  textures[filename].size = vec2(width, height);
-  return true;
-}
-
-bool Texture::loadMap(std::string fname) {
-  filename = fname;
-  textures[filename];
-  mode = MAP;
-  int            width;
-  int            height;
-  unsigned char* image;
-  image = SOIL_load_image(filename.c_str(), &width, &height, 0, SOIL_LOAD_RGBA);
-  if (image == 0) {
-    SOIL_free_image_data(image);
-    return false;
-  }
-  if (!Utils::getGLError())
-    throw Error("Failed to load SOIL_IMAGE");
-  int processed = 0;
-  for (int y = 0; y < height; y++) {
-    for (int x = 0; x < width; x++) {
-      textures[filename].imageMap[y][x] = vec4(image[processed],
-                                               image[processed + 1],
-                                               image[processed + 2],
-                                               image[processed + 3]);
-      processed += 4;
-    }
-  }
-  textures[filename].size = vec2(width, height);
-  SOIL_free_image_data(image);
+  mSize = vec2();
   return true;
 }
 
 unsigned char* Texture::loadEmptyTexture(const vec2& size, bool isReturn) {
   const int      arraySize = size.x * size.y;
   unsigned char* texData   = new unsigned char[arraySize];
+
   for (int i   = 0; i < arraySize; i++)
     texData[i] = 255;
 
@@ -305,8 +160,8 @@ unsigned char* Texture::loadEmptyTexture(const vec2& size, bool isReturn) {
   generateMipmaps();
   linear();
 
-  textures[filename].size = size;
-  textures[filename].count += 1;
+  mSize = size;
+
   if (isReturn)
     return texData;
 
@@ -320,13 +175,12 @@ bool Texture::createTexture(const vec2&    s,
                             GLenum         inColor) {
   static unsigned int nameNumber = 0;
   nameNumber++;
-  filename = "createTexture" + Utils::toStr(nameNumber);
-  textures[filename];
-  mode    = EMPTY;
-  inColor = (color == GL_DEPTH_COMPONENT) ? GL_DEPTH_COMPONENT : inColor;
+  mFilename = "createTexture" + Utils::toStr(nameNumber);
+  mMode   = EMPTY;
+  inColor = color == GL_DEPTH_COMPONENT ? GL_DEPTH_COMPONENT : inColor;
 
-  glGenTextures(1, &textures[filename].textureID);
-  glGenSamplers(1, &textures[filename].sampler);
+  glGenTextures(1, &mTextureId);
+  glGenSamplers(1, &mSamplerId);
   bind(0);
 
   glTexImage2D(GL_TEXTURE_2D,
@@ -340,8 +194,8 @@ bool Texture::createTexture(const vec2&    s,
                data);
   if (!Utils::getGLError())
     throw Error("createTexture failed. View OpenGL error above");
-  textures[filename].size = s;
-  textures[filename].count += 1;
+
+  mSize = s;
   return true;
 }
 
@@ -365,28 +219,18 @@ void Texture::saveTexture(std::string fname, const vec2& size) {
   unsigned char* data      = new unsigned char[imageSize];
   bind(0);
   glGetTexImage(GL_TEXTURE_2D, 0, GL_BGR, GL_UNSIGNED_BYTE, data);
-  int           xa         = (int) size.x % 256;
-  int           xb         = (size.x - xa) / 256;
-  int           ya         = (int) size.y % 256;
-  int           yb         = (size.y - ya) / 256;
-  unsigned char header[18] = { 0,
-                               0,
-                               2,
-                               0,
-                               0,
-                               0,
-                               0,
-                               0,
-                               0,
-                               0,
-                               0,
-                               0,
-                               (unsigned char) xa,
-                               (unsigned char) xb,
-                               (unsigned char) ya,
-                               (unsigned char) yb,
-                               24,
-                               0 };
+
+  int xa = (int) size.x % 256;
+  int xb = (size.x - xa) / 256;
+  int ya = (int) size.y % 256;
+  int yb = (size.y - ya) / 256;
+
+  // clang-format off
+  unsigned char header[18] = { 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                               (unsigned char) xa, (unsigned char) xb,
+                               (unsigned char) ya, (unsigned char) yb,
+                               24, 0 };
+  // clang-format on
 
   for (unsigned int i = 0; i < imageSize; i += 3) {
     data[i + 1] = data[i + 1] + 25;
@@ -401,12 +245,6 @@ void Texture::saveTexture(std::string fname, const vec2& size) {
   delete[] data;
   data = NULL;
   log("Saved texture to: '", fname, "'");
-}
-
-void Texture::freeImageMap() {
-  if (mode != MAP || !textures.count(filename))
-    return;
-  textures[filename].imageMap.clear();
 }
 
 Texture& Texture::linear() {
@@ -446,9 +284,11 @@ Texture& Texture::clampToEdge() {
 }
 
 void Texture::setSamplerFiltering(GLenum param, GLenum value) {
-  if (textures.count(filename) == 0 || textures[filename].sampler == 0)
+  if (mTextureId== 0 || mSamplerId == 0)
     return;
-  glSamplerParameteri(textures[filename].sampler, param, value);
+
+  glSamplerParameteri(mSamplerId, param, value);
+
   if (!Utils::getGLError())
     throw Error("Failed to set Sampler Parameteri");
 }

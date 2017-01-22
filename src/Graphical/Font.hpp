@@ -11,12 +11,13 @@
 
 #include "../Math/Math.hpp"
 #include "Texture.hpp"
+#include "../Resource/Resource.hpp"
 
 
 class Program;
 
 
-class Font {
+class Font : public Resource {
 public:
   //! Represents a character within the font.
   struct Glyph {
@@ -28,15 +29,20 @@ public:
     vec2 tc;
   };
 
-  //! Only Constructor - Initializes FreeType & loads font from file
-  Font(const std::string filename);
+  Font();
 
   //! Destructor
   //! If it is the last font object alive, it will deinitalize FreeType
   ~Font();
 
+  // Default handler, calls load with 12
+  bool load();
+
   //! Loads a font from file and converts it to a OpenGL texture
-  void loadFromFile(const std::string& filename, int size);
+  bool load(int size);
+
+  // unloads all the resources
+  void unload();
 
   //! Gets a glyph, if it does not exists loads
   //! the entire bitmap for that size
@@ -63,7 +69,6 @@ private:
   };
 
   std::map<unsigned int, Page> mPages;
-  std::string mFilename;
   FT_Face     mFace;
 
   static int        numFonts;

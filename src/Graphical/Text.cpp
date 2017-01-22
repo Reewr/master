@@ -5,14 +5,15 @@
 #include "../GLSL/Program.hpp"
 #include "../Graphical/Font.hpp"
 #include "../Utils/CFG.hpp"
+#include "../Resource/ResourceManager.hpp"
 
-Text::Text(Font*              font,
+Text::Text(const std::string& font,
            const std::string& text,
            const vec2&        position,
            int                size,
            int                color,
            const vec2&        limit) {
-  mTextFont  = font;
+  mTextFont  = mResourceManager->get<Font>(font);
   mLimit     = limit;
   mIsLimitOn = limit.x != 0 || limit.y != 0;
   mText      = text;

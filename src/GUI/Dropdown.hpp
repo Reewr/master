@@ -2,15 +2,19 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "../Math/MathCD.hpp"
 #include "GUI.hpp"
 
-class Texture;
 class Text;
 
 namespace tinyxml2 {
   class XMLElement;
+}
+
+namespace GL {
+  class Rectangle;
 }
 
 class Dropdown : public GUI {
@@ -72,9 +76,10 @@ private:
   //! whenever the active option changes
   void setActiveOptionPosition();
 
-  Texture* mBox;
-  Texture* mOptionsList;
-  vec2     mActiveOptionPosition;
+  GL::Rectangle* mBox;
+  GL::Rectangle* mOptionsList;
+
+  vec2 mActiveOptionPosition;
 
   std::vector<Text*> mOptions;
 

@@ -1,14 +1,15 @@
 #include "Rectangle.hpp"
+#include "../Texture.hpp"
 
 #include <vector>
 
 GL::Rectangle::Rectangle() {}
 
-GL::Rectangle::Rectangle(const Rect& r, bool isCCW) {
+GL::Rectangle::Rectangle(const Rect& r, bool isCCW) : mTexture(nullptr){
   change(r, isCCW);
 }
 
-GL::Rectangle::Rectangle(const vec2& p, const vec2& s, bool isCCW) {
+GL::Rectangle::Rectangle(const vec2& p, const vec2& s, bool isCCW) : mTexture(nullptr) {
   change(Rect(p, s), isCCW);
 }
 
@@ -54,6 +55,17 @@ void GL::Rectangle::change(const Rect& rect, bool isCCW) {
  */
 void GL::Rectangle::change(const vec2& p, const vec2& s, bool isCCW) {
   change(Rect(p, s), isCCW);
+}
+
+/**
+ * @brief
+ *   Tells the rectangle to use the texture when drawing.
+ *   Will bind this to 0
+ *
+ * @param texture
+ */
+void GL::Rectangle::setTexture(std::shared_ptr<Texture> texture) {
+  mTexture = texture;
 }
 
 /**
@@ -126,6 +138,9 @@ void GL::Rectangle::setup() {
  *   binding the vertex array and drawing the elements
  */
 void GL::Rectangle::draw() {
+  if (mTexture)
+    mTexture->bind(0);
+
   glBindVertexArray(VAO);
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
   glBindVertexArray(0);

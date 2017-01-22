@@ -182,7 +182,6 @@ set(DDDGP_CPP
   ${SRC_DIR}/GUI/GUI.cpp
   ${SRC_DIR}/GUI/Inputbox.cpp
   ${SRC_DIR}/GUI/Menu.cpp
-  ${SRC_DIR}/GUI/Notification.cpp
   ${SRC_DIR}/GUI/Slider.cpp
   ${SRC_DIR}/GUI/Tooltip.cpp
   ${SRC_DIR}/GUI/Window.cpp
@@ -210,6 +209,10 @@ set(DDDGP_CPP
 
   # src/Math
   ${SRC_DIR}/Math/MathCD.cpp
+
+  # src/Resource
+  ${SRC_DIR}/Resource/Resource.cpp
+  ${SRC_DIR}/Resource/ResourceManager.cpp
 
   # src/State
   ${SRC_DIR}/State/MainMenu.cpp
@@ -259,7 +262,6 @@ set(DDDGP_HPP
   ${SRC_DIR}/GUI/GUI.hpp
   ${SRC_DIR}/GUI/Inputbox.hpp
   ${SRC_DIR}/GUI/Menu.hpp
-  ${SRC_DIR}/GUI/Notification.hpp
   ${SRC_DIR}/GUI/Slider.hpp
   ${SRC_DIR}/GUI/Tooltip.hpp
   ${SRC_DIR}/GUI/Window.hpp
@@ -288,6 +290,10 @@ set(DDDGP_HPP
   # src/Math
   ${SRC_DIR}/Math/Math.hpp
   ${SRC_DIR}/Math/MathCD.hpp
+
+  # src/Resource
+  ${SRC_DIR}/Resource/Resource.hpp
+  ${SRC_DIR}/Resource/ResourceManager.hpp
 
   # src/State
   ${SRC_DIR}/State/MainMenu.hpp

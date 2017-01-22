@@ -6,8 +6,10 @@
 #include "../GLSL/Program.hpp"
 #include "../Graphical/Text.hpp"
 #include "../Graphical/Texture.hpp"
+#include "../Graphical/GL/Rectangle.hpp"
 #include "../Input/Event.hpp"
 #include "../Utils/Utils.hpp"
+#include "../Resource/ResourceManager.hpp"
 
 /**
  * @brief
@@ -22,8 +24,8 @@
  */
 Dropdown::Dropdown(const std::vector<std::string>& options,
                    const vec2&                     position) {
-  mBox                  = new Texture(TEMP::getPath(TEMP::DROPDOWN));
-  mOptionsList          = new Texture(TEMP::getPath(TEMP::BLACK));
+  mBox                  = new GL::Rectangle();
+  mOptionsList          = new GL::Rectangle();
   mIsVisible            = true;
   mIsOptionsListVisible = false;
   mMouseOption          = -1;
@@ -44,8 +46,10 @@ Dropdown::Dropdown(const std::vector<std::string>& options,
   mBigBoxRect = Rect(mBoundingBox.topleft,
                      mBoundingBox.size + vec2(0, mOptions.size() * 25));
 
-  mBox->recalculateGeometry(mBoundingBox);
-  mOptionsList->recalculateGeometry(mBigBoxRect);
+  mBox->change(mBoundingBox);
+  mBox->setTexture(mResourceManager->get<Texture>("Texture::Dropdown"));
+  mOptionsList->change(mBigBoxRect);
+  mOptionsList->setTexture(mResourceManager->get<Texture>("Texture::Background"));
   setActiveOptionPosition();
 }
 
@@ -150,7 +154,7 @@ void Dropdown::defaultInputHandler(const Input::Event& event) {
 void Dropdown::addOption(const std::string text) {
   float height    = (mOptions.size() + 1) * 25;
   vec2  optionPos = vec2(5, height);
-  Text* option    = new Text(mFont, text, vec2(0, 0), 15);
+  Text* option    = new Text("Font::Dejavu", text, vec2(0, 0), 15);
   vec2  size      = option->size();
 
   mBoundingBox.size.x = max(mBoundingBox.size.x, size.x);

@@ -1,11 +1,14 @@
 #pragma once
 
 #include "../Math/MathCD.hpp"
+#include "../Utils/CFG.hpp"
+#include "../GLSL/Program.hpp"
 #include <functional>
+#include <memory>
 
-class Font;
-class Program;
+class ResourceManager;
 class CFG;
+class Asset;
 
 namespace Input {
   class Event;
@@ -60,7 +63,7 @@ public:
   virtual void setSize(const vec2& size);
   virtual void setOffset(const vec2& offset);
 
-  static void init(CFG* cfg);
+  static void init(Asset* asset);
   static void deinit();
 
 protected:
@@ -79,7 +82,8 @@ protected:
 
   std::function<void(const Input::Event& event)> mInputHandler;
 
-  static CFG*     mCFG;
-  static Font*    mFont;
-  static Program* mGUIProgram;
+  static CFG*             mCFG;
+  static ResourceManager* mResourceManager;
+
+  static std::shared_ptr<Program> mGUIProgram;
 };

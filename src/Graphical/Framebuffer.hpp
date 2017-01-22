@@ -46,10 +46,10 @@ public:
   //! Readies the Framebuffer for drawing by setting
   //! the position and figuring out how much of the texture
   //! to draw
-  void activateDraw(const vec2& pos = vec2());
+  /* void activateDraw(const vec2& pos = vec2()); */
 
   //! Binds the drawing program and draws the texture
-  void draw();
+  /* void draw(); */
 
   //! Bind the framebuffer, also binds the program if
   //! bindProgram is true

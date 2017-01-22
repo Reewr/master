@@ -1,15 +1,17 @@
 #include "GUI.hpp"
 
 #include "../GLSL/Program.hpp"
+#include "../Resource/ResourceManager.hpp"
 #include "../Graphical/Font.hpp"
 #include "../Input/Event.hpp"
 #include "../Math/Math.hpp"
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
+#include "../Utils/Asset.hpp"
 
-CFG*     GUI::mCFG        = NULL;
-Program* GUI::mGUIProgram = NULL;
-Font*    GUI::mFont       = NULL;
+ResourceManager*         GUI::mResourceManager = nullptr;
+CFG*                     GUI::mCFG             = nullptr;
+std::shared_ptr<Program> GUI::mGUIProgram      = nullptr;
 
 GUI::GUI()
     : mBoundingBox(0, 0, 0, 0)
@@ -110,10 +112,11 @@ void GUI::setOffset(const vec2& offset) {
   mOffset = offset;
 }
 
-void GUI::init(CFG* c) {
-  mCFG        = c;
-  mFont       = new Font(TEMP::getPath(TEMP::FONT));
-  mGUIProgram = new Program("shaders/GUI/GUI.vsfs", 0);
+void GUI::init(Asset* a) {
+  mCFG             = a->cfg();
+  mResourceManager = a->rManager();
+  mGUIProgram      = mResourceManager->get<Program>("Program::GUI");
+
   mGUIProgram->bindAttribs({ "position", "texcoord" }, { 0, 1 });
   mGUIProgram->link();
   mGUIProgram->setUniform("screenRes", mCFG->graphics.res, "guiOffset", vec2());
@@ -121,14 +124,4 @@ void GUI::init(CFG* c) {
   mGUIProgram->setUniform("guiColor", vec3());
 }
 
-void GUI::deinit() {
-  if (mGUIProgram != nullptr) {
-    delete mGUIProgram;
-    mGUIProgram = nullptr;
-  }
-
-  if (mFont != nullptr) {
-    delete mFont;
-    mFont = nullptr;
-  }
-}
+void GUI::deinit() {}

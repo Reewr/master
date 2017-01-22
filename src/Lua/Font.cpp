@@ -19,9 +19,9 @@ void Lua::font_as_lua(sol::state& state) {
       a.first(state);
   }
 
-  sol::constructors<sol::types<std::string>> ctor;
+  /* sol::constructors<sol::types<std::string>> ctor; */
 
-  sol::usertype<Font> type(ctor, "loadFromFile", &Font::loadFromFile);
+  /* sol::usertype<Font> type(ctor); */
 
-  state.set_usertype("Font", type);
+  /* state.set_usertype("Font", type); */
 }

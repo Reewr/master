@@ -160,33 +160,33 @@ GL::Rectangle* Framebuffer::quad() {
   return mQuad;
 }
 
-/**
- * @brief
- *   Readies the Framebuffer for drawing by setting
- *   the position and figuring out how much of the texture
- *   to draw.
- *
- *   This does not bind the texture
- *
- * @param position
- */
-void Framebuffer::activateDraw(const vec2& position) {
-  failCheck();
-  mTexture->recalculateGeometry(Rect(position, mFrameSize));
-  mNeedsDrawing = true;
-}
-
-/**
- * @brief
- *   Binds the drawing program and draws the texture
- */
-void Framebuffer::draw() {
-  failCheck();
-  if (!mNeedsDrawing)
-    activateDraw();
-  drawProgram->bind();
-  mTexture->draw();
-}
+///**
+// * @brief
+// *   Readies the Framebuffer for drawing by setting
+// *   the position and figuring out how much of the texture
+// *   to draw.
+// *
+// *   This does not bind the texture
+// *
+// * @param position
+// */
+//void Framebuffer::activateDraw(const vec2& position) {
+//  failCheck();
+//  mTexture->recalculateGeometry(Rect(position, mFrameSize));
+//  mNeedsDrawing = true;
+//}
+//
+///**
+// * @brief
+// *   Binds the drawing program and draws the texture
+// */
+//void Framebuffer::draw() {
+//  failCheck();
+//  if (!mNeedsDrawing)
+//    activateDraw();
+//  drawProgram->bind();
+//  mTexture->draw();
+//}
 
 /**
  * @brief

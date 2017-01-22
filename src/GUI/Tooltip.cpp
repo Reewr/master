@@ -3,19 +3,22 @@
 #include "../GLSL/Program.hpp"
 #include "../Graphical/Text.hpp"
 #include "../Graphical/Texture.hpp"
+#include "../Graphical/GL/Rectangle.hpp"
+#include "../Resource/ResourceManager.hpp"
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
 
 Tooltip::Tooltip() {
   mBoundingBox = Rect(0, 0, 100, 60);
   mOffset      = vec2(0, 0);
-  mBackground  = new Texture(TEMP::getPath(TEMP::OPTSMENU));
-  mActiveText  = new Text(mFont,
+  mBackground  = new GL::Rectangle(mBoundingBox);
+  mActiveText  = new Text("Font::Dejavu",
                          "",
                          mBoundingBox.topleft,
                          10,
                          Text::WHITE,
                          mBoundingBox.size);
+  mBackground->setTexture(mResourceManager->get<Texture>("Texture::Background"));
 }
 
 /**

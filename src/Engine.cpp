@@ -17,6 +17,7 @@
 /* #include <3D/Model.hpp> */
 #include "Input/Event.hpp"
 #include "Input/Input.hpp"
+#include "Resource/ResourceManager.hpp"
 
 // These functions are because of GLFW's callback. They call engine functions
 static void placementKeyboardCB(GLFWwindow* w, int k, int, int a, int m) {
@@ -114,8 +115,9 @@ Input::Input* Engine::input() {
  */
 bool Engine::initialize(int argc, char* argv[], int isRefresh, int initState) {
 
-  mCFG   = new CFG();
-  mAsset = new Asset(mCFG);
+  mCFG             = new CFG();
+  mAsset           = new Asset(mCFG);
+  mResourceManager = new ResourceManager();
   // Load the configuration file
   mCFG->assimilate(mCFGPath);
 
@@ -154,8 +156,11 @@ bool Engine::initialize(int argc, char* argv[], int isRefresh, int initState) {
   mLua->add(mCFG);
   mAsset->setInput(mInput);
   mAsset->setLua(mLua);
+  mAsset->setResourceManager(mResourceManager);
 
-  GUI::init(mAsset->cfg());
+  mResourceManager->loadDescription("./media/resources.lua");
+
+  GUI::init(mAsset);
   Texture::init(mAsset->cfg());
   /* Spider::init(); */
   /* Model::init(&asset->cfg); */
@@ -367,6 +372,11 @@ void Engine::deinitialize(bool isFullDeinit) {
   if (mCurrent != nullptr) {
     delete mCurrent;
     mCurrent = nullptr;
+  }
+
+  if (mResourceManager != nullptr) {
+    delete mResourceManager;
+    mResourceManager = nullptr;
   }
 
   if (isFullDeinit)

@@ -8,6 +8,7 @@
 
 #include "../Math/Math.hpp"
 #include "../Utils/Utils.hpp"
+#include "../Resource/Resource.hpp"
 
 class Shader;
 class fstream;
@@ -16,7 +17,7 @@ class fstream;
 //! bind and unbinds them easily.
 //! NOTE: createProgram and link will cause segmentation fault
 //! if it fails to create/link GLSL program.
-class Program {
+class Program : public Resource {
 public:
   //! Default Constructor
   Program();
@@ -29,6 +30,9 @@ public:
   // Should only be used on files containing more than one shader
   // Seperated by "#ifdef __VERTEX__" and ended with "#endif"
   // Seperated by "#ifdef __FRAGMENT__" and ended with "#endif"
+  //
+  // This can also be used when the filename contains two files, separated
+  // by comma, for instance: "path/to/myshader.fs,path/to/myshader.vs"
   Program(const std::string& fsvs, int link = 1);
 
   //! Deletes shader program
@@ -49,11 +53,14 @@ public:
                      const Shader& vertex,
                      const bool    link = true);
 
-  bool createProgram(const std::string& fsvs, int link = 1);
+  bool createProgram(const std::string& fsvs, int link = 0);
 
   //! Adds a shader to the current program
   bool addShader(const Shader& sh);
   bool addShader(const std::string& sh);
+
+  bool load();
+  void unload();
 
   //! Links the program if you specified link in createProgram() as false.
   //! Does nothing otherwise. Returns false if errors.
@@ -111,6 +118,9 @@ private:
   static bool checkProgram(const GLuint pro);
   static std::string loadShader(std::ifstream& f);
   static std::map<std::string, std::string> loadVSFS(const std::string& vsfs);
+
+  static std::map<std::string, std::string>
+  loadDualShaderFilename(const std::string& vsfs);
 
   static GLuint activeProgram;
 

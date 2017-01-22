@@ -9,6 +9,7 @@
 
 class Asset;
 class CFG;
+class ResourceManager;
 
 namespace Input {
   class Input;
@@ -81,4 +82,5 @@ protected:
   GLFWwindow*   mWindow;
   Asset*        mAsset;
   Lua::Lua*     mLua;
+  ResourceManager* mResourceManager;
 };

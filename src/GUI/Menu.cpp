@@ -221,7 +221,7 @@ void Menu::defaultInputHandler(const Input::Event& event) {
 void Menu::addMenuItem(const std::string&  text,
                        const vec2&         position,
                        const MenuSettings& m) {
-  Text* item = new Text(mFont, text, position, m.size);
+  Text* item = new Text("Font::Dejavu", text, position, m.size);
   item->setColor(m.color);
   mMenuItems.push_back(item);
 }

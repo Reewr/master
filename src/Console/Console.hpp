@@ -61,6 +61,9 @@ private:
   // Checks if the command is legal, prints error if not.
   void doCommand(const Input::Event& event);
 
+  // Adds history, shortcut to making a text of font size 12
+  void addHistory(const std::string& message, int color);
+
   // Internal to add text
   void addHistory(Text* text);
 

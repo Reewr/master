@@ -30,15 +30,12 @@ Font::Page::Page() {}
  *   Creates a new font class. If this is the first
  *   instance of a Font it initializes the FreeType
  *   library and throws error if this does not work
- *
- * @param filename
  */
-Font::Font(const std::string filename) {
+Font::Font() {
   if (numFonts == 0 && FT_Init_FreeType(&fontLib))
     throw Error("FreeType not initialized correctly");
 
   numFonts++;
-  mFilename = filename;
 }
 
 /**
@@ -51,27 +48,32 @@ Font::~Font() {
 
   if (numFonts <= 0)
     FT_Done_FreeType(fontLib);
-
-  for (auto page : mPages)
-    page.second.glyphs.clear();
-
-  mPages.clear();
 }
 
 /**
  * @brief
- *   Loads a font from filename
- *
- * @param filename
- * @param size
+ *   Unloads the font from memory, clearing all
+ *   of its loaded data.
  */
-void Font::loadFromFile(const std::string& filename, int size) {
-  if (mPages.count(size) > 0)
-    return;
-  if (FT_New_Face(fontLib, filename.c_str(), 0, &mFace))
-    return;
+void Font::unload() {
+  for (auto page : mPages) {
+    page.second.glyphs.clear();
+    page.second.texture.unload();
+  }
 
-  mFilename = filename;
+  mPages.clear();
+}
+
+bool Font::load() {
+  return load(12);
+}
+
+bool Font::load(int size) {
+  if (mPages.count(size) > 0)
+    return true;
+  if (FT_New_Face(fontLib, mFilename.c_str(), 0, &mFace))
+    return false;
+
   mPages[size];
   Page& page = mPages[size];
 
@@ -144,6 +146,7 @@ void Font::loadFromFile(const std::string& filename, int size) {
   page.texSize = vec2(w, h);
   page.metrics = vec2(0, mFace->size->metrics.height >> 6);
   FT_Done_Face(mFace);
+  return true;
 }
 
 /**
@@ -159,7 +162,7 @@ void Font::loadFromFile(const std::string& filename, int size) {
  */
 const Font::Glyph& Font::getGlyph(char c, int size) {
   if (mPages.count(size) == 0)
-    loadFromFile(mFilename, size);
+    load(size);
 
   return mPages[size].glyphs[c];
 }
@@ -174,7 +177,7 @@ const Font::Glyph& Font::getGlyph(char c, int size) {
  */
 const vec2& Font::getTextureSize(int size) {
   if (mPages.count(size) == 0)
-    loadFromFile(mFilename, size);
+    load(size);
 
   return mPages[size].texSize;
 }
@@ -189,7 +192,7 @@ const vec2& Font::getTextureSize(int size) {
  */
 const vec2& Font::getMetrics(int size) {
   if (mPages.count(size) == 0)
-    loadFromFile(mFilename, size);
+    load(size);
 
   return mPages[size].metrics;
 }
@@ -204,7 +207,7 @@ const vec2& Font::getMetrics(int size) {
  */
 Texture& Font::getTexture(int size) {
   if (mPages.count(size) == 0)
-    loadFromFile(mFilename, size);
+    load(size);
 
   return mPages[size].texture;
 }

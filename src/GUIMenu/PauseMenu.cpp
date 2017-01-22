@@ -9,6 +9,8 @@
 #include "../Utils/Asset.hpp"
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
+#include "../Graphical/GL/Rectangle.hpp"
+#include "../Resource/ResourceManager.hpp"
 
 PauseMenu::PauseMenu(Input::Input* i) {
   mBoundingBox = Rect(mCFG->graphics.res.x * 0.5 - 300,
@@ -17,8 +19,8 @@ PauseMenu::PauseMenu(Input::Input* i) {
                       200);
 
   mInput = i;
-  mTex   = new Texture(TEMP::getPath(TEMP::OPTSMENU));
-  mTex->recalculateGeometry(mBoundingBox);
+  mBackground = new GL::Rectangle(mBoundingBox);
+  mBackground->setTexture(mResourceManager->get<Texture>("Texture::Background"));
 
   if (!mUiLoader.loadXMLSettings(TEMP::getPath(TEMP::XMLOPT), "Pause", this))
     throw Error("Read log above");

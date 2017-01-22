@@ -2,6 +2,8 @@
 
 #include "../../Math/MathCD.hpp"
 #include "Shape.hpp"
+#include "../Texture.hpp"
+#include <memory>
 
 namespace GL {
   /**
@@ -33,6 +35,10 @@ namespace GL {
     //! a new one
     void change(const vec2& position, const vec2& size, bool isCCW = true);
 
+    // Sets the texture of the rectangle, telling it to bind the texture when
+    // drawing
+    void setTexture(std::shared_ptr<Texture> t);
+
     //! Setup the OpenGL buffers and vertex arrays for the rectangle
     void setup();
 
@@ -42,5 +48,6 @@ namespace GL {
   private:
     Rect mRect;
     bool mIsCCW;
+    std::shared_ptr<Texture> mTexture;
   };
 }

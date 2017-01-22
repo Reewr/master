@@ -27,7 +27,7 @@ Console::Console(Asset* asset)
   mBoundingBox = Rect(0, 0, res.x, res.y / 2);
 
   mRect = new GL::Rectangle(mBoundingBox);
-  mText = new Text(mFont,
+  mText = new Text("Font::Dejavu",
                    "> _",
                    textPos,
                    12,
@@ -69,13 +69,7 @@ Console::~Console() {
  */
 void Console::error(const std::string& message) {
   ::error("[Console] ", message);
-  addHistory(new Text(mFont,
-                      message,
-                      vec2(0, 0),
-                      12,
-                      Text::RED,
-                      vec2(mAsset->cfg()->graphics.res.x,
-                           mAsset->cfg()->graphics.res.y)));
+  addHistory(message, Text::RED);
 }
 
 /**
@@ -87,13 +81,7 @@ void Console::error(const std::string& message) {
  */
 void Console::warn(const std::string& message) {
   ::warning("[Console] ", message);
-  addHistory(new Text(mFont,
-                      message,
-                      vec2(0, 0),
-                      12,
-                      Text::YELLOW,
-                      vec2(mAsset->cfg()->graphics.res.x,
-                           mAsset->cfg()->graphics.res.y)));
+  addHistory(message, Text::YELLOW);
 }
 
 /**
@@ -104,13 +92,21 @@ void Console::warn(const std::string& message) {
  */
 void Console::log(const std::string& message) {
   ::log("[Console] ", message);
-  addHistory(new Text(mFont,
-                      message,
-                      vec2(0, 0),
-                      12,
-                      Text::WHITE,
-                      vec2(mAsset->cfg()->graphics.res.x,
-                           mAsset->cfg()->graphics.res.y)));
+  addHistory(message, Text::WHITE);
+}
+
+/**
+ * @brief
+ *   Just like the other addHistory() function, but this creates the
+ *   text element before calling the other addHistory
+ *
+ * @param message
+ * @param color
+ */
+void Console::addHistory(const std::string& message, int color) {
+  CFG* cfg = mAsset->cfg();
+  vec2 limit = vec2(cfg->graphics.res.x, cfg->graphics.res.y);
+  addHistory(new Text("Font::Dejavu", message, vec2(0, 0), 12, color, limit));
 }
 
 /**

@@ -14,6 +14,10 @@ namespace tinyxml2 {
   class XMLElement;
 }
 
+namespace GL {
+  class Rectangle;
+}
+
 class Slider : public GUI {
 public:
   //! Loads textures and calls recalculatesGeometry
@@ -46,8 +50,8 @@ public:
   void draw();
 
 private:
-  Texture* mBackground;
-  Texture* mButton;
+  GL::Rectangle* mBackground;
+  GL::Rectangle* mButton;
   Text*    mInfo;
 
   float       mScale;

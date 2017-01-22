@@ -10,26 +10,28 @@
 #include "../GLSL/Program.hpp"
 #include "../Graphical/Text.hpp"
 #include "../Graphical/Texture.hpp"
+#include "../Graphical/GL/Rectangle.hpp"
+#include "../Resource/ResourceManager.hpp"
 #include "../Input/Event.hpp"
 #include "../Utils/Asset.hpp"
 #include "../Utils/Utils.hpp"
 
 Window::Window() {
-  mTex   = NULL;
-  mTitle = NULL;
+  mBackground   = nullptr;
+  mTitle = nullptr;
 
   mBoundingBox = Rect({ 0, 0 }, { 0, 0 });
 }
 
-Window::Window(std::string texFilename, Rect r) {
-  mTex   = NULL;
-  mTitle = NULL;
+Window::Window(std::string texture, Rect r) {
+  mBackground   = nullptr;
+  mTitle = nullptr;
 
   mBoundingBox = r;
 
-  if (texFilename != "NONE") {
-    mTex = new Texture(texFilename);
-    mTex->recalculateGeometry(mBoundingBox);
+  if (texture != "NONE") {
+    mBackground = new GL::Rectangle(mBoundingBox);
+    mBackground->setTexture(mResourceManager->get<Texture>(texture));
   }
 }
 
@@ -120,10 +122,10 @@ Window* Window::fromXML(tinyxml2::XMLElement* element) {
 }
 
 Window::~Window() {
-  if (mTex != NULL)
-    delete mTex;
+  if (mBackground != nullptr)
+    delete mBackground;
 
-  if (mTitle != NULL)
+  if (mTitle != nullptr)
     delete mTitle;
 
   Utils::deleteMap(mMenues);
@@ -145,13 +147,13 @@ int Window::handleAction() {
 }
 
 void Window::addTitle(std::string s) {
-  if (mTitle != NULL)
+  if (mTitle != nullptr)
     delete mTitle;
 
-  mTitle = new Text(mFont, s, vec2(0, 0), 40);
+  mTitle = new Text("Font::Dejavu", s, vec2(0, 0), 40);
   mTitle->setPosition(vec2(mBoundingBox.middle().x - mTitle->box().middle().x,
                            mBoundingBox.topleft.y + 20));
-  mTitle->setColor(mTex != NULL ? Text::WHITE : Text::BLACK);
+  mTitle->setColor(mBackground != nullptr ? Text::WHITE : Text::BLACK);
 }
 
 void Window::addWindow(std::string name, Rect r, std::string tex) {
@@ -256,12 +258,12 @@ void Window::addDropdown(std::string              name,
   sortDropdowns();
 }
 
-void Window::addCheckbox(std::string name, std::string box, vec2 pos) {
+void Window::addCheckbox(std::string name, vec2 pos) {
   if (mCheckboxes.count(name))
     delete mCheckboxes[name];
 
   pos               = mBoundingBox.topleft + pos;
-  mCheckboxes[name] = new Checkbox(box, pos);
+  mCheckboxes[name] = new Checkbox(pos);
 }
 
 void Window::addInputbox(std::string name, Rect r, std::string text) {
@@ -273,7 +275,7 @@ void Window::addInputbox(std::string name, Rect r, std::string text) {
 }
 
 void Window::setOffset(const vec2& offset) {
-  if (mTitle != NULL)
+  if (mTitle != nullptr)
     mTitle->setOffset(offset);
 
   for (auto m : mMenues)
@@ -306,37 +308,37 @@ void Window::setActiveMenuItem(std::string name, vec2 pos) {
 Menu* Window::menu(std::string name) {
   if (mMenues.count(name))
     return mMenues[name];
-  return NULL;
+  return nullptr;
 }
 
 Slider* Window::slider(std::string name) {
   if (mSliders.count(name))
     return mSliders[name];
-  return NULL;
+  return nullptr;
 }
 
 Dropdown* Window::dropdown(std::string name) {
   if (mDropdowns.count(name))
     return mDropdowns[name];
-  return NULL;
+  return nullptr;
 }
 
 Checkbox* Window::checkbox(std::string name) {
   if (mCheckboxes.count(name))
     return mCheckboxes[name];
-  return NULL;
+  return nullptr;
 }
 
 Inputbox* Window::inputbox(std::string name) {
   if (mInputboxes.count(name))
     return mInputboxes[name];
-  return NULL;
+  return nullptr;
 }
 
 Window* Window::window(std::string name) {
   if (mWindows.count(name))
     return mWindows[name];
-  return NULL;
+  return nullptr;
 }
 
 std::map<std::string, Menu*> Window::menues() {
@@ -490,10 +492,10 @@ void Window::draw() {
   if (!isVisible())
     return;
 
-  if (mTex != NULL) {
+  if (mBackground != nullptr) {
     mGUIProgram->bind();
     mGUIProgram->setUniform("guiOffset", mOffset);
-    mTex->draw();
+    mBackground->draw();
   }
 
   for (auto m : mMenues)
@@ -514,6 +516,6 @@ void Window::draw() {
   for (auto w : mWindows)
     w.second->draw();
 
-  if (mTitle != NULL)
+  if (mTitle != nullptr)
     mTitle->draw();
 }

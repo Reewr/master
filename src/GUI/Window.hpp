@@ -14,7 +14,10 @@ class Text;
 class Dropdown;
 class Checkbox;
 class Inputbox;
-class Texture;
+
+namespace GL {
+  class Rectangle;
+}
 
 namespace tinyxml2 {
   class XMLElement;
@@ -60,7 +63,7 @@ public:
 
   void addSlider(std::string name, vec2 pos, float scale = 1);
   void addDropdown(std::string name, std::vector<std::string> opt, vec2 pos);
-  void addCheckbox(std::string name, std::string box, vec2 pos);
+  void addCheckbox(std::string name, vec2 pos);
   void addInputbox(std::string name, Rect r, std::string text = "NOT SET");
 
   void setActiveMenuItem(std::string name, vec2 pos);
@@ -91,7 +94,7 @@ public:
 protected:
   void sortDropdowns();
 
-  Texture* mTex;
+  GL::Rectangle* mBackground;
   Text*    mTitle;
 
   std::list<Dropdown*> mDrawDropdowns;

@@ -1,6 +1,7 @@
 #include "Program.hpp"
 
 #include <fstream>
+#include <iostream>
 
 #include "Shader.hpp"
 
@@ -30,10 +31,7 @@ Program::Program(const std::string& fsvs, int link) {
   createProgram(fsvs, link);
 }
 
-Program::~Program() {
-  if (program != 0)
-    glDeleteProgram(program);
-}
+Program::~Program() { }
 
 bool Program::createProgram(const std::string& fs,
                             const std::string& vs,
@@ -83,19 +81,40 @@ bool Program::createProgram(const Shader& frag,
 }
 
 bool Program::createProgram(const std::string& fsvs, int link) {
-  std::map<std::string, std::string> srcs = loadVSFS(fsvs);
+  std::map<std::string, std::string> srcs;
+  if (fsvs.find(",") != std::string::npos) {
+    srcs = loadDualShaderFilename(fsvs);
+  } else {
+    srcs = loadVSFS(fsvs);
+  }
+
   if (!srcs.count("FRAGMENT") || !srcs.count("VERTEX"))
-    throw Error("Failed to load one of the shaders in combined file.");
+    throw Error("Failed to load one of the shaders from file '" + fsvs + "'");
+
   Shader fs(srcs["FRAGMENT"], true, fsvs);
   Shader vs(srcs["VERTEX"], false, fsvs);
   bool   linkage = (link == 0);
   return createProgram(fs, vs, linkage);
 }
 
+bool Program::load() {
+  return createProgram(mFilename, 0);
+}
+
+void Program::unload() {
+  if (program != 0) {
+    if (activeProgram == program)
+      activeProgram = 0;
+
+    glDeleteProgram(program);
+  }
+}
+
 bool Program::addShader(const Shader& sh) {
   if (program == 0) {
     program = glCreateProgram();
   }
+
   glAttachShader(program, sh.id());
   checkErrors("addShader()", { sh.type() });
   return true;
@@ -243,6 +262,53 @@ std::string Program::loadShader(std::ifstream& f) {
   return shaderSrc;
 }
 
+std::map<std::string, std::string> Program::loadDualShaderFilename(const std::string& fsvs) {
+  size_t      commaPos = fsvs.find(",");
+  std::string f1       = fsvs.substr(0, commaPos);
+  std::string f2       = fsvs.substr(commaPos);
+
+  bool f1isVert = f1.find(".vs") != std::string::npos;
+  bool f1isFrag = f1.find(".fs") != std::string::npos;
+
+  bool f2isVert = f2.find(".vs") != std::string::npos;
+  bool f2isFrag = f2.find(".fs") != std::string::npos;
+
+  if (!f1isFrag && !f2isFrag)
+    throw Error("Dual filename '" + fsvs + "' is missing fragment shader");
+
+  if (!f1isVert && !f2isVert)
+    throw Error("Dual filename '" + fsvs + "' is missing vertex shader");
+
+  if (f1isFrag && f2isFrag)
+    throw Error("Dual filename '" + fsvs + "' has two fragment shaders");
+
+  if (f1isVert && f2isVert)
+    throw Error("Dual filename '" + fsvs + "' has two vertex shaders");
+
+  std::ifstream fs1(f1);
+  std::ifstream fs2(f2);
+  std::map<std::string, std::string> contents;
+
+  if (!fs1.is_open())
+    throw Error("Unable to open file: '" + f1 + "'");
+
+  if (!fs2.is_open())
+    throw Error("Unable to open file: '" + f2 + "'");
+
+  std::string f1Content = std::string((std::istreambuf_iterator<char>(fs1)),
+                                        std::istreambuf_iterator<char>());
+
+  std::string f2Content = std::string((std::istreambuf_iterator<char>(fs2)),
+                                        std::istreambuf_iterator<char>());
+  fs1.close();
+  fs2.close();
+
+  contents["FRAGMENT"] = f1isFrag ? f1Content : f2Content;
+  contents["VERTEX"] = f1isVert ? f1Content : f2Content;
+
+  return contents;
+}
+
 std::map<std::string, std::string> Program::loadVSFS(const std::string& fsvs) {
   if (!fsvs.find(".vsfs") && !fsvs.find(".fsvs"))
     throw Error("File extension is faulty.");
@@ -251,8 +317,10 @@ std::map<std::string, std::string> Program::loadVSFS(const std::string& fsvs) {
   std::map<std::string, std::string> source;
   std::string content;
   std::string line;
+
   if (!fs.is_open())
     throw Error("Unable to open shaderfile.");
+
   while (fs.good()) {
     std::getline(fs, line);
     if (line.find("#ifdef") != std::string::npos) {
@@ -262,7 +330,9 @@ std::map<std::string, std::string> Program::loadVSFS(const std::string& fsvs) {
       source[line.substr(first, second)] = content;
     }
   }
+
   fs.close();
+
   return source;
 }
 

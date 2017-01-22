@@ -3,10 +3,11 @@
 #include "../Input/Input.hpp"
 #include "../Lua/Lua.hpp"
 #include "../State/State.hpp"
+#include "../Resource/ResourceManager.hpp"
 #include "CFG.hpp"
 #include "Utils.hpp"
 
-Asset::Asset(CFG* c) : mCFG(c), mInput(nullptr) {}
+Asset::Asset(CFG* c) : mCFG(c) {}
 
 CFG* Asset::cfg() {
   if (mCFG == nullptr)
@@ -26,6 +27,12 @@ Lua::Lua* Asset::lua() {
   return mLua;
 }
 
+ResourceManager* Asset::rManager() {
+  if (mResourceManager == nullptr)
+    throw Error("Tried to access ResourceManager when nullptr");
+  return mResourceManager;
+}
+
 void Asset::setCFG(CFG* c) {
   mCFG = c;
 }
@@ -36,4 +43,8 @@ void Asset::setInput(Input::Input* i) {
 
 void Asset::setLua(Lua::Lua* l) {
   mLua = l;
+}
+
+void Asset::setResourceManager(ResourceManager* r) {
+  mResourceManager = r;
 }

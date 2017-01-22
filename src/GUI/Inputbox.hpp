@@ -4,7 +4,6 @@
 
 #include "GUI.hpp"
 
-class Texture;
 class Text;
 
 namespace tinyxml2 {
@@ -13,6 +12,10 @@ namespace tinyxml2 {
 
 namespace Input {
   class Event;
+}
+
+namespace GL {
+  class Rectangle;
 }
 
 class Inputbox : public GUI {
@@ -48,8 +51,8 @@ public:
   void draw();
 
 private:
-  Texture* mTextBox;
-  Texture* mInputBox;
+  GL::Rectangle* mTextBox;
+  GL::Rectangle* mInputBox;
   Text*    mText;
   Text*    mInputBoxText;
 

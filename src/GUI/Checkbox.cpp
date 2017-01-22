@@ -5,16 +5,19 @@
 #include "../GLSL/Program.hpp"
 #include "../Graphical/Text.hpp"
 #include "../Graphical/Texture.hpp"
+#include "../Graphical/GL/Rectangle.hpp"
+#include "../Resource/ResourceManager.hpp"
 #include "../Input/Event.hpp"
 #include "../Utils/Asset.hpp"
 
-Checkbox::Checkbox(const std::string& box, const vec2& pos) : mIsTicked(false) {
+Checkbox::Checkbox(const vec2& pos) : mIsTicked(false) {
   mBoundingBox = Rect(pos, vec2(21, 21));
-  mSquare      = new Texture(box.c_str());
-  mTick        = new Text(mFont, "", vec2(pos.x, pos.y - 3), 20);
+  mSquare      = new GL::Rectangle();
+  mTick        = new Text("Font::Dejavu", "", vec2(pos.x, pos.y - 3), 20);
 
   mTick->setColor(Text::WHITE);
-  mSquare->recalculateGeometry(mBoundingBox);
+  mSquare->setTexture(mResourceManager->get<Texture>("Texture::Checkbox"));
+  mSquare->change(mBoundingBox);
 }
 
 /**
@@ -37,8 +40,7 @@ Checkbox::Checkbox(const std::string& box, const vec2& pos) : mIsTicked(false) {
  */
 Checkbox* Checkbox::fromXML(tinyxml2::XMLElement* element) {
 
-  vec2        position;
-  const char* check = element->Attribute("check");
+  vec2 position;
 
   if (element->QueryFloatAttribute("x", &position.x) != 0) {
     throw Error("XMLElement has no float attribute 'x'");
@@ -48,11 +50,7 @@ Checkbox* Checkbox::fromXML(tinyxml2::XMLElement* element) {
     throw Error("XMLElement has no float attribute 'y'");
   }
 
-  if (check == nullptr) {
-    throw Error("XMLElement has no 'check' attribute");
-  }
-
-  return new Checkbox(std::string(check), position);
+  return new Checkbox(position);
 }
 
 Checkbox::~Checkbox() {
