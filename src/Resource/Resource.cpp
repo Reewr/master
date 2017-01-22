@@ -1,6 +1,10 @@
 #include "Resource.hpp"
 
-Resource::Resource() : mScope(0), mType(-1), mName(""), mFilename("") {}
+Resource::Resource()
+    : mScope(ResourceScope::None)
+    , mType(ResourceType::Empty)
+    , mName("")
+    , mFilename("") {}
 
 Resource::~Resource() {}
 
@@ -11,7 +15,7 @@ Resource::~Resource() {}
  *
  * @param type
  */
-void Resource::setType(unsigned int type) {
+void Resource::setType(ResourceType type) {
   mType = type;
 }
 
@@ -23,7 +27,7 @@ void Resource::setType(unsigned int type) {
  *
  * @param scope
  */
-void Resource::setScope(unsigned int scope) {
+void Resource::setScope(ResourceScope scope) {
   mScope = scope;
 }
 
@@ -67,8 +71,8 @@ void Resource::setLoaded(bool loaded) {
  *
  * @return
  */
-bool Resource::includesScope(unsigned int scope) {
-  return mScope & scope;
+bool Resource::includesScope(ResourceScope scope) {
+  return int(mScope & scope) != 0;
 }
 
 /**
@@ -77,7 +81,7 @@ bool Resource::includesScope(unsigned int scope) {
  *
  * @return
  */
-unsigned int Resource::type() {
+ResourceType Resource::type() {
   return mType;
 }
 
@@ -87,7 +91,7 @@ unsigned int Resource::type() {
  *
  * @return
  */
-unsigned int Resource::scope() {
+ResourceScope Resource::scope() {
   return mScope;
 }
 

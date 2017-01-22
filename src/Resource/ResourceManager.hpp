@@ -10,19 +10,6 @@
 
 class ResourceManager {
 public:
-  enum {
-    ResourceTypeNone,
-    ResourceTypeTexture,
-    ResourceTypeFont,
-    ResourceTypeProgram
-  };
-
-  enum {
-    ResourceScopeAll = 0,
-    ResourceScopeMainMenu = 1,
-    ResourceScopeGame = 2,
-    ResourceScopeMaster = 4,
-  };
 
   ResourceManager();
   ~ResourceManager();
@@ -32,13 +19,13 @@ public:
 
   void loadDescription(const std::string& filename);
 
-  void loadRequired(int scope);
+  void loadRequired(ResourceScope scope);
   void unloadAll();
-  void unloadUnnecessary(int scope);
+  void unloadUnnecessary(ResourceScope scope);
 
 private:
 
-  int mCurrentScope;
+  ResourceScope mCurrentScope;
   std::map<std::string, std::shared_ptr<Resource>> mResources;
 };
 
@@ -53,9 +40,11 @@ std::shared_ptr<T> ResourceManager::get(const std::string& name) {
   if (mResources.count(name) == 0)
     throw std::runtime_error("Could not find filename for " + name);
 
-  if (!mResources[name]->includesScope(mCurrentScope))
+  if (!mResources[name]->includesScope(mCurrentScope)) {
     throw std::runtime_error("'" + name + "' is not available for scope: '" +
-                             std::to_string(mCurrentScope) + "'");
+                             std::to_string(static_cast<int>(mCurrentScope)) +
+                             "'");
+  }
 
   if (mResources[name]->loaded())
     return std::dynamic_pointer_cast<T>(mResources[name]);

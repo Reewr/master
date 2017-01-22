@@ -7,7 +7,7 @@
 
 #include <sol.hpp>
 
-ResourceManager::ResourceManager() : mCurrentScope(0) { }
+ResourceManager::ResourceManager() : mCurrentScope(ResourceScope::None) { }
 
 ResourceManager::~ResourceManager() {
   for(auto &rPair : mResources) {
@@ -16,7 +16,7 @@ ResourceManager::~ResourceManager() {
   }
 }
 
-void ResourceManager::loadRequired(int scope) {
+void ResourceManager::loadRequired(ResourceScope scope) {
   mCurrentScope = scope;
   for(auto &rPair : mResources) {
     if (rPair.second->includesScope(scope) && !rPair.second->loaded()) {
@@ -33,7 +33,7 @@ void ResourceManager::unloadAll() {
   }
 }
 
-void ResourceManager::unloadUnnecessary(int scope) {
+void ResourceManager::unloadUnnecessary(ResourceScope scope) {
   mCurrentScope = scope;
   for(auto &rPair : mResources) {
     if (!rPair.second->includesScope(scope) && rPair.second->loaded()) {
@@ -48,51 +48,52 @@ void ResourceManager::loadDescription(const std::string& filename) {
 
   lua.open_libraries(sol::lib::base, sol::lib::bit32);
 
+  // clang-format off
   lua.create_named_table("ResourceType",
-      "None", ResourceTypeNone,
-      "Texture", ResourceTypeTexture,
-      "Program", ResourceTypeProgram,
-      "Font", ResourceTypeFont);
+      "Empty"  , ResourceType::Empty,
+      "Texture", ResourceType::Texture,
+      "Program", ResourceType::Program,
+      "Font"   , ResourceType::Font);
 
   lua.create_named_table("ResourceScope",
-      "MainMenu", ResourceScopeMainMenu,
-      "Game", ResourceScopeGame,
-      "Master", ResourceScopeMaster,
-      "All", ResourceScopeAll);
+      "MainMenu", ResourceScope::MainMenu,
+      "Game"    , ResourceScope::Game,
+      "Master"  , ResourceScope::Master,
+      "All"     , ResourceScope::All);
+  // clang-format on
 
-  lua
-    .set_function("addResource",
-                  [&](std::string name,
-                      std::string path,
-                      int         type,
-                      int         scope) {
-                    bool existsButDifferent =
-                      mResources.count(name) &&
-                      mResources[name]->filename() != path;
-                    if (existsButDifferent) {
-                      throw std::invalid_argument(
-                        "Name already in resourcename with different filename");
-                    }
+  auto addResource = [&](std::string name,
+                         std::string path,
+                         ResourceType type,
+                         ResourceScope scope) {
+    bool existsButDifferent =
+      mResources.count(name) && mResources[name]->filename() != path;
+    if (existsButDifferent) {
+      throw std::invalid_argument(
+        "Name already in resourcename with different filename");
+    }
 
-                    switch (type) {
-                      case ResourceTypeProgram:
-                        mResources[name] = std::shared_ptr<Resource>(new Program());
-                        break;
-                      case ResourceTypeFont:
-                        mResources[name] = std::shared_ptr<Resource>(new Font());
-                        break;
-                      case ResourceTypeTexture:
-                        mResources[name] = std::shared_ptr<Resource>(new Texture());
-                        break;
-                      default:
-                        throw std::runtime_error("ResourceType implementation does not exist");
-                    }
+    switch (type) {
+      case ResourceType::Program:
+        mResources[name] = std::shared_ptr<Resource>(new class Program());
+        break;
+      case ResourceType::Font:
+        mResources[name] = std::shared_ptr<Resource>(new class Font());
+        break;
+      case ResourceType::Texture:
+        mResources[name] = std::shared_ptr<Resource>(new class Texture());
+        break;
+      default:
+        throw std::runtime_error("ResourceType implementation does not exist");
+    }
 
-                    mResources[name]->setFilename(path);
-                    mResources[name]->setScope(scope);
-                    mResources[name]->setType(type);
-                    log("ResourceManager :: Added '", name, "'");
-                  });
+    mResources[name]->setFilename(path);
+    mResources[name]->setScope(scope);
+    mResources[name]->setType(type);
+    log("ResourceManager :: Added '", name, "'");
+  };
+
+  lua.set_function("addResource", addResource);
 
   log("ResourceManager :: Running script '", filename, "'");
   lua.script_file(filename);

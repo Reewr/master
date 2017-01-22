@@ -2,6 +2,14 @@
 
 #include <string>
 
+enum class ResourceType { Empty, Texture, Font, Program };
+enum class ResourceScope {
+  None     = 0x00,
+  MainMenu = 0x01,
+  Game     = 0x02,
+  Master   = 0x04,
+  All      = 0x07
+};
 /**
  * @brief
  *   This class represents a resource. Since the engine now uses a resource
@@ -24,6 +32,7 @@
  */
 class Resource {
 public:
+
   Resource();
   virtual ~Resource();
 
@@ -40,11 +49,11 @@ public:
 
   //! Sets the type of the resource. The types
   //! can be find as enums in the ResourceManager
-  void setType(unsigned int type);
+  void setType(ResourceType type);
 
   //! Sets the scope of the resource. As with type,
   //! this can also be found in the ResourceManager
-  void setScope(unsigned int scope);
+  void setScope(ResourceScope scope);
 
   //! Sets where the resource is located on disk
   void setFilename(const std::string& filename);
@@ -58,15 +67,15 @@ public:
   void setLoaded(bool loaded);
 
   //! Retrieve type
-  unsigned int type();
+  ResourceType type();
 
   //! Retrieve scope
-  unsigned int scope();
+  ResourceScope scope();
 
   //! Checks if the resource is within a scope. Since
   //! the scope is a FLAG, it will check whether
   //! the given scope is within its legal flaglist
-  bool includesScope(unsigned int scope);
+  bool includesScope(ResourceScope scope);
 
   // Retrieve filename
   std::string filename();
@@ -79,9 +88,22 @@ public:
 
 protected:
 
-  unsigned int mScope;
-  unsigned int mType;
+  ResourceScope mScope;
+  ResourceType mType;
   std::string  mName;
   std::string  mFilename;
   bool         mLoaded;
 };
+
+// Overloading for the Scope so that bitwise operations work properly
+constexpr ResourceScope
+operator|(ResourceScope a, ResourceScope b) {
+  return static_cast<ResourceScope>(static_cast<int>(a) |
+                                                     static_cast<int>(b));
+}
+
+constexpr ResourceScope
+operator& (ResourceScope a, ResourceScope b) {
+  return static_cast<ResourceScope>(static_cast<int>(a) |
+                                                     static_cast<int>(b));
+}
