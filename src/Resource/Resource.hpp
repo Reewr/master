@@ -104,6 +104,6 @@ operator|(ResourceScope a, ResourceScope b) {
 
 constexpr ResourceScope
 operator& (ResourceScope a, ResourceScope b) {
-  return static_cast<ResourceScope>(static_cast<int>(a) |
+  return static_cast<ResourceScope>(static_cast<int>(a) &
                                                      static_cast<int>(b));
 }
