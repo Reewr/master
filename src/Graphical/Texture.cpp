@@ -8,7 +8,6 @@
 
 std::map<unsigned int, GLuint> Texture::activeTextures;
 GLuint Texture::activeTexture = 0;
-CFG*   Texture::cfg;
 
 Texture::Texture()
     : mMode(0), mTextureId(0), mSamplerId(0), mSize(0, 0) {}
@@ -313,16 +312,4 @@ void Texture::unbindAll() {
       k.second = 0;
     }
   }
-}
-
-void Texture::init(CFG* c) {
-  cfg = c;
-  /* GLfloat maxAniso = 0.0f; */
-  // glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAniso);
-  if (!Utils::getGLError())
-    throw Error(":D");
-  // if(maxAniso < cfg->graphics.aniso)
-  //  cfg->graphics.aniso = maxAniso;
-  for (unsigned int i = 0; i < 10; i++)
-    activeTextures[i] = 0;
 }

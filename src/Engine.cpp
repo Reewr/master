@@ -161,7 +161,6 @@ bool Engine::initialize(int argc, char* argv[], int isRefresh, int initState) {
   mResourceManager->loadDescription("./media/resources.lua");
 
   GUI::init(mAsset);
-  Texture::init(mAsset->cfg());
   /* Spider::init(); */
   /* Model::init(&asset->cfg); */
   Framebuffer::init(mAsset->cfg());

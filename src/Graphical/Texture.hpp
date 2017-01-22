@@ -77,9 +77,6 @@ public:
   //! Unbinds the current texture from OpenGL
   static void unbindAll();
 
-  //! Initalizes the texture class with CFG so it can set texture settings
-  static void init(CFG* c);
-
 private:
   bool loadDDS();
   bool loadTexture();
@@ -92,5 +89,4 @@ private:
 
   static std::map<unsigned int, GLuint> activeTextures;
   static GLuint activeTexture;
-  static CFG*   cfg;
 };
