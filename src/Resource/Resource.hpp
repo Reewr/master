@@ -66,7 +66,7 @@ public:
   //! Checks if the resource is within a scope. Since
   //! the scope is a FLAG, it will check whether
   //! the given scope is within its legal flaglist
-  unsigned int includesScope(unsigned int scope);
+  bool includesScope(unsigned int scope);
 
   // Retrieve filename
   std::string filename();
