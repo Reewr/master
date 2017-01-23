@@ -4,19 +4,16 @@
 
 #include "../OpenGLHeaders.hpp"
 
-#include "../Math/MathCD.hpp"
 #include "GUI.hpp"
 
 class Texture;
 class Text;
+class GLRectangle;
 
 namespace tinyxml2 {
   class XMLElement;
 }
 
-namespace GL {
-  class Rectangle;
-}
 
 class Slider : public GUI {
 public:
@@ -50,14 +47,14 @@ public:
   void draw();
 
 private:
-  GL::Rectangle* mBackground;
-  GL::Rectangle* mButton;
+  GLRectangle* mBackground;
+  GLRectangle* mButton;
   Text*          mInfo;
 
   float       mScale;
   float       mValue;
   std::string mValSign;
 
-  Rect mButtonRect;
+  Rectangle mButtonRect;
   vec2 mButtonOffset;
 };

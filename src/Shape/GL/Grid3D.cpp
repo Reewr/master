@@ -10,14 +10,14 @@ using dVector = std::vector<std::vector<T>>;
 template <typename T>
 using vector = std::vector<T>;
 
-GL::Grid3D::Grid3D(const vec2& size) {
+GLGrid3D::GLGrid3D(const vec2& size) {
   mSize = size;
   // this->change(size);
 }
 
-GL::Grid3D::~Grid3D() {}
+GLGrid3D::~GLGrid3D() {}
 
-void GL::Grid3D::setup() {
+void GLGrid3D::setup() {
   dVector<vec3>  vertices(mSize.y, vector<vec3>(mSize.x));
   dVector<vec3>  normals(mSize.y, vector<vec3>(mSize.x));
   dVector<vec2>  texCoords(mSize.y, vector<vec2>(mSize.x));
@@ -39,7 +39,7 @@ void GL::Grid3D::setup() {
   setupOpenGLArrays(vertexData, indices);
 }
 
-void GL::Grid3D::generateVertices(dVector<vec3>& v, dVector<vec2>& t) {
+void GLGrid3D::generateVertices(dVector<vec3>& v, dVector<vec2>& t) {
   /* Noise::Simplex simp(5, 0.65, 4.0/size.x, 2); */
   for (int y = 0; y < mSize.y - 1; y++) {
     vec2 s = vec2(0, y / (mSize.y - 1));
@@ -52,7 +52,7 @@ void GL::Grid3D::generateVertices(dVector<vec3>& v, dVector<vec2>& t) {
   }
 }
 
-void GL::Grid3D::generateNormals(const dVector<vec3>& v, dVector<vec3>& n) {
+void GLGrid3D::generateNormals(const dVector<vec3>& v, dVector<vec3>& n) {
   dVector<vec3> normals1(mSize.y - 1, vector<vec3>(mSize.x - 1));
   dVector<vec3> normals2(mSize.y - 1, vector<vec3>(mSize.x - 1));
 
@@ -91,7 +91,7 @@ void GL::Grid3D::generateNormals(const dVector<vec3>& v, dVector<vec3>& n) {
   }
 }
 
-void GL::Grid3D::setupOpenGLArrays(const vector<Vertex>& v,
+void GLGrid3D::setupOpenGLArrays(const vector<Vertex>& v,
                                    const vector<int>&    i) {
   glGenBuffers(1, &VBO);
   glGenBuffers(1, &IBO);

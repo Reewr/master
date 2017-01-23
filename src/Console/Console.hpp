@@ -17,9 +17,7 @@ namespace Input {
   class Event;
 }
 
-namespace GL {
-  class Rectangle;
-}
+class GLRectangle;
 
 class Console : public GUI {
 public:
@@ -88,8 +86,8 @@ private:
 
   // This holds the text that is rendered on the screen
   Text*          mText;
-  GL::Rectangle* mRect;
-  GL::Rectangle* mAutoCompleteBox;
+  GLRectangle* mRect;
+  GLRectangle* mAutoCompleteBox;
 
   std::shared_ptr<Program> mProgram;
   Asset*                   mAsset;

@@ -3,18 +3,18 @@
 
 #include <vector>
 
-GL::Rectangle::Rectangle() {}
+GLRectangle::GLRectangle() {}
 
-GL::Rectangle::Rectangle(const Rect& r, bool isCCW) : mTexture(nullptr) {
+GLRectangle::GLRectangle(const Rectangle& r, bool isCCW) : mTexture(nullptr) {
   change(r, isCCW);
 }
 
-GL::Rectangle::Rectangle(const vec2& p, const vec2& s, bool isCCW)
+GLRectangle::GLRectangle(const vec2& p, const vec2& s, bool isCCW)
     : mTexture(nullptr) {
-  change(Rect(p, s), isCCW);
+  change(Rectangle(p, s), isCCW);
 }
 
-GL::Rectangle::~Rectangle() {
+GLRectangle::~GLRectangle() {
   glDeleteBuffers(1, &IBO);
   glDeleteBuffers(1, &VBO);
   glDeleteVertexArrays(1, &VAO);
@@ -31,7 +31,7 @@ GL::Rectangle::~Rectangle() {
  * @param isCCW
  *   Whether or not this should utilize counter-clockwise rendering
  */
-void GL::Rectangle::change(const Rect& rect, bool isCCW) {
+void GLRectangle::change(const Rectangle& rect, bool isCCW) {
   mRect  = rect;
   mIsCCW = isCCW;
   setup();
@@ -54,8 +54,8 @@ void GL::Rectangle::change(const Rect& rect, bool isCCW) {
  * @param isCCW
  *   Whether or not this should utilize counter-clockwise rendering
  */
-void GL::Rectangle::change(const vec2& p, const vec2& s, bool isCCW) {
-  change(Rect(p, s), isCCW);
+void GLRectangle::change(const vec2& p, const vec2& s, bool isCCW) {
+  change(Rectangle(p, s), isCCW);
 }
 
 /**
@@ -65,7 +65,7 @@ void GL::Rectangle::change(const vec2& p, const vec2& s, bool isCCW) {
  *
  * @param texture
  */
-void GL::Rectangle::setTexture(std::shared_ptr<Texture> texture) {
+void GLRectangle::setTexture(std::shared_ptr<Texture> texture) {
   mTexture = texture;
 }
 
@@ -77,7 +77,7 @@ void GL::Rectangle::setTexture(std::shared_ptr<Texture> texture) {
  *
  * FIXME: Optimize
  */
-void GL::Rectangle::setup() {
+void GLRectangle::setup() {
   if (IBO != 0)
     glDeleteBuffers(1, &IBO);
   if (VBO != 0)
@@ -138,7 +138,7 @@ void GL::Rectangle::setup() {
  *   Performs the OpenGL draw call for the rectangle by
  *   binding the vertex array and drawing the elements
  */
-void GL::Rectangle::draw() {
+void GLRectangle::draw() {
   if (mTexture)
     mTexture->bind(0);
 

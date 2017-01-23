@@ -86,7 +86,7 @@ void GUI::isMouseOver(bool m) {
   mIsMouseOver = m;
 }
 
-const Rect& GUI::box() const {
+const Rectangle& GUI::box() const {
   return mBoundingBox;
 }
 const vec2& GUI::position() const {

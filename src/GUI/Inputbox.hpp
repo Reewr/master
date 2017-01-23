@@ -14,14 +14,12 @@ namespace Input {
   class Event;
 }
 
-namespace GL {
-  class Rectangle;
-}
+class GLRectangle;
 
 class Inputbox : public GUI {
 public:
   //! Default and only constructor
-  Inputbox(const Rect& r, const std::string text = "NOT SET");
+  Inputbox(const Rectangle& r, const std::string text = "NOT SET");
 
   //! Load from XML
   static Inputbox* fromXML(tinyxml2::XMLElement* element);
@@ -51,11 +49,11 @@ public:
   void draw();
 
 private:
-  GL::Rectangle* mTextBox;
-  GL::Rectangle* mInputBox;
+  GLRectangle* mTextBox;
+  GLRectangle* mInputBox;
   Text*          mText;
   Text*          mInputBoxText;
 
-  Rect mInputBoxRect;
+  Rectangle mInputBoxRect;
   bool mInputIsVisible;
 };

@@ -3,7 +3,7 @@
 #include <tinyxml2.h>
 
 #include "../GLSL/Program.hpp"
-#include "../Graphical/GL/Rectangle.hpp"
+#include "../Shape/GL/Rectangle.hpp"
 #include "../Input/Event.hpp"
 #include "../Input/Input.hpp"
 #include "../Resource/ResourceManager.hpp"
@@ -12,11 +12,11 @@
 #include "../Utils/Utils.hpp"
 #include "Text.hpp"
 
-Inputbox::Inputbox(const Rect& r, const std::string text) {
-  mTextBox  = new GL::Rectangle();
-  mInputBox = new GL::Rectangle();
+Inputbox::Inputbox(const Rectangle& r, const std::string text) {
+  mTextBox  = new GLRectangle();
+  mInputBox = new GLRectangle();
 
-  mInputBoxRect = Rect(vec2(mAsset->cfg()->graphics.res.x * 0.50 - 200,
+  mInputBoxRect = Rectangle(vec2(mAsset->cfg()->graphics.res.x * 0.50 - 200,
                             mAsset->cfg()->graphics.res.y * 0.50 - 25),
                        vec2(400, 50));
   mBoundingBox = r;
@@ -63,7 +63,7 @@ Inputbox* Inputbox::fromXML(tinyxml2::XMLElement* element) {
     throw Error("XMLElement is null");
   }
 
-  Rect        rect;
+  Rectangle        rect;
   const char* text = element->Attribute("text");
 
   if (text == nullptr) {

@@ -8,31 +8,31 @@
 #include "../../Math/Math.hpp"
 #include "../../Utils/Utils.hpp"
 
-GL::Grid::Grid() {
+GLGrid::GLGrid() {
   IBO = 0;
   VBO = 0;
   VAO = 0;
 }
 
-GL::Grid::Grid(const vec2& size) {
+GLGrid::GLGrid(const vec2& size) {
   IBO = 0;
   VBO = 0;
   VAO = 0;
   change(size);
 }
 
-GL::Grid::~Grid() {
+GLGrid::~GLGrid() {
   glDeleteBuffers(1, &VBO);
   glDeleteBuffers(1, &IBO);
   glDeleteVertexArrays(1, &VAO);
 }
 
-void GL::Grid::change(const vec2& size) {
+void GLGrid::change(const vec2& size) {
   mSize = size;
   setup();
 }
 
-void GL::Grid::setup() {
+void GLGrid::setup() {
   std::vector<vec4> vertices;
   std::vector<int>  indices;
   vertices.reserve(mSize.x * mSize.y);
@@ -43,7 +43,7 @@ void GL::Grid::setup() {
   setupOpenGLArrays(vertices, indices);
 }
 
-void GL::Grid::setupOpenGLArrays(const std::vector<vec4>& vertex,
+void GLGrid::setupOpenGLArrays(const std::vector<vec4>& vertex,
                                  const std::vector<int>&  ind) {
   glGenBuffers(1, &VBO);
   glGenBuffers(1, &IBO);
@@ -67,7 +67,7 @@ void GL::Grid::setupOpenGLArrays(const std::vector<vec4>& vertex,
   glBindVertexArray(0);
 }
 
-void GL::Grid::generateVertices(std::vector<vec4>& vertices) {
+void GLGrid::generateVertices(std::vector<vec4>& vertices) {
   for (int y = 0; y < mSize.y; y++) {
     vec2 s = vec2(0, y / (mSize.y - 1));
     for (int x = 0; x < mSize.x; x++) {
@@ -77,7 +77,7 @@ void GL::Grid::generateVertices(std::vector<vec4>& vertices) {
   }
 }
 
-void GL::Grid::generateTriIndices(std::vector<int>& indices) {
+void GLGrid::generateTriIndices(std::vector<int>& indices) {
   int quads = (mSize.x - 1) * (mSize.y - 1);
   for (int i = 0; i < quads; i++) {
     int k       = i + i / (int) (mSize.x - 1);
@@ -89,7 +89,7 @@ void GL::Grid::generateTriIndices(std::vector<int>& indices) {
   mIndicesSize = indices.size();
 }
 
-void GL::Grid::generateIndices(std::vector<int>& indices) {
+void GLGrid::generateIndices(std::vector<int>& indices) {
   int n = 0;
   for (int y = 0; y < mSize.y - 1; y++) {
     for (int x = 0; x < mSize.x * 2; x++) {
@@ -113,7 +113,7 @@ void GL::Grid::generateIndices(std::vector<int>& indices) {
 }
 
 
-void GL::Grid::draw() {
+void GLGrid::draw() {
   glBindVertexArray(VAO);
   glDrawElements(GL_TRIANGLE_STRIP, mIndicesSize, GL_UNSIGNED_INT, 0);
   glBindVertexArray(0);

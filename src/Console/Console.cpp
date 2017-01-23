@@ -5,7 +5,7 @@
 
 #include "../GLSL/Program.hpp"
 #include "../GUI/Text.hpp"
-#include "../Graphical/GL/Rectangle.hpp"
+#include "../Shape/GL/Rectangle.hpp"
 #include "../Input/Event.hpp"
 #include "../Input/Input.hpp"
 #include "../Lua/Lua.hpp"
@@ -19,14 +19,14 @@
 Console::Console(Asset* asset)
     : mLocation(0)
     , mCurrentText("")
-    , mAutoCompleteBox(new GL::Rectangle(Rect(0, 0, 0, 0)))
+    , mAutoCompleteBox(new GLRectangle(Rectangle(0, 0, 0, 0)))
     , mAsset(asset)
     , mShowAutoComplete(false) {
   vec2 res     = asset->cfg()->graphics.res;
   vec2 textPos = vec2(10, res.y / 2 - 30);
-  mBoundingBox = Rect(0, 0, res.x, res.y / 2);
+  mBoundingBox = Rectangle(0, 0, res.x, res.y / 2);
 
-  mRect = new GL::Rectangle(mBoundingBox);
+  mRect = new GLRectangle(mBoundingBox);
   mText = new Text("Font::Dejavu",
                    "> _",
                    textPos,
@@ -130,7 +130,7 @@ void Console::addHistory(Text* text) {
       continue;
     }
 
-    const Rect& box = (*a)->box();
+    const Rectangle& box = (*a)->box();
     startPos        = startPos - vec2(0, box.size.y + 5);
 
     (*a)->setOffset(startPos);
@@ -213,7 +213,7 @@ void Console::setAutoComplete() {
   return;
 
   vec2 res      = mAsset->cfg()->graphics.res;
-  Rect box      = Rect(5, res.y / 2 + 30, 0, 0);
+  Rectangle box      = Rectangle(5, res.y / 2 + 30, 0, 0);
   int  index    = 0;
   vec2 startPos = vec2(10, res.y / 2 + 30);
 

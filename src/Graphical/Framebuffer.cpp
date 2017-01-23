@@ -4,11 +4,10 @@
 #include <fstream>
 
 #include "../GLSL/Program.hpp"
-#include "../Math/Math.hpp"
 #include "../Resource/Texture.hpp"
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
-#include "GL/Rectangle.hpp"
+#include "../Shape/GL/Rectangle.hpp"
 
 
 CFG*        Framebuffer::cfg   = NULL;
@@ -58,7 +57,7 @@ Framebuffer::~Framebuffer() {
  */
 void Framebuffer::setup() {
   mTexture = new Texture();
-  mQuad    = new GL::Rectangle(vec2(), mFrameSize);
+  mQuad    = new GLRectangle(vec2(), mFrameSize);
 
   GLenum type          = mIsDepth ? GL_DEPTH_COMPONENT : GL_RGBA32F;
   GLenum buffer        = mIsDepth ? GL_NONE : GL_COLOR_ATTACHMENT0;
@@ -120,7 +119,7 @@ Texture* Framebuffer::texture() {
  *
  * @return Texture
  */
-GL::Rectangle* Framebuffer::quad() {
+GLRectangle* Framebuffer::quad() {
   return mQuad;
 }
 
@@ -136,7 +135,7 @@ GL::Rectangle* Framebuffer::quad() {
 // */
 // void Framebuffer::activateDraw(const vec2& position) {
 //  failCheck();
-//  mTexture->recalculateGeometry(Rect(position, mFrameSize));
+//  mTexture->recalculateGeometry(Rectangle(position, mFrameSize));
 //  mNeedsDrawing = true;
 //}
 //
@@ -260,7 +259,7 @@ void Framebuffer::finalize() {
   mIsBound = false;
 }
 
-void Framebuffer::doQuad(GL::Rectangle*               inQuad,
+void Framebuffer::doQuad(GLRectangle*               inQuad,
                          Program*                     program,
                          const std::vector<Texture*>& t,
                          unsigned int                 textureStart) {
@@ -275,7 +274,7 @@ void Framebuffer::doQuad(GL::Rectangle*               inQuad,
   finalize();
 }
 
-void Framebuffer::doQuad(GL::Rectangle*               inQuad,
+void Framebuffer::doQuad(GLRectangle*               inQuad,
                          const std::vector<Texture*>& t,
                          unsigned int                 tStart) {
   doQuad(inQuad, mProgram, t, tStart);
@@ -291,7 +290,7 @@ void Framebuffer::doQuad(const std::vector<Texture*>& t, unsigned int tStart) {
   doQuad(mQuad, mProgram, t, tStart);
 }
 
-void Framebuffer::nonClearQuad(GL::Rectangle*               inQuad,
+void Framebuffer::nonClearQuad(GLRectangle*               inQuad,
                                Program*                     p,
                                const std::vector<Texture*>& t,
                                unsigned int                 tStart) {
@@ -304,7 +303,7 @@ void Framebuffer::nonClearQuad(GL::Rectangle*               inQuad,
   finalize();
 }
 
-void Framebuffer::nonClearQuad(GL::Rectangle*               inQuad,
+void Framebuffer::nonClearQuad(GLRectangle*               inQuad,
                                const std::vector<Texture*>& t,
                                unsigned int                 tStart) {
   nonClearQuad(inQuad, mProgram, t, tStart);
@@ -325,7 +324,7 @@ void Framebuffer::queueStart() {
   bind(false);
 }
 
-void Framebuffer::queueQuad(GL::Rectangle*               inQuad,
+void Framebuffer::queueQuad(GLRectangle*               inQuad,
                             Program*                     p,
                             const std::vector<Texture*>& t,
                             unsigned int                 tStart) {
@@ -339,7 +338,7 @@ void Framebuffer::queueQuad(GL::Rectangle*               inQuad,
   inQuad->draw();
 }
 
-void Framebuffer::queueQuad(GL::Rectangle*               inQuad,
+void Framebuffer::queueQuad(GLRectangle*               inQuad,
                             const std::vector<Texture*>& t,
                             unsigned int                 tStart) {
   queueQuad(inQuad, mProgram, t, tStart);
@@ -358,7 +357,7 @@ void Framebuffer::queueEnd() {
   finalize();
 }
 
-std::vector<float> Framebuffer::getPixels(const Rect& r, GLenum type) {
+std::vector<float> Framebuffer::getPixels(const Rectangle& r, GLenum type) {
   int mult = 1;
 
   if (type == GL_RGBA) {
@@ -389,10 +388,10 @@ std::vector<float> Framebuffer::getPixels(const Rect& r, GLenum type) {
 }
 
 float Framebuffer::getPixel(const vec2& pos, GLenum type) {
-  return getPixels(Rect(pos, vec2(1, 1)), type)[0];
+  return getPixels(Rectangle(pos, vec2(1, 1)), type)[0];
 }
 
-void Framebuffer::printPixels(const Rect& r, GLenum type, std::string name) {
+void Framebuffer::printPixels(const Rectangle& r, GLenum type, std::string name) {
   const int          mult = (type == GL_RGBA) ? 4 : (type == GL_RGB) ? 3 : 1;
   std::vector<float> data = getPixels(r, type);
   log(name, ":");

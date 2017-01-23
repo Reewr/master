@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../GLSL/Program.hpp"
-#include "../Math/MathCD.hpp"
+#include "../Shape/Rectangle.hpp"
 #include "../Utils/Asset.hpp"
 #include <functional>
 #include <memory>
@@ -59,7 +59,7 @@ public:
 
   virtual void defaultInputHandler(const Input::Event& event);
 
-  virtual const Rect& box() const;
+  virtual const Rectangle& box() const;
   virtual const vec2& position() const;
   virtual const vec2& size() const;
   virtual const vec2& offset();
@@ -73,8 +73,8 @@ public:
 protected:
   GUI();
 
-  Rect mBoundingBox;
-  Rect mMouseoverBox;
+  Rectangle mBoundingBox;
+  Rectangle mMouseoverBox;
 
   vec2 mOffset;
   bool mIsVisible;

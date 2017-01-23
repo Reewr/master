@@ -6,10 +6,7 @@
 #include "GUI.hpp"
 
 class Text;
-
-namespace GL {
-  class Rectangle;
-}
+class GLRectangle;
 
 class Tooltip : public GUI {
 public:
@@ -28,5 +25,5 @@ public:
 private:
   CFG*           mCFG;
   Text*          mActiveText;
-  GL::Rectangle* mBackground;
+  GLRectangle* mBackground;
 };

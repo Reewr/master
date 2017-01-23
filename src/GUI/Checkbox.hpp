@@ -2,11 +2,12 @@
 
 #include <string>
 
-#include "../Math/MathCD.hpp"
+#include "../Math/Math.hpp"
 #include "GUI.hpp"
 
 class Text;
 class Texture;
+class GLRectangle;
 
 namespace tinyxml2 {
   class XMLElement;
@@ -16,9 +17,6 @@ namespace Input {
   class Input;
 }
 
-namespace GL {
-  class Rectangle;
-}
 
 class Checkbox : public GUI {
 public:
@@ -49,5 +47,5 @@ public:
 private:
   bool           mIsTicked;
   Text*          mTick;
-  GL::Rectangle* mSquare;
+  GLRectangle* mSquare;
 };

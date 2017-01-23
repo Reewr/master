@@ -3,7 +3,7 @@
 #include <tinyxml2.h>
 
 #include "../GLSL/Program.hpp"
-#include "../Graphical/GL/Rectangle.hpp"
+#include "../Shape/GL/Rectangle.hpp"
 #include "../Input/Event.hpp"
 #include "../Resource/ResourceManager.hpp"
 #include "../Resource/Texture.hpp"
@@ -11,8 +11,8 @@
 #include "Text.hpp"
 
 Checkbox::Checkbox(const vec2& pos) : mIsTicked(false) {
-  mBoundingBox = Rect(pos, vec2(21, 21));
-  mSquare      = new GL::Rectangle();
+  mBoundingBox = Rectangle(pos, vec2(21, 21));
+  mSquare      = new GLRectangle();
   mTick        = new Text("Font::Dejavu", "", vec2(pos.x, pos.y - 3), 20);
 
   mTick->setColor(Text::WHITE);

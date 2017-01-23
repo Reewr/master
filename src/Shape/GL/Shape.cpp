@@ -1,7 +1,7 @@
 #include "Shape.hpp"
 
-GL::Shape::Shape() {}
-GL::Shape::~Shape() {
+GLShape::GLShape() {}
+GLShape::~GLShape() {
   glDeleteBuffers(1, &IBO);
   glDeleteBuffers(1, &VBO);
   glDeleteVertexArrays(1, &VAO);

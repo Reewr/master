@@ -5,15 +5,13 @@
 
 #include "../OpenGLHeaders.hpp"
 
-#include "../Math/MathCD.hpp"
+#include "../Math/Math.hpp"
 
 class Program;
 class Texture;
 class CFG;
-
-namespace GL {
-  class Rectangle;
-}
+class Rectangle;
+class GLRectangle;
 
 class Framebuffer {
 public:
@@ -54,23 +52,23 @@ public:
   //! and setting the viewport back to normal
   void finalize();
 
-  void doQuad(GL::Rectangle*               inQuad,
+  void doQuad(GLRectangle*               inQuad,
               Program*                     p,
               const std::vector<Texture*>& t,
               unsigned int                 tStart = 0);
 
-  void doQuad(GL::Rectangle*               inQuad,
+  void doQuad(GLRectangle*               inQuad,
               const std::vector<Texture*>& t,
               unsigned int                 tStart = 0);
   void
   doQuad(Program* p, const std::vector<Texture*>& t, unsigned int tStart = 0);
   void doQuad(const std::vector<Texture*>& t, unsigned int tStart = 0);
 
-  void nonClearQuad(GL::Rectangle*               inQuad,
+  void nonClearQuad(GLRectangle*               inQuad,
                     Program*                     p,
                     const std::vector<Texture*>& t,
                     unsigned int                 tStart = 0);
-  void nonClearQuad(GL::Rectangle*               inQuad,
+  void nonClearQuad(GLRectangle*               inQuad,
                     const std::vector<Texture*>& t,
                     unsigned int                 tStart = 0);
   void nonClearQuad(Program*                     p,
@@ -79,11 +77,11 @@ public:
   void nonClearQuad(const std::vector<Texture*>& t, unsigned int tStart = 0);
 
   void queueStart();
-  void queueQuad(GL::Rectangle*               inQuad,
+  void queueQuad(GLRectangle*               inQuad,
                  Program*                     p,
                  const std::vector<Texture*>& t,
                  unsigned int                 tStart = 0);
-  void queueQuad(GL::Rectangle*               inQuad,
+  void queueQuad(GLRectangle*               inQuad,
                  const std::vector<Texture*>& t,
                  unsigned int                 tStart = 0);
   void queueQuad(Program*                     p,
@@ -92,9 +90,9 @@ public:
   void queueQuad(const std::vector<Texture*>& t, unsigned int tStart = 0);
   void queueEnd();
 
-  std::vector<float> getPixels(const Rect& r, GLenum type = GL_RED);
+  std::vector<float> getPixels(const Rectangle& r, GLenum type = GL_RED);
   float getPixel(const vec2& pos, GLenum type = GL_RED);
-  void printPixels(const Rect& r,
+  void printPixels(const Rectangle& r,
                    GLenum      type = GL_RED,
                    std::string name = "Framebuffer");
   void save(std::string filename);
@@ -103,7 +101,7 @@ public:
 
   Program*       program();
   Texture*       texture();
-  GL::Rectangle* quad();
+  GLRectangle* quad();
 
   bool isInitialized();
 
@@ -126,7 +124,7 @@ private:
 
   vec2 mFrameSize;
 
-  GL::Rectangle* mQuad;
+  GLRectangle* mQuad;
   Program*       mProgram;
   Texture*       mTexture;
   GLuint         mFrameBuffer;

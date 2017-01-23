@@ -1,5 +1,4 @@
 #include "Texture.hpp"
-#include "../Graphical/GL/Rectangle.hpp"
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
 

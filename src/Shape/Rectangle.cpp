@@ -1,44 +1,44 @@
-#include "MathCD.hpp"
+#include "Rectangle.hpp"
 
 #include <cmath>
 
-Rect::Rect() {}
+Rectangle::Rectangle() {}
 
-Rect::Rect(vec2 tl, vec2 s) : topleft(tl), size(s) {}
+Rectangle::Rectangle(vec2 tl, vec2 s) : topleft(tl), size(s) {}
 
-Rect::Rect(float x, float y, float sx, float sy) {
+Rectangle::Rectangle(float x, float y, float sx, float sy) {
   topleft = vec2(x, y);
   size    = vec2(sx, sy);
 }
 
-Rect::Rect(vec2 tl, float sx, float sy) {
+Rectangle::Rectangle(vec2 tl, float sx, float sy) {
   topleft = tl;
   size    = vec2(sx, sy);
 }
 
-Rect::Rect(const Rect& r) {
+Rectangle::Rectangle(const Rectangle& r) {
   topleft = r.topleft;
   size    = r.size;
 }
 
-bool Rect::contains(const vec2& p) const {
+bool Rectangle::contains(const vec2& p) const {
   return p.x >= topleft.x && p.y >= topleft.y && p.x <= topleft.x + size.x &&
          p.y <= topleft.y + size.y;
 }
 
-vec2 Rect::middle() const {
+vec2 Rectangle::middle() const {
   return vec2(topleft.x + size.x / 2, topleft.y + size.y / 2);
 }
 
-void Rect::middle(const vec2& m) {
+void Rectangle::middle(const vec2& m) {
   bottomright(m * 2);
 }
 
-vec2 Rect::bottomright() const {
+vec2 Rectangle::bottomright() const {
   return vec2(topleft.x + size.x, topleft.y + size.y);
 }
 
-void Rect::bottomright(const vec2& br) {
+void Rectangle::bottomright(const vec2& br) {
   vec2 s = br - topleft;
   if (s.x < 0) {
     s.x       = fmax(topleft.x, br.x) - fmin(topleft.x, br.x);

@@ -4,7 +4,6 @@
 
 #include "../OpenGLHeaders.hpp"
 
-#include "../Math/MathCD.hpp"
 #include "GUI.hpp"
 
 class Font;

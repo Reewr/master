@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 
-#include "../Math/MathCD.hpp"
 #include "GUI.hpp"
 #include "Menu.hpp"
 
@@ -15,9 +14,7 @@ class Dropdown;
 class Checkbox;
 class Inputbox;
 
-namespace GL {
-  class Rectangle;
-}
+class GLRectangle;
 
 namespace tinyxml2 {
   class XMLElement;
@@ -28,7 +25,7 @@ class Window : public GUI {
 public:
   Window();
 
-  Window(std::string texFilename, Rect r);
+  Window(std::string texFilename, Rectangle r);
 
   static Window* fromXML(tinyxml2::XMLElement* element);
 
@@ -50,7 +47,7 @@ public:
   void add(std::string name, GUI* widget);
 
   //! Add a GUI object to the window.
-  void addWindow(std::string name, Rect r, std::string tex = "NONE");
+  void addWindow(std::string name, Rectangle r, std::string tex = "NONE");
   void addMenu(std::string                     name,
                const std::vector<std::string>& names,
                const vec2&                     startPos,
@@ -64,7 +61,7 @@ public:
   void addSlider(std::string name, vec2 pos, float scale = 1);
   void addDropdown(std::string name, std::vector<std::string> opt, vec2 pos);
   void addCheckbox(std::string name, vec2 pos);
-  void addInputbox(std::string name, Rect r, std::string text = "NOT SET");
+  void addInputbox(std::string name, Rectangle r, std::string text = "NOT SET");
 
   void setActiveMenuItem(std::string name, vec2 pos);
 
@@ -94,7 +91,7 @@ public:
 protected:
   void sortDropdowns();
 
-  GL::Rectangle* mBackground;
+  GLRectangle* mBackground;
   Text*          mTitle;
 
   std::list<Dropdown*> mDrawDropdowns;

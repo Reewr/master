@@ -5,15 +5,15 @@
 #include "Text.hpp"
 
 #include "../GLSL/Program.hpp"
-#include "../Graphical/GL/Rectangle.hpp"
+#include "../Shape/GL/Rectangle.hpp"
 #include "../Input/Event.hpp"
 #include "../Resource/ResourceManager.hpp"
 #include "../Resource/Texture.hpp"
 #include "../Utils/Utils.hpp"
 
 Slider::Slider(const vec2& pos, const float scale, const std::string& valSign) {
-  mBackground = new GL::Rectangle();
-  mButton     = new GL::Rectangle();
+  mBackground = new GLRectangle();
+  mButton     = new GLRectangle();
   mInfo       = new Text("Font::Dejavu", "", pos, 15, Text::WHITE);
   mScale      = scale;
   mValSign    = valSign;
@@ -21,8 +21,8 @@ Slider::Slider(const vec2& pos, const float scale, const std::string& valSign) {
   auto texBackground = mAsset->rManager()->get<Texture>("Texture::Slider");
   auto texButton = mAsset->rManager()->get<Texture>("Texture::SliderButton");
 
-  mBoundingBox = Rect(pos, texBackground->getSize() * scale);
-  mButtonRect  = Rect(pos, texButton->getSize() * scale);
+  mBoundingBox = Rectangle(pos, texBackground->getSize() * scale);
+  mButtonRect  = Rectangle(pos, texButton->getSize() * scale);
   mButtonRect.topleft.y -= mButtonRect.size.y / 2;
 
   mBackground->change(mBoundingBox);

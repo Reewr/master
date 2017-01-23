@@ -9,7 +9,7 @@
 #include "Text.hpp"
 
 #include "../GLSL/Program.hpp"
-#include "../Graphical/GL/Rectangle.hpp"
+#include "../Shape/GL/Rectangle.hpp"
 #include "../Input/Event.hpp"
 #include "../Resource/ResourceManager.hpp"
 #include "../Resource/Texture.hpp"
@@ -20,17 +20,17 @@ Window::Window() {
   mBackground = nullptr;
   mTitle      = nullptr;
 
-  mBoundingBox = Rect({ 0, 0 }, { 0, 0 });
+  mBoundingBox = Rectangle({ 0, 0 }, { 0, 0 });
 }
 
-Window::Window(std::string texture, Rect r) {
+Window::Window(std::string texture, Rectangle r) {
   mBackground = nullptr;
   mTitle      = nullptr;
 
   mBoundingBox = r;
 
   if (texture != "NONE") {
-    mBackground = new GL::Rectangle(mBoundingBox);
+    mBackground = new GLRectangle(mBoundingBox);
     mBackground->setTexture(mAsset->rManager()->get<Texture>(texture));
   }
 }
@@ -174,11 +174,11 @@ void Window::addTitle(std::string s) {
   mTitle->setColor(mBackground != nullptr ? Text::WHITE : Text::BLACK);
 }
 
-void Window::addWindow(std::string name, Rect r, std::string tex) {
+void Window::addWindow(std::string name, Rectangle r, std::string tex) {
   if (mWindows.count(name))
     delete mWindows[name];
 
-  r              = Rect(mBoundingBox.topleft + r.topleft, r.size);
+  r              = Rectangle(mBoundingBox.topleft + r.topleft, r.size);
   mWindows[name] = new Window(tex, r);
 }
 
@@ -284,11 +284,11 @@ void Window::addCheckbox(std::string name, vec2 pos) {
   mCheckboxes[name] = new Checkbox(pos);
 }
 
-void Window::addInputbox(std::string name, Rect r, std::string text) {
+void Window::addInputbox(std::string name, Rectangle r, std::string text) {
   if (mInputboxes.count(name))
     delete mInputboxes[name];
 
-  r                 = Rect(mBoundingBox.topleft + r.topleft, r.size);
+  r                 = Rectangle(mBoundingBox.topleft + r.topleft, r.size);
   mInputboxes[name] = new Inputbox(r, text);
 }
 

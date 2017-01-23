@@ -1,5 +1,4 @@
-#ifndef GUIMENU_PAUSEMENU_HPP
-#define GUIMENU_PAUSEMENU_HPP
+#pragma once
 
 #include <string>
 
@@ -22,5 +21,3 @@ private:
   Import::UILoader mUiLoader;
   Input::Input*    mInput;
 };
-
-#endif

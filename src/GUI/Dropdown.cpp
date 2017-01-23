@@ -4,7 +4,7 @@
 #include <tinyxml2.h>
 
 #include "../GLSL/Program.hpp"
-#include "../Graphical/GL/Rectangle.hpp"
+#include "../Shape/GL/Rectangle.hpp"
 #include "../Input/Event.hpp"
 #include "../Resource/ResourceManager.hpp"
 #include "../Resource/Texture.hpp"
@@ -24,12 +24,12 @@
  */
 Dropdown::Dropdown(const std::vector<std::string>& options,
                    const vec2&                     position) {
-  mBox                  = new GL::Rectangle();
-  mOptionsList          = new GL::Rectangle();
+  mBox                  = new GLRectangle();
+  mOptionsList          = new GLRectangle();
   mIsVisible            = true;
   mIsOptionsListVisible = false;
   mMouseOption          = -1;
-  mBoundingBox          = Rect(position, vec2(0, 25));
+  mBoundingBox          = Rectangle(position, vec2(0, 25));
 
   // Padding on the top
   addOption("-----");
@@ -43,7 +43,7 @@ Dropdown::Dropdown(const std::vector<std::string>& options,
   mActiveOption = options.size() > 1 ? 1 : 0;
 
   // Add sizes together, assuming each element is ~25px
-  mBigBoxRect = Rect(mBoundingBox.topleft,
+  mBigBoxRect = Rectangle(mBoundingBox.topleft,
                      mBoundingBox.size + vec2(0, mOptions.size() * 25));
 
   mBox->change(mBoundingBox);

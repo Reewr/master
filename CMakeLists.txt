@@ -201,11 +201,12 @@ set(DDDGP_CPP
   # src/Graphical
   ${SRC_DIR}/Graphical/Framebuffer.cpp
 
-  # src/Graphical/GL
-  ${SRC_DIR}/Graphical/GL/Grid.cpp
-  ${SRC_DIR}/Graphical/GL/Grid3D.cpp
-  ${SRC_DIR}/Graphical/GL/Rectangle.cpp
-  ${SRC_DIR}/Graphical/GL/Shape.cpp
+  # src/Shape
+  ${SRC_DIR}/Shape/Rectangle.cpp
+  ${SRC_DIR}/Shape/GL/Grid.cpp
+  ${SRC_DIR}/Shape/GL/Grid3D.cpp
+  ${SRC_DIR}/Shape/GL/Rectangle.cpp
+  ${SRC_DIR}/Shape/GL/Shape.cpp
 
   # src/Import
   ${SRC_DIR}/Import/Animation.cpp
@@ -213,7 +214,6 @@ set(DDDGP_CPP
   ${SRC_DIR}/Import/XML.cpp
 
   # src/Math
-  ${SRC_DIR}/Math/MathCD.cpp
 
   # src/Resource
   ${SRC_DIR}/Resource/Font.cpp
@@ -282,10 +282,11 @@ set(DDDGP_HPP
   ${SRC_DIR}/Graphical/Framebuffer.hpp
 
   # src/Graphical/GL
-  ${SRC_DIR}/Graphical/GL/Grid.hpp
-  ${SRC_DIR}/Graphical/GL/Grid3D.hpp
-  ${SRC_DIR}/Graphical/GL/Rectangle.hpp
-  ${SRC_DIR}/Graphical/GL/Shape.hpp
+  ${SRC_DIR}/Shape/Rectangle.hpp
+  ${SRC_DIR}/Shape/GL/Grid.hpp
+  ${SRC_DIR}/Shape/GL/Grid3D.hpp
+  ${SRC_DIR}/Shape/GL/Rectangle.hpp
+  ${SRC_DIR}/Shape/GL/Shape.hpp
 
   # src/Import
   ${SRC_DIR}/Import/Animation.hpp
@@ -294,7 +295,6 @@ set(DDDGP_HPP
 
   # src/Math
   ${SRC_DIR}/Math/Math.hpp
-  ${SRC_DIR}/Math/MathCD.hpp
 
   # src/Resource
   ${SRC_DIR}/Resource/Font.hpp

@@ -4,17 +4,13 @@
 #include <string>
 #include <vector>
 
-#include "../Math/MathCD.hpp"
 #include "GUI.hpp"
 
 class Text;
+class GLRectangle;
 
 namespace tinyxml2 {
   class XMLElement;
-}
-
-namespace GL {
-  class Rectangle;
 }
 
 class Dropdown : public GUI {
@@ -76,8 +72,8 @@ private:
   //! whenever the active option changes
   void setActiveOptionPosition();
 
-  GL::Rectangle* mBox;
-  GL::Rectangle* mOptionsList;
+  GLRectangle* mBox;
+  GLRectangle* mOptionsList;
 
   vec2 mActiveOptionPosition;
 
@@ -88,5 +84,5 @@ private:
 
   bool mIsOptionsListVisible;
 
-  Rect mBigBoxRect;
+  Rectangle mBigBoxRect;
 };

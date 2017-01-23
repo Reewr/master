@@ -8,7 +8,7 @@
 #include "../GUI/Dropdown.hpp"
 #include "../GUI/Inputbox.hpp"
 #include "../GUI/Slider.hpp"
-#include "../Graphical/GL/Rectangle.hpp"
+#include "../Shape/GL/Rectangle.hpp"
 #include "../Input/Event.hpp"
 #include "../Input/Input.hpp"
 #include "../Resource/ResourceManager.hpp"
@@ -23,12 +23,12 @@ OptionsMenu::OptionsMenu(Input::Input* input) {
   mCFG          = mAsset->cfg();
   mActiveWindow = NULL;
   mInput        = input;
-  mBoundingBox  = Rect(mCFG->graphics.res.x * 0.50 - 500,
+  mBoundingBox  = Rectangle(mCFG->graphics.res.x * 0.50 - 500,
                       mCFG->graphics.res.y * 0.50 - 350,
                       1000,
                       700);
 
-  mBackground = new GL::Rectangle(mBoundingBox);
+  mBackground = new GLRectangle(mBoundingBox);
   mBackground->setTexture(
     mAsset->rManager()->get<Texture>("Texture::Background"));
 
@@ -46,7 +46,7 @@ OptionsMenu::OptionsMenu(Input::Input* input) {
                   { mBoundingBox.middle().x + 100,
                     mBoundingBox.bottomright().y - 50 });
 
-  Rect innerRect(vec2(200, 54),
+  Rectangle innerRect(vec2(200, 54),
                  vec2(mBoundingBox.size.x - 200, mBoundingBox.size.y - 125));
 
   addWindow("Audio", innerRect);
@@ -69,7 +69,7 @@ OptionsMenu::OptionsMenu(Input::Input* input) {
     vec2 place = vec2(250, 105);
     place += vec2((i % 2 == 0) ? 0 : 250, (i / 2 * 32));
     window("Keybindings")
-      ->addInputbox("Input" + Utils::toStr(i), Rect(place, vec2(200, 25)), "");
+      ->addInputbox("Input" + Utils::toStr(i), Rectangle(place, vec2(200, 25)), "");
   }
 
   mInputHandler = [&](const Input::Event& e) {

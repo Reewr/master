@@ -189,7 +189,7 @@ void Import::UILoader::handleInputboxElement(tinyxml2::XMLElement* e,
                                              Window*               w) {
   std::string name = std::string(e->Attribute("name"));
   std::string text = std::string(e->Attribute("text"));
-  Rect        r;
+  Rectangle   r;
   getAttrib(e, "x1", "y1", r.topleft);
   getAttrib(e, "x2", "y2", r.size);
   w->addInputbox(name, r, text);
