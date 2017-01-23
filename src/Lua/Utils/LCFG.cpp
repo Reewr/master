@@ -1,4 +1,4 @@
-#include "CFG.hpp"
+#include "LCFG.hpp"
 #include "../../Utils/CFG.hpp"
 
 #include <sol.hpp>

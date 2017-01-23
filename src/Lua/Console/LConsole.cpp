@@ -1,4 +1,4 @@
-#include "Console.hpp"
+#include "LConsole.hpp"
 #include "../../Console/Console.hpp"
 
 #include <sol.hpp>

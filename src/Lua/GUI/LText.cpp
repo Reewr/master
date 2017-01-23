@@ -1,11 +1,12 @@
-#include "Text.hpp"
+#include "LText.hpp"
 
 #include "../../GUI/Text.hpp"
 #include "../../Resource/Font.hpp"
+
 #include <sol.hpp>
 
-#include "../Resource/Font.hpp"
-#include "../Math/Math.hpp"
+#include "../Resource/LFont.hpp"
+#include "../Math/LMath.hpp"
 
 std::vector<std::pair<std::function<void(sol::state& state)>, std::string>>
   text_dependencies = { std::make_pair(&Lua::math_as_lua, "vec2") };

@@ -1,9 +1,9 @@
-#include "Font.hpp"
+#include "LFont.hpp"
 
 #include "../../Resource/Font.hpp"
 #include <sol.hpp>
 
-#include "../Math/Math.hpp"
+#include "../Math/LMath.hpp"
 
 std::vector<std::pair<std::function<void(sol::state& state)>, std::string>>
   font_dependencies = {
