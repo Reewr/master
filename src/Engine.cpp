@@ -164,7 +164,6 @@ bool Engine::initialize(int argc, char* argv[], int isRefresh, int initState) {
   /* Spider::init(); */
   /* Model::init(&asset->cfg); */
   Framebuffer::init(mAsset->cfg());
-  Framebuffer::printFramebufferLimits();
 
   if (isRefresh == States::Init) {
     changeState(initState);
@@ -344,7 +343,6 @@ void Engine::deinitialize(bool isFullDeinit) {
   mResourceManager->unloadAll();
   /* Model::deinit(); */
   /* Spider::deinit(); */
-  Framebuffer::deinit();
 
   mCFG->writetoFile("config/config.ini");
 

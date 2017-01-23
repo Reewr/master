@@ -22,11 +22,6 @@ public:
   //! Default Constructor
   Program();
 
-  Program(const Shader& frag, const Shader& vertex, const bool link = true);
-  Program(const std::string& fs, const Shader& vertex, const bool link = true);
-  Program(const Shader& frag, const std::string& fs, const bool link = true);
-  Program(const std::string& fs, const std::string& vs, const bool link = true);
-
   // Should only be used on files containing more than one shader
   // Seperated by "#ifdef __VERTEX__" and ended with "#endif"
   // Seperated by "#ifdef __FRAGMENT__" and ended with "#endif"
@@ -40,20 +35,7 @@ public:
 
   //! Creates and links the program. If you specify link as false it will
   //! not link so you can set attrib values before hand.
-  bool createProgram(const std::string& fs,
-                     const std::string& vs,
-                     const bool         link = true);
-  bool createProgram(const std::string& fs,
-                     const Shader&      vertex,
-                     const bool         link = true);
-  bool createProgram(const Shader&      frag,
-                     const std::string& vs,
-                     const bool         link = true);
-  bool createProgram(const Shader& frag,
-                     const Shader& vertex,
-                     const bool    link = true);
-
-  bool createProgram(const std::string& fsvs, int link = 0);
+  bool createProgram(const std::string& fsvs, int link = 1);
 
   //! Adds a shader to the current program
   bool addShader(const Shader& sh);

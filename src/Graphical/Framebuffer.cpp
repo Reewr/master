@@ -12,9 +12,6 @@
 
 
 CFG*        Framebuffer::cfg          = NULL;
-Program*    Framebuffer::drawProgram  = NULL;
-Program*    Framebuffer::copyProgram  = NULL;
-Program*    Framebuffer::clearProgram = NULL;
 std::string Framebuffer::ssLoc        = "";
 int         Framebuffer::numSS        = 0;
 
@@ -35,39 +32,6 @@ Framebuffer::Framebuffer(Program* p, const vec2& size, bool depth) {
   mIsOwnProgram = false;
   mIsBound      = false;
 
-  setup();
-}
-
-Framebuffer::Framebuffer(std::string vs, std::string fs, int size, bool depth) {
-  mIsDepth      = depth;
-  mFrameSize    = vec2(size, size);
-  mNeedsDrawing = false;
-  mIsOwnProgram = true;
-  mIsBound      = false;
-  mProgram      = new Program(fs, vs);
-  setup();
-}
-
-Framebuffer::Framebuffer(std::string vs,
-                         std::string fs,
-                         const vec2& size,
-                         bool        depth) {
-  mIsDepth      = depth;
-  mFrameSize    = size;
-  mNeedsDrawing = false;
-  mIsOwnProgram = true;
-  mIsBound      = false;
-  mProgram      = new Program(vs, fs);
-  setup();
-}
-
-Framebuffer::Framebuffer(std::string vsfs, const vec2& size, bool depth) {
-  mIsDepth      = depth;
-  mFrameSize    = size;
-  mNeedsDrawing = false;
-  mIsOwnProgram = true;
-  mIsBound      = false;
-  mProgram      = new Program(vsfs);
   setup();
 }
 
@@ -445,15 +409,15 @@ void Framebuffer::save(std::string filename) {
   mTexture->saveTexture(filename, mFrameSize);
 }
 
-void Framebuffer::clear() {
-  clearProgram->setUniform("screenRes", mFrameSize);
-  doQuad(clearProgram, {});
-}
+/* void Framebuffer::clear() { */
+/*   clearProgram->setUniform("screenRes", mFrameSize); */
+/*   doQuad(clearProgram, {}); */
+/* } */
 
-void Framebuffer::copy(Texture* toCopy) {
-  copyProgram->setUniform("screenRes", mFrameSize);
-  doQuad(copyProgram, { toCopy });
-}
+/* void Framebuffer::copy(Texture* toCopy) { */
+/*   copyProgram->setUniform("screenRes", mFrameSize); */
+/*   doQuad(copyProgram, { toCopy }); */
+/* } */
 
 bool Framebuffer::isInitialized() {
   if (mFrameBuffer != 0 && mTexture != NULL && mProgram != NULL)
@@ -465,34 +429,8 @@ void Framebuffer::init(CFG* c, std::string screenshotLoc) {
   Framebuffer::cfg = c;
   ssLoc            = screenshotLoc;
   numSS            = 0;
-  drawProgram      = new Program("shaders/GUI/GUI.vsfs", 0);
-  drawProgram->bindAttribs({ "position", "texcoord" }, { 0, 1 });
-  drawProgram->link();
-  drawProgram->setUniform("screenRes", cfg->graphics.res, "guiOffset", vec2());
-  drawProgram->setUniform("inTexture", 0);
 
-  clearProgram =
-    new Program("shaders/Framebuffer.vs", "shaders/Utils/Clear.fs");
-  copyProgram = new Program("shaders/Framebuffer.vs", "shaders/Utils/Copy.fs");
-  copyProgram->setUniform("toCopy", 0);
   initScreenshot();
-}
-
-void Framebuffer::deinit() {
-  if (drawProgram != nullptr) {
-    delete drawProgram;
-    drawProgram = nullptr;
-  }
-
-  if (clearProgram != nullptr) {
-    delete clearProgram;
-    clearProgram = nullptr;
-  }
-
-  if (copyProgram != nullptr) {
-    delete copyProgram;
-    copyProgram = nullptr;
-  }
 }
 
 void Framebuffer::initScreenshot() {

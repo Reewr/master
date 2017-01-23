@@ -23,24 +23,6 @@ public:
   //! with a specific size
   Framebuffer(Program* p, const vec2& size, bool depth = false);
 
-  //! Create a framebuffer using a GLSL program that has yet to be loaded
-  //! from file and only contains a vertex shader.
-  //! The size is uniform in both X and Y.
-  Framebuffer(std::string vs, std::string fs, int size, bool depth = false);
-
-  //! Creates a framebuffer using a GLSL program that has yet to be loaded
-  //! from file and contains both the vertex and fragment shader within one
-  //! file
-  Framebuffer(std::string vsfs, const vec2& frameSize, bool depth = false);
-
-  //! Creates a framebuffer using a GLSL program that has yet to be loaded
-  //! from two files, one with vertex shader and the other with fragment
-  //! shader
-  Framebuffer(std::string vs,
-              std::string fs,
-              const vec2& frameSize,
-              bool        depth = false);
-
   ~Framebuffer();
 
   //! Readies the Framebuffer for drawing by setting
@@ -115,9 +97,9 @@ public:
   void printPixels(const Rect& r,
                    GLenum      type = GL_RED,
                    std::string name = "Framebuffer");
-  void clear();
   void save(std::string filename);
-  void copy(Texture* toCopy);
+  /* void copy(Texture* toCopy); */
+  /* void clear(); */
 
   Program*       program();
   Texture*       texture();
@@ -127,13 +109,9 @@ public:
 
   static void init(CFG*        cfg,
                    std::string screenshotLoc = "./media/Screenshots/");
-  static void deinit();
   static void initScreenshot();
   static void takeScreenshot();
   static void printFramebufferLimits();
-
-  static Program* copyProgram;
-  static Program* clearProgram;
 
 private:
   void setup();
@@ -155,6 +133,5 @@ private:
 
   static int         numSS;
   static std::string ssLoc;
-  static Program*    drawProgram;
   static CFG*        cfg;
 };

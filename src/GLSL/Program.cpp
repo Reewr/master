@@ -7,77 +7,12 @@
 
 GLuint Program::activeProgram = 0;
 
-Program::Program() {}
-
-Program::Program(const Shader& frag, const Shader& vertex, const bool link) {
-  createProgram(frag, vertex, link);
-}
-
-Program::Program(const std::string& fs, const Shader& vertex, const bool link) {
-  createProgram(fs, vertex, link);
-}
-
-Program::Program(const Shader& frag, const std::string& vs, const bool link) {
-  createProgram(frag, vs, link);
-}
-
-Program::Program(const std::string& fs,
-                 const std::string& vs,
-                 const bool         link) {
-  createProgram(fs, vs, link);
-}
-
-Program::Program(const std::string& fsvs, int link) {
-  createProgram(fsvs, link);
-}
+Program::Program() : program(0), isLinked(false), isUsable(false) {}
 
 Program::~Program() { }
 
-bool Program::createProgram(const std::string& fs,
-                            const std::string& vs,
-                            const bool         link) {
-  Shader frag(fs);
-  Shader vertex(vs);
-  return createProgram(frag, vertex, link);
-}
-
-bool Program::createProgram(const std::string& fs,
-                            const Shader&      vertex,
-                            const bool         link) {
-  Shader frag(fs);
-  return createProgram(frag, vertex, link);
-}
-
-bool Program::createProgram(const Shader&      frag,
-                            const std::string& vs,
-                            const bool         link) {
-  Shader vertex(vs);
-  return createProgram(frag, vertex, link);
-}
-
-bool Program::createProgram(const Shader& frag,
-                            const Shader& vertex,
-                            const bool    link) {
-  isUsable = false;
-  isLinked = false;
-  if (program != 0)
-    glDeleteProgram(program);
-
-  program = 0;
-  filenames.push_back(frag.filename());
-  filenames.push_back(vertex.filename());
-
-  program = glCreateProgram();
-
-  if (program == 0 || frag.id() == 0 || vertex.id() == 0)
-    throw std::runtime_error("Failed to create program");
-
-  if (!addShader(frag) || !addShader(vertex))
-    throw std::runtime_error("Failed to create program");
-
-  if (!link)
-    return true;
-  return this->link();
+Program::Program(const std::string& fsvs, int link) {
+  createProgram(fsvs, link);
 }
 
 bool Program::createProgram(const std::string& fsvs, int link) {
@@ -93,12 +28,30 @@ bool Program::createProgram(const std::string& fsvs, int link) {
 
   Shader fs(srcs["FRAGMENT"], true, fsvs);
   Shader vs(srcs["VERTEX"], false, fsvs);
-  bool   linkage = (link == 0);
-  return createProgram(fs, vs, linkage);
+
+  if (program != 0)
+    glDeleteProgram(program);
+
+  program = 0;
+  filenames.push_back(fs.filename());
+  filenames.push_back(vs.filename());
+
+  program = glCreateProgram();
+
+  if (program == 0 || fs.id() == 0 || vs.id() == 0)
+    throw std::runtime_error("Failed to create program");
+
+  if (!addShader(fs) || !addShader(vs))
+    throw std::runtime_error("Failed to create program");
+
+  if (link == 0)
+    return true;
+
+  return this->link();
 }
 
 bool Program::load() {
-  return createProgram(mFilename, 0);
+  return createProgram(mFilename, 1);
 }
 
 void Program::unload() {
@@ -120,15 +73,12 @@ bool Program::addShader(const Shader& sh) {
   return true;
 }
 
-bool Program::addShader(const std::string& sh) {
-  Shader shader(sh);
-  return addShader(shader);
-}
-
 bool Program::link() {
   if (isLinked)
     return false;
+
   glLinkProgram(program);
+
   isLinked = true;
   isUsable = checkProgram(program);
   checkErrors("link()", filenames);
