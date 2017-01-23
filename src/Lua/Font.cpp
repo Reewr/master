@@ -1,6 +1,6 @@
 #include "Font.hpp"
 
-#include "../Graphical/Font.hpp"
+#include "../Resource/Font.hpp"
 #include <sol.hpp>
 
 #include "Math.hpp"

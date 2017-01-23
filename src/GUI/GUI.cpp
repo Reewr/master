@@ -2,11 +2,8 @@
 
 #include "../GLSL/Program.hpp"
 #include "../Resource/ResourceManager.hpp"
-#include "../Graphical/Font.hpp"
 #include "../Input/Event.hpp"
-#include "../Math/Math.hpp"
 #include "../Utils/CFG.hpp"
-#include "../Utils/Utils.hpp"
 #include "../Utils/Asset.hpp"
 
 Asset* GUI::mAsset = nullptr;

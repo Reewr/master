@@ -192,7 +192,6 @@ set(DDDGP_CPP
   ${SRC_DIR}/GUIMenu/PauseMenu.cpp
 
   # src/Graphical
-  ${SRC_DIR}/Graphical/Font.cpp
   ${SRC_DIR}/Graphical/Framebuffer.cpp
 
   # src/Graphical/GL
@@ -210,6 +209,7 @@ set(DDDGP_CPP
   ${SRC_DIR}/Math/MathCD.cpp
 
   # src/Resource
+  ${SRC_DIR}/Resource/Font.cpp
   ${SRC_DIR}/Resource/Texture.cpp
   ${SRC_DIR}/Resource/Resource.cpp
   ${SRC_DIR}/Resource/ResourceManager.cpp
@@ -272,7 +272,6 @@ set(DDDGP_HPP
   ${SRC_DIR}/GUIMenu/PauseMenu.hpp
 
   # src/Graphical
-  ${SRC_DIR}/Graphical/Font.hpp
   ${SRC_DIR}/Graphical/Framebuffer.hpp
 
   # src/Graphical/GL
@@ -291,6 +290,7 @@ set(DDDGP_HPP
   ${SRC_DIR}/Math/MathCD.hpp
 
   # src/Resource
+  ${SRC_DIR}/Resource/Font.hpp
   ${SRC_DIR}/Resource/Texture.hpp
   ${SRC_DIR}/Resource/Resource.hpp
   ${SRC_DIR}/Resource/ResourceManager.hpp

@@ -3,7 +3,7 @@
 
 #include "../GLSL/Program.hpp"
 #include "Texture.hpp"
-#include "../Graphical/Font.hpp"
+#include "Font.hpp"
 
 #include <sol.hpp>
 

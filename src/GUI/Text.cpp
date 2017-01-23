@@ -3,8 +3,8 @@
 #include <vector>
 
 #include "../GLSL/Program.hpp"
-#include "../Graphical/Font.hpp"
 #include "../Utils/CFG.hpp"
+#include "../Resource/Font.hpp"
 #include "../Resource/ResourceManager.hpp"
 
 Text::Text(const std::string& font,
