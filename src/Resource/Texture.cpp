@@ -1,9 +1,9 @@
-#include <Graphical/GL/Rectangle.hpp>
-#include <Graphical/Texture.hpp>
-#include <SOIL.h>
-#include <Utils/CFG.hpp>
-#include <Utils/Utils.hpp>
+#include "Texture.hpp"
+#include "../Graphical/GL/Rectangle.hpp"
+#include "../Utils/CFG.hpp"
+#include "../Utils/Utils.hpp"
 
+#include <SOIL.h>
 #include <fstream>
 
 std::map<unsigned int, GLuint> Texture::activeTextures;

@@ -1,5 +1,5 @@
 #include "Rectangle.hpp"
-#include "../Texture.hpp"
+#include "../../Resource/Texture.hpp"
 
 #include <vector>
 

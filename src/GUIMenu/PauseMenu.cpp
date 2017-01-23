@@ -2,7 +2,6 @@
 
 #include "../OpenGLHeaders.hpp"
 
-#include "../Graphical/Texture.hpp"
 #include "../Input/Event.hpp"
 #include "../Input/Input.hpp"
 #include "../State/State.hpp"
@@ -10,6 +9,7 @@
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
 #include "../Graphical/GL/Rectangle.hpp"
+#include "../Resource/Texture.hpp"
 #include "../Resource/ResourceManager.hpp"
 
 PauseMenu::PauseMenu(Input::Input* i) {

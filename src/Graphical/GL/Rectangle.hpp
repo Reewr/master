@@ -2,7 +2,7 @@
 
 #include "../../Math/MathCD.hpp"
 #include "Shape.hpp"
-#include "../Texture.hpp"
+#include "../../Resource/Texture.hpp"
 #include <memory>
 
 namespace GL {

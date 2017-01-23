@@ -10,7 +10,7 @@
 #include FT_FREETYPE_H
 
 #include "../Math/Math.hpp"
-#include "Texture.hpp"
+#include "../Resource/Texture.hpp"
 #include "../Resource/Resource.hpp"
 
 

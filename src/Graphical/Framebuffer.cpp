@@ -8,7 +8,7 @@
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
 #include "GL/Rectangle.hpp"
-#include "Texture.hpp"
+#include "../Resource/Texture.hpp"
 
 
 CFG*        Framebuffer::cfg          = NULL;

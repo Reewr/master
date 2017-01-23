@@ -7,7 +7,7 @@
 #include "../OpenGLHeaders.hpp"
 
 #include "../Math/MathCD.hpp"
-#include "../Resource/Resource.hpp"
+#include "Resource.hpp"
 
 class CFG;
 

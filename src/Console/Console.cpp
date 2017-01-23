@@ -6,7 +6,6 @@
 #include "../GLSL/Program.hpp"
 #include "../Graphical/GL/Rectangle.hpp"
 #include "../GUI/Text.hpp"
-#include "../Graphical/Texture.hpp"
 #include "../Input/Event.hpp"
 #include "../Input/Input.hpp"
 #include "../Lua/Lua.hpp"

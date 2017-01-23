@@ -2,7 +2,7 @@
 #include "../Utils/Utils.hpp"
 
 #include "../GLSL/Program.hpp"
-#include "../Graphical/Texture.hpp"
+#include "Texture.hpp"
 #include "../Graphical/Font.hpp"
 
 #include <sol.hpp>
