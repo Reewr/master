@@ -5,21 +5,24 @@
 #include "../Utils/CFG.hpp"
 #include "../Resource/ResourceManager.hpp"
 
+using mmm::vec3;
+using mmm::mat4;
+
 Camera::Light::Light()
     : day(0)
     , speed(0.5)
     , ambient(0.2)
     , color(1, 1, 1)
-    , model(mmm::mat4::identity)
-    , view(mmm::mat4::identity)
-    , projection(mmm::mat4::identity) {}
+    , model(mat4::identity)
+    , view(mat4::identity)
+    , projection(mat4::identity) {}
 
 Camera::Camera(Asset* asset)
     : mAsset(asset)
     , mTarget(0, 1.183, 0)
-    , mModel(mmm::mat4::identity)
-    , mView(mmm::mat4::identity)
-    , mProjection(mmm::mat4::identity)
+    , mModel(mat4::identity)
+    , mView(mat4::identity)
+    , mProjection(mat4::identity)
     , mHeight(2)
     , mHoriRotation(0)
     , mVertRotation(-45)
@@ -32,21 +35,21 @@ Camera::Camera(Asset* asset)
   update(0);
 }
 
-mmm::mat4 Camera::updateViewMatrix() {
-  mmm::vec3 cameraEye =
+mat4 Camera::updateViewMatrix() {
+  vec3 cameraEye =
     mTarget + vec3(rotate_y(mHoriRotation) * rotate_x(mVertRotation) *
                    vec4(0, 0, mHeight, 1));
-  mmm::vec3 cameraUp =
+  vec3 cameraUp =
     vec3(rotate_y(mHoriRotation) * rotate_x(mVertRotation) * vec4(0, 1, 0, 0));
 
-  return lookAt(cameraEye, mTarget, cameraUp);
+  return mmm::lookAt(cameraEye, mTarget, cameraUp);
 }
 
-mmm::mat4 Camera::updateProjectionMatrix() {
-  return perspective<float>(67.0f,
-                            mAsset->cfg()->graphics.aspect,
-                            0.1f,
-                            mAsset->cfg()->graphics.viewDistance);
+mat4 Camera::updateProjectionMatrix() {
+  return mmm::perspective<float>(67.0f,
+                                 mAsset->cfg()->graphics.aspect,
+                                 0.1f,
+                                 mAsset->cfg()->graphics.viewDistance);
 }
 
 void Camera::setLightMVPUniform(std::shared_ptr<Program> program,
@@ -82,16 +85,16 @@ void Camera::update(float) {
   mView = updateViewMatrix();
 
   // light.day -= light.speed * dt;
-  mmm::mat4 lt       = rotate_z(mLight.day) * rotate_y(mHoriRotation);
-  mmm::vec3 lightEye = mTarget + vec3(lt * vec4(0, mHeight, 0, 1));
-  mmm::vec3 lightUp  = vec3(lt * vec4(0, 0, -1, 0));
+  mat4 lt       = rotate_z(mLight.day) * rotate_y(mHoriRotation);
+  vec3 lightEye = mTarget + vec3(lt * vec4(0, mHeight, 0, 1));
+  vec3 lightUp  = vec3(lt * vec4(0, 0, -1, 0));
 
-  mLight.view = lookAt(lightEye, mTarget, lightUp);
+  mLight.view = mmm::lookAt(lightEye, mTarget, lightUp);
   // float h = height;
   // light.proj = ortho (-5*height, 5*height, -5*height, 5*height,
   // -5*height, 5*height);
-  mLight.projection = ortho(-7.f, 7.f, -7.f, 7.f, -7.f, 7.f);
-  mLight.direction  = normalize(lightUp - mTarget);
+  mLight.projection = mmm::ortho(-7.f, 7.f, -7.f, 7.f, -7.f, 7.f);
+  mLight.direction  = mmm::normalize(lightUp - mTarget);
 
   setLightMPUniforms(mShadowProgram);
   setLightMPUniforms(mModelProgram);
