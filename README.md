@@ -14,6 +14,10 @@ This folder contains all the dependencies of the project as source files. All of
 
 The only dependency that is not a submodule is the `OGL` library, which are files that have been generated. For more information about the dependencies, please checkout [Licenses](#licenses)
 
+**lua**
+
+This folder contains LUA files that are loaded by the Engine at some point during runtime. The structure of these files are work-in-progress
+
 **media**
 
 This folder contains all resources needed by the engine during runtime such as textures, models and XML files used for loading the GUI.
@@ -45,7 +49,7 @@ The [build.sh](./build.sh) file has several commands that can be useful for deve
 
 # Licenses
 
-This project utilizes seven (7) different dependencies for release builds and eight (8) different dependencies for development builds. The dependencies are as follows:
+This project utilizes nine (9) different dependencies for release builds and 10 different dependencies for development builds. The dependencies are as follows:
 
 - [backward-cpp](https://github.com/bombela/backward-cpp)
 - [FreeType](https://www.freetype.org/index.html)
@@ -55,6 +59,8 @@ This project utilizes seven (7) different dependencies for release builds and ei
 - [TinyXML2](http://www.grinninglizard.com/tinyxml2)
 - [Bullet3](http://bulletphysics.org/wordpress/)
 - [Assimp](http://www.assimp.org)
+- [mmm](https://github.com/Thhethssmuz/mmm)
+- [MultiNeat](http://multineat.com/)
 
 The licenses for each dependency can be found in the [deps](./deps) folder
 
