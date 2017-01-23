@@ -3,13 +3,13 @@
 #include <iterator>
 #include <tinyxml2.h>
 
-#include "Text.hpp"
 #include "../GLSL/Program.hpp"
-#include "../Resource/Texture.hpp"
 #include "../Graphical/GL/Rectangle.hpp"
 #include "../Input/Event.hpp"
-#include "../Utils/Utils.hpp"
 #include "../Resource/ResourceManager.hpp"
+#include "../Resource/Texture.hpp"
+#include "../Utils/Utils.hpp"
+#include "Text.hpp"
 
 /**
  * @brief
@@ -107,7 +107,7 @@ Dropdown::~Dropdown() {
   delete mBox;
   delete mOptionsList;
 
-  for(auto a : mOptions)
+  for (auto a : mOptions)
     delete a;
 
   mOptions.clear();

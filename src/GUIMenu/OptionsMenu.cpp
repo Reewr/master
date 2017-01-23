@@ -8,19 +8,19 @@
 #include "../GUI/Dropdown.hpp"
 #include "../GUI/Inputbox.hpp"
 #include "../GUI/Slider.hpp"
+#include "../Graphical/GL/Rectangle.hpp"
 #include "../Input/Event.hpp"
 #include "../Input/Input.hpp"
+#include "../Resource/ResourceManager.hpp"
+#include "../Resource/Texture.hpp"
 #include "../State/State.hpp"
 #include "../Utils/Asset.hpp"
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
-#include "../Graphical/GL/Rectangle.hpp"
-#include "../Resource/Texture.hpp"
-#include "../Resource/ResourceManager.hpp"
 
 
 OptionsMenu::OptionsMenu(Input::Input* input) {
-  mCFG = mAsset->cfg();
+  mCFG          = mAsset->cfg();
   mActiveWindow = NULL;
   mInput        = input;
   mBoundingBox  = Rect(mCFG->graphics.res.x * 0.50 - 500,
@@ -29,7 +29,8 @@ OptionsMenu::OptionsMenu(Input::Input* input) {
                       700);
 
   mBackground = new GL::Rectangle(mBoundingBox);
-  mBackground->setTexture(mAsset->rManager()->get<Texture>("Texture::Background"));
+  mBackground->setTexture(
+    mAsset->rManager()->get<Texture>("Texture::Background"));
 
   addMenu("Category",
           { "Audio", "Game", "Graphics", "Keybindings", "Mouse" },

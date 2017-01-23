@@ -2,8 +2,8 @@
 
 #include "../Input/Input.hpp"
 #include "../Lua/Lua.hpp"
-#include "../State/State.hpp"
 #include "../Resource/ResourceManager.hpp"
+#include "../State/State.hpp"
 #include "CFG.hpp"
 #include "Utils.hpp"
 

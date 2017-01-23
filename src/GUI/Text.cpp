@@ -3,9 +3,9 @@
 #include <vector>
 
 #include "../GLSL/Program.hpp"
-#include "../Utils/CFG.hpp"
 #include "../Resource/Font.hpp"
 #include "../Resource/ResourceManager.hpp"
+#include "../Utils/CFG.hpp"
 
 Text::Text(const std::string& font,
            const std::string& text,

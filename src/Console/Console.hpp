@@ -84,7 +84,7 @@ private:
   int mLocation;
 
   // Stores the text that the user inputs (command)
-  std::string    mCurrentText;
+  std::string mCurrentText;
 
   // This holds the text that is rendered on the screen
   Text*          mText;
@@ -92,7 +92,7 @@ private:
   GL::Rectangle* mAutoCompleteBox;
 
   std::shared_ptr<Program> mProgram;
-  Asset*         mAsset;
+  Asset*                   mAsset;
 
   bool               mShowAutoComplete;
   std::vector<Text*> mAutoComplete;

@@ -5,15 +5,15 @@
 
 #include "../GLSL/Program.hpp"
 #include "../Math/Math.hpp"
+#include "../Resource/Texture.hpp"
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
 #include "GL/Rectangle.hpp"
-#include "../Resource/Texture.hpp"
 
 
-CFG*        Framebuffer::cfg          = NULL;
-std::string Framebuffer::ssLoc        = "";
-int         Framebuffer::numSS        = 0;
+CFG*        Framebuffer::cfg   = NULL;
+std::string Framebuffer::ssLoc = "";
+int         Framebuffer::numSS = 0;
 
 Framebuffer::Framebuffer() {
   mFrameBuffer  = 0;
@@ -134,7 +134,7 @@ GL::Rectangle* Framebuffer::quad() {
 // *
 // * @param position
 // */
-//void Framebuffer::activateDraw(const vec2& position) {
+// void Framebuffer::activateDraw(const vec2& position) {
 //  failCheck();
 //  mTexture->recalculateGeometry(Rect(position, mFrameSize));
 //  mNeedsDrawing = true;
@@ -144,7 +144,7 @@ GL::Rectangle* Framebuffer::quad() {
 // * @brief
 // *   Binds the drawing program and draws the texture
 // */
-//void Framebuffer::draw() {
+// void Framebuffer::draw() {
 //  failCheck();
 //  if (!mNeedsDrawing)
 //    activateDraw();

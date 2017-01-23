@@ -1,15 +1,15 @@
 #include "Tooltip.hpp"
 
-#include "Text.hpp"
 #include "../GLSL/Program.hpp"
-#include "../Resource/Texture.hpp"
 #include "../Graphical/GL/Rectangle.hpp"
 #include "../Resource/ResourceManager.hpp"
+#include "../Resource/Texture.hpp"
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
+#include "Text.hpp"
 
 Tooltip::Tooltip() {
-  mCFG = mAsset->cfg();
+  mCFG         = mAsset->cfg();
   mBoundingBox = Rect(0, 0, 100, 60);
   mOffset      = vec2(0, 0);
   mBackground  = new GL::Rectangle(mBoundingBox);

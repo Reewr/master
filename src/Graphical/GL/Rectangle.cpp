@@ -5,11 +5,12 @@
 
 GL::Rectangle::Rectangle() {}
 
-GL::Rectangle::Rectangle(const Rect& r, bool isCCW) : mTexture(nullptr){
+GL::Rectangle::Rectangle(const Rect& r, bool isCCW) : mTexture(nullptr) {
   change(r, isCCW);
 }
 
-GL::Rectangle::Rectangle(const vec2& p, const vec2& s, bool isCCW) : mTexture(nullptr) {
+GL::Rectangle::Rectangle(const vec2& p, const vec2& s, bool isCCW)
+    : mTexture(nullptr) {
   change(Rect(p, s), isCCW);
 }
 

@@ -9,8 +9,7 @@
 std::map<unsigned int, GLuint> Texture::activeTextures;
 GLuint Texture::activeTexture = 0;
 
-Texture::Texture()
-    : mMode(0), mTextureId(0), mSamplerId(0), mSize(0, 0) {}
+Texture::Texture() : mMode(0), mTextureId(0), mSamplerId(0), mSize(0, 0) {}
 
 void Texture::unload() {
   if (activeTexture == mTextureId)
@@ -97,7 +96,8 @@ bool Texture::loadTexture() {
   int            width, height;
   unsigned char* image;
 
-  image = SOIL_load_image(mFilename.c_str(), &width, &height, 0, SOIL_LOAD_RGBA);
+  image =
+    SOIL_load_image(mFilename.c_str(), &width, &height, 0, SOIL_LOAD_RGBA);
 
   if (image == 0)
     throw Error("Failed to load SOIL_IMAGE");
@@ -175,8 +175,8 @@ bool Texture::createTexture(const vec2&    s,
   static unsigned int nameNumber = 0;
   nameNumber++;
   mFilename = "createTexture" + Utils::toStr(nameNumber);
-  mMode   = EMPTY;
-  inColor = color == GL_DEPTH_COMPONENT ? GL_DEPTH_COMPONENT : inColor;
+  mMode     = EMPTY;
+  inColor   = color == GL_DEPTH_COMPONENT ? GL_DEPTH_COMPONENT : inColor;
 
   glGenTextures(1, &mTextureId);
   glGenSamplers(1, &mSamplerId);
@@ -283,7 +283,7 @@ Texture& Texture::clampToEdge() {
 }
 
 void Texture::setSamplerFiltering(GLenum param, GLenum value) {
-  if (mTextureId== 0 || mSamplerId == 0)
+  if (mTextureId == 0 || mSamplerId == 0)
     return;
 
   glSamplerParameteri(mSamplerId, param, value);

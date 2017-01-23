@@ -2,13 +2,13 @@
 
 #include <tinyxml2.h>
 
-#include "Text.hpp"
 #include "../GLSL/Program.hpp"
-#include "../Resource/Texture.hpp"
 #include "../Graphical/GL/Rectangle.hpp"
-#include "../Resource/ResourceManager.hpp"
 #include "../Input/Event.hpp"
+#include "../Resource/ResourceManager.hpp"
+#include "../Resource/Texture.hpp"
 #include "../Utils/Asset.hpp"
+#include "Text.hpp"
 
 Checkbox::Checkbox(const vec2& pos) : mIsTicked(false) {
   mBoundingBox = Rect(pos, vec2(21, 21));

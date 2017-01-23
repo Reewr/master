@@ -25,7 +25,7 @@ private:
 
   bool handleOptionsAction(const Input::Event& event);
 
-  CFG* mCFG;
+  CFG*             mCFG;
   Input::Input*    mInput;
   Window*          mActiveWindow;
   Import::UILoader mUiLoader;

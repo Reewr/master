@@ -34,8 +34,9 @@ namespace Input {
       , mScroll(0, 0)
       , mInput(i)
       , mHandledState(States::NoChange) {
-    mType      = action == GLFW_PRESS ? Type::KeyPress :
-                 action == GLFW_RELEASE ? Type::KeyRelease : Type::KeyRepeat;
+    mType = action == GLFW_PRESS ?
+              Type::KeyPress :
+              action == GLFW_RELEASE ? Type::KeyRelease : Type::KeyRepeat;
     mCharacter = glfwKeyToString(key);
   }
 

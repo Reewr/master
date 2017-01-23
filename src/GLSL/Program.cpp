@@ -9,7 +9,7 @@ GLuint Program::activeProgram = 0;
 
 Program::Program() : program(0), isLinked(false), isUsable(false) {}
 
-Program::~Program() { }
+Program::~Program() {}
 
 Program::Program(const std::string& fsvs, int link) {
   createProgram(fsvs, link);
@@ -24,7 +24,8 @@ bool Program::createProgram(const std::string& fsvs, int link) {
   }
 
   if (!srcs.count("FRAGMENT") || !srcs.count("VERTEX"))
-    throw std::runtime_error("Failed to load one of the shaders from file '" + fsvs + "'");
+    throw std::runtime_error("Failed to load one of the shaders from file '" +
+                             fsvs + "'");
 
   Shader fs(srcs["FRAGMENT"], true, fsvs);
   Shader vs(srcs["VERTEX"], false, fsvs);
@@ -214,10 +215,11 @@ std::string Program::loadShader(std::ifstream& f) {
   return shaderSrc;
 }
 
-std::map<std::string, std::string> Program::loadDualShaderFilename(const std::string& fsvs) {
+std::map<std::string, std::string>
+Program::loadDualShaderFilename(const std::string& fsvs) {
   size_t      commaPos = fsvs.find(",");
   std::string f1       = fsvs.substr(0, commaPos);
-  std::string f2       = fsvs.substr(commaPos+1);
+  std::string f2       = fsvs.substr(commaPos + 1);
 
   bool f1isVert = f1.find(".vs") != std::string::npos;
   bool f1isFrag = f1.find(".fs") != std::string::npos;
@@ -226,16 +228,20 @@ std::map<std::string, std::string> Program::loadDualShaderFilename(const std::st
   bool f2isFrag = f2.find(".fs") != std::string::npos;
 
   if (!f1isFrag && !f2isFrag)
-    throw std::runtime_error("Dual filename '" + fsvs + "' is missing fragment shader");
+    throw std::runtime_error("Dual filename '" + fsvs +
+                             "' is missing fragment shader");
 
   if (!f1isVert && !f2isVert)
-    throw std::runtime_error("Dual filename '" + fsvs + "' is missing vertex shader");
+    throw std::runtime_error("Dual filename '" + fsvs +
+                             "' is missing vertex shader");
 
   if (f1isFrag && f2isFrag)
-    throw std::runtime_error("Dual filename '" + fsvs + "' has two fragment shaders");
+    throw std::runtime_error("Dual filename '" + fsvs +
+                             "' has two fragment shaders");
 
   if (f1isVert && f2isVert)
-    throw std::runtime_error("Dual filename '" + fsvs + "' has two vertex shaders");
+    throw std::runtime_error("Dual filename '" + fsvs +
+                             "' has two vertex shaders");
 
   std::ifstream fs1(f1);
   std::ifstream fs2(f2);
@@ -248,15 +254,15 @@ std::map<std::string, std::string> Program::loadDualShaderFilename(const std::st
     throw std::runtime_error("Unable to open file: '" + f2 + "'");
 
   std::string f1Content = std::string((std::istreambuf_iterator<char>(fs1)),
-                                        std::istreambuf_iterator<char>());
+                                      std::istreambuf_iterator<char>());
 
   std::string f2Content = std::string((std::istreambuf_iterator<char>(fs2)),
-                                        std::istreambuf_iterator<char>());
+                                      std::istreambuf_iterator<char>());
   fs1.close();
   fs2.close();
 
   contents["FRAGMENT"] = f1isFrag ? f1Content : f2Content;
-  contents["VERTEX"] = f1isVert ? f1Content : f2Content;
+  contents["VERTEX"]   = f1isVert ? f1Content : f2Content;
 
   return contents;
 }

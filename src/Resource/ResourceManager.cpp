@@ -2,15 +2,15 @@
 #include "../Utils/Utils.hpp"
 
 #include "../GLSL/Program.hpp"
-#include "Texture.hpp"
 #include "Font.hpp"
+#include "Texture.hpp"
 
 #include <sol.hpp>
 
-ResourceManager::ResourceManager() : mCurrentScope(ResourceScope::None) { }
+ResourceManager::ResourceManager() : mCurrentScope(ResourceScope::None) {}
 
 ResourceManager::~ResourceManager() {
-  for(auto &rPair : mResources) {
+  for (auto& rPair : mResources) {
     if (rPair.second->loaded())
       rPair.second->unload();
   }
@@ -18,7 +18,7 @@ ResourceManager::~ResourceManager() {
 
 void ResourceManager::loadRequired(ResourceScope scope) {
   mCurrentScope = scope;
-  for(auto &rPair : mResources) {
+  for (auto& rPair : mResources) {
     if (rPair.second->includesScope(scope) && !rPair.second->loaded()) {
       rPair.second->load();
       rPair.second->setLoaded(true);
@@ -27,7 +27,7 @@ void ResourceManager::loadRequired(ResourceScope scope) {
 }
 
 void ResourceManager::unloadAll() {
-  for(auto &rPair : mResources) {
+  for (auto& rPair : mResources) {
     rPair.second->unload();
     rPair.second->setLoaded(false);
   }
@@ -35,7 +35,7 @@ void ResourceManager::unloadAll() {
 
 void ResourceManager::unloadUnnecessary(ResourceScope scope) {
   mCurrentScope = scope;
-  for(auto &rPair : mResources) {
+  for (auto& rPair : mResources) {
     if (!rPair.second->includesScope(scope) && rPair.second->loaded()) {
       rPair.second->unload();
       rPair.second->setLoaded(false);
@@ -62,9 +62,9 @@ void ResourceManager::loadDescription(const std::string& filename) {
       "All"     , ResourceScope::All);
   // clang-format on
 
-  auto addResource = [&](std::string name,
-                         std::string path,
-                         ResourceType type,
+  auto addResource = [&](std::string   name,
+                         std::string   path,
+                         ResourceType  type,
                          ResourceScope scope) {
     bool existsButDifferent =
       mResources.count(name) && mResources[name]->filename() != path;

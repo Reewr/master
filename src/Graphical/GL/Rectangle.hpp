@@ -1,8 +1,8 @@
 #pragma once
 
 #include "../../Math/MathCD.hpp"
-#include "Shape.hpp"
 #include "../../Resource/Texture.hpp"
+#include "Shape.hpp"
 #include <memory>
 
 namespace GL {
@@ -46,8 +46,8 @@ namespace GL {
     void draw();
 
   private:
-    Rect mRect;
-    bool mIsCCW;
+    Rect                     mRect;
+    bool                     mIsCCW;
     std::shared_ptr<Texture> mTexture;
   };
 }

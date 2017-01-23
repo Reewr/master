@@ -3,14 +3,14 @@
 #include <tinyxml2.h>
 
 #include "../GLSL/Program.hpp"
-#include "Text.hpp"
-#include "../Resource/Texture.hpp"
 #include "../Graphical/GL/Rectangle.hpp"
-#include "../Resource/ResourceManager.hpp"
 #include "../Input/Event.hpp"
 #include "../Input/Input.hpp"
+#include "../Resource/ResourceManager.hpp"
+#include "../Resource/Texture.hpp"
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
+#include "Text.hpp"
 
 Inputbox::Inputbox(const Rect& r, const std::string text) {
   mTextBox  = new GL::Rectangle();
@@ -29,7 +29,8 @@ Inputbox::Inputbox(const Rect& r, const std::string text) {
 
   mText->setPosition(textPos);
 
-  mInputBoxText = new Text("Font::Dejavu", "Please input keybinding", vec2(0, 0), 15);
+  mInputBoxText =
+    new Text("Font::Dejavu", "Please input keybinding", vec2(0, 0), 15);
   mInputBoxText->setColor(Text::WHITE);
   textPos =
     vec2(mInputBoxRect.topleft.x + 200 - mInputBoxText->box().middle().x,

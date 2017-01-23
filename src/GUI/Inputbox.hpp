@@ -53,8 +53,8 @@ public:
 private:
   GL::Rectangle* mTextBox;
   GL::Rectangle* mInputBox;
-  Text*    mText;
-  Text*    mInputBoxText;
+  Text*          mText;
+  Text*          mInputBoxText;
 
   Rect mInputBoxRect;
   bool mInputIsVisible;

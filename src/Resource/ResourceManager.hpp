@@ -1,20 +1,19 @@
 #pragma once
 
 #include <map>
-#include <string>
 #include <memory>
+#include <string>
 #include <type_traits>
 
-#include "Resource.hpp"
 #include "../Utils/Utils.hpp"
+#include "Resource.hpp"
 
 class ResourceManager {
 public:
-
   ResourceManager();
   ~ResourceManager();
 
-  template<typename T>
+  template <typename T>
   std::shared_ptr<T> get(const std::string& name);
 
   void loadDescription(const std::string& filename);
@@ -24,7 +23,6 @@ public:
   void unloadUnnecessary(ResourceScope scope);
 
 private:
-
   ResourceScope mCurrentScope;
   std::map<std::string, std::shared_ptr<Resource>> mResources;
 };
@@ -35,7 +33,7 @@ private:
 //
 // ----------------------------------------------------------
 
-template<typename T>
+template <typename T>
 std::shared_ptr<T> ResourceManager::get(const std::string& name) {
   if (mResources.count(name) == 0)
     throw std::runtime_error("Could not find filename for " + name);

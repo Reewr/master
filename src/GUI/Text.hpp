@@ -4,8 +4,8 @@
 
 #include "../OpenGLHeaders.hpp"
 
-#include "GUI.hpp"
 #include "../Math/MathCD.hpp"
+#include "GUI.hpp"
 
 class Font;
 class CFG;

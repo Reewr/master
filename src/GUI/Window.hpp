@@ -95,7 +95,7 @@ protected:
   void sortDropdowns();
 
   GL::Rectangle* mBackground;
-  Text*    mTitle;
+  Text*          mTitle;
 
   std::list<Dropdown*> mDrawDropdowns;
 

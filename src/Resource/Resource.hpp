@@ -32,7 +32,6 @@ enum class ResourceScope {
  */
 class Resource {
 public:
-
   Resource();
   virtual ~Resource();
 
@@ -87,23 +86,18 @@ public:
   bool loaded();
 
 protected:
-
   ResourceScope mScope;
-  ResourceType mType;
-  std::string  mName;
-  std::string  mFilename;
-  bool         mLoaded;
+  ResourceType  mType;
+  std::string   mName;
+  std::string   mFilename;
+  bool          mLoaded;
 };
 
 // Overloading for the Scope so that bitwise operations work properly
-constexpr ResourceScope
-operator|(ResourceScope a, ResourceScope b) {
-  return static_cast<ResourceScope>(static_cast<int>(a) |
-                                                     static_cast<int>(b));
+constexpr ResourceScope operator|(ResourceScope a, ResourceScope b) {
+  return static_cast<ResourceScope>(static_cast<int>(a) | static_cast<int>(b));
 }
 
-constexpr ResourceScope
-operator& (ResourceScope a, ResourceScope b) {
-  return static_cast<ResourceScope>(static_cast<int>(a) &
-                                                     static_cast<int>(b));
+constexpr ResourceScope operator&(ResourceScope a, ResourceScope b) {
+  return static_cast<ResourceScope>(static_cast<int>(a) & static_cast<int>(b));
 }

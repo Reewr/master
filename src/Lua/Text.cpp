@@ -1,7 +1,7 @@
 #include "Text.hpp"
 
-#include "../Resource/Font.hpp"
 #include "../GUI/Text.hpp"
+#include "../Resource/Font.hpp"
 #include <sol.hpp>
 
 #include "Font.hpp"

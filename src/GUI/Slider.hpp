@@ -52,7 +52,7 @@ public:
 private:
   GL::Rectangle* mBackground;
   GL::Rectangle* mButton;
-  Text*    mInfo;
+  Text*          mInfo;
 
   float       mScale;
   float       mValue;

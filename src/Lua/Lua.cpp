@@ -54,8 +54,8 @@ namespace Lua {
 
   bool Lua::loadFile(const std::string& filename) {
     try {
-      sol::function_result res = engine.script_file("lua/main.lua");
-      bool isValid = res.valid();
+      sol::function_result res     = engine.script_file("lua/main.lua");
+      bool                 isValid = res.valid();
 
       if (!isValid && mConsole != nullptr)
         mConsole->error("Failed to load file '" + filename + "'. No such file");
@@ -79,7 +79,7 @@ namespace Lua {
       return;
 
     engine["console"] = console;
-    mConsole = console;
+    mConsole          = console;
   }
 
   void Lua::add(CFG* cfg) {
@@ -87,6 +87,6 @@ namespace Lua {
       return;
 
     engine["cfg"] = cfg;
-    mCFG = cfg;
+    mCFG          = cfg;
   }
 }

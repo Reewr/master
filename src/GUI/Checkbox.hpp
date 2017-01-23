@@ -47,7 +47,7 @@ public:
   void draw();
 
 private:
-  bool     mIsTicked;
-  Text*    mTick;
+  bool           mIsTicked;
+  Text*          mTick;
   GL::Rectangle* mSquare;
 };

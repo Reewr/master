@@ -82,10 +82,10 @@ private:
   bool loadTexture();
   void loadCube();
 
-  int           mMode;
-  GLuint        mTextureId;
-  GLuint        mSamplerId;
-  vec2          mSize;
+  int    mMode;
+  GLuint mTextureId;
+  GLuint mSamplerId;
+  vec2   mSize;
 
   static std::map<unsigned int, GLuint> activeTextures;
   static GLuint activeTexture;

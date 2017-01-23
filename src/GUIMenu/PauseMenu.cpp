@@ -2,15 +2,15 @@
 
 #include "../OpenGLHeaders.hpp"
 
+#include "../Graphical/GL/Rectangle.hpp"
 #include "../Input/Event.hpp"
 #include "../Input/Input.hpp"
+#include "../Resource/ResourceManager.hpp"
+#include "../Resource/Texture.hpp"
 #include "../State/State.hpp"
 #include "../Utils/Asset.hpp"
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
-#include "../Graphical/GL/Rectangle.hpp"
-#include "../Resource/Texture.hpp"
-#include "../Resource/ResourceManager.hpp"
 
 PauseMenu::PauseMenu(Input::Input* i) {
   mBoundingBox = Rect(mAsset->cfg()->graphics.res.x * 0.5 - 300,
@@ -18,9 +18,10 @@ PauseMenu::PauseMenu(Input::Input* i) {
                       600,
                       200);
 
-  mInput = i;
+  mInput      = i;
   mBackground = new GL::Rectangle(mBoundingBox);
-  mBackground->setTexture(mAsset->rManager()->get<Texture>("Texture::Background"));
+  mBackground->setTexture(
+    mAsset->rManager()->get<Texture>("Texture::Background"));
 
   if (!mUiLoader.loadXMLSettings(TEMP::getPath(TEMP::XMLOPT), "Pause", this))
     throw Error("Read log above");

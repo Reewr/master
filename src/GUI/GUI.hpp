@@ -1,8 +1,8 @@
 #pragma once
 
+#include "../GLSL/Program.hpp"
 #include "../Math/MathCD.hpp"
 #include "../Utils/Asset.hpp"
-#include "../GLSL/Program.hpp"
 #include <functional>
 #include <memory>
 

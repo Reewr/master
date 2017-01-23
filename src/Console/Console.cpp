@@ -4,17 +4,17 @@
 #include <sol.hpp>
 
 #include "../GLSL/Program.hpp"
-#include "../Graphical/GL/Rectangle.hpp"
 #include "../GUI/Text.hpp"
+#include "../Graphical/GL/Rectangle.hpp"
 #include "../Input/Event.hpp"
 #include "../Input/Input.hpp"
 #include "../Lua/Lua.hpp"
 #include "../Math/Math.hpp"
+#include "../Resource/ResourceManager.hpp"
 #include "../State/State.hpp"
 #include "../Utils/Asset.hpp"
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
-#include "../Resource/ResourceManager.hpp"
 
 Console::Console(Asset* asset)
     : mLocation(0)
@@ -101,7 +101,7 @@ void Console::log(const std::string& message) {
  * @param color
  */
 void Console::addHistory(const std::string& message, int color) {
-  CFG* cfg = mAsset->cfg();
+  CFG* cfg   = mAsset->cfg();
   vec2 limit = vec2(cfg->graphics.res.x, cfg->graphics.res.y);
   addHistory(new Text("Font::Dejavu", message, vec2(0, 0), 12, color, limit));
 }
@@ -169,7 +169,7 @@ void Console::doCommand(const Input::Event& event) {
  */
 void Console::setText(const std::string& s) {
   mCurrentText = s;
-  mLocation = 0;
+  mLocation    = 0;
   setText();
 }
 
@@ -191,7 +191,7 @@ void Console::setText() {
     return mText->setText("> " + mCurrentText + "_");
 
   std::string before = mCurrentText.substr(0, mLocation);
-  std::string after = mCurrentText.substr(mLocation);
+  std::string after  = mCurrentText.substr(mLocation);
 
   mText->setText("> " + before + "_" + after);
 }
@@ -372,8 +372,10 @@ void Console::deleteWord(int whichKey) {
 
     if (pos == std::string::npos) {
       mCurrentText = mCurrentText.substr(0, mLocation);
-    } {
-      mCurrentText = mCurrentText.substr(0, mLocation) + mCurrentText.substr(pos);
+    }
+    {
+      mCurrentText =
+        mCurrentText.substr(0, mLocation) + mCurrentText.substr(pos);
     }
 
     setText();

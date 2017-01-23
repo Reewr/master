@@ -19,9 +19,9 @@ class Asset {
 public:
   Asset(CFG* c);
 
-  CFG*          cfg();
-  Input::Input* input();
-  Lua::Lua*     lua();
+  CFG*             cfg();
+  Input::Input*    input();
+  Lua::Lua*        lua();
   ResourceManager* rManager();
 
   void setCFG(CFG* c);

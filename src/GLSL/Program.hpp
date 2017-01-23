@@ -7,8 +7,8 @@
 #include "../OpenGLHeaders.hpp"
 
 #include "../Math/Math.hpp"
-#include "../Utils/Utils.hpp"
 #include "../Resource/Resource.hpp"
+#include "../Utils/Utils.hpp"
 
 class Shader;
 class fstream;

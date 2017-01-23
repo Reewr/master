@@ -10,8 +10,8 @@
 #include FT_FREETYPE_H
 
 #include "../Math/Math.hpp"
-#include "../Resource/Texture.hpp"
 #include "../Resource/Resource.hpp"
+#include "../Resource/Texture.hpp"
 
 
 class Program;
@@ -69,7 +69,7 @@ private:
   };
 
   std::map<unsigned int, Page> mPages;
-  FT_Face     mFace;
+  FT_Face mFace;
 
   static int        numFonts;
   static FT_Library fontLib;

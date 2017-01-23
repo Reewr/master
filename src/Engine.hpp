@@ -76,11 +76,11 @@ protected:
 
   std::string mCFGPath;
 
-  CFG*          mCFG;
-  State*        mCurrent;
-  Input::Input* mInput;
-  GLFWwindow*   mWindow;
-  Asset*        mAsset;
-  Lua::Lua*     mLua;
+  CFG*             mCFG;
+  State*           mCurrent;
+  Input::Input*    mInput;
+  GLFWwindow*      mWindow;
+  Asset*           mAsset;
+  Lua::Lua*        mLua;
   ResourceManager* mResourceManager;
 };

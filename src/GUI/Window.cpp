@@ -9,23 +9,23 @@
 #include "Text.hpp"
 
 #include "../GLSL/Program.hpp"
-#include "../Resource/Texture.hpp"
 #include "../Graphical/GL/Rectangle.hpp"
-#include "../Resource/ResourceManager.hpp"
 #include "../Input/Event.hpp"
+#include "../Resource/ResourceManager.hpp"
+#include "../Resource/Texture.hpp"
 #include "../Utils/Asset.hpp"
 #include "../Utils/Utils.hpp"
 
 Window::Window() {
-  mBackground   = nullptr;
-  mTitle = nullptr;
+  mBackground = nullptr;
+  mTitle      = nullptr;
 
   mBoundingBox = Rect({ 0, 0 }, { 0, 0 });
 }
 
 Window::Window(std::string texture, Rect r) {
-  mBackground   = nullptr;
-  mTitle = nullptr;
+  mBackground = nullptr;
+  mTitle      = nullptr;
 
   mBoundingBox = r;
 
