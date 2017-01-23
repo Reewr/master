@@ -99,6 +99,10 @@ find_package(Lua51 REQUIRED)
 # Include sol2
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/sol2)
 
+# Include MultiNEAT
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/MultiNEAT)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/MultiNEAT)
+
 # =======================================
 # Project files
 # =======================================
@@ -333,6 +337,7 @@ find_library(SOIL_LIBRARY NAME SOIL)
 find_library(FREETYPE_LIBRARY NAME freetype)
 find_library(ASSIMP_LIBRARY NAME assimp)
 find_library(BULLET_LIBRARY NAME bullet)
+find_library(MultiNEAT_LIBRARY NAME MultiNEAT)
 
 # Note regarding TinyXML2:
 # ------------------------
@@ -358,6 +363,7 @@ target_link_libraries(DDDGP
                       Bullet3Dynamics
                       Bullet3Collision
                       Bullet3Common )
+target_link_libraries(DDDGP MultiNEAT)
 
 # =======================================
 # Custom commands
