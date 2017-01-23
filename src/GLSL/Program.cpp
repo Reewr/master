@@ -70,10 +70,10 @@ bool Program::createProgram(const Shader& frag,
   program = glCreateProgram();
 
   if (program == 0 || frag.id() == 0 || vertex.id() == 0)
-    throw Error("Failed to create program");
+    throw std::runtime_error("Failed to create program");
 
   if (!addShader(frag) || !addShader(vertex))
-    throw Error("Failed to create program");
+    throw std::runtime_error("Failed to create program");
 
   if (!link)
     return true;
@@ -89,7 +89,7 @@ bool Program::createProgram(const std::string& fsvs, int link) {
   }
 
   if (!srcs.count("FRAGMENT") || !srcs.count("VERTEX"))
-    throw Error("Failed to load one of the shaders from file '" + fsvs + "'");
+    throw std::runtime_error("Failed to load one of the shaders from file '" + fsvs + "'");
 
   Shader fs(srcs["FRAGMENT"], true, fsvs);
   Shader vs(srcs["VERTEX"], false, fsvs);
@@ -138,8 +138,10 @@ bool Program::link() {
 void Program::bind() {
   if (isActive())
     return;
+
   if (!isUsable)
-    throw Error("Tried to bind program that is not usable.");
+    throw std::runtime_error("Tried to bind program that is not usable.");
+
   activeProgram = program;
   glUseProgram(program);
 }
@@ -248,7 +250,7 @@ bool Program::isActive() const {
 
 std::string Program::loadShader(std::ifstream& f) {
   if (!f.is_open())
-    throw Error("ifstream is closed.");
+    throw std::runtime_error("ifstream is closed.");
   std::string shaderSrc = "";
   std::string line;
   while (f.good()) {
@@ -265,7 +267,7 @@ std::string Program::loadShader(std::ifstream& f) {
 std::map<std::string, std::string> Program::loadDualShaderFilename(const std::string& fsvs) {
   size_t      commaPos = fsvs.find(",");
   std::string f1       = fsvs.substr(0, commaPos);
-  std::string f2       = fsvs.substr(commaPos);
+  std::string f2       = fsvs.substr(commaPos+1);
 
   bool f1isVert = f1.find(".vs") != std::string::npos;
   bool f1isFrag = f1.find(".fs") != std::string::npos;
@@ -274,26 +276,26 @@ std::map<std::string, std::string> Program::loadDualShaderFilename(const std::st
   bool f2isFrag = f2.find(".fs") != std::string::npos;
 
   if (!f1isFrag && !f2isFrag)
-    throw Error("Dual filename '" + fsvs + "' is missing fragment shader");
+    throw std::runtime_error("Dual filename '" + fsvs + "' is missing fragment shader");
 
   if (!f1isVert && !f2isVert)
-    throw Error("Dual filename '" + fsvs + "' is missing vertex shader");
+    throw std::runtime_error("Dual filename '" + fsvs + "' is missing vertex shader");
 
   if (f1isFrag && f2isFrag)
-    throw Error("Dual filename '" + fsvs + "' has two fragment shaders");
+    throw std::runtime_error("Dual filename '" + fsvs + "' has two fragment shaders");
 
   if (f1isVert && f2isVert)
-    throw Error("Dual filename '" + fsvs + "' has two vertex shaders");
+    throw std::runtime_error("Dual filename '" + fsvs + "' has two vertex shaders");
 
   std::ifstream fs1(f1);
   std::ifstream fs2(f2);
   std::map<std::string, std::string> contents;
 
   if (!fs1.is_open())
-    throw Error("Unable to open file: '" + f1 + "'");
+    throw std::runtime_error("Unable to open file: '" + f1 + "'");
 
   if (!fs2.is_open())
-    throw Error("Unable to open file: '" + f2 + "'");
+    throw std::runtime_error("Unable to open file: '" + f2 + "'");
 
   std::string f1Content = std::string((std::istreambuf_iterator<char>(fs1)),
                                         std::istreambuf_iterator<char>());
@@ -311,7 +313,7 @@ std::map<std::string, std::string> Program::loadDualShaderFilename(const std::st
 
 std::map<std::string, std::string> Program::loadVSFS(const std::string& fsvs) {
   if (!fsvs.find(".vsfs") && !fsvs.find(".fsvs"))
-    throw Error("File extension is faulty.");
+    throw std::runtime_error("File extension is faulty.");
 
   std::ifstream fs(fsvs);
   std::map<std::string, std::string> source;
@@ -319,7 +321,7 @@ std::map<std::string, std::string> Program::loadVSFS(const std::string& fsvs) {
   std::string line;
 
   if (!fs.is_open())
-    throw Error("Unable to open shaderfile.");
+    throw std::runtime_error("Unable to open shaderfile.");
 
   while (fs.good()) {
     std::getline(fs, line);
@@ -347,7 +349,7 @@ bool Program::checkErrors(const std::string&              place,
     fprintf(stderr, "GL_ERROR @ %s: %i\n", place.c_str(), errorCheck);
     std::cout << std::endl;
     error("GLSL error.. Please see error above.");
-    throw Error("Program.cpp");
+    throw std::runtime_error("Program.cpp");
     return false;
   }
   return true;
@@ -369,7 +371,7 @@ bool Program::checkProgram(const GLuint pro) {
     error(s);
     glDeleteProgram(pro);
     error("GLSL program error. Please see above.");
-    throw Error("Program.cpp");
+    throw std::runtime_error("Program.cpp");
     return false;
   }
   return true;
