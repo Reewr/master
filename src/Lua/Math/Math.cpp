@@ -1,6 +1,6 @@
 #include "Math.hpp"
 
-#include "../Math/Math.hpp"
+#include "../../Math/Math.hpp"
 #include <sol.hpp>
 
 void Lua::math_as_lua(sol::state& state) {

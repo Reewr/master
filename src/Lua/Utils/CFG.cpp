@@ -1,5 +1,5 @@
 #include "CFG.hpp"
-#include "../Utils/CFG.hpp"
+#include "../../Utils/CFG.hpp"
 
 #include <sol.hpp>
 
