@@ -91,7 +91,7 @@ private:
   GL::Rectangle* mRect;
   GL::Rectangle* mAutoCompleteBox;
 
-  Program*       mProgram;
+  std::shared_ptr<Program> mProgram;
   Asset*         mAsset;
 
   bool               mShowAutoComplete;

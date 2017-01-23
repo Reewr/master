@@ -15,6 +15,7 @@
 #include "../Utils/Asset.hpp"
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
+#include "../Resource/ResourceManager.hpp"
 
 Console::Console(Asset* asset)
     : mLocation(0)
@@ -37,15 +38,12 @@ Console::Console(Asset* asset)
 
   // Specific program for the console since the console
   // is just drawn in black with alpha
-  mProgram = new Program("shaders/GUI/ColorRect.vsfs", 0);
-  mProgram->bindAttribs({ "position", "texcoord" }, { 0, 1 });
-  mProgram->link();
+  mProgram = mAsset->rManager()->get<Program>("Program::ColorRect");
   mProgram->setUniform("screenRes", res, "guiOffset", vec2());
   mProgram->setUniform("guiColor", vec4(0, 0, 0, 0.9));
 }
 
 Console::~Console() {
-  delete mProgram;
   delete mRect;
   delete mText;
   delete mAutoCompleteBox;
