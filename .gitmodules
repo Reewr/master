@@ -25,3 +25,6 @@
 [submodule "deps/sol2"]
 	path = deps/sol2
 	url = git@github.com:ThePhD/sol2.git
+[submodule "deps/MultiNEAT/MultiNEAT"]
+	path = deps/MultiNEAT/MultiNEAT
+	url = git@github.com:peter-ch/MultiNEAT.git
