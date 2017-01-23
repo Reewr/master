@@ -1,62 +1,72 @@
 #pragma once
 
 #include <string>
-#include <vector>
-
-#include "../Math/Math.hpp"
+#include <memory>
+#include <mmm.hpp>
 
 class Asset;
 class Program;
 
-namespace Input {
-  class Input;
-}
-
 class Camera {
 public:
-  Asset* asset;
-  vec3   target = { 0, 1.183, 0 };
-  float  height = 2;
+  struct Light {
+    Light();
 
-  float hrot   = 0;
-  float vrot   = -45;
-  float p_hrot = 0;
-  float p_vrot = 0;
+    float day;
+    float speed;
+    float ambient;
 
-  float speed = 4;
+    mmm::vec3 color;
+    mmm::vec3 direction;
+    mmm::mat4 model;
+    mmm::mat4 view;
+    mmm::mat4 projection;
+  };
 
-  struct {
-    float day     = 0;
-    float speed   = 0.5;
-    vec3  color   = { 1, 1, 1 };
-    float ambient = 0.2;
-    vec3  dir;
-    mat4  model = mat4::identity;
-    mat4  view  = mat4::identity;
-    mat4  proj  = mat4::identity;
-  } light;
-
-  Program* shadow;
   /* Program* model; */
 
-  mat4 model = mat4::identity;
-  mat4 view  = mat4::identity;
-  mat4 proj  = mat4::identity;
-
-  Camera(Asset* a, Program* shadow);
+  Camera(Asset* a);
   /* Camera (Input* i, Program* shadow, Program* model); */
 
-  mat4 updateViewMatrix();
-  mat4 updateProjMatrix();
+  mmm::mat4 updateViewMatrix();
+  mmm::mat4 updateProjectionMatrix();
 
-  void setLightMVPUniform(Program* p, std::string name = "lightMVP");
-  void setLightMPUniforms(Program* p, std::string name = "light");
-  void setLightMVPUniforms(Program* p, std::string name = "light");
-  void setMVPUniform(Program* p, std::string name = "MVP");
-  void setMVPUniforms(Program* p, std::string name = "mvp");
+  void setLightMPUniforms(std::shared_ptr<Program> program,
+                          const std::string&       name = "light");
+
+  void setLightMVPUniform(std::shared_ptr<Program> program,
+                          const std::string&       name = "lightMVP");
+
+  void setLightMVPUniforms(std::shared_ptr<Program> program,
+                           const std::string&       name = "light");
+
+  void setMVPUniform(std::shared_ptr<Program> program,
+                     const std::string&       name = "MVP");
+
+  void setMVPUniforms(std::shared_ptr<Program> program,
+                      const std::string&       name = "mvp");
 
   void update(float dt);
   void zoom(int sign);
 
-  /* void handleKeys(std::vector<int> actions, float dt); */
+private:
+  Asset* mAsset;
+
+  std::shared_ptr<Program> mShadowProgram;
+  std::shared_ptr<Program> mModelProgram;
+
+  mmm::vec3 mTarget;
+  mmm::mat4 mModel;
+  mmm::mat4 mView;
+  mmm::mat4 mProjection;
+
+  float mHeight;
+  float mHoriRotation;
+  float mVertRotation;
+  float mSpeed;
+  Light mLight;
+
+  // What are these two?
+  /* float p_hrot = 0; */
+  /* float p_vrot = 0; */
 };

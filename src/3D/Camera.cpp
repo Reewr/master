@@ -1,80 +1,102 @@
 #include "Camera.hpp"
 
 #include "../GLSL/Program.hpp"
-#include "../Input/Input.hpp"
 #include "../Utils/Asset.hpp"
 #include "../Utils/CFG.hpp"
-#include "../Utils/Utils.hpp"
+#include "../Resource/ResourceManager.hpp"
 
-/* Camera::Camera (Input* i, Program* shadow, Program* model) { */
-Camera::Camera(Asset* a, Program* shadow) {
-  this->shadow = shadow;
-  asset        = a;
-  /* this->model  = model; */
-  light.day = 0;
-  proj      = updateProjMatrix();
+Camera::Light::Light()
+    : day(0)
+    , speed(0.5)
+    , ambient(0.2)
+    , color(1, 1, 1)
+    , model(mmm::mat4::identity)
+    , view(mmm::mat4::identity)
+    , projection(mmm::mat4::identity) {}
 
-  /* model->setUniform("proj", proj); */
+Camera::Camera(Asset* asset)
+    : mAsset(asset)
+    , mTarget(0, 1.183, 0)
+    , mModel(mmm::mat4::identity)
+    , mView(mmm::mat4::identity)
+    , mProjection(mmm::mat4::identity)
+    , mHeight(2)
+    , mHoriRotation(0)
+    , mVertRotation(-45)
+    , mSpeed(4) {
 
+  mProjection    = updateProjectionMatrix();
+  mShadowProgram = mAsset->rManager()->get<Program>("Program::shadow");
+  mModelProgram  = mAsset->rManager()->get<Program>("Program::model");
+  mModelProgram->setUniform("projection", mProjection);
   update(0);
 }
 
-mat4 Camera::updateViewMatrix() {
-  vec3 cp =
-    target + vec3(rotate_y(hrot) * rotate_x(vrot) * vec4(0, 0, height, 1));
-  vec3 cu = vec3(rotate_y(hrot) * rotate_x(vrot) * vec4(0, 1, 0, 0));
-  return lookAt(cp, target, cu);
+mmm::mat4 Camera::updateViewMatrix() {
+  mmm::vec3 cameraEye =
+    mTarget + vec3(rotate_y(mHoriRotation) * rotate_x(mVertRotation) *
+                   vec4(0, 0, mHeight, 1));
+  mmm::vec3 cameraUp =
+    vec3(rotate_y(mHoriRotation) * rotate_x(mVertRotation) * vec4(0, 1, 0, 0));
+
+  return lookAt(cameraEye, mTarget, cameraUp);
 }
 
-mat4 Camera::updateProjMatrix() {
-  return perspective<float>(67.f,
-                            asset->cfg()->graphics.aspect,
+mmm::mat4 Camera::updateProjectionMatrix() {
+  return perspective<float>(67.0f,
+                            mAsset->cfg()->graphics.aspect,
                             0.1f,
-                            asset->cfg()->graphics.viewDistance);
+                            mAsset->cfg()->graphics.viewDistance);
 }
 
-void Camera::setLightMVPUniform(Program* p, std::string name) {
-  p->setUniform(name, light.proj * light.view * light.model);
+void Camera::setLightMVPUniform(std::shared_ptr<Program> program,
+                                const std::string&       name) {
+  program->setUniform(name, mLight.projection * mLight.view * mLight.model);
 }
 
-void Camera::setLightMVPUniforms(Program* p, std::string name) {
-  p->setUniform(name + ".model", light.model);
-  setLightMPUniforms(p, name);
+void Camera::setLightMVPUniforms(std::shared_ptr<Program> program,
+                                 const std::string&       name) {
+  program->setUniform(name + ".model", mLight.model);
+  setLightMPUniforms(program, name);
 }
 
-void Camera::setLightMPUniforms(Program* p, std::string name) {
-  p->setUniform(name + ".view", light.view);
-  p->setUniform(name + ".proj", light.proj);
-}
-void Camera::setMVPUniform(Program* p, std::string name) {
-  p->setUniform(name, proj * view * model);
+void Camera::setLightMPUniforms(std::shared_ptr<Program> program,
+                                const std::string&       name) {
+  program->setUniform(name + ".view", mLight.view);
+  program->setUniform(name + ".proj", mLight.projection);
 }
 
-void Camera::setMVPUniforms(Program* p, std::string name) {
-  p->setUniform(name + ".model", model);
-  p->setUniform(name + ".view", view);
-  p->setUniform(name + ".proj", proj);
+void Camera::setMVPUniform(std::shared_ptr<Program> program,
+                           const std::string&       name) {
+  program->setUniform(name, mProjection * mView * mModel);
+}
+
+void Camera::setMVPUniforms(std::shared_ptr<Program> program,
+                            const std::string&       name) {
+  program->setUniform(name + ".model", mModel);
+  program->setUniform(name + ".view", mView);
+  program->setUniform(name + ".proj", mProjection);
 }
 
 void Camera::update(float) {
-  view = updateViewMatrix();
+  mView = updateViewMatrix();
 
   // light.day -= light.speed * dt;
-  mat4 lt = rotate_z(light.day) * rotate_y(hrot);
-  vec3 lp = target + vec3(lt * vec4(0, height, 0, 1));
-  vec3 lu = vec3(lt * vec4(0, 0, -1, 0));
+  mmm::mat4 lt       = rotate_z(mLight.day) * rotate_y(mHoriRotation);
+  mmm::vec3 lightEye = mTarget + vec3(lt * vec4(0, mHeight, 0, 1));
+  mmm::vec3 lightUp  = vec3(lt * vec4(0, 0, -1, 0));
 
-  light.view = lookAt(lp, target, lu);
+  mLight.view = lookAt(lightEye, mTarget, lightUp);
   // float h = height;
   // light.proj = ortho (-5*height, 5*height, -5*height, 5*height,
   // -5*height, 5*height);
-  light.proj = ortho(-7.f, 7.f, -7.f, 7.f, -7.f, 7.f);
-  light.dir  = normalize(lp - target);
+  mLight.projection = ortho(-7.f, 7.f, -7.f, 7.f, -7.f, 7.f);
+  mLight.direction  = normalize(lightUp - mTarget);
 
-  setLightMPUniforms(shadow);
-  /* setLightMPUniforms(model); */
-  /* model->setUniform ("view", view); */
-  /* model->setUniform ("dir", light.dir); */
+  setLightMPUniforms(mShadowProgram);
+  setLightMPUniforms(mModelProgram);
+  mModelProgram->setUniform("view", mView);
+  mModelProgram->setUniform("dir", mLight.direction);
   // terrain->setUniform("lightDir", ld);
 
   /*
@@ -92,14 +114,16 @@ void Camera::update(float) {
 }
 
 void Camera::zoom(int sign) {
-  CFG* cfg = asset->cfg();
+  CFG* cfg = mAsset->cfg();
 
   sign = cfg->camera.zoomInv ^ (sign > 0) ? -1 : 1;
-  height += cfg->camera.zoomSpeed * sign;
-  if (height > 40)
-    height = 40;
-  if (height < 0.2)
-    height = 0.2;
+  mHeight += cfg->camera.zoomSpeed * sign;
+
+  if (mHeight > 40)
+    mHeight = 40;
+
+  if (mHeight < 0.2)
+    mHeight = 0.2;
 }
 
 /* void Camera::handleKeys(const Input::Event& event, float dt) { */
