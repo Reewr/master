@@ -162,15 +162,15 @@ set(DDDGP_CPP
   ${SRC_DIR}/Input/Event.cpp
 
   # src/Lua
-  ${SRC_DIR}/Lua/CFG.cpp
-  ${SRC_DIR}/Lua/Console.cpp
+  ${SRC_DIR}/Lua/Utils/CFG.cpp
+  ${SRC_DIR}/Lua/Console/Console.cpp
   ${SRC_DIR}/Lua/Engine.cpp
-  ${SRC_DIR}/Lua/Event.cpp
+  ${SRC_DIR}/Lua/Input/Event.cpp
   ${SRC_DIR}/Lua/Lua.cpp
-  ${SRC_DIR}/Lua/State.cpp
-  ${SRC_DIR}/Lua/Math.cpp
-  ${SRC_DIR}/Lua/Font.cpp
-  ${SRC_DIR}/Lua/Text.cpp
+  ${SRC_DIR}/Lua/State/State.cpp
+  ${SRC_DIR}/Lua/Math/Math.cpp
+  ${SRC_DIR}/Lua/Resource/Font.cpp
+  ${SRC_DIR}/Lua/GUI/Text.cpp
 
   # src/GLSL
   ${SRC_DIR}/GLSL/Program.cpp
@@ -242,15 +242,15 @@ set(DDDGP_HPP
   ${SRC_DIR}/Input/Event.hpp
 
   # src/Lua
-  ${SRC_DIR}/Lua/CFG.hpp
-  ${SRC_DIR}/Lua/Console.hpp
+  ${SRC_DIR}/Lua/Utils/CFG.hpp
+  ${SRC_DIR}/Lua/Console/Console.hpp
   ${SRC_DIR}/Lua/Engine.hpp
-  ${SRC_DIR}/Lua/Event.hpp
+  ${SRC_DIR}/Lua/Input/Event.hpp
   ${SRC_DIR}/Lua/Lua.hpp
-  ${SRC_DIR}/Lua/State.hpp
-  ${SRC_DIR}/Lua/Math.hpp
-  ${SRC_DIR}/Lua/Font.hpp
-  ${SRC_DIR}/Lua/Text.hpp
+  ${SRC_DIR}/Lua/State/State.hpp
+  ${SRC_DIR}/Lua/Math/Math.hpp
+  ${SRC_DIR}/Lua/Resource/Font.hpp
+  ${SRC_DIR}/Lua/GUI/Text.hpp
 
   # src/GLSL
   ${SRC_DIR}/GLSL/Program.hpp

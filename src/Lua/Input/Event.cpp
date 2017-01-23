@@ -1,5 +1,5 @@
 #include "Event.hpp"
-#include "../Input/Event.hpp"
+#include "../../Input/Event.hpp"
 
 #include <sol.hpp>
 

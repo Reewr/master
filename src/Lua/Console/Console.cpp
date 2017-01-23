@@ -1,5 +1,5 @@
 #include "Console.hpp"
-#include "../Console/Console.hpp"
+#include "../../Console/Console.hpp"
 
 #include <sol.hpp>
 
