@@ -23,7 +23,8 @@ namespace States {
     MasterThesis,
     Refresh,
     WinRefresh,
-    NoChange
+    NoChange,
+    LuaReload
   };
 }
 

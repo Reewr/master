@@ -18,6 +18,7 @@ void Lua::state_as_lua(sol::state& state) {
     "MasterThesis"    , States::MasterThesis,
     "Refresh"         , States::Refresh,
     "WinRefresh"      , States::WinRefresh,
-    "NoChange"        , States::NoChange);
+    "NoChange"        , States::NoChange,
+    "LuaReload"       , States::LuaReload);
   // clang-format on
 }

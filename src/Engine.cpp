@@ -460,6 +460,9 @@ void Engine::changeState(int newState) {
     case States::WinRefresh:
       refreshState(true);
       break;
+    case States::LuaReload:
+      mLua->reInitialize();
+      return;
     default:
       mActiveStates.push(newState);
       break;

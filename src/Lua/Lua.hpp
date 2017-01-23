@@ -30,6 +30,7 @@ namespace Lua {
     sol::state engine;
 
   private:
-    bool hasConsole = false;
+    Console* mConsole;
+    CFG*     mCFG;
   };
 }

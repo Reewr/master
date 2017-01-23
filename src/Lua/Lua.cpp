@@ -17,7 +17,7 @@
 #include <sol.hpp>
 
 namespace Lua {
-  Lua::Lua() { reInitialize(); }
+  Lua::Lua() : mConsole(nullptr), mCFG(nullptr) { reInitialize(); }
 
   Lua::~Lua() {}
 
@@ -44,7 +44,10 @@ namespace Lua {
       loadFile(filename);
     };
 
-    engine["lua"]["reload"] = [&]() { reInitialize(); };
+    if (mConsole != nullptr)
+      add(mConsole);
+    if (mCFG != nullptr)
+      add(mCFG);
 
     loadFile("lua/main.lua");
   }
@@ -52,12 +55,17 @@ namespace Lua {
   bool Lua::loadFile(const std::string& filename) {
     try {
       sol::function_result res = engine.script_file("lua/main.lua");
-      return res.valid();
+      bool isValid = res.valid();
 
+      if (!isValid && mConsole != nullptr)
+        mConsole->error("Failed to load file '" + filename + "'. No such file");
+      else if (!isValid)
+        error("Failed to load file '" + filename + "'. No such file");
+
+      return isValid;
     } catch (const sol::error& e) {
-      if (hasConsole) {
-        Console* c = engine["console"];
-        c->error("Tried to load file '" + filename + "': " + e.what());
+      if (mConsole != nullptr) {
+        mConsole->error("Tried to load file '" + filename + "': " + e.what());
       } else {
         error(e.what());
       }
@@ -71,7 +79,7 @@ namespace Lua {
       return;
 
     engine["console"] = console;
-    hasConsole        = true;
+    mConsole = console;
   }
 
   void Lua::add(CFG* cfg) {
@@ -79,5 +87,6 @@ namespace Lua {
       return;
 
     engine["cfg"] = cfg;
+    mCFG = cfg;
   }
 }

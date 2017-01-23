@@ -16,3 +16,9 @@ function prevState()
   currentEvent:sendStateChange(States.Quit)
   currentEvent:stopPropgation()
 end
+
+function lua.reload()
+  console:log("Reloading LUA engine and files")
+  currentEvent:sendStateChange(States.LuaReload)
+  currentEvent:stopPropgation()
+end
