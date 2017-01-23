@@ -17,8 +17,8 @@ Slider::Slider(const vec2& pos, const float scale, const std::string& valSign) {
   mScale      = scale;
   mValSign    = valSign;
 
-  auto texBackground = mResourceManager->get<Texture>("Texture::Slider");
-  auto texButton     = mResourceManager->get<Texture>("Texture::SliderButton");
+  auto texBackground = mAsset->rManager()->get<Texture>("Texture::Slider");
+  auto texButton     = mAsset->rManager()->get<Texture>("Texture::SliderButton");
 
   mBoundingBox = Rect(pos, texBackground->getSize() * scale);
   mButtonRect  = Rect(pos, texButton->getSize() * scale);

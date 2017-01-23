@@ -26,6 +26,7 @@ public:
   void draw();
 
 private:
+  CFG*     mCFG;
   Text*    mActiveText;
   GL::Rectangle* mBackground;
 };

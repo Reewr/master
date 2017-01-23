@@ -20,6 +20,7 @@
 
 
 OptionsMenu::OptionsMenu(Input::Input* input) {
+  mCFG = mAsset->cfg();
   mActiveWindow = NULL;
   mInput        = input;
   mBoundingBox  = Rect(mCFG->graphics.res.x * 0.50 - 500,
@@ -28,7 +29,7 @@ OptionsMenu::OptionsMenu(Input::Input* input) {
                       700);
 
   mBackground = new GL::Rectangle(mBoundingBox);
-  mBackground->setTexture(mResourceManager->get<Texture>("Texture::Background"));
+  mBackground->setTexture(mAsset->rManager()->get<Texture>("Texture::Background"));
 
   addMenu("Category",
           { "Audio", "Game", "Graphics", "Keybindings", "Mouse" },

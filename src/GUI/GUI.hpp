@@ -1,13 +1,11 @@
 #pragma once
 
 #include "../Math/MathCD.hpp"
-#include "../Utils/CFG.hpp"
+#include "../Utils/Asset.hpp"
 #include "../GLSL/Program.hpp"
 #include <functional>
 #include <memory>
 
-class ResourceManager;
-class CFG;
 class Asset;
 
 namespace Input {
@@ -38,17 +36,24 @@ public:
   //! Check whether the GUI element is being mousedover
   virtual bool isMouseOver() const;
 
+  //! This can be used, if the GUI element obeys it, to
+  //! check if anything has changed. For instance, if the
+  //! user has set the element to a different dropdown
   virtual bool hasChanged() const;
-  virtual void hasChanged(bool c);
 
+  // Setter functions
+  virtual void hasChanged(bool c);
   virtual void isVisible(bool v);
   virtual void isClickable(bool c);
   virtual void isMinimized(bool m);
   virtual void isAnimating(bool a);
   virtual void isMouseOver(bool m);
 
+  // The input handler itself. This is called by the active state
   virtual void input(const Input::Event& event);
 
+  // It is often useful to customize the handler of a GUI element, this
+  // allows that.
   virtual void
   setInputHandler(std::function<void(const Input::Event& event)> handler);
 
@@ -63,8 +68,7 @@ public:
   virtual void setSize(const vec2& size);
   virtual void setOffset(const vec2& offset);
 
-  static void init(Asset* asset);
-  static void deinit();
+  static Asset* mAsset;
 
 protected:
   GUI();
@@ -80,10 +84,6 @@ protected:
   bool mHasChanged;
   bool mIsMouseOver;
 
+  std::shared_ptr<Program> mGUIProgram;
   std::function<void(const Input::Event& event)> mInputHandler;
-
-  static CFG*             mCFG;
-  static ResourceManager* mResourceManager;
-
-  static std::shared_ptr<Program> mGUIProgram;
 };

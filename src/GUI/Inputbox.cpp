@@ -16,8 +16,8 @@ Inputbox::Inputbox(const Rect& r, const std::string text) {
   mTextBox  = new GL::Rectangle();
   mInputBox = new GL::Rectangle();
 
-  mInputBoxRect = Rect(vec2(mCFG->graphics.res.x * 0.50 - 200,
-                            mCFG->graphics.res.y * 0.50 - 25),
+  mInputBoxRect = Rect(vec2(mAsset->cfg()->graphics.res.x * 0.50 - 200,
+                            mAsset->cfg()->graphics.res.y * 0.50 - 25),
                        vec2(400, 50));
   mBoundingBox = r;
 
@@ -38,9 +38,9 @@ Inputbox::Inputbox(const Rect& r, const std::string text) {
   mInputBoxText->setPosition(textPos);
 
   mTextBox->change(mBoundingBox);
-  mTextBox->setTexture(mResourceManager->get<Texture>("Texture::Background"));
+  mTextBox->setTexture(mAsset->rManager()->get<Texture>("Texture::Background"));
   mInputBox->change(mInputBoxRect);
-  mInputBox->setTexture(mResourceManager->get<Texture>("Texture::Slider"));
+  mInputBox->setTexture(mAsset->rManager()->get<Texture>("Texture::Slider"));
   mInputIsVisible = false;
   hasChanged(false);
 }

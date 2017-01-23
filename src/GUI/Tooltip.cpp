@@ -9,6 +9,7 @@
 #include "../Utils/Utils.hpp"
 
 Tooltip::Tooltip() {
+  mCFG = mAsset->cfg();
   mBoundingBox = Rect(0, 0, 100, 60);
   mOffset      = vec2(0, 0);
   mBackground  = new GL::Rectangle(mBoundingBox);
@@ -18,7 +19,8 @@ Tooltip::Tooltip() {
                          10,
                          Text::WHITE,
                          mBoundingBox.size);
-  mBackground->setTexture(mResourceManager->get<Texture>("Texture::Background"));
+  mBackground->setTexture(
+    mAsset->rManager()->get<Texture>("Texture::Background"));
 }
 
 /**

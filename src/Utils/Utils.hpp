@@ -61,15 +61,6 @@ namespace Utils {
   std::string toStr(N n);
 
   void logPercent(int percent, std::string msg = "");
-
-  template <typename V>
-  void deleteVec(std::vector<V*>& vec);
-
-  template <typename V>
-  void deleteList(std::list<V*>& list);
-
-  template <typename K, typename V>
-  void deleteMap(std::map<K, V*>& map);
 }
 
 //! print fatal error regardless of DEBUG_MODE

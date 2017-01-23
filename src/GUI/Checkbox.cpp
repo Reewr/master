@@ -16,7 +16,7 @@ Checkbox::Checkbox(const vec2& pos) : mIsTicked(false) {
   mTick        = new Text("Font::Dejavu", "", vec2(pos.x, pos.y - 3), 20);
 
   mTick->setColor(Text::WHITE);
-  mSquare->setTexture(mResourceManager->get<Texture>("Texture::Checkbox"));
+  mSquare->setTexture(mAsset->rManager()->get<Texture>("Texture::Checkbox"));
   mSquare->change(mBoundingBox);
 }
 

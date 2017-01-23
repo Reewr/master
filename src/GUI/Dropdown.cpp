@@ -47,9 +47,10 @@ Dropdown::Dropdown(const std::vector<std::string>& options,
                      mBoundingBox.size + vec2(0, mOptions.size() * 25));
 
   mBox->change(mBoundingBox);
-  mBox->setTexture(mResourceManager->get<Texture>("Texture::Dropdown"));
+  mBox->setTexture(mAsset->rManager()->get<Texture>("Texture::Dropdown"));
   mOptionsList->change(mBigBoxRect);
-  mOptionsList->setTexture(mResourceManager->get<Texture>("Texture::Background"));
+  mOptionsList->setTexture(
+    mAsset->rManager()->get<Texture>("Texture::Background"));
   setActiveOptionPosition();
 }
 
@@ -105,7 +106,11 @@ Dropdown* Dropdown::fromXML(tinyxml2::XMLElement* element) {
 Dropdown::~Dropdown() {
   delete mBox;
   delete mOptionsList;
-  Utils::deleteVec(mOptions);
+
+  for(auto a : mOptions)
+    delete a;
+
+  mOptions.clear();
 }
 
 /**

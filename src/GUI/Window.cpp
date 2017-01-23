@@ -31,7 +31,7 @@ Window::Window(std::string texture, Rect r) {
 
   if (texture != "NONE") {
     mBackground = new GL::Rectangle(mBoundingBox);
-    mBackground->setTexture(mResourceManager->get<Texture>(texture));
+    mBackground->setTexture(mAsset->rManager()->get<Texture>(texture));
   }
 }
 
@@ -128,12 +128,30 @@ Window::~Window() {
   if (mTitle != nullptr)
     delete mTitle;
 
-  Utils::deleteMap(mMenues);
-  Utils::deleteMap(mSliders);
-  Utils::deleteMap(mWindows);
-  Utils::deleteMap(mDropdowns);
-  Utils::deleteMap(mCheckboxes);
-  Utils::deleteMap(mInputboxes);
+  for (auto m : mMenues)
+    delete m.second;
+
+  for (auto s : mSliders)
+    delete s.second;
+
+  for (auto w : mWindows)
+    delete w.second;
+
+  for (auto d : mDropdowns)
+    delete d.second;
+
+  for (auto c : mCheckboxes)
+    delete c.second;
+
+  for (auto i : mInputboxes)
+    delete i.second;
+
+  mMenues.clear();
+  mSliders.clear();
+  mWindows.clear();
+  mDropdowns.clear();
+  mCheckboxes.clear();
+  mInputboxes.clear();
 }
 
 int Window::handleKeyInput(int, int) {

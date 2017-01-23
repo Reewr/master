@@ -4,6 +4,7 @@
 #include "../GUI/Menu.hpp"
 #include "../GUI/Window.hpp"
 #include "../GUIMenu/OptionsMenu.hpp"
+#include "../Resource/ResourceManager.hpp"
 #include "../Graphical/Framebuffer.hpp"
 #include "../Graphical/GL/Rectangle.hpp"
 #include "../Graphical/Texture.hpp"
@@ -16,6 +17,8 @@
 
 MainMenu::MainMenu(Asset* asset) {
   mAsset = asset;
+  mAsset->rManager()->unloadUnnecessary(ResourceScope::MainMenu);
+  mAsset->rManager()->loadRequired(ResourceScope::MainMenu);
 
   Console*     console = new Console(asset);
   OptionsMenu* opts    = new OptionsMenu(asset->input());

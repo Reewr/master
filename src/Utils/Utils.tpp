@@ -130,24 +130,3 @@ std::string Utils::toStr(N n) {
   buff << n;
   return buff.str();
 }
-
-template <typename V>
-void Utils::deleteVec(std::vector<V*>& vec) {
-  for (auto& v : vec)
-    delete v;
-  vec.clear();
-}
-
-template <typename V>
-void Utils::deleteList(std::list<V*>& list) {
-  for (auto& v : list)
-    delete v;
-  list.clear();
-}
-
-template <typename K, typename V>
-void Utils::deleteMap(std::map<K, V*>& map) {
-  for (auto& v : map)
-    delete v.second;
-  map.clear();
-}

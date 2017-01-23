@@ -13,7 +13,8 @@ Text::Text(const std::string& font,
            int                size,
            int                color,
            const vec2&        limit) {
-  mTextFont  = mResourceManager->get<Font>(font);
+
+  mTextFont  = mAsset->rManager()->get<Font>(font);
   mLimit     = limit;
   mIsLimitOn = limit.x != 0 || limit.y != 0;
   mText      = text;

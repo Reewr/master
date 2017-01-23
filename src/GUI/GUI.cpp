@@ -9,9 +9,7 @@
 #include "../Utils/Utils.hpp"
 #include "../Utils/Asset.hpp"
 
-ResourceManager*         GUI::mResourceManager = nullptr;
-CFG*                     GUI::mCFG             = nullptr;
-std::shared_ptr<Program> GUI::mGUIProgram      = nullptr;
+Asset* GUI::mAsset = nullptr;
 
 GUI::GUI()
     : mBoundingBox(0, 0, 0, 0)
@@ -21,7 +19,10 @@ GUI::GUI()
     , mIsAnimating(false)
     , mIsMinimized(false)
     , mHasChanged(false)
-    , mIsMouseOver(false) {}
+    , mIsMouseOver(false) {
+  mGUIProgram = mAsset->rManager()->get<Program>("Program::GUI");
+  mGUIProgram->setUniform("screenRes", mAsset->cfg()->graphics.res);
+}
 
 GUI::~GUI() {}
 
@@ -111,17 +112,3 @@ void GUI::setSize(const vec2& size) {
 void GUI::setOffset(const vec2& offset) {
   mOffset = offset;
 }
-
-void GUI::init(Asset* a) {
-  mCFG             = a->cfg();
-  mResourceManager = a->rManager();
-  mGUIProgram      = mResourceManager->get<Program>("Program::GUI");
-
-  mGUIProgram->bindAttribs({ "position", "texcoord" }, { 0, 1 });
-  mGUIProgram->link();
-  mGUIProgram->setUniform("screenRes", mCFG->graphics.res, "guiOffset", vec2());
-  mGUIProgram->setUniform("isText", 0);
-  mGUIProgram->setUniform("guiColor", vec3());
-}
-
-void GUI::deinit() {}

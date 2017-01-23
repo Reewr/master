@@ -160,7 +160,7 @@ bool Engine::initialize(int argc, char* argv[], int isRefresh, int initState) {
 
   mResourceManager->loadDescription("./media/resources.lua");
 
-  GUI::init(mAsset);
+  GUI::mAsset = mAsset;
   /* Spider::init(); */
   /* Model::init(&asset->cfg); */
   Framebuffer::init(mAsset->cfg());
@@ -341,7 +341,7 @@ void Engine::sendEvent(const Input::Event& event) {
  *   If true, also shuts down glfw.
  */
 void Engine::deinitialize(bool isFullDeinit) {
-  GUI::deinit();
+  mResourceManager->unloadAll();
   /* Model::deinit(); */
   /* Spider::deinit(); */
   Framebuffer::deinit();

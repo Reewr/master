@@ -13,14 +13,14 @@
 #include "../Resource/ResourceManager.hpp"
 
 PauseMenu::PauseMenu(Input::Input* i) {
-  mBoundingBox = Rect(mCFG->graphics.res.x * 0.5 - 300,
-                      mCFG->graphics.res.y * 0.5 - 100,
+  mBoundingBox = Rect(mAsset->cfg()->graphics.res.x * 0.5 - 300,
+                      mAsset->cfg()->graphics.res.y * 0.5 - 100,
                       600,
                       200);
 
   mInput = i;
   mBackground = new GL::Rectangle(mBoundingBox);
-  mBackground->setTexture(mResourceManager->get<Texture>("Texture::Background"));
+  mBackground->setTexture(mAsset->rManager()->get<Texture>("Texture::Background"));
 
   if (!mUiLoader.loadXMLSettings(TEMP::getPath(TEMP::XMLOPT), "Pause", this))
     throw Error("Read log above");

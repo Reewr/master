@@ -164,8 +164,8 @@ Menu* Menu::fromXML(tinyxml2::XMLElement* element) {
 }
 
 Menu::~Menu() {
-  for (unsigned int i = 0; i < mMenuItems.size(); i++)
-    delete mMenuItems[i];
+  for (auto m : mMenuItems)
+    delete m;
 
   mMenuItems.clear();
 }
