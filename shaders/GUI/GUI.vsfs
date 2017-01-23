@@ -1,9 +1,9 @@
 
 #ifdef __VERTEX__
-#version 130
+#version 330
 
-in vec2 position;
-in vec2 texcoord;
+layout(location=0) in vec2 position;
+layout(location=1) in vec2 texcoord;
 out vec2 Texcoord;
 
 uniform vec2 screenRes;
@@ -26,7 +26,7 @@ void main() {
 #endif
 #ifdef __FRAGMENT__
 
-#version 130
+#version 330
 
 in vec2 Texcoord;
 out vec4 outColor;
