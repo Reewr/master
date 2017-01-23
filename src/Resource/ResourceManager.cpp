@@ -10,26 +10,31 @@
 ResourceManager::ResourceManager() : mCurrentScope(ResourceScope::None) {}
 
 ResourceManager::~ResourceManager() {
-  for (auto& rPair : mResources) {
-    if (rPair.second->loaded())
-      rPair.second->unload();
-  }
+  unloadAll();
 }
 
 void ResourceManager::loadRequired(ResourceScope scope) {
+  log("ResourceManager :: loadRequired, scope: ", static_cast<int>(scope));
   mCurrentScope = scope;
   for (auto& rPair : mResources) {
     if (rPair.second->includesScope(scope) && !rPair.second->loaded()) {
+      log("ResourceManager :: Loading: ", rPair.second->filename());
       rPair.second->load();
       rPair.second->setLoaded(true);
+    } else if (rPair.second->includesScope(scope) && rPair.second->loaded()) {
+      log("ResourceManager :: Already loaded: ", rPair.second->filename());
+    } else {
+      log("ResourceManager :: Not loading: ", rPair.second->filename());
     }
   }
 }
 
 void ResourceManager::unloadAll() {
   for (auto& rPair : mResources) {
-    rPair.second->unload();
-    rPair.second->setLoaded(false);
+    if (rPair.second->loaded()) {
+      rPair.second->unload();
+      rPair.second->setLoaded(false);
+    }
   }
 }
 

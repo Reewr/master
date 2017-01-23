@@ -28,14 +28,14 @@ public:
   //
   // This can also be used when the filename contains two files, separated
   // by comma, for instance: "path/to/myshader.fs,path/to/myshader.vs"
-  Program(const std::string& fsvs, int link = 1);
+  Program(const std::string& fsvs, bool link = true);
 
   //! Deletes shader program
   ~Program();
 
   //! Creates and links the program. If you specify link as false it will
   //! not link so you can set attrib values before hand.
-  bool createProgram(const std::string& fsvs, int link = 1);
+  bool createProgram(const std::string& fsvs, bool link = true);
 
   //! Adds a shader to the current program
   bool addShader(const Shader& sh);

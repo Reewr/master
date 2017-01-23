@@ -32,8 +32,11 @@ Font::Page::Page() {}
  *   library and throws error if this does not work
  */
 Font::Font() {
-  if (numFonts == 0 && FT_Init_FreeType(&fontLib))
-    throw Error("FreeType not initialized correctly");
+  if (numFonts == 0) {
+    if (FT_Init_FreeType(&fontLib))
+      throw Error("FreeType not initialized correctly");
+    log("Font :: Loaded FreeType");
+  }
 
   numFonts++;
 }
@@ -46,8 +49,10 @@ Font::Font() {
 Font::~Font() {
   numFonts--;
 
-  if (numFonts <= 0)
+  if (numFonts <= 0) {
     FT_Done_FreeType(fontLib);
+    log("Font :: Unloaded FreeType");
+  }
 }
 
 /**
@@ -69,8 +74,11 @@ bool Font::load() {
 }
 
 bool Font::load(int size) {
-  if (mPages.count(size) > 0)
+  log("Font :: Loading size: ", std::to_string(size));
+  if (mPages.count(size) > 0) {
+    log("Font :: Size already loaded: ", std::to_string(size));
     return true;
+  }
   if (FT_New_Face(fontLib, mFilename.c_str(), 0, &mFace))
     return false;
 
@@ -112,6 +120,7 @@ bool Font::load(int size) {
   // in the previous loop
   Utils::getGLError();
   page.texture.createTexture(vec2(w, h), 0, GL_RED, GL_RED);
+  page.texture.setFilename(filename() + ":" + std::to_string(size));
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
   page.texture.clampToEdge().linear();
 

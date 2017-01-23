@@ -67,7 +67,7 @@ protected:
 
   void deinitialize(bool isFullDeinit = true);
 
-  void refreshState(bool isWinRefresh);
+  void refreshState(int refreshType);
   void changeState(int newState);
   void createState();
   void closeWindow();
@@ -83,4 +83,5 @@ protected:
   Asset*           mAsset;
   Lua::Lua*        mLua;
   ResourceManager* mResourceManager;
+  bool             mWindowRefresh;
 };

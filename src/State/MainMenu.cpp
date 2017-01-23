@@ -18,9 +18,9 @@ MainMenu::MainMenu(Asset* asset) {
   mAsset->rManager()->unloadUnnecessary(ResourceScope::MainMenu);
   mAsset->rManager()->loadRequired(ResourceScope::MainMenu);
 
-  Console*     console = new Console(asset);
-  OptionsMenu* opts    = new OptionsMenu(asset->input());
-  CFG*         cfg     = asset->cfg();
+  Console*     console = new Console(mAsset);
+  OptionsMenu* opts    = new OptionsMenu(mAsset->input());
+  CFG*         cfg     = mAsset->cfg();
   Window*      menu =
     new Window("NONE",
                Rect(vec2(cfg->graphics.res.x - 175, cfg->graphics.res.y - 175),

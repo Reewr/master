@@ -30,15 +30,17 @@ Console::Console(Asset* asset)
   mText = new Text("Font::Dejavu",
                    "> _",
                    textPos,
-                   12,
+                   15,
                    Text::WHITE,
                    vec2(mAsset->cfg()->graphics.res.x,
                         mAsset->cfg()->graphics.res.y));
+  mText->isVisible(true);
+  ::log("res: ", res, " textPos: ", textPos, " ");
 
   // Specific program for the console since the console
   // is just drawn in black with alpha
   mProgram = mAsset->rManager()->get<Program>("Program::ColorRect");
-  mProgram->setUniform("screenRes", res, "guiOffset", vec2());
+  mProgram->setUniform("screenRes", res);
   mProgram->setUniform("guiColor", vec4(0, 0, 0, 0.9));
 }
 

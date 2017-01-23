@@ -28,7 +28,7 @@ namespace Utils {
 
   bool fileExists(const std::string& name);
 
-  bool getGLError();
+  bool getGLError(const std::string& place = "");
   void clearGLError();
 
   void logTimeStart(std::string name    = "TimeStart",

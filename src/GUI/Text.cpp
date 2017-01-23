@@ -280,7 +280,7 @@ void Text::recalculateGeometry() {
  *   the font used for the text is not null
  */
 void Text::draw() {
-  if (!isVisible() || mTextFont == nullptr)
+  if (!isVisible())
     return;
 
   mGUIProgram->bind();

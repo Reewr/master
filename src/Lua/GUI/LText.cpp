@@ -5,8 +5,8 @@
 
 #include <sol.hpp>
 
-#include "../Resource/LFont.hpp"
 #include "../Math/LMath.hpp"
+#include "../Resource/LFont.hpp"
 
 std::vector<std::pair<std::function<void(sol::state& state)>, std::string>>
   text_dependencies = { std::make_pair(&Lua::math_as_lua, "vec2") };

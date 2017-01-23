@@ -12,6 +12,8 @@ GLuint Texture::activeTexture = 0;
 Texture::Texture() : mMode(0), mTextureId(0), mSamplerId(0), mSize(0, 0) {}
 
 void Texture::unload() {
+  log("Unloading Texture :: ", mFilename);
+
   if (activeTexture == mTextureId)
     activeTexture = 0;
 
@@ -76,6 +78,7 @@ GLuint Texture::generateGLTexture() {
 }
 
 bool Texture::load() {
+  log("Loading Texture :: ", mFilename);
   if (mTextureId != 0)
     return true;
 
@@ -191,6 +194,7 @@ bool Texture::createTexture(const vec2&    s,
                inColor,
                GL_UNSIGNED_BYTE,
                data);
+
   if (!Utils::getGLError())
     throw Error("createTexture failed. View OpenGL error above");
 

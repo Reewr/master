@@ -4,7 +4,8 @@ Resource::Resource()
     : mScope(ResourceScope::None)
     , mType(ResourceType::Empty)
     , mName("")
-    , mFilename("") {}
+    , mFilename("")
+    , mLoaded(false) {}
 
 Resource::~Resource() {}
 

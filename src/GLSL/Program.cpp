@@ -11,11 +11,12 @@ Program::Program() : program(0), isLinked(false), isUsable(false) {}
 
 Program::~Program() {}
 
-Program::Program(const std::string& fsvs, int link) {
+Program::Program(const std::string& fsvs, bool link)
+    : program(0), isLinked(false), isUsable(false) {
   createProgram(fsvs, link);
 }
 
-bool Program::createProgram(const std::string& fsvs, int link) {
+bool Program::createProgram(const std::string& fsvs, bool link) {
   std::map<std::string, std::string> srcs;
   if (fsvs.find(",") != std::string::npos) {
     srcs = loadDualShaderFilename(fsvs);
@@ -45,23 +46,29 @@ bool Program::createProgram(const std::string& fsvs, int link) {
   if (!addShader(fs) || !addShader(vs))
     throw std::runtime_error("Failed to create program");
 
-  if (link == 0)
+  if (!link)
     return true;
 
   return this->link();
 }
 
 bool Program::load() {
-  return createProgram(mFilename, 1);
+  log("Loading Program :: ", mFilename);
+  return createProgram(mFilename, true);
 }
 
 void Program::unload() {
+  log("Unloading Program :: ", mFilename);
   if (program != 0) {
     if (activeProgram == program)
       activeProgram = 0;
 
     glDeleteProgram(program);
+    program = 0;
   }
+
+  isUsable = false;
+  isLinked = false;
 }
 
 bool Program::addShader(const Shader& sh) {
@@ -76,7 +83,7 @@ bool Program::addShader(const Shader& sh) {
 
 bool Program::link() {
   if (isLinked)
-    return false;
+    return true;
 
   glLinkProgram(program);
 
@@ -306,8 +313,8 @@ bool Program::checkErrors(const std::string&              place,
     std::cout << std::endl;
     error("GLSL error.. Please see error above.");
     throw std::runtime_error("Program.cpp");
-    return false;
   }
+
   return true;
 }
 
@@ -328,7 +335,7 @@ bool Program::checkProgram(const GLuint pro) {
     glDeleteProgram(pro);
     error("GLSL program error. Please see above.");
     throw std::runtime_error("Program.cpp");
-    return false;
   }
+
   return true;
 }

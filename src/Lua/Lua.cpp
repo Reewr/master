@@ -5,14 +5,14 @@
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
 
-#include "Utils/LCFG.hpp"
 #include "Console/LConsole.hpp"
-#include "LEngine.hpp"
-#include "Input/LEvent.hpp"
-#include "Resource/LFont.hpp"
-#include "Math/LMath.hpp"
-#include "State/LState.hpp"
 #include "GUI/LText.hpp"
+#include "Input/LEvent.hpp"
+#include "LEngine.hpp"
+#include "Math/LMath.hpp"
+#include "Resource/LFont.hpp"
+#include "State/LState.hpp"
+#include "Utils/LCFG.hpp"
 
 #include <sol.hpp>
 

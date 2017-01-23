@@ -223,11 +223,11 @@ void Utils::logTime(std::string loc) {
   log(loc + " - ", glfwGetTime(), " seconds.");
 }
 
-bool Utils::getGLError() {
-  GLenum glerror = glGetError();
-  if (glerror != GL_NO_ERROR) {
+bool Utils::getGLError(const std::string& place) {
+  GLenum glError = glGetError();
+  if (glError != GL_NO_ERROR) {
+    error("OpenGL Error after: " + place + " ", glError);
     // const unsigned char* errorChar = gluErrorString(glerror);
-    // error("OpenGL Error: ", errorChar);
     return false;
   }
   return true;

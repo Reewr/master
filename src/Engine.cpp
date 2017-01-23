@@ -58,7 +58,8 @@ static void glfwErrorHandler(int, const char* k) {
 }
 
 Engine::Engine(std::string cfgPath) {
-  mCFGPath = cfgPath;
+  mCFGPath       = cfgPath;
+  mWindowRefresh = false;
 }
 
 Engine::~Engine() {
@@ -136,6 +137,7 @@ bool Engine::initialize(int argc, char* argv[], int isRefresh, int initState) {
     glfwSetCursorPosCallback(mWindow, placementMouseMovementCB);
     glfwSetMouseButtonCallback(mWindow, placementMouseButtonCB);
     glfwSetCharCallback(mWindow, placementCharCB);
+    glfwSetWindowUserPointer(mWindow, this);
   } else {
     // Else we just readjust the window
     // based on the settings given
@@ -395,25 +397,35 @@ void Engine::runLoop() {
     startTime         = currentTime;
 
     LOOP_LOGGER += deltaTime;
+
     // Update the stack if available
-    if (mCurrent != nullptr)
-      mCurrent->update(deltaTime);
-    else
-      error("Engine::Failed at update due to no states");
+    mCurrent->update(deltaTime);
 
     // Clear everything
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClearColor(0, 0.4, 0.7, 1);
 
-    if (mCurrent != nullptr)
-      mCurrent->draw(deltaTime);
+    mCurrent->draw(deltaTime);
 
-    glfwSetWindowUserPointer(mWindow, this);
     glfwPollEvents();
     glfwSwapBuffers(mWindow);
 
     if (LOOP_LOGGER > 1) {
       LOOP_LOGGER = 0;
+    }
+
+    // Special case for when the engine has to be entirely
+    // reloaded due context setting changes.
+    //
+    // The reason for this so late in the loop is
+    // so that no GLFW calls are being called during
+    // its destruction
+    if (mWindowRefresh) {
+      refreshState(States::WinRefresh);
+      int current = mActiveStates.top();
+      mActiveStates.pop();
+      changeState(current);
+      mWindowRefresh = false;
     }
   }
 }
@@ -428,11 +440,10 @@ void Engine::runLoop() {
  *   that a normal refresh isnt good enough. If true, it will unload all
  *   resources before reloading them.
  */
-void Engine::refreshState(bool isWinRefresh) {
-  int type = isWinRefresh ? States::WinRefresh : States::Refresh;
-  deinitialize(isWinRefresh);
+void Engine::refreshState(int refreshType) {
+  deinitialize(refreshType == States::WinRefresh);
 
-  if (!initialize(0, NULL, type)) {
+  if (!initialize(0, NULL, refreshType)) {
     throw Error("Engine failed to refresh!");
   }
 }
@@ -451,12 +462,13 @@ void Engine::changeState(int newState) {
     case States::Quit:
       mActiveStates.pop();
       break;
+    // Fall through because they use the same function
     case States::Refresh:
-      refreshState(false);
+      refreshState(newState);
       break;
     case States::WinRefresh:
-      refreshState(true);
-      break;
+      mWindowRefresh = true;
+      return;
     case States::LuaReload:
       mLua->reInitialize();
       return;
