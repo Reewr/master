@@ -5,7 +5,7 @@
 
 #include "../GLSL/Program.hpp"
 #include "../Graphical/GL/Rectangle.hpp"
-#include "../Graphical/Text.hpp"
+#include "../GUI/Text.hpp"
 #include "../Graphical/Texture.hpp"
 #include "../Input/Event.hpp"
 #include "../Input/Input.hpp"

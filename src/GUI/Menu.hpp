@@ -2,8 +2,8 @@
 
 #include <vector>
 
-#include "../Graphical/Text.hpp"
 #include "GUI.hpp"
+#include "Text.hpp"
 
 namespace tinyxml2 {
   class XMLElement;

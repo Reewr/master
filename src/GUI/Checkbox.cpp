@@ -2,8 +2,8 @@
 
 #include <tinyxml2.h>
 
+#include "Text.hpp"
 #include "../GLSL/Program.hpp"
-#include "../Graphical/Text.hpp"
 #include "../Graphical/Texture.hpp"
 #include "../Graphical/GL/Rectangle.hpp"
 #include "../Resource/ResourceManager.hpp"

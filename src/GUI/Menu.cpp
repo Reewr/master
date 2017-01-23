@@ -3,7 +3,7 @@
 #include "../OpenGLHeaders.hpp"
 #include <tinyxml2.h>
 
-#include "../Graphical/Text.hpp"
+#include "Text.hpp"
 #include "../Input/Event.hpp"
 #include "../Utils/Asset.hpp"
 #include "../Utils/Utils.hpp"

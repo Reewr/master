@@ -3,10 +3,7 @@
 #include "OpenGLHeaders.hpp"
 
 #include "GUI/GUI.hpp"
-#include "Graphical/Font.hpp"
 #include "Graphical/Framebuffer.hpp"
-#include "Graphical/Text.hpp"
-#include "Graphical/Texture.hpp"
 #include "Lua/Lua.hpp"
 #include "State/MainMenu.hpp"
 #include "State/Master.hpp"

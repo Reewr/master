@@ -6,9 +6,9 @@
 #include "Dropdown.hpp"
 #include "Inputbox.hpp"
 #include "Slider.hpp"
+#include "Text.hpp"
 
 #include "../GLSL/Program.hpp"
-#include "../Graphical/Text.hpp"
 #include "../Graphical/Texture.hpp"
 #include "../Graphical/GL/Rectangle.hpp"
 #include "../Resource/ResourceManager.hpp"

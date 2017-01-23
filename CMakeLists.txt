@@ -182,6 +182,7 @@ set(DDDGP_CPP
   ${SRC_DIR}/GUI/GUI.cpp
   ${SRC_DIR}/GUI/Inputbox.cpp
   ${SRC_DIR}/GUI/Menu.cpp
+  ${SRC_DIR}/GUI/Text.cpp
   ${SRC_DIR}/GUI/Slider.cpp
   ${SRC_DIR}/GUI/Tooltip.cpp
   ${SRC_DIR}/GUI/Window.cpp
@@ -193,7 +194,6 @@ set(DDDGP_CPP
   # src/Graphical
   ${SRC_DIR}/Graphical/Font.cpp
   ${SRC_DIR}/Graphical/Framebuffer.cpp
-  ${SRC_DIR}/Graphical/Text.cpp
   ${SRC_DIR}/Graphical/Texture.cpp
 
   # src/Graphical/GL
@@ -263,6 +263,7 @@ set(DDDGP_HPP
   ${SRC_DIR}/GUI/Inputbox.hpp
   ${SRC_DIR}/GUI/Menu.hpp
   ${SRC_DIR}/GUI/Slider.hpp
+  ${SRC_DIR}/GUI/Text.hpp
   ${SRC_DIR}/GUI/Tooltip.hpp
   ${SRC_DIR}/GUI/Window.hpp
 
@@ -273,7 +274,6 @@ set(DDDGP_HPP
   # src/Graphical
   ${SRC_DIR}/Graphical/Font.hpp
   ${SRC_DIR}/Graphical/Framebuffer.hpp
-  ${SRC_DIR}/Graphical/Text.hpp
   ${SRC_DIR}/Graphical/Texture.hpp
 
   # src/Graphical/GL

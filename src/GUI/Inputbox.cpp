@@ -3,7 +3,7 @@
 #include <tinyxml2.h>
 
 #include "../GLSL/Program.hpp"
-#include "../Graphical/Text.hpp"
+#include "Text.hpp"
 #include "../Graphical/Texture.hpp"
 #include "../Graphical/GL/Rectangle.hpp"
 #include "../Resource/ResourceManager.hpp"
