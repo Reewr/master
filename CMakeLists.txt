@@ -29,6 +29,9 @@ macro(SET_OPTION opt value)
   set(${opt} ${value} CACHE "" INTERNAL FORCE)
 endmacro()
 
+# build dependencies as shared libraries
+set(BUILD_SHARED_LIBS ON)
+
 # Find & add TinyXML2
 #
 # Note:
