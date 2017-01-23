@@ -5,10 +5,10 @@
 #include "Text.hpp"
 
 #include "../GLSL/Program.hpp"
-#include "../Shape/GL/Rectangle.hpp"
 #include "../Input/Event.hpp"
 #include "../Resource/ResourceManager.hpp"
 #include "../Resource/Texture.hpp"
+#include "../Shape/GL/Rectangle.hpp"
 #include "../Utils/Utils.hpp"
 
 Slider::Slider(const vec2& pos, const float scale, const std::string& valSign) {

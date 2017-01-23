@@ -2,11 +2,11 @@
 
 #include "../OpenGLHeaders.hpp"
 
-#include "../Shape/GL/Rectangle.hpp"
 #include "../Input/Event.hpp"
 #include "../Input/Input.hpp"
 #include "../Resource/ResourceManager.hpp"
 #include "../Resource/Texture.hpp"
+#include "../Shape/GL/Rectangle.hpp"
 #include "../State/State.hpp"
 #include "../Utils/Asset.hpp"
 #include "../Utils/CFG.hpp"
@@ -14,9 +14,9 @@
 
 PauseMenu::PauseMenu(Input::Input* i) {
   mBoundingBox = Rectangle(mAsset->cfg()->graphics.res.x * 0.5 - 300,
-                      mAsset->cfg()->graphics.res.y * 0.5 - 100,
-                      600,
-                      200);
+                           mAsset->cfg()->graphics.res.y * 0.5 - 100,
+                           600,
+                           200);
 
   mInput      = i;
   mBackground = new GLRectangle(mBoundingBox);

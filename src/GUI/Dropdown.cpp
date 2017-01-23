@@ -4,10 +4,10 @@
 #include <tinyxml2.h>
 
 #include "../GLSL/Program.hpp"
-#include "../Shape/GL/Rectangle.hpp"
 #include "../Input/Event.hpp"
 #include "../Resource/ResourceManager.hpp"
 #include "../Resource/Texture.hpp"
+#include "../Shape/GL/Rectangle.hpp"
 #include "../Utils/Utils.hpp"
 #include "Text.hpp"
 
@@ -44,7 +44,7 @@ Dropdown::Dropdown(const std::vector<std::string>& options,
 
   // Add sizes together, assuming each element is ~25px
   mBigBoxRect = Rectangle(mBoundingBox.topleft,
-                     mBoundingBox.size + vec2(0, mOptions.size() * 25));
+                          mBoundingBox.size + vec2(0, mOptions.size() * 25));
 
   mBox->change(mBoundingBox);
   mBox->setTexture(mAsset->rManager()->get<Texture>("Texture::Dropdown"));

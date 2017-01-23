@@ -17,8 +17,7 @@ public:
 
 protected:
   void setup();
-  void setupOpenGLArrays(const std::vector<vec4>& v,
-                         const std::vector<int>&  i);
+  void setupOpenGLArrays(const std::vector<vec4>& v, const std::vector<int>& i);
   void generateVertices(std::vector<vec4>& vertices);
   void generateTriIndices(std::vector<int>& indices);
 

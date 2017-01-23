@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../Rectangle.hpp"
 #include "../../Resource/Texture.hpp"
+#include "../Rectangle.hpp"
 #include "Shape.hpp"
 #include <memory>
 

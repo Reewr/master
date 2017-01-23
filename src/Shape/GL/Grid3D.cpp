@@ -92,7 +92,7 @@ void GLGrid3D::generateNormals(const dVector<vec3>& v, dVector<vec3>& n) {
 }
 
 void GLGrid3D::setupOpenGLArrays(const vector<Vertex>& v,
-                                   const vector<int>&    i) {
+                                 const vector<int>&    i) {
   glGenBuffers(1, &VBO);
   glGenBuffers(1, &IBO);
   glGenVertexArrays(1, &VAO);

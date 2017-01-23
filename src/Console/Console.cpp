@@ -5,12 +5,12 @@
 
 #include "../GLSL/Program.hpp"
 #include "../GUI/Text.hpp"
-#include "../Shape/GL/Rectangle.hpp"
 #include "../Input/Event.hpp"
 #include "../Input/Input.hpp"
 #include "../Lua/Lua.hpp"
 #include "../Math/Math.hpp"
 #include "../Resource/ResourceManager.hpp"
+#include "../Shape/GL/Rectangle.hpp"
 #include "../State/State.hpp"
 #include "../Utils/Asset.hpp"
 #include "../Utils/CFG.hpp"
@@ -131,7 +131,7 @@ void Console::addHistory(Text* text) {
     }
 
     const Rectangle& box = (*a)->box();
-    startPos        = startPos - vec2(0, box.size.y + 5);
+    startPos             = startPos - vec2(0, box.size.y + 5);
 
     (*a)->setOffset(startPos);
   }
@@ -212,31 +212,31 @@ void Console::setText() {
 void Console::setAutoComplete() {
   return;
 
-  vec2 res      = mAsset->cfg()->graphics.res;
-  Rectangle box      = Rectangle(5, res.y / 2 + 30, 0, 0);
-  int  index    = 0;
-  vec2 startPos = vec2(10, res.y / 2 + 30);
+  /* vec2      res      = mAsset->cfg()->graphics.res; */
+  /* Rectangle box      = Rectangle(5, res.y / 2 + 30, 0, 0); */
+  /* int       index    = 0; */
+  /* vec2      startPos = vec2(10, res.y / 2 + 30); */
 
-  for (auto a : mAutoComplete) {
-    bool hasText = a->getText().find(mCurrentText) != std::string::npos;
-    if (hasText) {
-      a->isVisible(true);
-      a->setOffset(startPos + vec2(0, 20 * index));
-      box.size.x = max(a->size().x, box.size.x);
-      box.size.y = max(a->size().y, box.size.y);
-      index++;
-    } else {
-      a->isVisible(false);
-    }
-  }
+  /* for (auto a : mAutoComplete) { */
+  /*   bool hasText = a->getText().find(mCurrentText) != std::string::npos; */
+  /*   if (hasText) { */
+  /*     a->isVisible(true); */
+  /*     a->setOffset(startPos + vec2(0, 20 * index)); */
+  /*     box.size.x = max(a->size().x, box.size.x); */
+  /*     box.size.y = max(a->size().y, box.size.y); */
+  /*     index++; */
+  /*   } else { */
+  /*     a->isVisible(false); */
+  /*   } */
+  /* } */
 
-  if (box.size.y > 0 && index != 0) {
-    box.size.x        = box.size.x + 10;
-    mShowAutoComplete = true;
-    mAutoCompleteBox->change(box);
-  } else {
-    mShowAutoComplete = false;
-  }
+  /* if (box.size.y > 0 && index != 0) { */
+  /*   box.size.x        = box.size.x + 10; */
+  /*   mShowAutoComplete = true; */
+  /*   mAutoCompleteBox->change(box); */
+  /* } else { */
+  /*   mShowAutoComplete = false; */
+  /* } */
 }
 
 /**
@@ -409,7 +409,7 @@ void Console::deleteWord(int whichKey) {
  *
  * @param deltaTime
  */
-void Console::update(float deltaTime) {}
+void Console::update(float) {}
 
 /**
  * @brief Draw!

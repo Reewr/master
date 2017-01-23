@@ -22,8 +22,9 @@ MainMenu::MainMenu(Asset* asset) {
   CFG*         cfg     = mAsset->cfg();
   Window*      menu =
     new Window("NONE",
-               Rectangle(vec2(cfg->graphics.res.x - 175, cfg->graphics.res.y - 175),
-                    vec2(cfg->graphics.res.x, cfg->graphics.res.y)));
+               Rectangle(vec2(cfg->graphics.res.x - 175,
+                              cfg->graphics.res.y - 175),
+                         vec2(cfg->graphics.res.x, cfg->graphics.res.y)));
   menu->isVisible(true);
   menu->addMenu("MainMenu",
                 { "Master Thesis", "Start Game", "Options", "Exit" },

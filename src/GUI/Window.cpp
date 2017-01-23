@@ -9,10 +9,10 @@
 #include "Text.hpp"
 
 #include "../GLSL/Program.hpp"
-#include "../Shape/GL/Rectangle.hpp"
 #include "../Input/Event.hpp"
 #include "../Resource/ResourceManager.hpp"
 #include "../Resource/Texture.hpp"
+#include "../Shape/GL/Rectangle.hpp"
 #include "../Utils/Asset.hpp"
 #include "../Utils/Utils.hpp"
 

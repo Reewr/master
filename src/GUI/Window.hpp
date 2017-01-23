@@ -92,7 +92,7 @@ protected:
   void sortDropdowns();
 
   GLRectangle* mBackground;
-  Text*          mTitle;
+  Text*        mTitle;
 
   std::list<Dropdown*> mDrawDropdowns;
 

@@ -60,9 +60,9 @@ public:
   virtual void defaultInputHandler(const Input::Event& event);
 
   virtual const Rectangle& box() const;
-  virtual const vec2& position() const;
-  virtual const vec2& size() const;
-  virtual const vec2& offset();
+  virtual const vec2&      position() const;
+  virtual const vec2&      size() const;
+  virtual const vec2&      offset();
 
   virtual void setPosition(const vec2& position);
   virtual void setSize(const vec2& size);

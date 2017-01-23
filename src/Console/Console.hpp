@@ -85,7 +85,7 @@ private:
   std::string mCurrentText;
 
   // This holds the text that is rendered on the screen
-  Text*          mText;
+  Text*        mText;
   GLRectangle* mRect;
   GLRectangle* mAutoCompleteBox;
 

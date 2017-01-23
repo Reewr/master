@@ -49,12 +49,12 @@ public:
 private:
   GLRectangle* mBackground;
   GLRectangle* mButton;
-  Text*          mInfo;
+  Text*        mInfo;
 
   float       mScale;
   float       mValue;
   std::string mValSign;
 
   Rectangle mButtonRect;
-  vec2 mButtonOffset;
+  vec2      mButtonOffset;
 };

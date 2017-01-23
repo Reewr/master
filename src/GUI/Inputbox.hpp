@@ -51,9 +51,9 @@ public:
 private:
   GLRectangle* mTextBox;
   GLRectangle* mInputBox;
-  Text*          mText;
-  Text*          mInputBoxText;
+  Text*        mText;
+  Text*        mInputBoxText;
 
   Rectangle mInputBoxRect;
-  bool mInputIsVisible;
+  bool      mInputIsVisible;
 };

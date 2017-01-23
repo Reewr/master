@@ -44,7 +44,7 @@ void GLGrid::setup() {
 }
 
 void GLGrid::setupOpenGLArrays(const std::vector<vec4>& vertex,
-                                 const std::vector<int>&  ind) {
+                               const std::vector<int>&  ind) {
   glGenBuffers(1, &VBO);
   glGenBuffers(1, &IBO);
   glGenVertexArrays(1, &VAO);
