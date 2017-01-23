@@ -40,40 +40,12 @@ int main(int argc, char* argv[]) {
   log("Starting DDDGP");
   Engine* engine = new Engine();
 
-  try {
-    if (!engine->initialize(argc, argv)) {
-      throw Error("Engined failed to initialize");
-    }
-  } catch (const Error& err) {
-    fatalError("Init :: Threw an 'Error': ", err.what());
-    delete engine;
-    return 1;
-  } catch (const char* s) {
-    fatalError("Init :: Threw an const char* Error: ", s);
-    delete engine;
-    return 1;
-  } catch (std::string s) {
-    fatalError("Init :: Threw an std::string error: ", s);
-    delete engine;
-    return 1;
+  if (!engine->initialize(argc, argv)) {
+    throw Error("Engined failed to initialize");
   }
 
   // runs the loop, exiting on any errors
-  try {
-    engine->runLoop();
-  } catch (const Error& err) {
-    fatalError("Loop :: Threw an 'Error': ", err.what());
-    delete engine;
-    return 1;
-  } catch (const char* s) {
-    fatalError("Loop :: Threw an const char* Error: ", s);
-    delete engine;
-    return 1;
-  } catch (std::string s) {
-    fatalError("Loop :: Threw an std::string error: ", s);
-    delete engine;
-    return 1;
-  }
+  engine->runLoop();
 
   delete engine;
 
