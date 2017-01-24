@@ -75,6 +75,17 @@ void Console::error(const std::string& message) {
 
 /**
  * @brief
+ *   Logs a message to the console. The message is white.
+ *
+ * @param message
+ */
+void Console::log(const std::string& message) {
+  ::log("[Console] ", message);
+  addHistory(message, Text::WHITE);
+}
+
+/**
+ * @brief
  *   Logs an error to the console. The error is red.
  *
  * @param message
@@ -87,13 +98,13 @@ void Console::warn(const std::string& message) {
 
 /**
  * @brief
- *   Logs a message to the console. The message is white.
- *
- * @param message
+ *   Clears the console of text
  */
-void Console::log(const std::string& message) {
-  ::log("[Console] ", message);
-  addHistory(message, Text::WHITE);
+void Console::clear() {
+  for (auto h : mHistory)
+    delete h;
+
+  mHistory.clear();
 }
 
 /**

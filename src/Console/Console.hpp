@@ -18,6 +18,24 @@ namespace Input {
 
 class GLRectangle;
 
+/**
+ * @brief
+ *   This represents a Console that can be used together with Lua
+ *   to interact with the engine itself.
+ *
+ *   @TODO:
+ *     - Fix movement of caret to make more sense
+ *     - Add tab completion
+ *     - Add scroll in history
+ *     - Add movement by word, left and right
+ *     - Fix lua to output to console
+ *     - Command history (up and down for last command)
+ *     - History size in config
+ *     - Lua help (help someFunction to indication of arguments)
+ *       - help help!
+ *
+ *     - Add aliases (quit, :q, exit)
+ */
 class Console : public GUI {
 public:
   using Command = std::string;
@@ -34,6 +52,9 @@ public:
 
   //! Logs a yellow warning to the console
   void warn(const std::string& message);
+
+  //! Clears the history of the console
+  void clear();
 
   // Input handler
   void input(const Input::Event& event);

@@ -9,6 +9,7 @@ void Lua::console_as_lua(sol::state& state) {
     "new"    , sol::no_constructor,
     "log"    , &Console::log,
     "error"  , &Console::error,
-    "warn"   , &Console::warn);
+    "warn"   , &Console::warn,
+    "clear"  , &Console::clear);
   // clang-format on
 }
