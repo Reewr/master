@@ -180,6 +180,19 @@ void Text::setColor(int color) {
 
 /**
  * @brief
+ *   Sets the color as an RGB.
+ *
+ * @param color
+ */
+void Text::setColor(const mmm::vec3& color) {
+  mColor.prevEnumColor    = mColor.currentEnumColor;
+  mColor.previous         = mColor.current;
+  mColor.currentEnumColor = 0;
+  mColor.current          = color;
+}
+
+/**
+ * @brief
  *   Whenever a color is changed, the previous color is
  *   stored. This sets the color back to the previous one,
  *   this can be useful when setting the color to something

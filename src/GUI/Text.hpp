@@ -48,6 +48,9 @@ public:
   //! Changes the color on next rendering (and from there on.)
   void setColor(int c);
 
+  //! Set an RGB color
+  void setColor(const mmm::vec3& color);
+
   //! Changes the color back to what it was previously or black.
   void setPrevColor();
 
