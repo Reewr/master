@@ -12,6 +12,8 @@
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
 
+using mmm::vec2;
+
 MainMenu::MainMenu(Asset* asset) {
   mAsset = asset;
   mAsset->rManager()->unloadUnnecessary(ResourceScope::MainMenu);

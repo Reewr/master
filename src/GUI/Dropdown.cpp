@@ -8,9 +8,11 @@
 #include "../Resource/ResourceManager.hpp"
 #include "../Resource/Texture.hpp"
 #include "../Shape/GL/Rectangle.hpp"
+#include "../Utils/Asset.hpp"
 #include "../Utils/Utils.hpp"
 #include "Text.hpp"
 
+using mmm::vec2;
 /**
  * @brief
  *   Creates a dropdown that has the given options
@@ -73,18 +75,18 @@ Dropdown::Dropdown(const std::vector<std::string>& options,
  */
 Dropdown* Dropdown::fromXML(tinyxml2::XMLElement* element) {
   if (element == nullptr) {
-    throw Error("XMLElement is null");
+    throw std::runtime_error("XMLElement is null");
   }
 
   vec2 position;
 
   // retrieve the positions of the dropdown
   if (element->QueryFloatAttribute("x", &position.x) != 0) {
-    throw Error("Float position 'x' does not exist in XMLElement");
+    throw std::runtime_error("Float position 'x' does not exist in XMLElement");
   }
 
   if (element->QueryFloatAttribute("x", &position.y) != 0) {
-    throw Error("Float position 'y' does not exist in XMLElement");
+    throw std::runtime_error("Float position 'y' does not exist in XMLElement");
   }
 
   std::vector<std::string> strOptions;
@@ -94,7 +96,7 @@ Dropdown* Dropdown::fromXML(tinyxml2::XMLElement* element) {
     const char* option = options->Attribute("name");
 
     if (option == nullptr) {
-      throw Error("Option has no attribute 'name'");
+      throw std::runtime_error("Option has no attribute 'name'");
     }
 
     strOptions.push_back(std::string(option));

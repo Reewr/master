@@ -5,6 +5,8 @@
 #include <SOIL.h>
 #include <fstream>
 
+using mmm::vec2;
+
 std::map<unsigned int, GLuint> Texture::activeTextures;
 GLuint Texture::activeTexture = 0;
 
@@ -32,7 +34,7 @@ Texture::~Texture() {
     unload();
 }
 
-vec2 Texture::getSize() const {
+const vec2& Texture::getSize() const {
   return mSize;
 }
 

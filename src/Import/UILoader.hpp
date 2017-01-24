@@ -1,10 +1,8 @@
 #pragma once
 
+#include <mmm.hpp>
 #include <string>
 #include <tinyxml2.h>
-#include <typeinfo>
-
-#include "../Math/Math.hpp"
 
 class Window;
 
@@ -21,8 +19,10 @@ namespace Import {
   private:
     void getAttrib(tinyxml2::XMLElement* e, const char* a, int* t);
     void getAttrib(tinyxml2::XMLElement* e, const char* a, float* t);
-    void
-    getAttrib(tinyxml2::XMLElement* e, const char* a, const char* b, vec2& v);
+    void getAttrib(tinyxml2::XMLElement* e,
+                   const char*           a,
+                   const char*           b,
+                   mmm::vec2&            v);
     std::string getAttrib(tinyxml2::XMLElement* e, const char* a);
 
     void handleWindowElement(tinyxml2::XMLElement* winElement,

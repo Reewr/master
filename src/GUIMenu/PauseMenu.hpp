@@ -4,7 +4,6 @@
 
 #include "../GUI/Window.hpp"
 #include "../Import/UILoader.hpp"
-#include "../Math/Math.hpp"
 
 namespace Input {
   class Input;

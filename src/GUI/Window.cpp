@@ -14,7 +14,8 @@
 #include "../Resource/Texture.hpp"
 #include "../Shape/GL/Rectangle.hpp"
 #include "../Utils/Asset.hpp"
-#include "../Utils/Utils.hpp"
+
+using mmm::vec2;
 
 Window::Window() {
   mBackground = nullptr;
@@ -56,7 +57,8 @@ void handleGUIElement(Window* window, tinyxml2::XMLElement* element) {
   std::string type     = std::string(cStrType);
 
   if (cStrName == nullptr) {
-    throw Error("XMLElement: '" + type + "' has no name attribute");
+    throw std::runtime_error("XMLElement: '" + type +
+                             "' has no name attribute");
   }
 
   std::string name   = std::string(cStrName);
@@ -76,7 +78,7 @@ void handleGUIElement(Window* window, tinyxml2::XMLElement* element) {
   } else if (type == "window") {
     widget = Window::fromXML(element);
   } else {
-    throw Error("XMLElement: '" + type + "' is not supported");
+    throw std::runtime_error("XMLElement: '" + type + "' is not supported");
   }
 
   window->add(name, widget);
@@ -84,7 +86,7 @@ void handleGUIElement(Window* window, tinyxml2::XMLElement* element) {
 
 Window* Window::fromXML(tinyxml2::XMLElement* element) {
   if (element == nullptr) {
-    throw Error("XMLElement is null");
+    throw std::runtime_error("XMLElement is null");
   }
 
   const char* cStrTexture = element->Attribute("texture");
@@ -92,7 +94,7 @@ Window* Window::fromXML(tinyxml2::XMLElement* element) {
   const char* cStrTitle   = element->Attribute("title");
 
   if (cStrName == nullptr) {
-    throw Error("XMLElement has no attribute 'name'");
+    throw std::runtime_error("XMLElement has no attribute 'name'");
   }
 
   std::string texture =
@@ -184,11 +186,10 @@ void Window::addWindow(std::string name, Rectangle r, std::string tex) {
 
 void Window::add(std::string name, GUI* widget) {
   if (widget == nullptr) {
-    throw Error("GUI Widget is null");
+    throw std::runtime_error("GUI Widget is null");
   }
 
   widget->setPosition(mBoundingBox.topleft + widget->position());
-  log("Adding '" + name + "' to window through Window::add");
 
   // this is very temporary as I just want to get the XML
   // importing working before I start messing with the
@@ -199,41 +200,35 @@ void Window::add(std::string name, GUI* widget) {
     if (mMenues.count(name))
       delete mMenues[name];
 
-    log("Adding '" + name + "' as Menu");
     mMenues[name] = menu;
   } else if (Slider* slider = dynamic_cast<Slider*>(widget)) {
     if (mSliders.count(name))
       delete mSliders[name];
 
-    log("Adding '" + name + "' as Slider");
     mSliders[name] = slider;
   } else if (Dropdown* dropdown = dynamic_cast<Dropdown*>(widget)) {
     if (mDropdowns.count(name))
       delete mDropdowns[name];
 
-    log("Adding '" + name + "' as Dropdown");
     mDropdowns[name] = dropdown;
     sortDropdowns();
   } else if (Checkbox* checkbox = dynamic_cast<Checkbox*>(widget)) {
     if (mCheckboxes.count(name))
       delete mCheckboxes[name];
 
-    log("Adding '" + name + "' as Checkbox");
     mCheckboxes[name] = checkbox;
   } else if (Inputbox* inputbox = dynamic_cast<Inputbox*>(widget)) {
     if (mInputboxes.count(name))
       delete mInputboxes[name];
 
-    log("Adding '" + name + "' as Inputbox");
     mInputboxes[name] = inputbox;
   } else if (Window* window = dynamic_cast<Window*>(widget)) {
     if (mWindows.count(name))
       delete mWindows[name];
 
-    log("Adding '" + name + "' as Window");
     mWindows[name] = window;
   } else {
-    throw Error("No implementation for element");
+    throw std::runtime_error("No implementation for element");
   }
 }
 

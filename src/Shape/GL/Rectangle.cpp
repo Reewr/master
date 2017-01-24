@@ -3,6 +3,9 @@
 
 #include <vector>
 
+using mmm::vec2;
+using mmm::vec4;
+
 GLRectangle::GLRectangle() {}
 
 GLRectangle::GLRectangle(const Rectangle& r, bool isCCW) : mTexture(nullptr) {

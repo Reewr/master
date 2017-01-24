@@ -5,28 +5,26 @@
 #include <vector>
 
 #include "../OpenGLHeaders.hpp"
+#include <mmm.hpp>
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-#include "../Math/Math.hpp"
 #include "../Resource/Resource.hpp"
-#include "../Resource/Texture.hpp"
-
 
 class Program;
-
+class Texture;
 
 class Font : public Resource {
 public:
   //! Represents a character within the font.
   struct Glyph {
     Glyph();
-    Glyph(FT_GlyphSlot& gs, const vec2& offset, const vec2& size);
-    vec2 advance;
-    vec2 bitmapSize;
-    vec2 bitmapLoc;
-    vec2 tc;
+    Glyph(FT_GlyphSlot& gs, const mmm::vec2& offset, const mmm::vec2& size);
+    mmm::vec2 advance;
+    mmm::vec2 bitmapSize;
+    mmm::vec2 bitmapLoc;
+    mmm::vec2 tc;
   };
 
   Font();
@@ -48,24 +46,25 @@ public:
   //! the entire bitmap for that size
   const Font::Glyph& getGlyph(char c, int size);
 
-  //! Returns a texture size, if it does not exists loads
-  //! the entire bitmap for that size
-  const vec2& getTextureSize(int size);
-
   //! Returns the metric values (Line spacing etc) for character size
-  const vec2& getMetrics(int size);
+  const mmm::vec2& getMetrics(int size);
 
   //! Returns a texture, it it does not exists,
   //! loads the entire bitmap for that size
-  Texture& getTexture(int size);
+  Texture* getTexture(int size);
 
 private:
   struct Page {
     Page();
-    vec2    texSize;
-    Texture texture;
-    vec2    metrics;
+    ~Page();
+
+    Texture*  texture;
+    mmm::vec2 metrics;
     std::map<char, Glyph> glyphs;
+
+  private:
+    Page(const Page& p);
+    Page& operator=(const Page&);
   };
 
   std::map<unsigned int, Page> mPages;

@@ -18,7 +18,7 @@ namespace tinyxml2 {
 class Slider : public GUI {
 public:
   //! Loads textures and calls recalculatesGeometry
-  Slider(const vec2&        pos,
+  Slider(const mmm::vec2&   pos,
          const float        scale   = 1,
          const std::string& valSign = "%");
 
@@ -33,12 +33,12 @@ public:
   void defaultInputHandler(const Input::Event& event);
 
   //! Changing the offset of all items
-  void setOffset(const vec2& offset);
+  void setOffset(const mmm::vec2& offset);
 
   float value() const;
 
   //! Moves the slider on the X axis
-  bool moveSlider(const vec2& position);
+  bool moveSlider(const mmm::vec2& position);
 
   //! Sets the slider to a specific position based a value
   void setSlider(float s);
@@ -56,5 +56,5 @@ private:
   std::string mValSign;
 
   Rectangle mButtonRect;
-  vec2      mButtonOffset;
+  mmm::vec2 mButtonOffset;
 };

@@ -5,8 +5,9 @@
 #include "Utils/Asset.hpp"
 #include "Utils/CFG.hpp"
 
-namespace Input {
+using mmm::vec2;
 
+namespace Input {
 
   Keys::Keys(int k1, int k2) {
     key1 = k1;

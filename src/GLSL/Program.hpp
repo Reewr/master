@@ -4,11 +4,10 @@
 #include <string>
 #include <vector>
 
-#include "../OpenGLHeaders.hpp"
+#include <mmm.hpp>
 
-#include "../Math/Math.hpp"
+#include "../OpenGLHeaders.hpp"
 #include "../Resource/Resource.hpp"
-#include "../Utils/Utils.hpp"
 
 class Shader;
 class fstream;
@@ -64,16 +63,6 @@ public:
   template <typename T>
   bool setUniform(const std::string& uni, const T& t);
 
-  //! Sets several uniforms with the names in unis to values is.
-  //! Returns false if one fails. Lists has to be equal in size.
-  template <typename T>
-  bool setUniforms(const std::vector<std::string>& unis,
-                   const std::vector<T>&           t);
-
-  //! Set several uniform pairs ("uniformname", vec2, "uniformname2", int)
-  template <typename T, typename... Ts>
-  bool setUniform(const std::string& uni, T x, Ts... xs);
-
   //! Lets you bind an attribute (by name) to a index.
   //!  Only allowed if the program is not linked.
   bool bindAttrib(const std::string& attrib, const int index);
@@ -91,11 +80,11 @@ private:
   bool setGLUniform(GLint loc, const int i, const int j);
   bool setGLUniform(GLint loc, const float f);
   bool setGLUniform(GLint loc, const double d);
-  bool setGLUniform(GLint loc, const vec2& v);
-  bool setGLUniform(GLint loc, const vec3& v);
-  bool setGLUniform(GLint loc, const vec4& v);
-  bool setGLUniform(GLint loc, const mat3& m);
-  bool setGLUniform(GLint loc, const mat4& m);
+  bool setGLUniform(GLint loc, const mmm::vec2& v);
+  bool setGLUniform(GLint loc, const mmm::vec3& v);
+  bool setGLUniform(GLint loc, const mmm::vec4& v);
+  bool setGLUniform(GLint loc, const mmm::mat3& m);
+  bool setGLUniform(GLint loc, const mmm::mat4& m);
 
   static bool checkProgram(const GLuint pro);
   static std::string loadShader(std::ifstream& f);
@@ -127,25 +116,4 @@ bool Program::setUniform(const std::string& uni, const T& t) {
   if (loc != -1)
     return setGLUniform(loc, t);
   return false;
-}
-
-template <typename T>
-bool Program::setUniforms(const std::vector<std::string>& unis,
-                          const std::vector<T>&           t) {
-  if (unis.size() != t.size()) {
-    error("setUniforms: size is not equal");
-    return false;
-  }
-
-  for (unsigned int i = 0; i < unis.size(); i++) {
-    if (!setUniform(unis[i], t[i]))
-      return false;
-  }
-  return true;
-}
-
-template <typename T, typename... Ts>
-bool Program::setUniform(const std::string& uni, T x, Ts... xs) {
-  setUniform(uni, x);
-  return setUniform(xs...);
 }

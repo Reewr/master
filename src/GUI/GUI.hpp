@@ -1,12 +1,13 @@
 #pragma once
 
-#include "../GLSL/Program.hpp"
-#include "../Shape/Rectangle.hpp"
-#include "../Utils/Asset.hpp"
 #include <functional>
 #include <memory>
+#include <mmm.hpp>
+
+#include "../Shape/Rectangle.hpp"
 
 class Asset;
+class Program;
 
 namespace Input {
   class Event;
@@ -19,7 +20,7 @@ public:
   virtual void draw();
   virtual void update(float deltaTime);
 
-  virtual bool isInside(const vec2& pos) const;
+  virtual bool isInside(const mmm::vec2& pos) const;
 
   //! Check whether the GUI element is visible or not
   virtual bool isVisible() const;
@@ -60,13 +61,13 @@ public:
   virtual void defaultInputHandler(const Input::Event& event);
 
   virtual const Rectangle& box() const;
-  virtual const vec2&      position() const;
-  virtual const vec2&      size() const;
-  virtual const vec2&      offset();
+  virtual const mmm::vec2& position() const;
+  virtual const mmm::vec2& size() const;
+  virtual const mmm::vec2& offset();
 
-  virtual void setPosition(const vec2& position);
-  virtual void setSize(const vec2& size);
-  virtual void setOffset(const vec2& offset);
+  virtual void setPosition(const mmm::vec2& position);
+  virtual void setSize(const mmm::vec2& size);
+  virtual void setOffset(const mmm::vec2& offset);
 
   static Asset* mAsset;
 
@@ -76,13 +77,13 @@ protected:
   Rectangle mBoundingBox;
   Rectangle mMouseoverBox;
 
-  vec2 mOffset;
-  bool mIsVisible;
-  bool mIsClickable;
-  bool mIsAnimating;
-  bool mIsMinimized;
-  bool mHasChanged;
-  bool mIsMouseOver;
+  mmm::vec2 mOffset;
+  bool      mIsVisible;
+  bool      mIsClickable;
+  bool      mIsAnimating;
+  bool      mIsMinimized;
+  bool      mHasChanged;
+  bool      mIsMouseOver;
 
   std::shared_ptr<Program> mGUIProgram;
   std::function<void(const Input::Event& event)> mInputHandler;

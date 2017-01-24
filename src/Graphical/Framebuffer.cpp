@@ -9,10 +9,11 @@
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
 
-
 CFG*        Framebuffer::cfg   = NULL;
 std::string Framebuffer::ssLoc = "";
 int         Framebuffer::numSS = 0;
+
+using mmm::vec2;
 
 Framebuffer::Framebuffer() {
   mFrameBuffer  = 0;

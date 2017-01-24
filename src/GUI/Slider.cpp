@@ -9,7 +9,9 @@
 #include "../Resource/ResourceManager.hpp"
 #include "../Resource/Texture.hpp"
 #include "../Shape/GL/Rectangle.hpp"
-#include "../Utils/Utils.hpp"
+#include "../Utils/Asset.hpp"
+
+using mmm::vec2;
 
 Slider::Slider(const vec2& pos, const float scale, const std::string& valSign) {
   mBackground = new GLRectangle();
@@ -37,7 +39,7 @@ Slider::Slider(const vec2& pos, const float scale, const std::string& valSign) {
 
 Slider* Slider::fromXML(tinyxml2::XMLElement* element) {
   if (element == nullptr) {
-    throw Error("XMLElement is null");
+    throw std::runtime_error("XMLElement is null");
   }
 
   vec2        position;
@@ -45,11 +47,11 @@ Slider* Slider::fromXML(tinyxml2::XMLElement* element) {
   const char* valueSign = element->Attribute("scale");
 
   if (element->QueryFloatAttribute("x", &position.x) != 0) {
-    throw Error("XMLElement has no float attribute 'x'");
+    throw std::runtime_error("XMLElement has no float attribute 'x'");
   }
 
   if (element->QueryFloatAttribute("y", &position.y) != 0) {
-    throw Error("XMLElement has no float attribute 'x'");
+    throw std::runtime_error("XMLElement has no float attribute 'x'");
   }
 
   if (element->QueryFloatAttribute("x", &scale) != 0) {
@@ -133,7 +135,7 @@ bool Slider::moveSlider(const vec2& position) {
   // Find out what value we should display
   float value =
     mButtonOffset.x / (mBoundingBox.size.x - mButtonRect.size.x / 2);
-  setSlider(min(max(value, 0), 1));
+  setSlider(mmm::min(mmm::max(value, 0), 1));
   hasChanged(true);
 
   return true;
@@ -155,7 +157,7 @@ void Slider::setSlider(float value) {
   mButtonOffset = vec2(pos, mButtonOffset.y);
   mInfo->setPosition(vec2(mBoundingBox.bottomright().x + 10,
                           mBoundingBox.topleft.y - mBoundingBox.size.y / 2));
-  mInfo->setText(Utils::toStr(int(value * 100)) + mValSign);
+  mInfo->setText(std::to_string(static_cast<int>(value * 100)) + mValSign);
   mValue = value;
 }
 

@@ -4,9 +4,11 @@
 #include "../Resource/ResourceManager.hpp"
 #include "../Resource/Texture.hpp"
 #include "../Shape/GL/Rectangle.hpp"
+#include "../Utils/Asset.hpp"
 #include "../Utils/CFG.hpp"
-#include "../Utils/Utils.hpp"
 #include "Text.hpp"
+
+using mmm::vec2;
 
 Tooltip::Tooltip() {
   mCFG         = mAsset->cfg();

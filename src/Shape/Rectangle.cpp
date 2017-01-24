@@ -1,7 +1,7 @@
 #include "Rectangle.hpp"
 
-void Rectangle::bottomright(const vec2& br) {
-  vec2 s = br - topleft;
+void Rectangle::bottomright(const mmm::vec2& br) {
+  mmm::vec2 s = br - topleft;
   if (s.x < 0) {
     s.x       = max(topleft.x, br.x) - min(topleft.x, br.x);
     topleft.x = br.x;

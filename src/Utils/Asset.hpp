@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../Engine.hpp"
-
 namespace Input {
   class Input;
 }

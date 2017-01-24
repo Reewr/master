@@ -22,10 +22,10 @@ public:
   //! Only takes a pointer to a Font. Do NOT destroy the font object.
   Text(const std::string& font,
        const std::string& text,
-       const vec2&        position,
+       const mmm::vec2&   position,
        int                size  = 30,
        int                color = BLACK,
-       const vec2&        limit = vec2());
+       const mmm::vec2&   limit = mmm::vec2());
 
   //! Deconstructor
   ~Text();
@@ -37,7 +37,7 @@ public:
   void setStyle(int s);
 
   //! Sets the size limit for text (Will add newlines at whitespace)
-  void setLimit(const vec2& li);
+  void setLimit(const mmm::vec2& li);
 
   //! Changes the text. Has to recalculate vertices.
   void setText(const std::string& s);
@@ -55,7 +55,7 @@ public:
   void setFont(Font* font);
 
   //! Changes the position and recalculates Geometry
-  void setPosition(const vec2& pos);
+  void setPosition(const mmm::vec2& pos);
 
   //! :)
   std::string getText();
@@ -67,10 +67,10 @@ private:
   void recalculateGeometry();
 
   struct {
-    vec3 current;
-    vec3 previous;
-    int  currentEnumColor;
-    int  prevEnumColor;
+    mmm::vec3 current;
+    mmm::vec3 previous;
+    int       currentEnumColor;
+    int       prevEnumColor;
   } mColor;
 
   int mNumVertices;
@@ -84,6 +84,6 @@ private:
 
   std::string mText;
 
-  vec2 mLimit;
-  bool mIsLimitOn;
+  mmm::vec2 mLimit;
+  bool      mIsLimitOn;
 };

@@ -1,11 +1,11 @@
 #pragma once
 
+#include <mmm.hpp>
 #include <string>
 
-#include "../Input/Input.hpp"
-#include "../Math/Math.hpp"
-
 namespace Input {
+  enum Action : int;
+  class Input;
 
   //! The event class is a class that is a wrapper around an input event.
   //! It differentiates between what type of input it is by which constructor
@@ -36,15 +36,21 @@ namespace Input {
 
     //! Calling this constructor tells the Event that it is of either
     //! a MousePress or MouseRelease event
-    Event(Input* i, const vec2& mousePosition, int key, int action, int mods);
+    Event(Input*           i,
+          const mmm::vec2& mousePosition,
+          int              key,
+          int              action,
+          int              mods);
 
     //! Calling this constructor tells the Event that it is of MouseScroll event
-    Event(Input* i, const vec2& mousePosition, const vec2& scrollOffset);
+    Event(Input*           i,
+          const mmm::vec2& mousePosition,
+          const mmm::vec2& scrollOffset);
 
     //! Calling the constructor without any additional information than the
     //! mouse
     //! position indicates that it is a MouseMovement event
-    Event(Input* i, const vec2& mousePosition);
+    Event(Input* i, const mmm::vec2& mousePosition);
 
     //! Lastly, the CharacterInput event only consists of a single character
     Event(Input* i, std::string s);
@@ -98,7 +104,7 @@ namespace Input {
 
     //! Returns the mouse position, this only make sense to use if
     //! the event is a mouse event.
-    const vec2& position() const;
+    const mmm::vec2& position() const;
 
     //! Checks whether the scroll was made left.
     //! This will always return false unless the event is a MouseScroll
@@ -153,8 +159,8 @@ namespace Input {
 
     std::string mCharacter;
 
-    vec2 mPosition;
-    vec2 mScroll;
+    mmm::vec2 mPosition;
+    mmm::vec2 mScroll;
 
     Input* mInput;
 

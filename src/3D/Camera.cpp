@@ -1,11 +1,12 @@
 #include "Camera.hpp"
 
 #include "../GLSL/Program.hpp"
+#include "../Resource/ResourceManager.hpp"
 #include "../Utils/Asset.hpp"
 #include "../Utils/CFG.hpp"
-#include "../Resource/ResourceManager.hpp"
 
 using mmm::vec3;
+using mmm::vec4;
 using mmm::mat4;
 
 Camera::Light::Light()
@@ -37,10 +38,10 @@ Camera::Camera(Asset* asset)
 
 mat4 Camera::updateViewMatrix() {
   vec3 cameraEye =
-    mTarget + vec3(rotate_y(mHoriRotation) * rotate_x(mVertRotation) *
+    mTarget + vec3(mmm::rotate_y(mHoriRotation) * mmm::rotate_x(mVertRotation) *
                    vec4(0, 0, mHeight, 1));
-  vec3 cameraUp =
-    vec3(rotate_y(mHoriRotation) * rotate_x(mVertRotation) * vec4(0, 1, 0, 0));
+  vec3 cameraUp = vec3(mmm::rotate_y(mHoriRotation) *
+                       mmm::rotate_x(mVertRotation) * vec4(0, 1, 0, 0));
 
   return mmm::lookAt(cameraEye, mTarget, cameraUp);
 }
@@ -85,7 +86,7 @@ void Camera::update(float) {
   mView = updateViewMatrix();
 
   // light.day -= light.speed * dt;
-  mat4 lt       = rotate_z(mLight.day) * rotate_y(mHoriRotation);
+  mat4 lt       = mmm::rotate_z(mLight.day) * mmm::rotate_y(mHoriRotation);
   vec3 lightEye = mTarget + vec3(lt * vec4(0, mHeight, 0, 1));
   vec3 lightUp  = vec3(lt * vec4(0, 0, -1, 0));
 

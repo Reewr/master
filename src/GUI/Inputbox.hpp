@@ -40,10 +40,10 @@ public:
 
   //! Show the inputbox if the click is within the smaller inputbox
   //! True if the click was inside
-  bool showInputbox(const vec2& position);
+  bool showInputbox(const mmm::vec2& position);
 
   //! Sets the offset and all the elements in Inputbox
-  void setOffset(const vec2& of);
+  void setOffset(const mmm::vec2& of);
 
   //! Draws input box
   void draw();

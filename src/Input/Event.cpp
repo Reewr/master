@@ -7,6 +7,8 @@
 #include "../Utils/Utils.hpp"
 #include "Input.hpp"
 
+using mmm::vec2;
+
 namespace Input {
   /**
    * @brief

@@ -293,9 +293,6 @@ set(DDDGP_HPP
   ${SRC_DIR}/Import/UILoader.hpp
   ${SRC_DIR}/Import/XML.hpp
 
-  # src/Math
-  ${SRC_DIR}/Math/Math.hpp
-
   # src/Resource
   ${SRC_DIR}/Resource/Font.hpp
   ${SRC_DIR}/Resource/Texture.hpp

@@ -46,7 +46,6 @@ namespace Utils {
   void lineLog(Ts... args);
 
   void logTimeNoEnd();
-  void logTime(std::string loc);
 
   std::string toUpper(std::string s);
   std::string toLower(std::string s);

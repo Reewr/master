@@ -36,10 +36,10 @@ void Lua::text_as_lua(sol::state& state) {
     "Italic"   ,  Text::ITALIC);
 
   sol::constructors<
-    sol::types<std::string, std::string, vec2>,
-    sol::types<std::string, std::string, vec2, int>,
-    sol::types<std::string, std::string, vec2, int, int>,
-    sol::types<std::string, std::string, vec2, int, int, vec2>> ctor;
+    sol::types<std::string, std::string, mmm::vec2>,
+    sol::types<std::string, std::string, mmm::vec2, int>,
+    sol::types<std::string, std::string, mmm::vec2, int, int>,
+    sol::types<std::string, std::string, mmm::vec2, int, int, mmm::vec2>> ctor;
 
   sol::usertype<Text> type(ctor,
       "draw"        , &Text::draw,

@@ -2,7 +2,9 @@
 
 #include <vector>
 
-#include "../../Math/Math.hpp"
+using mmm::vec2;
+using mmm::vec3;
+using mmm::vec4;
 
 template <typename T>
 using dVector = std::vector<std::vector<T>>;

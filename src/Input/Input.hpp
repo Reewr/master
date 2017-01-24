@@ -5,15 +5,14 @@
 #include <string>
 #include <vector>
 
-#include "OpenGLHeaders.hpp"
+#include <mmm.hpp>
 
-#include "Math/Math.hpp"
+#include "OpenGLHeaders.hpp"
 
 class Asset;
 struct ActB;
 struct GLFWwindow;
 class CFG;
-
 
 namespace Input {
 
@@ -39,7 +38,7 @@ namespace Input {
   };
 
   //! Actions
-  enum Action {
+  enum Action : int {
     NotBound = -1,
     PauseMenu,
     MoveUp,
@@ -95,7 +94,7 @@ namespace Input {
     std::vector<std::string> getActionKeysToString(int action);
 
     //! Returns last reported mouse coords
-    vec2 getMouseCoords();
+    mmm::vec2 getMouseCoords();
 
     //! sets the current mouse coords. usefull to call when a button is pressed.
     void setPressedCoord(int btn);
@@ -103,7 +102,7 @@ namespace Input {
     //! Returns the latest recorded pressed coordinates for the button. (0, 0)
     //! if
     //! not recorded.
-    vec2 getPressedCoord(int btn);
+    mmm::vec2 getPressedCoord(int btn);
 
     //! Adds an action. Unlike `setKeys` this also allows you to set
     //! the string representation of that action
@@ -111,9 +110,9 @@ namespace Input {
 
   private:
     // used to store the functions received through addKeyCB()
-    std::map<int, Keys> keys;
-    std::map<int, int>  glfwKeys;
-    std::map<int, vec2> pressedCoords;
+    std::map<int, Keys>      keys;
+    std::map<int, int>       glfwKeys;
+    std::map<int, mmm::vec2> pressedCoords;
     std::vector<std::string> actionsString;
 
     GLFWwindow* window;

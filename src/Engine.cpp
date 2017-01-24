@@ -16,6 +16,8 @@
 #include "Input/Input.hpp"
 #include "Resource/ResourceManager.hpp"
 
+using mmm::vec2;
+
 // These functions are because of GLFW's callback. They call engine functions
 static void placementKeyboardCB(GLFWwindow* w, int k, int, int a, int m) {
   Engine*      e = static_cast<Engine*>(glfwGetWindowUserPointer(w));

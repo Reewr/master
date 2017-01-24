@@ -219,10 +219,6 @@ void Utils::logTimeNoEnd() {
   std::cout << timeSinceStart() << " ";
 }
 
-void Utils::logTime(std::string loc) {
-  log(loc + " - ", glfwGetTime(), " seconds.");
-}
-
 bool Utils::getGLError(const std::string& place) {
   GLenum glError = glGetError();
   if (glError != GL_NO_ERROR) {

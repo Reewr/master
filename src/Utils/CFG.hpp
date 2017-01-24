@@ -1,12 +1,11 @@
 #pragma once
 
 #include <functional>
-#include <iostream>
 #include <map>
 #include <string>
 #include <vector>
 
-#include "../Math/Math.hpp"
+#include <mmm.hpp>
 
 //! Actions bindings - Keybindings
 struct ActB {
@@ -23,16 +22,16 @@ public:
   typedef std::vector<Param> Params;
 
   struct Graphics {
-    int   aliasing      = 0;
-    float aniso         = 0;
-    float aspect        = 1.33333333;
-    int   monitor       = 0;
-    vec2  res           = { 1024, 768 };
-    int   shadowSamples = 4;
-    int   shadowRes     = 1024;
-    bool  vsync         = false;
-    int   viewDistance  = 20;
-    int   winMode       = 0;
+    int       aliasing      = 0;
+    float     aniso         = 0;
+    float     aspect        = 1.33333333;
+    int       monitor       = 0;
+    mmm::vec2 res           = { 1024, 768 };
+    int       shadowSamples = 4;
+    int       shadowRes     = 1024;
+    bool      vsync         = false;
+    int       viewDistance  = 20;
+    int       winMode       = 0;
   } graphics;
 
   struct General {

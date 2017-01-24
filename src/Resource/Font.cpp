@@ -1,7 +1,10 @@
 #include "Font.hpp"
 
 #include "../GLSL/Program.hpp"
+#include "../Resource/Texture.hpp"
 #include "../Utils/Utils.hpp"
+
+using mmm::vec2;
 
 int        Font::numFonts = 0;
 FT_Library Font::fontLib;
@@ -23,7 +26,16 @@ Font::Glyph::Glyph(FT_GlyphSlot& gs, const vec2& offset, const vec2& size) {
   tc.y = offset.y / size.y;
 }
 
-Font::Page::Page() {}
+Font::Page::Page() : texture(nullptr) {
+  texture = new Texture();
+}
+
+Font::Page::~Page() {
+  if (texture != nullptr) {
+    delete texture;
+    texture = nullptr;
+  }
+}
 
 /**
  * @brief
@@ -61,9 +73,9 @@ Font::~Font() {
  *   of its loaded data.
  */
 void Font::unload() {
-  for (auto page : mPages) {
+  for (auto& page : mPages) {
     page.second.glyphs.clear();
-    page.second.texture.unload();
+    page.second.texture->unload();
   }
 
   mPages.clear();
@@ -119,10 +131,11 @@ bool Font::load(int size) {
   // Creates a texture with the size that was found out
   // in the previous loop
   Utils::getGLError();
-  page.texture.createTexture(vec2(w, h), 0, GL_RED, GL_RED);
-  page.texture.setFilename(filename() + ":" + std::to_string(size));
+  page.texture->createTexture(vec2(w, h), 0, GL_RED, GL_RED);
+  page.texture->setFilename(filename() + ":" + std::to_string(size));
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-  page.texture.clampToEdge().linear();
+  page.texture->clampToEdge();
+  page.texture->linear();
 
   int offsetX = 0;
   int offsetY = 0;
@@ -142,9 +155,9 @@ bool Font::load(int size) {
       offsetX = 0;
     }
 
-    page.texture.changeSubTex(vec2(offsetX, offsetY),
-                              vec2(g->bitmap.width, g->bitmap.rows),
-                              g->bitmap.buffer);
+    page.texture->changeSubTex(vec2(offsetX, offsetY),
+                               vec2(g->bitmap.width, g->bitmap.rows),
+                               g->bitmap.buffer);
 
     page.glyphs[i] = Font::Glyph(g, vec2(offsetX, offsetY), vec2(w, h));
 
@@ -152,7 +165,6 @@ bool Font::load(int size) {
     offsetX += g->bitmap.width + 1;
   }
 
-  page.texSize = vec2(w, h);
   page.metrics = vec2(0, mFace->size->metrics.height >> 6);
   FT_Done_Face(mFace);
   return true;
@@ -178,21 +190,6 @@ const Font::Glyph& Font::getGlyph(char c, int size) {
 
 /**
  * @brief
- *   Gets the texture size of a font with a specific size
- *
- * @param size
- *
- * @return
- */
-const vec2& Font::getTextureSize(int size) {
-  if (mPages.count(size) == 0)
-    load(size);
-
-  return mPages[size].texSize;
-}
-
-/**
- * @brief
  *   Returns the font metrics for a specific size
  *
  * @param size
@@ -214,7 +211,7 @@ const vec2& Font::getMetrics(int size) {
  *
  * @return
  */
-Texture& Font::getTexture(int size) {
+Texture* Font::getTexture(int size) {
   if (mPages.count(size) == 0)
     load(size);
 

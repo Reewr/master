@@ -2,10 +2,6 @@
 
 #include <sol.hpp>
 
-namespace sol {
-  class state;
-}
-
 class Engine;
 class CFG;
 class Console;

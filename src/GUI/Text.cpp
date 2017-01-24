@@ -5,7 +5,13 @@
 #include "../GLSL/Program.hpp"
 #include "../Resource/Font.hpp"
 #include "../Resource/ResourceManager.hpp"
+#include "../Resource/Texture.hpp"
+#include "../Utils/Asset.hpp"
 #include "../Utils/CFG.hpp"
+
+using mmm::vec2;
+using mmm::vec3;
+using mmm::vec4;
 
 Text::Text(const std::string& font,
            const std::string& text,
@@ -203,7 +209,7 @@ void Text::recalculateGeometry() {
   std::vector<vec4> coordinates;
 
   float      scale   = 1;
-  const vec2 texSize = mTextFont->getTextureSize(mCharacterSize);
+  const vec2 texSize = mTextFont->getTexture(mCharacterSize)->getSize();
   vec2       tempPos = mBoundingBox.topleft + vec2(0, mCharacterSize);
 
   for (char c : mText) {
@@ -288,7 +294,7 @@ void Text::draw() {
   mGUIProgram->setUniform("guiColor", mColor.current);
   mGUIProgram->setUniform("guiOffset", mOffset);
 
-  mTextFont->getTexture(mCharacterSize).bind(0);
+  mTextFont->getTexture(mCharacterSize)->bind(0);
 
   glBindVertexArray(mVAO);
   glDrawArrays(GL_TRIANGLES, 0, mNumVertices);

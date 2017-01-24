@@ -10,6 +10,7 @@
 class Asset;
 class CFG;
 class ResourceManager;
+class State;
 
 namespace Input {
   class Input;

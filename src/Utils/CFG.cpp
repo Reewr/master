@@ -8,6 +8,8 @@
 #include "../Input/Input.hpp"
 #include "Utils.hpp"
 
+using mmm::vec2;
+
 ActB::ActB(int k1, int k2) {
   key1 = k1;
   key2 = k2;

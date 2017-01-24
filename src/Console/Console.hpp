@@ -11,7 +11,6 @@ class Text;
 class CFG;
 class Asset;
 
-
 namespace Input {
   class Input;
   class Event;

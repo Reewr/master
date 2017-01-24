@@ -2,7 +2,8 @@
 
 #include "../GUI/Menu.hpp"
 #include "../GUI/Window.hpp"
-#include "../Utils/Utils.hpp"
+
+using mmm::vec2;
 
 Import::UILoader::UILoader() {
   errorID = 0;
@@ -11,11 +12,12 @@ Import::UILoader::UILoader() {
 bool Import::UILoader::loadXML(std::string filepath) {
   xml.LoadFile(filepath.c_str());
   errorID = xml.ErrorID();
+
   if (errorID != 0) {
-    error(getError(FILEERROR), filepath);
     xml.PrintError();
-    return false;
+    throw std::runtime_error(getError(FILEERROR) + " " + filepath);
   }
+
   return true;
 }
 
@@ -33,8 +35,8 @@ void Import::UILoader::getAttrib(tinyxml2::XMLElement* e,
                                  int*                  t) {
   int er = e->QueryIntAttribute(a, t);
   if (er != 0) {
-    error(getError(ATTRIBINTFAIL), a);
     xml.PrintError();
+    throw std::runtime_error(getError(ATTRIBINTFAIL) + " " + a);
   }
 }
 
@@ -43,8 +45,8 @@ void Import::UILoader::getAttrib(tinyxml2::XMLElement* e,
                                  float*                t) {
   int er = e->QueryFloatAttribute(a, t);
   if (er != 0) {
-    error(getError(ATTRIBFLOFAIL), a);
     xml.PrintError();
+    throw std::runtime_error(getError(ATTRIBFLOFAIL) + " " + a);
   }
 }
 
@@ -60,25 +62,24 @@ std::string Import::UILoader::getAttrib(tinyxml2::XMLElement* e,
                                         const char*           a) {
   const char* b = e->Attribute(a);
   if (!b) {
-    error(getError(ATTRIBSTRFAIL), a);
     xml.PrintError();
-    return "EMPTYSTRING";
+    throw std::runtime_error(getError(ATTRIBSTRFAIL) + " " + a);
   } else
     return std::string(b);
 }
 
 void Import::UILoader::loadSettings(std::string setting, Window* win) {
   if (errorID != 0) {
-    error(getError(LOADSETTERROR), setting);
+    throw std::runtime_error(getError(LOADSETTERROR) + " " + setting);
     return;
   }
 
   tinyxml2::XMLElement* scElem = xml.RootElement();
 
   if (scElem == NULL) {
-    error(getError(INVSCREEN), setting);
-    return;
+    throw std::runtime_error(getError(INVSCREEN) + " " + setting);
   }
+
   scElem = scElem->FirstChildElement();
   for (; scElem != NULL; scElem = scElem->NextSiblingElement()) {
     std::string sName = std::string(scElem->Attribute("name"));

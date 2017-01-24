@@ -6,6 +6,7 @@ namespace Input {
   class Input;
   class Event;
 }
+
 class Console;
 class Asset;
 

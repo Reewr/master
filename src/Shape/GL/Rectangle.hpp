@@ -1,10 +1,11 @@
 #pragma once
 
-#include "../../Resource/Texture.hpp"
 #include "../Rectangle.hpp"
 #include "Shape.hpp"
 #include <memory>
+#include <mmm.hpp>
 
+class Texture;
 /**
  * @brief This class serves as a simplification
  * of drawing rectangles with OpenGL
@@ -21,7 +22,9 @@ public:
   //! Creates an opengl using position and size by effectively
   //! converting it to a rectangle.
   //! isCCW tells whether to utilize counter-clockwise rendering
-  GLRectangle(const vec2& position, const vec2& size, bool isCCW = true);
+  GLRectangle(const mmm::vec2& position,
+              const mmm::vec2& size,
+              bool             isCCW = true);
   ~GLRectangle();
 
   //! Changes the stored rectangle to a new one. By doing some optimizations
@@ -32,7 +35,8 @@ public:
   //! Changes the stored rectangle to a new one. By doing some optimizations
   //! using the OpenGL buffers, this is faster than reconstructing
   //! a new one
-  void change(const vec2& position, const vec2& size, bool isCCW = true);
+  void
+  change(const mmm::vec2& position, const mmm::vec2& size, bool isCCW = true);
 
   // Sets the texture of the rectangle, telling it to bind the texture when
   // drawing

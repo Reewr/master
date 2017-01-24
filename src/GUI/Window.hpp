@@ -31,7 +31,7 @@ public:
 
   ~Window();
 
-  void setOffset(const vec2& offset);
+  void setOffset(const mmm::vec2& offset);
 
   // :)
   void draw();
@@ -50,20 +50,21 @@ public:
   void addWindow(std::string name, Rectangle r, std::string tex = "NONE");
   void addMenu(std::string                     name,
                const std::vector<std::string>& names,
-               const vec2&                     startPos,
+               const mmm::vec2&                startPos,
                const Menu::MenuSettings&       m = Menu::MenuSettings());
 
   void addMenuItem(std::string               name,
                    std::string               text,
-                   const vec2&               pos,
+                   const mmm::vec2&          pos,
                    const Menu::MenuSettings& m = Menu::MenuSettings());
 
-  void addSlider(std::string name, vec2 pos, float scale = 1);
-  void addDropdown(std::string name, std::vector<std::string> opt, vec2 pos);
-  void addCheckbox(std::string name, vec2 pos);
+  void addSlider(std::string name, mmm::vec2 pos, float scale = 1);
+  void
+  addDropdown(std::string name, std::vector<std::string> opt, mmm::vec2 pos);
+  void addCheckbox(std::string name, mmm::vec2 pos);
   void addInputbox(std::string name, Rectangle r, std::string text = "NOT SET");
 
-  void setActiveMenuItem(std::string name, vec2 pos);
+  void setActiveMenuItem(std::string name, mmm::vec2 pos);
 
   //! Returns a GUI object based on name. If it doesn't exist, returns NULL
   Menu* menu(std::string name);

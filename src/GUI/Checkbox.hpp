@@ -1,8 +1,8 @@
 #pragma once
 
+#include <mmm.hpp>
 #include <string>
 
-#include "../Math/Math.hpp"
 #include "GUI.hpp"
 
 class Text;
@@ -22,7 +22,7 @@ class Checkbox : public GUI {
 public:
   //! Creates a checkbox where box is the filename
   //! to the texture used
-  Checkbox(const vec2& pos);
+  Checkbox(const mmm::vec2& pos);
 
   //! Load the checkbox from XML
   static Checkbox* fromXML(tinyxml2::XMLElement* element);
@@ -31,10 +31,10 @@ public:
 
   //! If position is inside the checkbox, it will
   //! either set it selected or unselected
-  bool setSelected(const vec2& pos);
+  bool setSelected(const mmm::vec2& pos);
 
   //! Sets the offset of the GUI
-  void setOffset(const vec2& of);
+  void setOffset(const mmm::vec2& of);
 
   //! Can be called to do the default actions by using
   //! setInputHandler. Is also called by default if setInputHandler

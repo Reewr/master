@@ -18,6 +18,7 @@
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
 
+using mmm::vec2;
 
 OptionsMenu::OptionsMenu(Input::Input* input) {
   mCFG          = mAsset->cfg();
@@ -57,7 +58,7 @@ OptionsMenu::OptionsMenu(Input::Input* input) {
   addWindow("Game", innerRect);
 
   if (!mUiLoader.loadXMLSettings(TEMP::getPath(TEMP::XMLOPT), "Options", this))
-    throw Error("Read log above");
+    throw std::runtime_error("Read log above");
 
   std::vector<std::string> actions = input->getActionsString();
   window("Keybindings")

@@ -14,7 +14,7 @@ struct Wrapper {
   Wrapper(bool& b);
   Wrapper(int& i);
   Wrapper(float& f);
-  Wrapper(vec2& v);
+  Wrapper(mmm::vec2& v);
   Wrapper(ActB& ab);
 
   // can support any type if it has an assosiated posible-value-map

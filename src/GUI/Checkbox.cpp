@@ -10,6 +10,8 @@
 #include "../Utils/Asset.hpp"
 #include "Text.hpp"
 
+using mmm::vec2;
+
 Checkbox::Checkbox(const vec2& pos) : mIsTicked(false) {
   mBoundingBox = Rectangle(pos, vec2(21, 21));
   mSquare      = new GLRectangle();
@@ -43,11 +45,11 @@ Checkbox* Checkbox::fromXML(tinyxml2::XMLElement* element) {
   vec2 position;
 
   if (element->QueryFloatAttribute("x", &position.x) != 0) {
-    throw Error("XMLElement has no float attribute 'x'");
+    throw std::runtime_error("XMLElement has no float attribute 'x'");
   }
 
   if (element->QueryFloatAttribute("y", &position.y) != 0) {
-    throw Error("XMLElement has no float attribute 'y'");
+    throw std::runtime_error("XMLElement has no float attribute 'y'");
   }
 
   return new Checkbox(position);

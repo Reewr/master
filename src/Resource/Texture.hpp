@@ -1,12 +1,11 @@
 #pragma once
 
 #include <map>
+#include <mmm.hpp>
 #include <string>
 #include <vector>
 
 #include "../OpenGLHeaders.hpp"
-
-#include "../Math/Math.hpp"
 #include "Resource.hpp"
 
 class CFG;
@@ -32,19 +31,21 @@ public:
 
   //! Loads a white texture into OpenGL with specified size -
   //! Returns a pointer. Needs to be deleted.
-  unsigned char* loadEmptyTexture(const vec2& size, bool isReturn = false);
+  unsigned char* loadEmptyTexture(const mmm::vec2& size, bool isReturn = false);
 
   //! Creates a texture out from data. NB: DOES NOT SET FILTERING
-  bool createTexture(const vec2&    s,
-                     unsigned char* data    = NULL,
-                     GLenum         color   = GL_RGBA,
-                     GLenum         inColor = GL_RGBA);
+  bool createTexture(const mmm::vec2& s,
+                     unsigned char*   data    = NULL,
+                     GLenum           color   = GL_RGBA,
+                     GLenum           inColor = GL_RGBA);
 
   //! Changes texture colors at specific position with size
-  void changeSubTex(const vec2& pos, const vec2& size, unsigned char* change);
+  void changeSubTex(const mmm::vec2& pos,
+                    const mmm::vec2& size,
+                    unsigned char*   change);
 
   //! Saves a texture a TGA file.
-  void saveTexture(std::string filename, const vec2& size);
+  void saveTexture(std::string filename, const mmm::vec2& size);
 
   //! Binds the loaded texture so you can use it.
   //! Parameter: GL_TEXTUREX where X = [0-3]
@@ -52,7 +53,7 @@ public:
   void unbind(unsigned int textureUnit);
 
   //! Returns the size of the loaded texture
-  vec2 getSize() const;
+  const mmm::vec2& getSize() const;
 
   //! Returns an OpenGL Texture number or 0 if not exists.
   GLuint getGLTexture();
@@ -82,10 +83,10 @@ private:
   bool loadTexture();
   void loadCube();
 
-  int    mMode;
-  GLuint mTextureId;
-  GLuint mSamplerId;
-  vec2   mSize;
+  int       mMode;
+  GLuint    mTextureId;
+  GLuint    mSamplerId;
+  mmm::vec2 mSize;
 
   static std::map<unsigned int, GLuint> activeTextures;
   static GLuint activeTexture;

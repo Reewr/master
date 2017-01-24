@@ -1,7 +1,7 @@
 #include "ResourceManager.hpp"
-#include "../Utils/Utils.hpp"
 
 #include "../GLSL/Program.hpp"
+#include "../Utils/Utils.hpp"
 #include "Font.hpp"
 #include "Texture.hpp"
 

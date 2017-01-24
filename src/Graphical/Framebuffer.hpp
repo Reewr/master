@@ -5,7 +5,7 @@
 
 #include "../OpenGLHeaders.hpp"
 
-#include "../Math/Math.hpp"
+#include <mmm.hpp>
 
 class Program;
 class Texture;
@@ -19,14 +19,14 @@ public:
 
   //! Create framebuffer using an already defined program together
   //! with a specific size
-  Framebuffer(Program* p, const vec2& size, bool depth = false);
+  Framebuffer(Program* p, const mmm::vec2& size, bool depth = false);
 
   ~Framebuffer();
 
   //! Readies the Framebuffer for drawing by setting
   //! the position and figuring out how much of the texture
   //! to draw
-  /* void activateDraw(const vec2& pos = vec2()); */
+  /* void activateDraw(const mmm::vec2& pos = mmm::vec2()); */
 
   //! Binds the drawing program and draws the texture
   /* void draw(); */
@@ -91,7 +91,7 @@ public:
   void queueEnd();
 
   std::vector<float> getPixels(const Rectangle& r, GLenum type = GL_RED);
-  float getPixel(const vec2& pos, GLenum type = GL_RED);
+  float getPixel(const mmm::vec2& pos, GLenum type = GL_RED);
   void printPixels(const Rectangle& r,
                    GLenum           type = GL_RED,
                    std::string      name = "Framebuffer");
@@ -122,7 +122,7 @@ private:
   bool mNeedsDrawing;
   bool mIsBound;
 
-  vec2 mFrameSize;
+  mmm::vec2 mFrameSize;
 
   GLRectangle* mQuad;
   Program*     mProgram;

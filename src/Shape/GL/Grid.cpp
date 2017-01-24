@@ -4,9 +4,10 @@
 #include <vector>
 
 #include "../../OpenGLHeaders.hpp"
-
-#include "../../Math/Math.hpp"
 #include "../../Utils/Utils.hpp"
+
+using mmm::vec2;
+using mmm::vec4;
 
 GLGrid::GLGrid() {
   IBO = 0;

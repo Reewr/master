@@ -8,13 +8,15 @@
 #include "../Input/Event.hpp"
 #include "../Input/Input.hpp"
 #include "../Lua/Lua.hpp"
-#include "../Math/Math.hpp"
 #include "../Resource/ResourceManager.hpp"
 #include "../Shape/GL/Rectangle.hpp"
 #include "../State/State.hpp"
 #include "../Utils/Asset.hpp"
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
+
+using mmm::vec2;
+using mmm::vec4;
 
 Console::Console(Asset* asset)
     : mLocation(0)

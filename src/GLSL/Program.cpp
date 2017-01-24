@@ -3,6 +3,7 @@
 #include <fstream>
 #include <iostream>
 
+#include "../Utils/Utils.hpp"
 #include "Shader.hpp"
 
 GLuint Program::activeProgram = 0;
@@ -158,27 +159,27 @@ bool Program::setGLUniform(GLint loc, const double d) {
   return checkErrors("setGLUniform(double): ", filenames);
 }
 
-bool Program::setGLUniform(GLint loc, const vec2& v) {
+bool Program::setGLUniform(GLint loc, const mmm::vec2& v) {
   glUniform2f(loc, v.x, v.y);
   return checkErrors("setGLUniform(vec2): ", filenames);
 }
 
-bool Program::setGLUniform(GLint loc, const vec3& v) {
+bool Program::setGLUniform(GLint loc, const mmm::vec3& v) {
   glUniform3f(loc, v.x, v.y, v.z);
   return checkErrors("setGLUniform(vec3): ", filenames);
 }
 
-bool Program::setGLUniform(GLint loc, const vec4& v) {
+bool Program::setGLUniform(GLint loc, const mmm::vec4& v) {
   glUniform4f(loc, v.x, v.y, v.z, v.w);
   return checkErrors("setGLUniform(vec4): ", filenames);
 }
 
-bool Program::setGLUniform(GLint loc, const mat3& m) {
+bool Program::setGLUniform(GLint loc, const mmm::mat3& m) {
   glUniformMatrix3fv(loc, 1, GL_TRUE, m.rawdata);
   return checkErrors("setGLUniform(mat3): ", filenames);
 }
 
-bool Program::setGLUniform(GLint loc, const mat4& m) {
+bool Program::setGLUniform(GLint loc, const mmm::mat4& m) {
   glUniformMatrix4fv(loc, 1, GL_TRUE, m.rawdata);
   return checkErrors("setGLUniform(mat4): ", filenames);
 }

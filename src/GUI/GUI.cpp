@@ -6,6 +6,8 @@
 #include "../Utils/Asset.hpp"
 #include "../Utils/CFG.hpp"
 
+using mmm::vec2;
+
 Asset* GUI::mAsset = nullptr;
 
 GUI::GUI()

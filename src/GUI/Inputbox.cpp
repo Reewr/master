@@ -8,9 +8,11 @@
 #include "../Resource/ResourceManager.hpp"
 #include "../Resource/Texture.hpp"
 #include "../Shape/GL/Rectangle.hpp"
+#include "../Utils/Asset.hpp"
 #include "../Utils/CFG.hpp"
-#include "../Utils/Utils.hpp"
 #include "Text.hpp"
+
+using mmm::vec2;
 
 Inputbox::Inputbox(const Rectangle& r, const std::string text) {
   mTextBox  = new GLRectangle();
@@ -60,30 +62,30 @@ Inputbox::Inputbox(const Rectangle& r, const std::string text) {
  */
 Inputbox* Inputbox::fromXML(tinyxml2::XMLElement* element) {
   if (element == nullptr) {
-    throw Error("XMLElement is null");
+    throw std::runtime_error("XMLElement is null");
   }
 
   Rectangle   rect;
   const char* text = element->Attribute("text");
 
   if (text == nullptr) {
-    throw Error("XMLElement has no attribute 'text'");
+    throw std::runtime_error("XMLElement has no attribute 'text'");
   }
 
   if (element->QueryFloatAttribute("x1", &rect.topleft.x) != 0) {
-    throw Error("XMLElement has no float attribute 'x1'");
+    throw std::runtime_error("XMLElement has no float attribute 'x1'");
   }
 
   if (element->QueryFloatAttribute("y1", &rect.topleft.y) != 0) {
-    throw Error("XMLElement has no float attribute 'y1'");
+    throw std::runtime_error("XMLElement has no float attribute 'y1'");
   }
 
   if (element->QueryFloatAttribute("x2", &rect.size.x) != 0) {
-    throw Error("XMLElement has no float attribute 'x2'");
+    throw std::runtime_error("XMLElement has no float attribute 'x2'");
   }
 
   if (element->QueryFloatAttribute("y2", &rect.size.x) != 0) {
-    throw Error("XMLElement has no float attribute 'y2'");
+    throw std::runtime_error("XMLElement has no float attribute 'y2'");
   }
 
   return new Inputbox(rect, std::string(text));

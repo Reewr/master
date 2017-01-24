@@ -8,6 +8,8 @@
 #include "../Utils/Utils.hpp"
 #include "Text.hpp"
 
+using mmm::vec2;
+
 Menu::MenuSettings::MenuSettings(float size, float offset, int ori, int color) {
   this->size   = size;
   this->offset = offset;
@@ -90,7 +92,7 @@ Menu::Menu(const std::vector<std::string>& names,
  */
 Menu* Menu::fromXML(tinyxml2::XMLElement* element) {
   if (element == nullptr) {
-    throw Error("XMLElement is null");
+    throw std::runtime_error("XMLElement is null");
   }
 
   // retrieve the position from the XML element
@@ -98,11 +100,11 @@ Menu* Menu::fromXML(tinyxml2::XMLElement* element) {
     vec2 position;
 
     if (innerElement->QueryFloatAttribute("x", &position.x) != 0) {
-      throw Error("XMLElement has no float attribute 'x'");
+      throw std::runtime_error("XMLElement has no float attribute 'x'");
     }
 
     if (innerElement->QueryFloatAttribute("y", &position.y) != 0) {
-      throw Error("XMLElement has no float attribute 'y'");
+      throw std::runtime_error("XMLElement has no float attribute 'y'");
     }
 
     return position;
@@ -139,7 +141,7 @@ Menu* Menu::fromXML(tinyxml2::XMLElement* element) {
   const char*  name         = element->Attribute("name");
 
   if (name == nullptr) {
-    throw Error("XMLElement has no attribute 'name'");
+    throw std::runtime_error("XMLElement has no attribute 'name'");
   }
 
   Menu* menu = new Menu(std::string(name), mainPosition, mainMs);
@@ -154,7 +156,7 @@ Menu* Menu::fromXML(tinyxml2::XMLElement* element) {
     vec2         position = getPosition(childElement);
 
     if (chName == nullptr) {
-      throw Error("XMLElement has no attribute 'name'");
+      throw std::runtime_error("XMLElement has no attribute 'name'");
     }
 
     menu->addMenuItem(std::string(chName), position, ms);
