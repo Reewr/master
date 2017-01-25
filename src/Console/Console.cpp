@@ -203,12 +203,14 @@ void Console::setText() {
     mLocation = 0;
 
   if (mLocation == size)
-    return mText->setText("> " + mCurrentText + "_");
+    return mText->setText("> " + mCurrentText +
+                          "\\<0,0,0,255:255,255,255,255> \\</>");
 
   std::string before = mCurrentText.substr(0, mLocation);
-  std::string after  = mCurrentText.substr(mLocation);
+  std::string character = mCurrentText.substr(mLocation, 1);
+  std::string after  = mCurrentText.substr(mLocation + 1);
 
-  mText->setText("> " + before + "_" + after);
+  mText->setText("> " + before + "\\<0,0,0,255:255,255,255,255>" + character + "\\</>" + after);
 }
 
 /**
