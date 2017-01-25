@@ -400,6 +400,28 @@ std::vector<Text::TextBlock> Text::parseString(const std::string& s,
   return colors;
 }
 
+/**
+ * @brief
+ *   Strips the color information from the string, returning
+ *   a string without this information.
+ *
+ * @param s
+ *
+ * @return
+ */
+std::string Text::stripColorsFromStr(const std::string& s) {
+  std::string text;
+  try {
+    auto textBlocks = Text::parseString(s);
+    for (auto t : textBlocks)
+      text += t.text;
+  } catch (const std::runtime_error& r) {
+    text = s;
+  }
+
+  return text;
+}
+
 
 /**
  * @brief

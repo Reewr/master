@@ -20,6 +20,16 @@ public:
   //! Enums for styles. Currently none are implemented.
   enum { BOLD, UNDERLINE, ITALIC };
 
+  struct ConsoleColor {
+    mmm::vec4 foreground;
+    mmm::vec4 background;
+  };
+
+  struct TextBlock {
+    ConsoleColor color;
+    std::string text = "";
+  };
+
   //! Only takes a pointer to a Font. Do NOT destroy the font object.
   Text(const std::string& font,
        const std::string& text,
@@ -73,23 +83,16 @@ public:
   //! Returns char size
   int getCharSize();
 
-private:
-  struct ConsoleColor {
-    mmm::vec4 foreground;
-    mmm::vec4 background;
-  };
-
-  struct TextBlock {
-    ConsoleColor color;
-    std::string text = "";
-  };
-
-  void recalculateGeometry();
-
-  std::vector<TextBlock>
+  static std::vector<TextBlock>
   parseString(const std::string& s,
               mmm::vec4          defaultForeground = { 1, 1, 1, 1 },
               mmm::vec4          defaultBackround  = { 0, 0, 0, 0 });
+
+  static std::string stripColorsFromStr(const std::string& s);
+
+private:
+  void recalculateGeometry();
+
 
   struct {
     mmm::vec3 current;
