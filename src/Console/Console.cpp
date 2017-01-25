@@ -370,6 +370,7 @@ void Console::deleteCharacter(int whichKey) {
       return;
 
     mCurrentText.erase(mLocation - 1, 1);
+    --mLocation;
     setText();
     return;
   }
