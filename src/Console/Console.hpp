@@ -28,7 +28,6 @@ class GLRectangle;
  *     - Add scroll in history
  *     - Add movement by word, left and right
  *     - Fix lua to output to console
- *     - Command history (up and down for last command)
  *     - History size in config
  *     - Lua help (help someFunction to indication of arguments)
  *       - help help!
@@ -75,6 +74,9 @@ private:
   // set to the stored text in mCurrentText
   void setText();
 
+  // Sets the command from history based on mCommandHistoryIndex
+  void setCommandFromHistory();
+
   // Checks if the command is legal, prints error if not.
   void doCommand(const Input::Event& event);
 
@@ -99,6 +101,7 @@ private:
 
   // Stores the location of the pointer
   int mLocation;
+  int mCommandHistoryIndex;
 
   // Stores the text that the user inputs (command)
   std::string mCurrentText;
@@ -114,4 +117,5 @@ private:
   bool               mShowAutoComplete;
   std::vector<Text*> mAutoComplete;
   std::vector<Text*> mHistory;
+  std::vector<std::string> mCommandHistory;
 };

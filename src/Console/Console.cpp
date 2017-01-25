@@ -20,6 +20,7 @@ using mmm::vec4;
 
 Console::Console(Asset* asset)
     : mLocation(0)
+    , mCommandHistoryIndex(0)
     , mCurrentText("")
     , mAutoCompleteBox(new GLRectangle(Rectangle(0, 0, 0, 0)))
     , mAsset(asset)
@@ -37,7 +38,6 @@ Console::Console(Asset* asset)
                    vec2(mAsset->cfg()->graphics.res.x,
                         mAsset->cfg()->graphics.res.y));
   mText->isVisible(true);
-  ::log("res: ", res, " textPos: ", textPos, " ");
 
   // Specific program for the console since the console
   // is just drawn in black with alpha
@@ -158,6 +158,28 @@ void Console::addCharacter(const std::string& c) {
 
 /**
  * @brief
+ *   Sets the current text to be a text retrieved from the command
+ *   history. It will make sure that the command history index
+ *   does not go over any limits.
+ *
+ */
+void Console::setCommandFromHistory() {
+  int commandHistoryLen = mCommandHistory.size();
+
+  if (mCommandHistoryIndex >= commandHistoryLen) {
+    mCommandHistoryIndex = commandHistoryLen;
+    return setText("");
+  }
+
+  if (mCommandHistoryIndex < 0)
+    mCommandHistoryIndex = 0;
+
+  // retrieve the command strip the '> ' characters
+  setText(mCommandHistory[mCommandHistoryIndex]);
+}
+
+/**
+ * @brief
  *   Tries to run the current inputted string in Lua, printing
  *   any result / erorrs to the console
  *
@@ -166,6 +188,8 @@ void Console::addCharacter(const std::string& c) {
 void Console::doCommand(const Input::Event& event) {
   try {
     log("> " + mCurrentText);
+    mCommandHistory.push_back(mCurrentText);
+    mCommandHistoryIndex = mCommandHistory.size();
     mAsset->lua()->engine["currentEvent"] = &event;
     mAsset->lua()->engine.script(mCurrentText);
   } catch (const sol::error& e) {
@@ -184,7 +208,7 @@ void Console::doCommand(const Input::Event& event) {
  */
 void Console::setText(const std::string& s) {
   mCurrentText = s;
-  mLocation    = 0;
+  mLocation    = s.size();
   setText();
 }
 
@@ -332,15 +356,29 @@ void Console::input(const Input::Event& event) {
 
   // If left arrow is held down, move left in the console
   if (event.key() == GLFW_KEY_LEFT) {
-    mLocation = mLocation - 1;
+    --mLocation;
     setText();
     return event.stopPropgation();
   }
 
   // if right arrow is held down, move right
   if (event.key() == GLFW_KEY_RIGHT) {
-    mLocation = mLocation + 1;
+    ++mLocation;
     setText();
+    return event.stopPropgation();
+  }
+
+  // if up arrow is held down, go up through the history
+  if (event.key() == GLFW_KEY_DOWN) {
+    ++mCommandHistoryIndex;
+    setCommandFromHistory();
+    return event.stopPropgation();
+  }
+
+  // if down arrow is held down, go down through the history
+  if (event.key() == GLFW_KEY_UP) {
+    --mCommandHistoryIndex;
+    setCommandFromHistory();
     return event.stopPropgation();
   }
 }
