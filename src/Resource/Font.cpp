@@ -139,6 +139,7 @@ bool Font::load(int size) {
 
   int offsetX = 0;
   int offsetY = 0;
+  int maxWidth = 0;
 
   rowH = 0;
 
@@ -160,12 +161,14 @@ bool Font::load(int size) {
                                g->bitmap.buffer);
 
     page.glyphs[i] = Font::Glyph(g, vec2(offsetX, offsetY), vec2(w, h));
+    maxWidth = max(page.glyphs[i].bitmapSize.x, maxWidth);
+
 
     rowH = std::max(rowH, g->bitmap.rows);
     offsetX += g->bitmap.width + 1;
   }
 
-  page.metrics = vec2(0, mFace->size->metrics.height >> 6);
+  page.metrics = vec2(maxWidth, mFace->size->metrics.height >> 6);
   FT_Done_Face(mFace);
   return true;
 }
