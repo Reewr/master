@@ -24,7 +24,6 @@ class GLRectangle;
  *   to interact with the engine itself.
  *
  *   @TODO:
- *     - Fix movement of caret to make more sense
  *     - Add tab completion
  *     - Add scroll in history
  *     - Add movement by word, left and right
