@@ -1,0 +1,51 @@
+#ifdef __VERTEX__
+#version 330
+
+layout(location=0) in vec2 position;
+layout(location=1) in vec2 texcoord;
+layout(location=2) in vec4 colors;
+
+out vec2 Texcoord;
+out vec4 Colors;
+
+uniform vec2 screenRes;
+uniform vec2 guiOffset;
+
+float convertCoords(float x, float s) {
+  return ((x - s/2)/(s/2));
+}
+
+void main() {
+  Texcoord = texcoord;
+  Colors = colors;
+  vec2 newPos = position + guiOffset;
+
+  newPos.x =  convertCoords(newPos.x, screenRes.x);
+  newPos.y = -convertCoords(newPos.y, screenRes.y);
+
+  gl_Position = vec4(newPos, 0.0, 1.0);
+}
+
+#endif
+#ifdef __FRAGMENT__
+
+#version 330
+
+in vec2 Texcoord;
+in vec4 Colors;
+
+out vec4 outColor;
+
+uniform sampler2D inTexture;
+uniform bool isBackground;
+
+uniform bool isColorOverriden;
+uniform vec3 overrideColor;
+
+void main() {
+  vec4 texColor = texture(inTexture, Texcoord);
+  vec4 usedColors = isColorOverriden ? vec4(overrideColor, 1.0) : Colors;
+  outColor = isBackground ? Colors : texColor.r * usedColors;
+}
+
+#endif

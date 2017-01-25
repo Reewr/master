@@ -35,6 +35,9 @@ addResource("Font::Dejavu", "media/Fonts/DejaVuSansMono.ttf",
 addResource("Program::GUI", "shaders/GUI/GUI.vsfs",
             ResourceType.Program, ResourceScope.All)
 
+addResource("Program::Font", "shaders/GUI/Font.vsfs",
+            ResourceType.Program, ResourceScope.All)
+
 addResource("Program::ColorRect", "shaders/GUI/ColorRect.vsfs",
             ResourceType.Program, ResourceScope.All)
 

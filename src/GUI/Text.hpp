@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 #include "../OpenGLHeaders.hpp"
 
@@ -60,14 +61,35 @@ public:
   //! Changes the position and recalculates Geometry
   void setPosition(const mmm::vec2& pos);
 
+  // Checks if the text has background colors defined
+  bool hasBackgroundColor() const;
+
   //! :)
   std::string getText();
+
+  // Returns the text without all the color bullshit
+  std::string getFormattedText();
 
   //! Returns char size
   int getCharSize();
 
 private:
+  struct ConsoleColor {
+    mmm::vec4 foreground;
+    mmm::vec4 background;
+  };
+
+  struct TextBlock {
+    ConsoleColor color;
+    std::string text = "";
+  };
+
   void recalculateGeometry();
+
+  std::vector<TextBlock>
+  parseString(const std::string& s,
+              mmm::vec4          defaultForeground = { 1, 1, 1, 1 },
+              mmm::vec4          defaultBackround  = { 0, 0, 0, 0 });
 
   struct {
     mmm::vec3 current;
@@ -78,15 +100,22 @@ private:
 
   int mNumVertices;
   int mCharacterSize;
+  int mNumVerticesBackground;
   int mStyle;
 
   GLuint mVBO;
   GLuint mVAO;
 
-  std::shared_ptr<Font> mTextFont;
+  GLuint mVBOBackground;
+  GLuint mVAOBackground;
 
+  std::shared_ptr<Font> mTextFont;
+  std::shared_ptr<Program> mFontProgram;
+
+  std::vector<TextBlock> mFormattedText;
   std::string mText;
 
   mmm::vec2 mLimit;
   bool      mIsLimitOn;
+  bool      mHasBackgroundColor;
 };
