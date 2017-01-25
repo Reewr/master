@@ -59,6 +59,7 @@ Console::~Console() {
 
   mAutoComplete.clear();
   mHistory.clear();
+  mCommandHistory.clear();
 }
 
 /**
