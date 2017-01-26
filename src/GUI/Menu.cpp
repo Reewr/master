@@ -340,6 +340,10 @@ bool Menu::setActiveMenu(const int index) {
   if (!isVisible() && index != -1)
     return false;
 
+  if (index >= (int) mMenuItems.size()) {
+    return setActiveMenu(-1);
+  }
+
   if (mActiveMenu != -1 && mActiveMenu != index) {
     mMenuItems[mActiveMenu]->setPrevColor();
   }
