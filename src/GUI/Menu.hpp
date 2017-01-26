@@ -64,6 +64,9 @@ public:
                     const mmm::vec2&                startPos,
                     const MenuSettings&             m = MenuSettings());
 
+  //! Removes the menu items from the menu
+  void clearMenuItems();
+
   //! Sets the active menuItem - turns it yellow
   bool setActiveMenu(const int i);
 
@@ -72,6 +75,9 @@ public:
 
   //! Returns the index of the active menu item
   int getActiveMenu() const;
+
+  //! Returns the Text element that is active, otherwise nullptr
+  const Text* getActiveMenuItem() const;
 
   //! Sets an offset on all menu items
   void setOffset(const mmm::vec2& offset);

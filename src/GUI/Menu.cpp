@@ -8,6 +8,8 @@
 #include "../Utils/Utils.hpp"
 #include "Text.hpp"
 
+#include <limits>
+
 using mmm::vec2;
 
 Menu::MenuSettings::MenuSettings(float size, float offset, int ori, int color) {
@@ -166,10 +168,7 @@ Menu* Menu::fromXML(tinyxml2::XMLElement* element) {
 }
 
 Menu::~Menu() {
-  for (auto m : mMenuItems)
-    delete m;
-
-  mMenuItems.clear();
+  clearMenuItems();
 }
 
 /**
@@ -223,6 +222,9 @@ void Menu::defaultInputHandler(const Input::Event& event) {
 void Menu::addMenuItem(const std::string&  text,
                        const vec2&         position,
                        const MenuSettings& m) {
+  if (mMenuItems.size() == 0)
+    mBoundingBox.topleft = position;
+
   Text* item = new Text("Font::Dejavu", text, position, m.size);
   item->setColor(m.color);
   mMenuItems.push_back(item);
@@ -248,8 +250,6 @@ void Menu::addMenuItem(const std::string&  text,
 void Menu::addMenuItems(const std::vector<std::string>& texts,
                         const vec2&                     startPosition,
                         const MenuSettings&             m) {
-  mBoundingBox.topleft = startPosition;
-
   for (unsigned int i = 0; i < texts.size(); i++) {
     float newX = startPosition.x;
     float newY = startPosition.y;
@@ -258,14 +258,51 @@ void Menu::addMenuItems(const std::vector<std::string>& texts,
       Text* lastElement = mMenuItems.back();
       vec2  bottomRight = lastElement->box().bottomright();
 
-      if (mMenuItems.size() >= 1 && m.ori == VERTICAL)
+      if (i > 0 && m.ori == VERTICAL)
         newY = bottomRight.y + m.offset / 2;
-      else if (mMenuItems.size() >= 1 && m.ori == HORIZONTAL)
+      else if (i > 0 && m.ori == HORIZONTAL)
         newX = bottomRight.x + m.offset;
     }
 
     addMenuItem(texts[i], { newX, newY }, m);
   }
+
+  vec2 bottomright = {0, 0};
+  vec2 topleft = { std::numeric_limits<float>::max(), std::numeric_limits<float>::max()};
+
+  // Update the size of the menu element.
+  for (auto a : mMenuItems) {
+    const Rectangle& r = a->box();
+    vec2 textBR = r.bottomright();
+
+    if (r.topleft.x < topleft.x)
+      topleft.x = r.topleft.x;
+
+    if (r.topleft.y < topleft.y)
+      topleft.y = r.topleft.y;
+
+    bool isLargerX = textBR.x > bottomright.x;
+    bool isLargerY = textBR.y > bottomright.y;
+
+    if (isLargerX && isLargerY)
+      bottomright = textBR;
+    else if (isLargerX)
+      bottomright.x = textBR.x;
+    else if (isLargerY)
+      bottomright.y = textBR.y;
+  }
+
+  mBoundingBox = { topleft.x,
+                   topleft.y,
+                   bottomright.x - topleft.x,
+                   bottomright.y - topleft.y };
+}
+
+void Menu::clearMenuItems() {
+  for (auto a : mMenuItems)
+    delete a;
+
+  mMenuItems.clear();
 }
 
 /**
@@ -368,6 +405,19 @@ void Menu::setOffset(const vec2& offset) {
  */
 int Menu::getActiveMenu() const {
   return mActiveMenu;
+}
+
+/**
+ * @brief
+ *   Returns the Text element for the item that is active. If there
+ *   is no item that is active, the return value is a nullptr
+ *
+ * @return
+ */
+const Text* Menu::getActiveMenuItem() const {
+  if (mActiveMenu < 0 || mActiveMenu >= (int) mMenuItems.size())
+    return nullptr;
+  return mMenuItems[mActiveMenu];
 }
 
 /**
