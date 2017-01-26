@@ -13,6 +13,7 @@
 #include "Text.hpp"
 
 using mmm::vec2;
+
 /**
  * @brief
  *   Creates a dropdown that has the given options
@@ -164,8 +165,8 @@ void Dropdown::addOption(const std::string text) {
   Text* option    = new Text("Font::Dejavu", text, vec2(0, 0), 15);
   vec2  size      = option->size();
 
-  mBoundingBox.size.x = max(mBoundingBox.size.x, size.x);
-  mBoundingBox.size.y = max(mBoundingBox.size.y, size.y);
+  mBoundingBox.size.x = mmm::max(mBoundingBox.size.x, size.x);
+  mBoundingBox.size.y = mmm::max(mBoundingBox.size.y, size.y);
 
   option->setPosition(mBoundingBox.topleft + optionPos);
   option->setColor(Text::WHITE);

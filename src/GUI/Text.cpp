@@ -602,7 +602,7 @@ void Text::recalculateGeometry() {
   }
 
   size.x = size.x - mBoundingBox.topleft.x;
-  size.y = max(size.y - mBoundingBox.topleft.y, metrics.y);
+  size.y = mmm::max(size.y - mBoundingBox.topleft.y, metrics.y);
   mBoundingBox.size = size;
 
   mNumVertices = coordinates.size();

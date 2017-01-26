@@ -115,17 +115,17 @@ bool Font::load(int size) {
     }
 
     if (rowW + g->bitmap.width + 1 >= 1024) {
-      w = std::max(w, rowW);
+      w = mmm::max(w, rowW);
       h += rowH;
       rowW = 0;
       rowH = 0;
     }
 
     rowW += g->bitmap.width + 1;
-    rowH = std::max(rowH, g->bitmap.rows);
+    rowH = mmm::max(rowH, g->bitmap.rows);
   }
 
-  w = std::max(w, rowW);
+  w = mmm::max(w, rowW);
   h += rowH;
 
   // Creates a texture with the size that was found out
@@ -161,10 +161,10 @@ bool Font::load(int size) {
                                g->bitmap.buffer);
 
     page.glyphs[i] = Font::Glyph(g, vec2(offsetX, offsetY), vec2(w, h));
-    maxWidth = max(page.glyphs[i].bitmapSize.x, maxWidth);
+    maxWidth = mmm::max(page.glyphs[i].bitmapSize.x, maxWidth);
 
 
-    rowH = std::max(rowH, g->bitmap.rows);
+    rowH = mmm::max(rowH, g->bitmap.rows);
     offsetX += g->bitmap.width + 1;
   }
 
