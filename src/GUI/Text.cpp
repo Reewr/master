@@ -515,6 +515,7 @@ void Text::recalculateGeometry() {
   const vec2 texSize = mTextFont->getTexture(mCharacterSize)->getSize();
   const vec2 metrics = mTextFont->getMetrics(mCharacterSize);
   vec2       tempPos = mBoundingBox.topleft + vec2(0, mCharacterSize);
+  vec2       size    = vec2();
 
   for (auto textBlock : mFormattedText) {
 
@@ -548,21 +549,28 @@ void Text::recalculateGeometry() {
         mIsLimitOn && tempPos.x > mBoundingBox.topleft.x + mLimit.x;
 
       if (isNewline || (isAboveLimit && isWhitespace)) {
-        /* bkCords.push_back({ xLast, tempPos.y            , bColor }); */
-        /* bkCords.push_back({ x0   , tempPos.y + metrics.y, bColor }); */
-        /* bkCords.push_back({ xLast, tempPos.y + metrics.y, bColor }); */
+        if (xLast > size.x)
+          size.x = xLast;
 
-        /* bkCords.push_back({ x0   , tempPos.y + metrics.y, bColor }); */
-        /* bkCords.push_back({ xLast, tempPos.y            , bColor }); */
-        /* bkCords.push_back({ x0   , tempPos.y            , bColor }); */
+        if (tempPos.y > size.y)
+          size.y = tempPos.y;
+
+        bkCords.push_back({ xLast, tempPos.y - metrics.y * 0.75, 0, 0, bColor });
+        bkCords.push_back({ x0   , tempPos.y + metrics.y * 0.25, 0, 0, bColor });
+        bkCords.push_back({ xLast, tempPos.y + metrics.y * 0.25, 0, 0, bColor });
+
+        bkCords.push_back({ x0   , tempPos.y + metrics.y * 0.25, 0, 0,  bColor });
+        bkCords.push_back({ xLast, tempPos.y - metrics.y * 0.75, 0, 0, bColor });
+        bkCords.push_back({ x0   , tempPos.y - metrics.y * 0.75, 0, 0, bColor });
         tempPos.x = mBoundingBox.topleft.x;
-        tempPos.y += mCharacterSize * 2;
+        tempPos.y += metrics.y;
         continue;
       } else if (isWhitespace) {
         xLast = x2 + g.advance.x;
       } else if (!w || !h) {
         continue;
       }
+
 
       const float tx = g.tc.x + g.bitmapSize.x / texSize.x;
       const float ty = g.tc.y + g.bitmapSize.y / texSize.y;
@@ -574,9 +582,13 @@ void Text::recalculateGeometry() {
       coordinates.push_back({ x2    , -y2 + h, g.tc.x, ty    , fColor });
       coordinates.push_back({ x2 + w, -y2    , tx    , g.tc.y, fColor });
       coordinates.push_back({ x2    , -y2    , g.tc.x, g.tc.y, fColor });
-
-      mBoundingBox.bottomright(vec2(x2 + w, -y2 + mCharacterSize));
     }
+
+    if (xLast > size.x)
+      size.x = xLast;
+
+    if (tempPos.y > size.y)
+      size.y = tempPos.y;
 
     if (mHasBackgroundColor) {
       bkCords.push_back({ xLast, tempPos.y - metrics.y * 0.75, 0, 0, bColor });
@@ -588,6 +600,10 @@ void Text::recalculateGeometry() {
       bkCords.push_back({ x0   , tempPos.y - metrics.y * 0.75, 0, 0, bColor });
     }
   }
+
+  size.x = size.x - mBoundingBox.topleft.x;
+  size.y = max(size.y - mBoundingBox.topleft.y, metrics.y);
+  mBoundingBox.size = size;
 
   mNumVertices = coordinates.size();
 

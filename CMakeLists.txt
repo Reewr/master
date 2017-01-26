@@ -94,7 +94,7 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/mmm)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/mmm/src)
 
 # Find and add LUA51
-find_package(Lua51 REQUIRED)
+find_package(Lua 5.3 REQUIRED)
 
 # Include sol2
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/sol2)

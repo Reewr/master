@@ -5,6 +5,7 @@
 
 #include "../GLSL/Program.hpp"
 #include "../GUI/Text.hpp"
+#include "../GUI/Menu.hpp"
 #include "../Input/Event.hpp"
 #include "../Input/Input.hpp"
 #include "../Lua/Lua.hpp"
@@ -21,11 +22,14 @@ using mmm::vec4;
 Console::Console(Asset* asset)
     : mLocation(0)
     , mCommandHistoryIndex(0)
+    , mAutoCompleteIndex(-1)
     , mCurrentText("")
     , mAutoCompleteBox(new GLRectangle(Rectangle(0, 0, 0, 0)))
     , mAsset(asset)
-    , mShowAutoComplete(false) {
-  vec2 res     = asset->cfg()->graphics.res;
+    , mShowAutoComplete(false)
+    , mLuaAutoComplete({}) {
+  CFG* cfg     = asset->cfg();
+  vec2 res     = cfg->graphics.res;
   vec2 textPos = vec2(10, res.y / 2 - 30);
   mBoundingBox = Rectangle(0, 0, res.x, res.y / 2);
 
@@ -35,8 +39,9 @@ Console::Console(Asset* asset)
                    textPos,
                    15,
                    Text::WHITE,
-                   vec2(mAsset->cfg()->graphics.res.x,
-                        mAsset->cfg()->graphics.res.y));
+                   cfg->graphics.res);
+
+  mAutoComplete = new Menu();
   mText->isVisible(true);
 
   // Specific program for the console since the console
@@ -49,17 +54,14 @@ Console::Console(Asset* asset)
 Console::~Console() {
   delete mRect;
   delete mText;
-  delete mAutoCompleteBox;
-
-  for (auto a : mAutoComplete)
-    delete a;
+  delete mAutoComplete;
 
   for (auto h : mHistory)
     delete h;
 
-  mAutoComplete.clear();
   mHistory.clear();
   mCommandHistory.clear();
+  mLuaAutoComplete.clear();
 }
 
 /**
@@ -167,13 +169,13 @@ void Console::addCharacter(const std::string& c) {
 void Console::setCommandFromHistory() {
   int commandHistoryLen = mCommandHistory.size();
 
+  if (mCommandHistoryIndex < 0)
+    mCommandHistoryIndex = 0;
+
   if (mCommandHistoryIndex >= commandHistoryLen) {
     mCommandHistoryIndex = commandHistoryLen;
     return setText("");
   }
-
-  if (mCommandHistoryIndex < 0)
-    mCommandHistoryIndex = 0;
 
   // retrieve the command strip the '> ' characters
   setText(mCommandHistory[mCommandHistoryIndex]);
@@ -229,13 +231,13 @@ void Console::setText() {
 
   if (mLocation == size)
     return mText->setText("> " + mCurrentText +
-                          "\\<0,0,0,255:255,255,255,255> \\</>");
+                          "\\<0,0,0,255:255,255,255,125> \\</>");
 
   std::string before = mCurrentText.substr(0, mLocation);
   std::string character = mCurrentText.substr(mLocation, 1);
   std::string after  = mCurrentText.substr(mLocation + 1);
 
-  mText->setText("> " + before + "\\<0,0,0,255:255,255,255,255>" + character + "\\</>" + after);
+  mText->setText("> " + before + "\\<0,0,0,255:255,255,255,125>" + character + "\\</>" + after);
 }
 
 /**
@@ -250,33 +252,70 @@ void Console::setText() {
  *   @TODO: Make this work with Lua
  */
 void Console::setAutoComplete() {
-  return;
+  std::vector<Lua::Typenames> names = mAsset->lua()->getTypenames(mCurrentText);
 
-  /* vec2      res      = mAsset->cfg()->graphics.res; */
-  /* Rectangle box      = Rectangle(5, res.y / 2 + 30, 0, 0); */
-  /* int       index    = 0; */
-  /* vec2      startPos = vec2(10, res.y / 2 + 30); */
+  vec2         res        = mAsset->cfg()->graphics.res;
+  unsigned int maxNameLen = 0;
+  unsigned int maxTypeLen = 0;
+  int          namesLen   = names.size();
+  bool         isEqual    = (int) mLuaAutoComplete.size() == namesLen;
+  // find the max length of name and type so that they
+  // can be aligned properly
+  for(int i = 0; i < namesLen; i++) {
+    isEqual    = isEqual && names[i] == mLuaAutoComplete[i];
+    maxNameLen = mmm::max(names[i].name.size(), maxNameLen);
+    maxTypeLen = mmm::max(names[i].typeName.size(), maxTypeLen);
+  }
 
-  /* for (auto a : mAutoComplete) { */
-  /*   bool hasText = a->getText().find(mCurrentText) != std::string::npos; */
-  /*   if (hasText) { */
-  /*     a->isVisible(true); */
-  /*     a->setOffset(startPos + vec2(0, 20 * index)); */
-  /*     box.size.x = max(a->size().x, box.size.x); */
-  /*     box.size.y = max(a->size().y, box.size.y); */
-  /*     index++; */
-  /*   } else { */
-  /*     a->isVisible(false); */
-  /*   } */
-  /* } */
+  if (isEqual) {
+    mAutoComplete->setActiveMenu(mAutoComplete->getActiveMenu() + 1);
+    return;
+  }
 
-  /* if (box.size.y > 0 && index != 0) { */
-  /*   box.size.x        = box.size.x + 10; */
-  /*   mShowAutoComplete = true; */
-  /*   mAutoCompleteBox->change(box); */
-  /* } else { */
-  /*   mShowAutoComplete = false; */
-  /* } */
+  mLuaAutoComplete = names;
+  mAutoComplete->clearMenuItems();
+  mAutoComplete->setActiveMenu(-1);
+
+  Menu::MenuSettings settings(12, 10, Menu::VERTICAL, Text::WHITE);
+  vec2 startPos = vec2(10, res.y / 2);
+  std::vector<std::string> row = {};
+
+  for(int i = 0; i < namesLen; ++i) {
+    std::string name = names[i].name;
+    std::string type = names[i].typeName;
+    std::string content = "";
+
+    if (name.size() < maxNameLen)
+      name.append(maxNameLen - name.size(), ' ');
+
+    if (type.size() < maxTypeLen)
+      type.append(maxTypeLen - type.size(), ' ');
+
+    if (i == mAutoCompleteIndex)
+      content += "\\<102,217,238,255:>" + name + " :: "  + type + "\\</>";
+    else
+      content += name + " :: " + type;
+
+    row.push_back(content);
+
+    if ((i % 10 == 0 && i != 0) || i + 1 == namesLen) {
+      mAutoComplete->addMenuItems(row, startPos, settings);
+      row.clear();
+      startPos.x = mAutoComplete->size().x + 10;
+    }
+  }
+
+  mLuaAutoComplete = names;
+
+  if (names.size() == 0) {
+    mShowAutoComplete = false;
+    return;
+  }
+
+  const vec2& size = mAutoComplete->size();
+  Rectangle box = Rectangle(0, res.y / 2, size.x + 20, size.y + 10);
+  mAutoCompleteBox->change(box);
+  mShowAutoComplete = true;
 }
 
 /**
@@ -327,6 +366,8 @@ void Console::input(const Input::Event& event) {
           return event.stopPropgation();
         }
         break;
+      case GLFW_KEY_TAB:
+        setAutoComplete();
     }
   }
 
@@ -478,8 +519,7 @@ void Console::draw() {
 
   if (mShowAutoComplete) {
     mAutoCompleteBox->draw();
-    for (auto a : mAutoComplete)
-      a->draw();
+    mAutoComplete->draw();
   }
 
   mText->draw();

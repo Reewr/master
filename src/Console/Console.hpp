@@ -10,6 +10,11 @@
 class Text;
 class CFG;
 class Asset;
+class Menu;
+
+namespace Lua {
+  struct Typenames;
+}
 
 namespace Input {
   class Input;
@@ -97,25 +102,27 @@ private:
   // position based on the key pressed
   void deleteWord(int whichKey);
 
+  bool mShowAutoComplete;
   bool mPrevInputOpened;
 
   // Stores the location of the pointer
   int mLocation;
   int mCommandHistoryIndex;
+  int mAutoCompleteIndex;
 
   // Stores the text that the user inputs (command)
   std::string mCurrentText;
 
   // This holds the text that is rendered on the screen
   Text*        mText;
+  Menu*        mAutoComplete;
   GLRectangle* mRect;
   GLRectangle* mAutoCompleteBox;
 
   std::shared_ptr<Program> mProgram;
   Asset*                   mAsset;
 
-  bool               mShowAutoComplete;
-  std::vector<Text*> mAutoComplete;
-  std::vector<Text*> mHistory;
-  std::vector<std::string> mCommandHistory;
+  std::vector<Text*>          mHistory;
+  std::vector<std::string>    mCommandHistory;
+  std::vector<Lua::Typenames> mLuaAutoComplete;
 };
