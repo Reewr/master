@@ -91,7 +91,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/bullet/src)
 # Find and add mmm
 SET_OPTION(BUILD_MMM_TESTS OFF)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/mmm)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/mmm/src)
+# include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/mmm/src)
 
 # Find and add LUA51
 find_package(Lua 5.3 REQUIRED)
@@ -360,6 +360,7 @@ target_link_libraries(DDDGP
                       Bullet3Dynamics
                       Bullet3Collision
                       Bullet3Common )
+target_link_libraries(DDDGP mmm)
 target_link_libraries(DDDGP MultiNEAT)
 
 # =======================================
