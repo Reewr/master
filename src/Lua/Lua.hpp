@@ -27,9 +27,15 @@ namespace Lua {
     ~Lua();
 
     // TODO: Add removal functions
+
+    //! Adds the console object to Lua, making it available to Lua runtime
     void add(Console* c);
+
+    //! Adds teh CFG object to Lua, making it available to Lua runtime.
     void add(CFG* cfg);
 
+    //! Recreates the lua engine, adding the console and config
+    //! objects and reruns the files that are loaded
     void reInitialize();
     bool loadFile(const std::string& filename);
     std::vector<Typenames> getTypenames(const std::string name="");
