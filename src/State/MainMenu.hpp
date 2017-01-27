@@ -8,6 +8,10 @@ class OptionsMenu;
 class Texture;
 class Framebuffer;
 
+namespace Lua {
+  class Lua;
+}
+
 namespace Input {
   class Input;
   class Event;
@@ -35,4 +39,5 @@ protected:
   void drawGUI();
 
   Asset* mAsset;
+  Lua::Lua*   mLua;
 };

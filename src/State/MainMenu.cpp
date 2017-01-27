@@ -16,6 +16,7 @@ using mmm::vec2;
 
 MainMenu::MainMenu(Asset* asset) {
   mAsset = asset;
+  mLua   = mAsset->lua();
   mAsset->rManager()->unloadUnnecessary(ResourceScope::MainMenu);
   mAsset->rManager()->loadRequired(ResourceScope::MainMenu);
 
@@ -76,7 +77,7 @@ MainMenu::MainMenu(Asset* asset) {
   };
 
   menu->setInputHandler(handler);
-  mAsset->lua()->add(console);
+  mLua->add(console);
   log("MainMenu: Initialized successfully...");
 }
 
@@ -90,6 +91,12 @@ void MainMenu::update(float deltaTime) {
 
   for (auto i = mGUIElements.rbegin(); i != mGUIElements.rend(); ++i) {
     (*i)->update(deltaTime);
+  }
+
+  try {
+    mLua->engine["update"](deltaTime);
+  } catch (const sol::error& e) {
+    error("Failed to update: ", e.what());
   }
 }
 
@@ -106,6 +113,12 @@ void MainMenu::drawGUI() {
   glDisable(GL_DEPTH_TEST);
   for (auto g : mGUIElements)
     g->draw();
+
+  try {
+    mLua->engine["draw"]();
+  } catch (const sol::error& e) {
+    error("Failed to draw: ", e.what());
+  }
 }
 
 void MainMenu::input(const Input::Event& event) {
