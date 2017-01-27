@@ -41,18 +41,20 @@ void Lua::text_as_lua(sol::state& state) {
     sol::types<std::string, std::string, mmm::vec2, int, int>,
     sol::types<std::string, std::string, mmm::vec2, int, int, mmm::vec2>> ctor;
 
-  /* sol::usertype<Text> type(ctor, */
-  /*     "draw"        , &Text::draw, */
-  /*     "setStyle"    , &Text::setStyle, */
-  /*     "setLimit"    , &Text::setLimit, */
-  /*     "setText"     , &Text::setText, */
-  /*     "setTextSize" , &Text::setTextSize, */
-  /*     "setColor"    , &Text::setColor, */
-  /*     "setPrevColor", &Text::setPrevColor, */
-  /*     "setPosition" , &Text::setPosition, */
-  /*     "getText"     , &Text::getText, */
-  /*     "getCharSize" , &Text::getCharSize); */
+  // clang-format off
+  sol::usertype<Text> type(ctor,
+    "draw"              , &Text::draw,
+    "setStyle"          , &Text::setStyle,
+    "setLimit"          , &Text::setLimit,
+    "setText"           , &Text::setText,
+    "setTextSize"       , &Text::setTextSize,
+    "setPrevColor"      , &Text::setPrevColor,
+    "setPosition"       , &Text::setPosition,
+    "hasBackgroundColor", &Text::hasBackgroundColor,
+    "getText"           , &Text::getText,
+    "getFormattedText"  , &Text::getFormattedText,
+    "getCharSize"       , &Text::getCharSize);
 
-  /* state.set_usertype("Text", type); */
+  state.set_usertype("Text", type);
   // clang-format on
 }
