@@ -108,7 +108,6 @@ private:
   // Stores the location of the pointer
   int mLocation;
   int mCommandHistoryIndex;
-  int mAutoCompleteIndex;
 
   // Stores the text that the user inputs (command)
   std::string mCurrentText;
