@@ -63,7 +63,7 @@ private:
   float mHeight;
   float mHoriRotation;
   float mVertRotation;
-  float mSpeed;
+  /* float mSpeed; */
   Light mLight;
 
   // What are these two?
