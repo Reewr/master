@@ -259,6 +259,7 @@ void Console::setAutoComplete() {
   unsigned int maxTypeLen = 0;
   int          namesLen   = names.size();
   bool         isEqual    = (int) mLuaAutoComplete.size() == namesLen;
+
   // find the max length of name and type so that they
   // can be aligned properly
   for(int i = 0; i < namesLen; i++) {
@@ -291,14 +292,14 @@ void Console::setAutoComplete() {
     if (type.size() < maxTypeLen)
       type.append(maxTypeLen - type.size(), ' ');
 
-    if (i == mAutoCompleteIndex)
-      content += "\\<102,217,238,255:>" + name + " :: "  + type + "\\</>";
-    else
-      content += name + " :: " + type;
+    content += name + " :: " + type;
+
+    if (i + 13 < namesLen)
+      content += " | ";
 
     row.push_back(content);
 
-    if ((i % 10 == 0 && i != 0) || i + 1 == namesLen) {
+    if ((i % 14 == 0 && i != 0) || i + 1 == namesLen) {
       mAutoComplete->addMenuItems(row, startPos, settings);
       row.clear();
       startPos.x = mAutoComplete->size().x + 10;
