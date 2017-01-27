@@ -20,13 +20,12 @@ using mmm::vec2;
 using mmm::vec4;
 
 Console::Console(Asset* asset)
-    : mLocation(0)
+    : mShowAutoComplete(false)
+    , mLocation(0)
     , mCommandHistoryIndex(0)
-    , mAutoCompleteIndex(-1)
     , mCurrentText("")
     , mAutoCompleteBox(new GLRectangle(Rectangle(0, 0, 0, 0)))
     , mAsset(asset)
-    , mShowAutoComplete(false)
     , mLuaAutoComplete({}) {
   CFG* cfg     = asset->cfg();
   vec2 res     = cfg->graphics.res;
