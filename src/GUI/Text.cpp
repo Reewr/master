@@ -139,6 +139,8 @@ Text::Text(const std::string& font,
   mIsLimitOn   = limit.x != 0 || limit.y != 0;
   mColor       = {vec3(), vec3(), 0, 0};
 
+  // try to load text colors from the text, if it fails, ignore
+  // it and use default colors
   try {
     mFormattedText = parseString(text);
     mHasBackgroundColor = false;
@@ -151,7 +153,7 @@ Text::Text(const std::string& font,
     mFormattedText = {{{vec4(1, 1, 1, 1), vec4(0, 0, 0, 0)}, mText}};
   }
 
-  mBoundingBox.topleft    = position;
+  mBoundingBox.topleft = position;
 
   mFontProgram->setUniform("screenRes", mAsset->cfg()->graphics.res);
 
@@ -329,12 +331,12 @@ std::vector<Text::TextBlock> Text::parseString(const std::string& s,
                                                vec4 defaultForeground,
                                                vec4 defaultBackround) {
   std::stack<ConsoleColor> st;
-  st.push({defaultForeground, defaultBackround});
-
   std::vector<Text::TextBlock> colors = {};
   Text::TextBlock current = {{defaultForeground, defaultBackround}, ""};
   int state = 0;
   char lastChar;
+
+  st.push({defaultForeground, defaultBackround});
 
   for (auto c = s.begin(); c != s.end(); ++c){
     switch (state) {
@@ -389,10 +391,13 @@ std::vector<Text::TextBlock> Text::parseString(const std::string& s,
     lastChar = *c;
   }
 
+  // if broke in the middle of processing a text, add
+  // the current text
   if (current.text != "") {
     colors.push_back(current);
   }
 
+  // remove the text that contains no elements.
   colors.erase(std::remove_if(colors.begin(), colors.end(), [](Text::TextBlock& c) {
       return c.text.size() == 0;
   }), colors.end());
@@ -517,6 +522,8 @@ void Text::recalculateGeometry() {
   vec2       tempPos = mBoundingBox.topleft + vec2(0, mCharacterSize);
   vec2       size    = vec2();
 
+  // Go through each text block, creating the quads
+  // needed to render the text, together with the color of the quads
   for (auto textBlock : mFormattedText) {
 
     vec4& fColor = textBlock.color.foreground;
@@ -525,6 +532,7 @@ void Text::recalculateGeometry() {
     float x0;
     float xLast;
 
+    // Go through each character in the string
     for (unsigned int i = 0; i < textBlock.text.size(); ++i) {
       char c = textBlock.text[i];
       const Font::Glyph g = mTextFont->getGlyph(c, mCharacterSize);
