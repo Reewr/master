@@ -275,12 +275,12 @@ namespace Lua {
    *
    * @return
    */
-  std::vector<Typenames> Lua::getScope(sol::table& t, const std::string& name) {
+  std::vector<Typenames> Lua::getScope(sol::table& table, const std::string& name) {
     size_t pos = name.find_first_of(":");
     std::vector<Typenames> types = {};
 
     if (pos == std::string::npos) {
-      for (auto a : t) {
+      for (auto a : table) {
         Typenames t = getTypename(a);
 
         if (shouldIncludeType(t.name, name))
@@ -293,10 +293,10 @@ namespace Lua {
     std::string scopeName = name.substr(0, pos);
     std::string rest = name.substr(pos + 1);
 
-    sol::table table = engine[scopeName];
+    sol::table newTable = engine[scopeName];
 
-    if (table)
-      return getScope(table, rest);
+    if (newTable)
+      return getScope(newTable, rest);
 
     return types;
   }
