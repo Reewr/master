@@ -2,6 +2,7 @@
 
 #include "../../GUI/Text.hpp"
 #include "../../Resource/Font.hpp"
+#include "../../Input/Event.hpp"
 
 #include <sol.hpp>
 
@@ -43,6 +44,39 @@ void Lua::text_as_lua(sol::state& state) {
 
   // clang-format off
   sol::usertype<Text> type(ctor,
+    // Inherited from GUI
+    // Overloading functions
+    "isVisible"  , sol::overload((bool(Text::*)() const) &Text::isVisible,
+                                 (void(Text::*)(bool)) &Text::isVisible),
+
+    "isClickable", sol::overload((bool(Text::*)() const) &Text::isClickable,
+                                 (void(Text::*)(bool)) &Text::isClickable),
+
+    "isAnimating", sol::overload((bool(Text::*)() const) &Text::isAnimating,
+                                 (void(Text::*)(bool)) &Text::isAnimating),
+
+    "isMinimized", sol::overload((bool(Text::*)() const) &Text::isMinimized,
+                                 (void(Text::*)(bool)) &Text::isMinimized),
+
+    "isMouseOver", sol::overload((bool(Text::*)() const) &Text::isMouseOver,
+                                 (void(Text::*)(bool)) &Text::isMouseOver),
+
+    "hasChanged" , sol::overload((bool(Text::*)() const) &Text::hasChanged,
+                                 (void(Text::*)(bool)) &Text::hasChanged),
+
+    "update"             , &Text::update,
+    "isInside"           , &Text::isInside,
+    "input"              , &Text::input,
+    "setInputHandler"    , &Text::setInputHandler,
+    "defaultInputHandler", &Text::defaultInputHandler,
+    "box"                , &Text::box,
+    "position"           , &Text::position,
+    "size"               , &Text::size,
+    "offset"             , &Text::offset,
+    "setSize"            , &Text::setSize,
+    "setOffset"          , &Text::setOffset,
+
+    // Overriden and custom functions
     "draw"              , &Text::draw,
     "setStyle"          , &Text::setStyle,
     "setLimit"          , &Text::setLimit,
@@ -53,7 +87,8 @@ void Lua::text_as_lua(sol::state& state) {
     "hasBackgroundColor", &Text::hasBackgroundColor,
     "getText"           , &Text::getText,
     "getFormattedText"  , &Text::getFormattedText,
-    "getCharSize"       , &Text::getCharSize);
+    "getCharSize"       , &Text::getCharSize,
+    sol::base_classes, sol::bases<GUI>());
 
   state.set_usertype("Text", type);
   // clang-format on
