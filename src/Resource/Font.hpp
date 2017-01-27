@@ -44,7 +44,7 @@ public:
 
   //! Gets a glyph, if it does not exists loads
   //! the entire bitmap for that size
-  const Font::Glyph& getGlyph(char c, int size);
+  const Font::Glyph& getGlyph(unsigned int c, int size);
 
   //! Returns the metric values (Line spacing etc) for character size
   const mmm::vec2& getMetrics(int size);
@@ -60,7 +60,7 @@ private:
 
     Texture*  texture;
     mmm::vec2 metrics;
-    std::map<char, Glyph> glyphs;
+    std::map<unsigned int, Glyph> glyphs;
 
   private:
     Page(const Page& p);

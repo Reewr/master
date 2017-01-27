@@ -81,16 +81,32 @@ void Font::unload() {
   mPages.clear();
 }
 
+/**
+ * @brief
+ *   Loads the font using font-size 12 as initial size
+ *
+ * @return
+ */
 bool Font::load() {
   return load(12);
 }
 
+/**
+ * @brief
+ *   Loads the font using the given font-size
+ *
+ * @param size
+ *
+ * @return
+ */
 bool Font::load(int size) {
   log("Font :: Loading size: ", std::to_string(size));
+
   if (mPages.count(size) > 0) {
     log("Font :: Size already loaded: ", std::to_string(size));
     return true;
   }
+
   if (FT_New_Face(fontLib, mFilename.c_str(), 0, &mFace))
     return false;
 
@@ -105,11 +121,23 @@ bool Font::load(int size) {
   unsigned int w    = 0;
   unsigned int h    = 0;
 
+  FT_ULong charCode;
+  FT_UInt glyphIndex;
+
   // goes through the different characters, loading them
   // into memory and figuring out the size of the texture
   // that should hold it
-  for (int i = 32; i < 128; i++) {
-    if (FT_Load_Char(mFace, i, FT_LOAD_RENDER)) {
+  charCode = FT_Get_First_Char(mFace, &glyphIndex);
+  while(glyphIndex != 0) {
+    if (charCode > 255) {
+      w = mmm::max(w, rowW);
+      h += rowH;
+      rowW = 0;
+      rowH = 0;
+      break;
+    }
+
+    if (FT_Load_Char(mFace, charCode, FT_LOAD_RENDER)) {
       fprintf(stderr, "%s\n", "Cannot load character");
       continue;
     }
@@ -123,6 +151,8 @@ bool Font::load(int size) {
 
     rowW += g->bitmap.width + 1;
     rowH = mmm::max(rowH, g->bitmap.rows);
+
+    charCode = FT_Get_Next_Char(mFace, charCode, &glyphIndex);
   }
 
   w = mmm::max(w, rowW);
@@ -146,9 +176,16 @@ bool Font::load(int size) {
   // go through the same character again, but this time
   // use the newly created texture and add the characters
   // to that texture
-  for (int i = 32; i < 128; i++) {
-    if (FT_Load_Char(mFace, i, FT_LOAD_RENDER))
+  charCode = FT_Get_First_Char(mFace, &glyphIndex);
+  Utils::getGLError("Before loading");
+  while(glyphIndex != 0) {
+    if (charCode > 255)
+      break;
+
+    if (FT_Load_Char(mFace, charCode, FT_LOAD_RENDER)) {
+      fprintf(stderr, "%s\n", "Cannot load character");
       continue;
+    }
 
     if (offsetX + g->bitmap.width + 1 >= 1024) {
       offsetY += rowH;
@@ -160,12 +197,13 @@ bool Font::load(int size) {
                                vec2(g->bitmap.width, g->bitmap.rows),
                                g->bitmap.buffer);
 
-    page.glyphs[i] = Font::Glyph(g, vec2(offsetX, offsetY), vec2(w, h));
-    maxWidth = mmm::max(page.glyphs[i].bitmapSize.x, maxWidth);
-
+    page.glyphs[charCode] = Font::Glyph(g, vec2(offsetX, offsetY), vec2(w, h));
+    maxWidth = mmm::max(page.glyphs[charCode].bitmapSize.x, maxWidth);
 
     rowH = mmm::max(rowH, g->bitmap.rows);
     offsetX += g->bitmap.width + 1;
+
+    charCode = FT_Get_Next_Char(mFace, charCode, &glyphIndex);
   }
 
   page.metrics = vec2(maxWidth, mFace->size->metrics.height >> 6);
@@ -184,7 +222,7 @@ bool Font::load(int size) {
  *
  * @return
  */
-const Font::Glyph& Font::getGlyph(char c, int size) {
+const Font::Glyph& Font::getGlyph(unsigned int c, int size) {
   if (mPages.count(size) == 0)
     load(size);
 
