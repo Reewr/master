@@ -177,6 +177,7 @@ set(DDDGP_CPP
   ${SRC_DIR}/Lua/Math/LMath.cpp
   ${SRC_DIR}/Lua/Resource/LFont.cpp
   ${SRC_DIR}/Lua/GUI/LText.cpp
+  ${SRC_DIR}/Lua/GUI/LMenu.cpp
   ${SRC_DIR}/Lua/Lua.cpp
 
   # src/GLSL
@@ -257,6 +258,7 @@ set(DDDGP_HPP
   ${SRC_DIR}/Lua/Math/LMath.hpp
   ${SRC_DIR}/Lua/Resource/LFont.hpp
   ${SRC_DIR}/Lua/GUI/LText.hpp
+  ${SRC_DIR}/Lua/GUI/LMenu.hpp
   ${SRC_DIR}/Lua/Lua.hpp
 
   # src/GLSL

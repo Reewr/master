@@ -7,6 +7,7 @@
 
 #include "Console/LConsole.hpp"
 #include "GUI/LText.hpp"
+#include "GUI/LMenu.hpp"
 #include "Input/LEvent.hpp"
 #include "LEngine.hpp"
 #include "Math/LMath.hpp"
@@ -112,13 +113,26 @@ namespace Lua {
     engine = sol::state();
     engine.open_libraries(sol::lib::base, sol::lib::package);
 
+    // Load math
     math_as_lua(engine);
+
+    // Load resources
     font_as_lua(engine);
+
+    // Load GUI
     text_as_lua(engine);
+    menu_as_lua(engine);
+
+    // Load event
     event_as_lua(engine);
+
+    // Load console
     console_as_lua(engine);
-    engine_as_lua(engine);
+
+    // Load CFG
     cfg_as_lua(engine);
+
+    // Load State
     state_as_lua(engine);
 
     std::string path          = engine["package"]["path"];
