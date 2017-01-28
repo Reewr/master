@@ -11,7 +11,13 @@ class Font;
 class CFG;
 class Program;
 
-//! Text class needs a pointer to a Font object to work.
+/**
+ * @brief
+ *   This class represents any text in GUI elements. All elements that has some
+ *   kind of text is using this class.
+ *
+ *   This class is exported fully in Lua and can be used as it can in C++
+ */
 class Text : public GUI {
 public:
   //! Enums for Text Color - use these if you want to change color of the text
