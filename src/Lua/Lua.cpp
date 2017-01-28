@@ -9,6 +9,7 @@
 #include "GUI/LText.hpp"
 #include "GUI/LMenu.hpp"
 #include "GUI/LDropdown.hpp"
+#include "GUI/LSlider.hpp"
 #include "Input/LEvent.hpp"
 #include "LEngine.hpp"
 #include "Math/LMath.hpp"
@@ -124,6 +125,7 @@ namespace Lua {
     text_as_lua(engine);
     menu_as_lua(engine);
     dropdown_as_lua(engine);
+    slider_as_lua(engine);
 
     // Load event
     event_as_lua(engine);
