@@ -129,7 +129,8 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} \
   -Wextra \
   -pedantic-errors \
   -O3 \
-  -fdiagnostics-color=always")
+  -fdiagnostics-color=always
+  -ftemplate-depth=512")
 
 # Set lots of warnings. All warnings that are listed below -Wall
 # are warnings that GCC does not automatically include due to their
@@ -180,6 +181,7 @@ set(DDDGP_CPP
   ${SRC_DIR}/Lua/GUI/LMenu.cpp
   ${SRC_DIR}/Lua/GUI/LDropdown.cpp
   ${SRC_DIR}/Lua/GUI/LSlider.cpp
+  ${SRC_DIR}/Lua/GUI/LInputbox.cpp
   ${SRC_DIR}/Lua/Lua.cpp
 
   # src/GLSL
@@ -263,6 +265,7 @@ set(DDDGP_HPP
   ${SRC_DIR}/Lua/GUI/LMenu.hpp
   ${SRC_DIR}/Lua/GUI/LDropdown.hpp
   ${SRC_DIR}/Lua/GUI/LSlider.hpp
+  ${SRC_DIR}/Lua/GUI/LInputbox.hpp
   ${SRC_DIR}/Lua/Lua.hpp
 
   # src/GLSL
