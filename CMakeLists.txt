@@ -178,6 +178,7 @@ set(DDDGP_CPP
   ${SRC_DIR}/Lua/Resource/LFont.cpp
   ${SRC_DIR}/Lua/GUI/LText.cpp
   ${SRC_DIR}/Lua/GUI/LMenu.cpp
+  ${SRC_DIR}/Lua/GUI/LDropdown.cpp
   ${SRC_DIR}/Lua/Lua.cpp
 
   # src/GLSL
@@ -259,6 +260,7 @@ set(DDDGP_HPP
   ${SRC_DIR}/Lua/Resource/LFont.hpp
   ${SRC_DIR}/Lua/GUI/LText.hpp
   ${SRC_DIR}/Lua/GUI/LMenu.hpp
+  ${SRC_DIR}/Lua/GUI/LDropdown.hpp
   ${SRC_DIR}/Lua/Lua.hpp
 
   # src/GLSL
