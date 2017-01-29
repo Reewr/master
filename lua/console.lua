@@ -7,7 +7,12 @@ state = {}
 _print = print
 
 function print(...)
-  s = tostring(...)
+  s = ''
+
+  for i, v in ipairs({...}) do
+    s = s .. tostring(v) .. ' '
+  end
+
   console:log('\\<102,217,239,255:>LUA:\\</> ' .. s)
 end
 
