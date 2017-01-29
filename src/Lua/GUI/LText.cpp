@@ -6,24 +6,17 @@
 
 #include <sol.hpp>
 
-#include "../Math/LMath.hpp"
-#include "../Resource/LFont.hpp"
-
-std::vector<std::pair<std::function<void(sol::state& state)>, std::string>>
-  text_dependencies = { std::make_pair(&Lua::math_as_lua, "vec2") };
-
 void Lua::text_as_lua(sol::state& state) {
 
-  // load the dependencies of this library
-  for (auto a : text_dependencies) {
-    auto exists = state[a.second];
+  auto guiTable = state["GUI"];
 
-    if (!exists.valid())
-      a.first(state);
-  }
+  if (!guiTable.valid())
+    state.create_named_table("GUI");
+
+  sol::table GUITable = state["GUI"];
 
   // clang-format off
-  state["TextColor"] = state.create_table_with(
+  GUITable["TextColor"] = GUITable.create_with(
     "Black" , Text::BLACK,
     "White" , Text::WHITE,
     "Redj"  , Text::RED,
@@ -31,7 +24,7 @@ void Lua::text_as_lua(sol::state& state) {
     "Blue"  , Text::BLUE,
     "Yellow", Text::YELLOW);
 
-  state["TextStyle"] = state.create_table_with(
+  GUITable["TextStyle"] = GUITable.create_with(
     "Bold"     ,  Text::BOLD,
     "Underline",  Text::UNDERLINE,
     "Italic"   ,  Text::ITALIC);
@@ -90,6 +83,6 @@ void Lua::text_as_lua(sol::state& state) {
     "getCharSize"       , &Text::getCharSize,
     sol::base_classes, sol::bases<GUI>());
 
-  state.set_usertype("Text", type);
+  GUITable.set_usertype("Text", type);
   // clang-format on
 }
