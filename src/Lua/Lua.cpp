@@ -17,6 +17,7 @@
 #include "Math/LMath.hpp"
 #include "Resource/LFont.hpp"
 #include "State/LState.hpp"
+#include "Shape/LRectangle.hpp"
 #include "Utils/LCFG.hpp"
 
 #include <sol.hpp>
@@ -122,6 +123,9 @@ namespace Lua {
 
     // Load resources
     font_as_lua(engine);
+
+    // Shapes
+    rectangle_as_lua(engine);
 
     // Load GUI
     text_as_lua(engine);

@@ -175,6 +175,7 @@ set(DDDGP_CPP
   ${SRC_DIR}/Lua/LEngine.cpp
   ${SRC_DIR}/Lua/Input/LEvent.cpp
   ${SRC_DIR}/Lua/State/LState.cpp
+  ${SRC_DIR}/Lua/Shape/LRectangle.cpp
   ${SRC_DIR}/Lua/Math/LMath.cpp
   ${SRC_DIR}/Lua/Resource/LFont.cpp
   ${SRC_DIR}/Lua/GUI/LText.cpp
@@ -260,6 +261,7 @@ set(DDDGP_HPP
   ${SRC_DIR}/Lua/LEngine.hpp
   ${SRC_DIR}/Lua/Input/LEvent.hpp
   ${SRC_DIR}/Lua/State/LState.hpp
+  ${SRC_DIR}/Lua/Shape/LRectangle.hpp
   ${SRC_DIR}/Lua/Math/LMath.hpp
   ${SRC_DIR}/Lua/Resource/LFont.hpp
   ${SRC_DIR}/Lua/GUI/LText.hpp
