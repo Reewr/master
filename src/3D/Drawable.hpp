@@ -1,5 +1,7 @@
 #pragma once
 
+class btRigidBody;
+class Asset;
 
 namespace Input {
   class Event;
@@ -16,6 +18,14 @@ public:
   virtual void draw(float deltaTime) = 0;
 
   virtual void input(const Input::Event& event) = 0;
+
+  virtual bool hasPhysics() = 0;
+
+  virtual btRigidBody* getRigidBody() = 0;
+
+  virtual void updateFromPhysics();
+
+  static Asset* mAsset;
 
 protected:
 
