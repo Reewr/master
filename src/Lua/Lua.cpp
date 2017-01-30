@@ -163,6 +163,20 @@ namespace Lua {
       add(mCFG);
 
     loadFile("lua/main.lua");
+
+    emit("reInitialize");
+
+    engine.set_function("toVectorStr", [](sol::table t) -> std::vector<std::string> {
+      std::vector<std::string> s;
+
+      for (auto pair : t) {
+        if (pair.second.get_type() == sol::type::string) {
+          s.push_back(pair.second.as<std::string>());
+        }
+      }
+
+      return s;
+    });
   }
 
   /**
@@ -237,6 +251,35 @@ namespace Lua {
 
       return false;
     }
+  }
+
+  /**
+   * @brief
+   *   Adds a handler for a specific event.
+   *
+   * @param name the name of the event to handle
+   * @param e the function that should be called when the event happens.
+   */
+  void Lua::on(const std::string& eventName, EventHandler&& e) {
+    if (!mHandlers.count(eventName))
+      mHandlers[eventName] = {e};
+    else
+      mHandlers[eventName].push_back(e);
+  }
+
+  /**
+   * @brief
+   *   Emits a signal to all attached handlers for a specific event by
+   *   calling each function with one parameter, the lua engine.
+   *
+   * @param eventName
+   */
+  void Lua::emit(const std::string& eventName) {
+    if (!mHandlers.count(eventName))
+      return;
+
+    for (auto eventHandler : mHandlers[eventName])
+      eventHandler();
   }
 
   /**

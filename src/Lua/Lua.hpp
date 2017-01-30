@@ -1,6 +1,9 @@
 #pragma once
 
 #include <sol.hpp>
+#include <map>
+#include <vector>
+#include <functional>
 
 class Engine;
 class CFG;
@@ -12,6 +15,8 @@ namespace Input {
 
 namespace Lua {
 
+
+  typedef std::function<void()> EventHandler;
   // Turns a sol::type to a string of max 6 characters
   std::string solTypetoStr(sol::type t);
 
@@ -50,6 +55,12 @@ namespace Lua {
     // the working directory is.
     bool loadFile(const std::string& filename);
 
+    // Sets a handler to handle a specific event
+    void on(const std::string& eventName, EventHandler&& e);
+
+    // Calls all handlers for a specific event
+    void emit(const std::string& eventName);
+
     // Returns a list of types that is accessible based on the name given.
     // For instance, a name with "" will check global scope where as
     // a name with "config:" will check the scope of "config"
@@ -69,6 +80,8 @@ namespace Lua {
     // Function used by both getTypenames and getScope to see if they should
     // ignore a variable based on what the name contains / does not contain
     bool shouldIncludeType(const std::string& name, const std::string& search);
+
+    std::map<std::string, std::vector<EventHandler>> mHandlers;
     Console* mConsole;
     CFG*     mCFG;
   };

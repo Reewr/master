@@ -15,6 +15,8 @@ void Lua::rectangle_as_lua(sol::state& state) {
     sol::types<const Rectangle&>> ctor;
 
   sol::usertype<Rectangle> type(ctor,
+    "size"       , &Rectangle::size,
+    "topleft"    , &Rectangle::topleft,
     "contains"   , &Rectangle::contains,
     "middle"     , &Rectangle::middle,
     "bottomright", sol::overload(
