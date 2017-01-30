@@ -248,7 +248,8 @@ void Window::addMenuItem(std::string               name,
                          const Menu::MenuSettings& m) {
 
   if (!mMenues.count(name))
-    return;
+    throw std::runtime_error("There is no menu with name: '" + name + "'");
+
   vec2 newPos = mBoundingBox.topleft + pos;
   mMenues[name]->addMenuItem(text, newPos, m);
 }
