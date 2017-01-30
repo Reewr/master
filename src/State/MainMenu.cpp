@@ -78,6 +78,12 @@ MainMenu::MainMenu(Asset* asset) {
 
   menu->setInputHandler(handler);
   mLua->add(console);
+  mLua->loadFile("lua/states/mainmenu.lua");
+
+  /* mLua->on("reInitialize", [&](){ */
+  /*   mLua->add(console); */
+  /*   mLua->loadFile("lua/states/mainmenu.lua"); */
+  /* }); */
   log("MainMenu: Initialized successfully...");
 }
 

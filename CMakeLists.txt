@@ -161,6 +161,7 @@ set(DDDGP_CPP
 
   # src/3D
   ${SRC_DIR}/3D/Camera.cpp
+  ${SRC_DIR}/3D/Drawable.cpp
 
   # src/Console
   ${SRC_DIR}/Console/Console.cpp
@@ -247,6 +248,7 @@ set(DDDGP_HPP
 
   # src/3D
   ${SRC_DIR}/3D/Camera.hpp
+  ${SRC_DIR}/3D/Drawable.hpp
 
   # src/Console
   ${SRC_DIR}/Console/Console.hpp

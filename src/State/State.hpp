@@ -4,6 +4,7 @@
 
 class Asset;
 class GUI;
+class Drawable;
 
 namespace Input {
   class Event;
@@ -39,6 +40,8 @@ public:
 protected:
   State();
 
-  float             mDeltaTime;
-  std::vector<GUI*> mGUIElements;
+  float mDeltaTime;
+
+  std::vector<Drawable*> mDrawable;
+  std::vector<GUI*>      mGUIElements;
 };
