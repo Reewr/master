@@ -19,7 +19,7 @@ The following commands are available:
   run
     Builds the executable by using normal build procedure
     followed by executing the executable. This is equivalent
-    to running './build.sh build && ./DDDGP'
+    to running './build.sh build && ./EXECUTABLE-FILE'
 
   build
     Builds the executable, creating needed directories if
@@ -178,7 +178,13 @@ run_clang_format() {
 # as other directories and files that are produced
 # when building
 clean_build_dir() {
-  rm -rf build bin lib DDDGP
+  cd build || exit
+
+  if hash ninja 2>/dev/null; then
+    ninja cleanbuild
+  else
+    make cleanbuild
+  fi
 }
 
 # If we try to run a debug build with a release build
