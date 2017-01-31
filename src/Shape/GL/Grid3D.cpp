@@ -14,7 +14,7 @@ using vector = std::vector<T>;
 
 GLGrid3D::GLGrid3D(const vec2& size) {
   mSize = size;
-  // this->change(size);
+  this->change(size);
 }
 
 GLGrid3D::~GLGrid3D() {}
