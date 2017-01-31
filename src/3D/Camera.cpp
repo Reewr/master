@@ -66,11 +66,11 @@ void Camera::setLightMVPUniform(std::shared_ptr<Program> program,
 void Camera::setLightMVPUniforms(std::shared_ptr<Program> program,
                                  const std::string&       name) {
   program->setUniform(name + ".model", mLight.model);
-  setLightMPUniforms(program, name);
+  setLightVPUniforms(program, name);
 }
 
-void Camera::setLightMPUniforms(std::shared_ptr<Program> program,
-                                const std::string&       name) {
+void Camera::setLightVPUniforms(std::shared_ptr<Program> program,
+                               const std::string&       name) {
   program->setUniform(name + ".view", mLight.view);
   program->setUniform(name + ".proj", mLight.projection);
 }
@@ -89,20 +89,19 @@ void Camera::setMVPUniforms(std::shared_ptr<Program> program) {
 void Camera::update(float) {
   mView = updateViewMatrix();
 
-  // light.day -= light.speed * dt;
+  /* mLight.day -= light.speed * dt; */
   mat4 lt       = mmm::rotate_z(mLight.day) * mmm::rotate_y(mHoriRotation);
   vec3 lightEye = mTarget + vec3(lt * vec4(0, mHeight, 0, 1));
   vec3 lightUp  = vec3(lt * vec4(0, 0, -1, 0));
 
   mLight.view = mmm::lookAt(lightEye, mTarget, lightUp);
-  // float h = height;
-  // light.proj = ortho (-5*height, 5*height, -5*height, 5*height,
-  // -5*height, 5*height);
+  /* float h = mHeight; */
+  /* mLight.projection = ortho (-5*h, 5*h, -5*h, 5*h, -5*h, 5*h); */
   mLight.projection = mmm::ortho(-7.f, 7.f, -7.f, 7.f, -7.f, 7.f);
   mLight.direction  = mmm::normalize(lightUp - mTarget);
 
-  setLightMPUniforms(mShadowProgram);
-  setLightMPUniforms(mModelProgram);
+  setLightVPUniforms(mShadowProgram);
+  setLightVPUniforms(mModelProgram);
   mModelProgram->setUniform("view", mView);
   mModelProgram->setUniform("dir", mLight.direction);
   // terrain->setUniform("lightDir", ld);

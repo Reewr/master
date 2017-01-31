@@ -35,7 +35,7 @@ public:
   mmm::mat4 updateViewMatrix();
   mmm::mat4 updateProjectionMatrix();
 
-  void setLightMPUniforms(std::shared_ptr<Program> program,
+  void setLightVPUniforms(std::shared_ptr<Program> program,
                           const std::string&       name = "light");
 
   void setLightMVPUniform(std::shared_ptr<Program> program,
