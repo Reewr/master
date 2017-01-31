@@ -8,7 +8,7 @@
 # Builds ddgp by making the required folders.
 # This will automatically use the make-program `ninja`
 # if it exists
-build_dddgp() {
+build_project() {
   local build_type
   mkdir -p build bin lib
   cd build || exit
@@ -267,7 +267,7 @@ fi
 case "$COMMAND" in
   build | run)
     different_build_type "$FLAG"
-    build_dddgp "$COMMAND" "$FLAG"
+    build_project "$COMMAND" "$FLAG"
     ;;
   clang-format)
     run_clang "$FLAG"
