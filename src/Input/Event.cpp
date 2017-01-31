@@ -1,6 +1,5 @@
 #include "Event.hpp"
 
-
 #include "../OpenGLHeaders.hpp"
 
 #include "../State/State.hpp"
@@ -40,6 +39,9 @@ namespace Input {
               Type::KeyPress :
               action == GLFW_RELEASE ? Type::KeyRelease : Type::KeyRepeat;
     mCharacter = glfwKeyToString(key);
+
+    if (mInput != nullptr && mType == Type::KeyPress)
+      mInput->setPressedCoord(key);
   }
 
   /**
@@ -77,6 +79,9 @@ namespace Input {
       , mHandledState(States::NoChange) {
     mType      = action == GLFW_PRESS ? Type::MousePress : Type::MouseRelease;
     mCharacter = glfwKeyToString(key);
+
+    if (mInput != nullptr && mType == Type::MousePress)
+      mInput->setPressedCoord(key);
   }
 
   /**
