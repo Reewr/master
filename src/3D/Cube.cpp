@@ -7,6 +7,7 @@
 #include "../Resource/Texture.hpp"
 #include "../Shape/GL/Cube.hpp"
 #include "../Utils/Asset.hpp"
+#include "Camera.hpp"
 
 using mmm::vec2;
 using mmm::vec3;
@@ -25,6 +26,7 @@ Cube::Cube() {
                                                     mShape,
                                                     fallInertia);
   mBody     = new btRigidBody(consInfo);
+  mTexture  = mAsset->rManager()->get<Texture>("Texture::Cube");
   mProgram  = mAsset->rManager()->get<Program>("Program::Model");
   mPosition = vec3(0, 50, 0);
 }
@@ -38,8 +40,11 @@ Cube::~Cube() {
 
 void Cube::update(float) {}
 
-void Cube::draw(Camera*, float) {
+void Cube::draw(Camera* c, float) {
   mProgram->bind();
+  c->setMVPUniforms(mProgram);
+  c->setLightVPUniforms(mProgram, "light");
+  mTexture->bind(1);
   mCube->draw();
 }
 
