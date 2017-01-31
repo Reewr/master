@@ -1,9 +1,9 @@
 #include "Camera.hpp"
 
 #include "../GLSL/Program.hpp"
-#include "../Resource/ResourceManager.hpp"
 #include "../Input/Event.hpp"
 #include "../Input/Input.hpp"
+#include "../Resource/ResourceManager.hpp"
 #include "../Utils/Asset.hpp"
 #include "../Utils/CFG.hpp"
 

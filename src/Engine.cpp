@@ -2,8 +2,8 @@
 
 #include "OpenGLHeaders.hpp"
 
-#include "GUI/GUI.hpp"
 #include "3D/Drawable.hpp"
+#include "GUI/GUI.hpp"
 #include "Graphical/Framebuffer.hpp"
 #include "Lua/Lua.hpp"
 #include "State/MainMenu.hpp"
@@ -166,7 +166,7 @@ bool Engine::initialize(int argc, char* argv[], int isRefresh, int initState) {
   mResourceManager->loadDescription("./media/resources.lua");
 
   Drawable::mAsset = mAsset;
-  GUI::mAsset = mAsset;
+  GUI::mAsset      = mAsset;
   /* Spider::init(); */
   /* Model::init(&asset->cfg); */
   Framebuffer::init(mAsset->cfg());
