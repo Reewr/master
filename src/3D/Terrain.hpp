@@ -8,7 +8,7 @@ class GLGrid3D;
 class Texture;
 class Program;
 
-class Terrain : Drawable3D {
+class Terrain : public Drawable3D {
 public:
   Terrain();
   ~Terrain();
