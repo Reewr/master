@@ -1,6 +1,6 @@
 #include "World.hpp"
 
-#include "Drawable.hpp"
+#include "../Drawable/Drawable3D.hpp"
 #include <algorithm>
 #include <btBulletDynamicsCommon.h>
 
@@ -40,11 +40,11 @@ World::~World() {
  *
  * @param element
  */
-void World::addObject(Drawable* element) {
+void World::addObject(Drawable3D* element) {
   if (!element->hasPhysics())
     return;
 
-  world->addRigidBody(element->getRigidBody());
+  world->addRigidBody(element->rigidBody());
   mElements.push_back(element);
 }
 
@@ -56,7 +56,7 @@ void World::addObject(Drawable* element) {
  *
  * @param element the drawable element to remove
  */
-void World::removeObject(Drawable* element) {
+void World::removeObject(Drawable3D* element) {
   mElements.erase(std::remove_if(mElements.begin(),
                                  mElements.end(),
                                  [element](Drawable* e) {

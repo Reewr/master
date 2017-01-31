@@ -3,13 +3,13 @@
 #include <mmm.hpp>
 #include <vector>
 
-class btDbvtBroadphase;
+struct btDbvtBroadphase;
 class btDefaultCollisionConfiguration;
 class btCollisionDispatcher;
 class btSequentialImpulseConstraintSolver;
 class btDiscreteDynamicsWorld;
 
-class Drawable;
+class Drawable3D;
 
 class World {
 public:
@@ -17,11 +17,11 @@ public:
   ~World();
 
   // adds an element to the physics world
-  void addObject(Drawable* element);
+  void addObject(Drawable3D* element);
 
   // removes an object. Removes all that are equal if there
   // are multiple which are
-  void removeObject(Drawable* element = nullptr);
+  void removeObject(Drawable3D* element = nullptr);
 
   // does the physics!
   // also tells all drawable elements to update their position
@@ -34,5 +34,5 @@ private:
   btCollisionDispatcher*               dispatcher;
   btDiscreteDynamicsWorld*             world;
 
-  std::vector<Drawable*> mElements;
+  std::vector<Drawable3D*> mElements;
 };
