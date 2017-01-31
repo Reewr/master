@@ -103,7 +103,7 @@ EOF
 # Also supports an interactive mode that shows the changes
 # that are to be done and asks for confirmation before
 # performing the said changes
-run_clang() {
+run_clang_format() {
   local files=()
   local diff
   local use_color_diff=1
@@ -270,6 +270,6 @@ case "$COMMAND" in
     build_project "$COMMAND" "$FLAG"
     ;;
   clang-format)
-    run_clang "$FLAG"
+    run_clang_format "$FLAG"
     ;;
 esac
