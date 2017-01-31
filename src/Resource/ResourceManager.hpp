@@ -3,8 +3,12 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <type_traits>
 
 #include "Resource.hpp"
+#include "../Utils/Utils.hpp"
+
+class Texture;
 
 class ResourceManager {
 public:
@@ -33,7 +37,11 @@ private:
 
 template <typename T>
 std::shared_ptr<T> ResourceManager::get(const std::string& name) {
-  if (mResources.count(name) == 0)
+  bool invalid = mResources.count(name) == 0;
+  if (invalid && std::is_same<T, Texture>::value && name != "Texture::Debug") {
+    error("Tried to load Texture that did not exist: ", name);
+    return get<T>("Texture::Debug");
+  } else if (invalid)
     throw std::runtime_error("Could not find filename for " + name);
 
   if (!mResources[name]->includesScope(mCurrentScope)) {
