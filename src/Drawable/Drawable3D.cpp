@@ -25,6 +25,6 @@ bool Drawable3D::hasPhysics() {
   return mShape != nullptr && mMotion != nullptr && mBody != nullptr;
 }
 
-btRigidBody* Drawable3D::rigidiBody() {
+btRigidBody* Drawable3D::rigidBody() {
   return mBody;
 }
