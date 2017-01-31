@@ -36,10 +36,10 @@ namespace Input {
    *
    * @return
    */
-  Keys Input::getKey(int action) {
+  const Keys& Input::getKey(int action) {
     if (keys.count(action))
       return keys[action];
-    return { GLFW_KEY_UNKNOWN, GLFW_KEY_UNKNOWN };
+    return keys[Action::NotBound];
   }
 
   /**
@@ -305,6 +305,7 @@ namespace Input {
 
     actionsString.clear();
     pressedCoords[-1] = vec2();
+    addAction(Action::NotBound, ActB(-1, -1), "Not bound");
     addAction(Action::PauseMenu, b->pauseMenu, "Pause Menu");
     addAction(Action::MoveUp, b->moveUp, "Move up");
     addAction(Action::MoveDown, b->moveDown, "Move down");

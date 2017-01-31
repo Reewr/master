@@ -58,7 +58,7 @@ namespace Input {
     void initialize();
 
     //! Returns both GLFW_KEY_*'s bound to an action
-    Keys getKey(int action);
+    const Keys& getKey(int action);
 
     //! Returns a action bound to a GLFW_KEY_*
     int getAction(int glfwKey);
