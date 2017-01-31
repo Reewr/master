@@ -13,7 +13,6 @@ using mmm::vec3;
 
 Cube::Cube() {
   mCube    = new GLCube(vec2(256, 256));
-  mProgram = mAsset->rManager()->get<Program>("Program::Model");
   mShape   = new btBoxShape(btVector3(1, 1, 1));
   mMotion  = new btDefaultMotionState(
     btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 50, 0)));
@@ -26,6 +25,7 @@ Cube::Cube() {
                                                     mShape,
                                                     fallInertia);
   mBody     = new btRigidBody(consInfo);
+  mProgram  = mAsset->rManager()->get<Program>("Program::Model");
   mPosition = vec3(0, 50, 0);
 }
 
@@ -38,25 +38,9 @@ Cube::~Cube() {
 
 void Cube::update(float) {}
 
-void Cube::draw(float) {
+void Cube::draw(Camera*, float) {
   mProgram->bind();
   mCube->draw();
 }
 
 void Cube::input(const Input::Event&) {}
-
-bool Cube::hasPhysics() {
-  return true;
-}
-
-btRigidBody* Cube::getRigidBody() {
-  return mBody;
-}
-
-void Cube::updateFromPhysics() {
-  btTransform trans;
-  mBody->getMotionState()->getWorldTransform(trans);
-
-  btVector3 origin = trans.getOrigin();
-  mPosition        = vec3(origin.x(), origin.y(), origin.z());
-}

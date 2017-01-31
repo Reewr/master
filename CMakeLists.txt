@@ -161,12 +161,15 @@ set(DDDGP_CPP
 
   # src/3D
   ${SRC_DIR}/3D/Camera.cpp
-  ${SRC_DIR}/3D/Drawable.cpp
   ${SRC_DIR}/3D/Terrain.cpp
   ${SRC_DIR}/3D/Cube.cpp
 
   # src/Console
   ${SRC_DIR}/Console/Console.cpp
+
+  # src/Drawable
+  ${SRC_DIR}/Drawable/Drawable.cpp
+  ${SRC_DIR}/Drawable/Drawable3D.cpp
 
   # src/Input
   ${SRC_DIR}/Input/Input.cpp
@@ -251,12 +254,15 @@ set(DDDGP_HPP
 
   # src/3D
   ${SRC_DIR}/3D/Camera.hpp
-  ${SRC_DIR}/3D/Drawable.hpp
   ${SRC_DIR}/3D/Terrain.hpp
   ${SRC_DIR}/3D/Cube.hpp
 
   # src/Console
   ${SRC_DIR}/Console/Console.hpp
+
+  # src/Drawable
+  ${SRC_DIR}/Drawable/Drawable.hpp
+  ${SRC_DIR}/Drawable/Drawable3D.hpp
 
   # src/Input
   ${SRC_DIR}/Input/Input.hpp

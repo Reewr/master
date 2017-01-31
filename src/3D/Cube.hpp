@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Drawable.hpp"
+#include "../Drawable/Drawable3D.hpp"
 #include <memory>
 
 #include <mmm.hpp>
@@ -14,7 +14,7 @@ struct btDefaultMotionState;
 class Texture;
 class Program;
 
-class Cube : Drawable {
+class Cube : public Drawable3D {
 public:
   Cube();
   ~Cube();
@@ -23,23 +23,11 @@ public:
   void update(float deltaTime);
 
   // Draw it. Keep it seperate from update
-  void draw(float deltaTime);
+  void draw(Camera* camera, float deltaTime);
 
   void input(const Input::Event& event);
 
-  bool hasPhysics();
-
-  btRigidBody* getRigidBody();
-
-  void updateFromPhysics();
-
 private:
   GLCube*                  mCube;
-  btRigidBody*             mBody;
   std::shared_ptr<Program> mProgram;
-
-  mmm::vec3 mPosition;
-
-  btCollisionShape*     mShape;
-  btDefaultMotionState* mMotion;
 };

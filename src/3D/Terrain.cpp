@@ -13,8 +13,6 @@ using mmm::vec2;
 
 Terrain::Terrain() {
   mGrid    = new GLGrid3D(vec2(256, 256));
-  mTexture = mAsset->rManager()->get<Texture>("Texture::Terrain");
-  mProgram = mAsset->rManager()->get<Program>("Program::Model");
   mShape   = new btStaticPlaneShape(btVector3(0, 1, 0), 1);
   mMotion  = new btDefaultMotionState(
     btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1, 0)));
@@ -23,7 +21,9 @@ Terrain::Terrain() {
                                                     mMotion,
                                                     mShape,
                                                     btVector3(0, 0, 0));
-  mBody = new btRigidBody(consInfo);
+  mBody    = new btRigidBody(consInfo);
+  mProgram = mAsset->rManager()->get<Program>("Program::Model");
+  mTexture = mAsset->rManager()->get<Texture>("Texture::Terrain");
 }
 
 Terrain::~Terrain() {
@@ -35,20 +35,10 @@ Terrain::~Terrain() {
 
 void Terrain::update(float) {}
 
-void Terrain::draw(float) {
+void Terrain::draw(Camera*, float) {
   mProgram->bind();
   mTexture->bind(0);
   mGrid->draw();
 }
 
 void Terrain::input(const Input::Event&) {}
-
-bool Terrain::hasPhysics() {
-  return true;
-}
-
-btRigidBody* Terrain::getRigidBody() {
-  return mBody;
-}
-
-void Terrain::updateFromPhysics() {}

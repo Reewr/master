@@ -2,7 +2,7 @@
 
 #include "OpenGLHeaders.hpp"
 
-#include "3D/Drawable.hpp"
+#include "Drawable/Drawable.hpp"
 #include "GUI/GUI.hpp"
 #include "Graphical/Framebuffer.hpp"
 #include "Lua/Lua.hpp"
