@@ -37,7 +37,7 @@ Camera::Camera(Asset* asset)
   mProjection    = updateProjectionMatrix();
   mShadowProgram = mAsset->rManager()->get<Program>("Program::shadow");
   mModelProgram  = mAsset->rManager()->get<Program>("Program::model");
-  mModelProgram->setUniform("projection", mProjection);
+  mModelProgram->setUniform("proj", mProjection);
   update(0);
 }
 
@@ -80,11 +80,10 @@ void Camera::setMVPUniform(std::shared_ptr<Program> program,
   program->setUniform(name, mProjection * mView * mModel);
 }
 
-void Camera::setMVPUniforms(std::shared_ptr<Program> program,
-                            const std::string&       name) {
-  program->setUniform(name + ".model", mModel);
-  program->setUniform(name + ".view", mView);
-  program->setUniform(name + ".proj", mProjection);
+void Camera::setMVPUniforms(std::shared_ptr<Program> program) {
+  program->setUniform("model", mModel);
+  program->setUniform("view", mView);
+  program->setUniform("proj", mProjection);
 }
 
 void Camera::update(float) {

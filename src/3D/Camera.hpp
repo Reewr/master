@@ -47,8 +47,7 @@ public:
   void setMVPUniform(std::shared_ptr<Program> program,
                      const std::string&       name = "MVP");
 
-  void setMVPUniforms(std::shared_ptr<Program> program,
-                      const std::string&       name = "mvp");
+  void setMVPUniforms(std::shared_ptr<Program> program);
 
   void update(float dt);
   void zoom(int sign);
