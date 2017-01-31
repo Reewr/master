@@ -2,7 +2,7 @@
 
 in vec3 vertexPosition;
 in vec3 vertexTexCoord;
-in vec3 vertexNormal;
+in vec2 vertexNormal;
 
 uniform mat4 model;
 uniform mat4 view;
