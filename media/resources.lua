@@ -20,6 +20,10 @@ addResource("Texture::Background", "media/Textures/optionsMenu.png",
             ResourceType.Texture,
             ResourceScope.All)
 
+addResource("Texture::Debug", "media/Textures/debug.png",
+            ResourceType.Texture,
+            ResourceScope.All)
+
 addResource("Texture::Dropdown", "media/Textures/dropdown.png",
             ResourceType.Texture, ResourceScope.All)
 
