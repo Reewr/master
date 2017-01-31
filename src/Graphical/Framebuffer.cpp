@@ -24,10 +24,12 @@ Framebuffer::Framebuffer() {
   mIsBound      = false;
 }
 
-Framebuffer::Framebuffer(Program* p, const vec2& size, bool depth) {
+Framebuffer::Framebuffer(std::shared_ptr<Program> program,
+                         const mmm::vec2&         size,
+                         bool                     depth) {
+  mProgram      = program;
   mIsDepth      = depth;
   mFrameSize    = size;
-  mProgram      = p;
   mNeedsDrawing = false;
   mIsOwnProgram = false;
   mIsBound      = false;
@@ -40,9 +42,6 @@ Framebuffer::~Framebuffer() {
 
   delete mTexture;
   delete mQuad;
-
-  if (mIsOwnProgram)
-    delete mProgram;
 }
 
 /**
@@ -97,7 +96,7 @@ void Framebuffer::setup() {
  *
  * @return Program
  */
-Program* Framebuffer::program() {
+std::shared_ptr<Program> Framebuffer::program() {
   return mProgram;
 }
 
@@ -193,7 +192,7 @@ void Framebuffer::bind(bool bindProgram) {
  * @param program
  *   the program to use
  */
-void Framebuffer::bind(Program* program) {
+void Framebuffer::bind(std::shared_ptr<Program> program) {
   if (program == nullptr)
     throw Error("Program is null");
 
@@ -234,7 +233,7 @@ void Framebuffer::nonClearBind(bool bindProgram) {
  *
  * @param bindProgram
  */
-void Framebuffer::nonClearBind(Program* program) {
+void Framebuffer::nonClearBind(std::shared_ptr<Program> program) {
   if (program == nullptr)
     throw Error("Pointer to program is null");
 
@@ -261,7 +260,7 @@ void Framebuffer::finalize() {
 }
 
 void Framebuffer::doQuad(GLRectangle*                 inQuad,
-                         Program*                     program,
+                         std::shared_ptr<Program>                     program,
                          const std::vector<Texture*>& t,
                          unsigned int                 textureStart) {
   bind(program);
@@ -281,7 +280,7 @@ void Framebuffer::doQuad(GLRectangle*                 inQuad,
   doQuad(inQuad, mProgram, t, tStart);
 }
 
-void Framebuffer::doQuad(Program*                     p,
+void Framebuffer::doQuad(std::shared_ptr<Program>     p,
                          const std::vector<Texture*>& t,
                          unsigned int                 tStart) {
   doQuad(mQuad, p, t, tStart);
@@ -292,7 +291,7 @@ void Framebuffer::doQuad(const std::vector<Texture*>& t, unsigned int tStart) {
 }
 
 void Framebuffer::nonClearQuad(GLRectangle*                 inQuad,
-                               Program*                     p,
+                               std::shared_ptr<Program>     p,
                                const std::vector<Texture*>& t,
                                unsigned int                 tStart) {
   nonClearBind(p);
@@ -310,7 +309,7 @@ void Framebuffer::nonClearQuad(GLRectangle*                 inQuad,
   nonClearQuad(inQuad, mProgram, t, tStart);
 }
 
-void Framebuffer::nonClearQuad(Program*                     p,
+void Framebuffer::nonClearQuad(std::shared_ptr<Program>     p,
                                const std::vector<Texture*>& t,
                                unsigned int                 tStart) {
   nonClearQuad(mQuad, p, t, tStart);
@@ -326,7 +325,7 @@ void Framebuffer::queueStart() {
 }
 
 void Framebuffer::queueQuad(GLRectangle*                 inQuad,
-                            Program*                     p,
+                            std::shared_ptr<Program>     p,
                             const std::vector<Texture*>& t,
                             unsigned int                 tStart) {
   if (!mIsBound)
@@ -344,7 +343,7 @@ void Framebuffer::queueQuad(GLRectangle*                 inQuad,
                             unsigned int                 tStart) {
   queueQuad(inQuad, mProgram, t, tStart);
 }
-void Framebuffer::queueQuad(Program*                     p,
+void Framebuffer::queueQuad(std::shared_ptr<Program>     p,
                             const std::vector<Texture*>& t,
                             unsigned int                 tStart) {
   queueQuad(mQuad, p, t, tStart);

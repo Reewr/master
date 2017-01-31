@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "../OpenGLHeaders.hpp"
 
@@ -19,7 +20,9 @@ public:
 
   //! Create framebuffer using an already defined program together
   //! with a specific size
-  Framebuffer(Program* p, const mmm::vec2& size, bool depth = false);
+  Framebuffer(std::shared_ptr<Program> program,
+              const mmm::vec2&         size,
+              bool                     depth = false);
 
   ~Framebuffer();
 
@@ -38,7 +41,7 @@ public:
 
   //! Bind the framebuffer, also binds the given program
   //! This clears the framebuffer
-  void bind(Program* p);
+  void bind(std::shared_ptr<Program> p);
 
   //! Binds the framebuffer, but unlike nonClearBind() it
   //! does not clear.
@@ -46,45 +49,46 @@ public:
 
   //! Binds the framebuffer and the given program. Does
   //! not clear the framebuffer
-  void nonClearBind(Program* p);
+  void nonClearBind(std::shared_ptr<Program> p);
 
   //! Finalizes the framebuffer, unbinding it
   //! and setting the viewport back to normal
   void finalize();
 
   void doQuad(GLRectangle*                 inQuad,
-              Program*                     p,
+              std::shared_ptr<Program>     p,
               const std::vector<Texture*>& t,
               unsigned int                 tStart = 0);
 
   void doQuad(GLRectangle*                 inQuad,
               const std::vector<Texture*>& t,
               unsigned int                 tStart = 0);
-  void
-  doQuad(Program* p, const std::vector<Texture*>& t, unsigned int tStart = 0);
+  void doQuad(std::shared_ptr<Program>    p,
+              const std::vector<Texture*>& t,
+              unsigned int                 tStart = 0);
   void doQuad(const std::vector<Texture*>& t, unsigned int tStart = 0);
 
   void nonClearQuad(GLRectangle*                 inQuad,
-                    Program*                     p,
+                    std::shared_ptr<Program>     p,
                     const std::vector<Texture*>& t,
                     unsigned int                 tStart = 0);
   void nonClearQuad(GLRectangle*                 inQuad,
                     const std::vector<Texture*>& t,
                     unsigned int                 tStart = 0);
-  void nonClearQuad(Program*                     p,
+  void nonClearQuad(std::shared_ptr<Program>    p,
                     const std::vector<Texture*>& t,
                     unsigned int                 tStart = 0);
   void nonClearQuad(const std::vector<Texture*>& t, unsigned int tStart = 0);
 
   void queueStart();
   void queueQuad(GLRectangle*                 inQuad,
-                 Program*                     p,
+                 std::shared_ptr<Program>     p,
                  const std::vector<Texture*>& t,
                  unsigned int                 tStart = 0);
   void queueQuad(GLRectangle*                 inQuad,
                  const std::vector<Texture*>& t,
                  unsigned int                 tStart = 0);
-  void queueQuad(Program*                     p,
+  void queueQuad(std::shared_ptr<Program>     p,
                  const std::vector<Texture*>& t,
                  unsigned int                 tStart = 0);
   void queueQuad(const std::vector<Texture*>& t, unsigned int tStart = 0);
@@ -99,9 +103,9 @@ public:
   /* void copy(Texture* toCopy); */
   /* void clear(); */
 
-  Program*     program();
-  Texture*     texture();
-  GLRectangle* quad();
+  std::shared_ptr<Program> program();
+  Texture*                 texture();
+  GLRectangle*             quad();
 
   bool isInitialized();
 
@@ -125,7 +129,7 @@ private:
   mmm::vec2 mFrameSize;
 
   GLRectangle* mQuad;
-  Program*     mProgram;
+  std::shared_ptr<Program> mProgram;
   Texture*     mTexture;
   GLuint       mFrameBuffer;
 
