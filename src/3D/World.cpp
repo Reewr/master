@@ -23,11 +23,14 @@ World::World(const vec3& gravity) {
 }
 
 World::~World() {
+  for (auto element : mElements)
+    world->removeRigidBody(element->rigidBody());
+
+  delete world;
+  delete solver;
   delete collision;
   delete dispatcher;
   delete phase;
-  delete solver;
-  delete world;
 
   mElements.clear();
 }
