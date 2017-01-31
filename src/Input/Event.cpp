@@ -337,6 +337,19 @@ namespace Input {
     return glfwKey == key();
   }
 
+
+  /**
+   * @brief
+   *   Checks if the event is of a type that is a Key event, meaning either
+   *   press, repeat or release.
+   *
+   * @return
+   */
+  bool Event::isKeyEvent() const {
+    return mType == Type::KeyPress || mType == Type::KeyRepeat ||
+           mType == Type::KeyRelease;
+  }
+
   /**
    * @brief
    *   Checks if a button is pressed by sending in the GLFW version of it.

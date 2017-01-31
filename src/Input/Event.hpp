@@ -98,6 +98,10 @@ namespace Input {
     //! compares the code to the key given.
     bool keyPressed(int glfwKey) const;
 
+    // checks if the event is a key event, meaning that it is an event
+    // of KeyPress, KeyRelease or KeyRepeat
+    bool isKeyEvent() const;
+
     //! This is a simplification for checking for buttons. It firstly
     //! checks that it is a mouse press event and then
     //! compares the code to the key given.
