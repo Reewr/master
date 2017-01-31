@@ -5,49 +5,6 @@
 # It supports both ninja and make as the makefile generator,
 # preferring ninja when available.
 
-# Builds ddgp by making the required folders.
-# This will automatically use the make-program `ninja`
-# if it exists
-build_project() {
-  local build_type
-  mkdir -p build bin lib
-  cd build || exit
-
-  # Set build type
-  if [ "$2" == "release" ]; then
-    build_type="Release"
-  else
-    build_type="Debug"
-  fi
-
-  # Run different command based on
-  # whether ninja is available.
-  #
-  # This could have been shorted down significantly
-  # by the use of `eval`, but CMake is not a fan of that.
-  if hash ninja 2>/dev/null; then
-    if [ ! -f "./build.ninja" ]; then
-      cmake -GNinja -Wno-dev -D CMAKE_BUILD_TYPE="$build_type" ..
-    fi
-
-    if [ "$1" == "run" ]; then
-      ninja run
-    else
-      ninja
-    fi
-  else
-    if [ ! -f "./Makefile" ]; then
-      cmake -Wno-dev -D CMAKE_BUILD_TYPE="$build_type" ..
-    fi
-
-    if [ "$1" == "run" ]; then
-      make run
-    else
-      make
-    fi
-  fi
-}
-
 # Prints the usage of the binary
 function usage() {
   cat <<EOF
@@ -96,6 +53,49 @@ The following flags are available:
     to the '.cpp', '.hpp', or '.tpp' format that is supported.
 
 EOF
+}
+
+# Builds ddgp by making the required folders.
+# This will automatically use the make-program `ninja`
+# if it exists
+build_project() {
+  local build_type
+  mkdir -p build bin lib
+  cd build || exit
+
+  # Set build type
+  if [ "$2" == "release" ]; then
+    build_type="Release"
+  else
+    build_type="Debug"
+  fi
+
+  # Run different command based on
+  # whether ninja is available.
+  #
+  # This could have been shorted down significantly
+  # by the use of `eval`, but CMake is not a fan of that.
+  if hash ninja 2>/dev/null; then
+    if [ ! -f "./build.ninja" ]; then
+      cmake -GNinja -Wno-dev -D CMAKE_BUILD_TYPE="$build_type" ..
+    fi
+
+    if [ "$1" == "run" ]; then
+      ninja run
+    else
+      ninja
+    fi
+  else
+    if [ ! -f "./Makefile" ]; then
+      cmake -Wno-dev -D CMAKE_BUILD_TYPE="$build_type" ..
+    fi
+
+    if [ "$1" == "run" ]; then
+      make run
+    else
+      make
+    fi
+  fi
 }
 
 # Runs clang-format on all the files one by one, outputting only
