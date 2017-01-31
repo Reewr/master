@@ -55,7 +55,6 @@ void GLGrid3D::generateVertices(dVector<vec3>& v, dVector<vec2>& t) {
       v[y][x]   = vec3(-0.5 + s.x, 0, -0.5 + s.y);
       t[y][x]   = s;
       v[y][x].y = 0;
-      log("", x, ":", y, ": ", v[y][x], "", " x: ", s.x, " y: ", s.y);
     }
   }
 }
