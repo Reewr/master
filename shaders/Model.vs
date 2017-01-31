@@ -23,13 +23,13 @@ out vec2 texCoord;
 
 void main () {
 
-  position = vec3(view * model * vec4(vertex_position, 1.0));
-  normal   = normalize (vec3(view * model * vec4(vertex_normal, 0.0)));
-  texCoord = vertex_texCoord;
+  position = vec3(view * model * vec4(vertexPosition, 1.0));
+  normal   = normalize (vec3(view * model * vec4(vertexNormal, 0.0)));
+  texCoord = vertexTexCoord;
 
   gl_Position = proj * vec4(position, 1.0);
 
-  shadowCoord = light.proj * light.view * model * vec4(vertex_position, 1.0);
+  shadowCoord = light.proj * light.view * model * vec4(vertexPosition, 1.0);
   shadowCoord.xyz /= shadowCoord.w;
   shadowCoord.xyz += 1.0;
   shadowCoord.xyz *= 0.5;
