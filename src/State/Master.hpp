@@ -9,6 +9,9 @@ namespace Input {
 
 class Console;
 class Asset;
+class Camera;
+class Framebuffer;
+class World;
 
 class Master : public State {
 public:
@@ -26,6 +29,9 @@ private:
   void draw3D();
   void drawGUI();
 
+  Camera* mCamera;
+  Framebuffer* mShadowmap;
+  World*       mWorld;
   /* Input::Input* mInput; */
   /* Asset*        mAsset; */
 };
