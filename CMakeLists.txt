@@ -394,13 +394,18 @@ add_custom_target(run COMMAND DDDGP DEPENDS DDDGP WORKING_DIRECTORY ${EXECUTABLE
 # Add custom command for checking what build version we're using
 add_custom_target(print_build_type COMMAND ${CMAKE_COMMAND} -E echo ${CMAKE_BUILD_TYPE})
 
-# Add special clean command if on windows
+# Add special clean commands
 if(WIN32)
   add_custom_target(
     cleanbuild
     COMMAND
     cd .. & rmdir /S /Q build & mkdir build & cd build & cmake -G \"MinGW Makefiles\" .. & mingw31-make -j5
     WORKING_DIRECTORY
-    "${CMAKE_SOURCE_DIR}/build"
-  )
+    "${CMAKE_SOURCE_DIR}/build")
+else(WIN32)
+  add_custom_target(
+    cleanbuild
+    COMMAND cd .. && rm -r build && mkdir build && rm DDDGP && rm -r lib && rm -r bin
+    WORKING_DIRECTORY
+    "${CMAKE_SOURCE_DIR}/build")
 endif(WIN32)
