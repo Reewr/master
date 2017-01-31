@@ -162,6 +162,8 @@ set(DDDGP_CPP
   # src/3D
   ${SRC_DIR}/3D/Camera.cpp
   ${SRC_DIR}/3D/Drawable.cpp
+  ${SRC_DIR}/3D/Terrain.cpp
+  ${SRC_DIR}/3D/Cube.cpp
 
   # src/Console
   ${SRC_DIR}/Console/Console.cpp
@@ -215,6 +217,7 @@ set(DDDGP_CPP
   ${SRC_DIR}/Shape/GL/Grid3D.cpp
   ${SRC_DIR}/Shape/GL/Rectangle.cpp
   ${SRC_DIR}/Shape/GL/Shape.cpp
+  ${SRC_DIR}/Shape/GL/Cube.cpp
 
   # src/Import
   ${SRC_DIR}/Import/Animation.cpp
@@ -249,6 +252,8 @@ set(DDDGP_HPP
   # src/3D
   ${SRC_DIR}/3D/Camera.hpp
   ${SRC_DIR}/3D/Drawable.hpp
+  ${SRC_DIR}/3D/Terrain.hpp
+  ${SRC_DIR}/3D/Cube.hpp
 
   # src/Console
   ${SRC_DIR}/Console/Console.hpp
@@ -302,6 +307,7 @@ set(DDDGP_HPP
   ${SRC_DIR}/Shape/GL/Grid3D.hpp
   ${SRC_DIR}/Shape/GL/Rectangle.hpp
   ${SRC_DIR}/Shape/GL/Shape.hpp
+  ${SRC_DIR}/Shape/GL/Cube.hpp
 
   # src/Import
   ${SRC_DIR}/Import/Animation.hpp
@@ -372,9 +378,8 @@ target_link_libraries(DDDGP SOIL)
 target_link_libraries(DDDGP freetype)
 target_link_libraries(DDDGP assimp)
 target_link_libraries(DDDGP
-                      Bullet3Dynamics
-                      Bullet3Collision
-                      Bullet3Common )
+                      BulletDynamics
+                      BulletCollision)
 target_link_libraries(DDDGP mmm)
 target_link_libraries(DDDGP MultiNEAT)
 
