@@ -25,6 +25,9 @@ Master::Master(Asset* a) {
   CFG* c         = a->cfg();
   vec2 shadowRes = vec2(c->graphics.shadowRes, c->graphics.shadowRes);
 
+  a->rManager()->unloadUnnecessary(ResourceScope::Master);
+  a->rManager()->loadRequired(ResourceScope::Master);
+
   mCamera    = new Camera(a);
   mWorld     = new World(vec3(0, 1, 0));
   mShadowmap = new Framebuffer(a->rManager()->get<Program>("Program::Shadow"),
