@@ -13,7 +13,7 @@
 using mmm::vec2;
 
 Terrain::Terrain() {
-  mGrid    = new GLGrid3D(vec2(256, 256));
+  mGrid    = new GLGrid3D(vec2(128, 128));
   mShape   = new btStaticPlaneShape(btVector3(0, 1, 0), 1);
   mMotion  = new btDefaultMotionState(
     btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1, 0)));

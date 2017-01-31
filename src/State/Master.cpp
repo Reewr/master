@@ -54,12 +54,12 @@ Master::~Master() {
 void Master::draw3D() {
   glEnable(GL_DEPTH_TEST);
 
-  mShadowmap->bind();
+  /* mShadowmap->bind(); */
 
-  for (auto d : mDrawable3D)
-    d->draw(mCamera, mDeltaTime);
+  /* for (auto d : mDrawable3D) */
+  /*   d->draw(mCamera, mDeltaTime); */
 
-  mShadowmap->finalize();
+  /* mShadowmap->finalize(); */
   mShadowmap->texture()->bind(0);
 
   for (auto d : mDrawable3D)
@@ -77,7 +77,11 @@ void Master::input(const Input::Event& event) {
     event.stopPropgation();
   }
 
-  if (event.isKeyEvent())
+  if (event.scrollUp())
+    mCamera->zoom(1);
+  else if (event.scrollDown())
+    mCamera->zoom(-1);
+  else
     mCamera->input(event, mDeltaTime);
 }
 

@@ -2,6 +2,8 @@
 
 #include <vector>
 
+#include "../../Utils/Utils.hpp"
+
 using mmm::vec2;
 using mmm::vec3;
 using mmm::vec4;
@@ -14,7 +16,7 @@ using vector = std::vector<T>;
 
 GLGrid3D::GLGrid3D(const vec2& size) {
   mSize = size;
-  this->change(size);
+  setup();
 }
 
 GLGrid3D::~GLGrid3D() {}
@@ -44,12 +46,16 @@ void GLGrid3D::setup() {
 void GLGrid3D::generateVertices(dVector<vec3>& v, dVector<vec2>& t) {
   /* Noise::Simplex simp(5, 0.65, 4.0/size.x, 2); */
   for (int y = 0; y < mSize.y - 1; y++) {
+
     vec2 s = vec2(0, y / (mSize.y - 1));
+
     for (int x = 0; x < mSize.x - 1; x++) {
+
       s.x       = x / (mSize.x - 1);
       v[y][x]   = vec3(-0.5 + s.x, 0, -0.5 + s.y);
       t[y][x]   = s;
       v[y][x].y = 0;
+      log("", x, ":", y, ": ", v[y][x], "", " x: ", s.x, " y: ", s.y);
     }
   }
 }
