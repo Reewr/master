@@ -46,3 +46,9 @@ addResource("Program::Clear", "shaders/Framebuffer.vs,shaders/Utils/Clear.fs",
 
 addResource("Program::Copy", "shaders/Framebuffer.vs,shaders/Utils/Copy.fs",
             ResourceType.Program, ResourceScope.All)
+
+addResource("Program::Shadow", "shaders/Shadow.fs,shaders/Shadow.vs",
+            ResourceType.Program, ResourceScope.Master)
+
+addResource("Program::Model", "shaders/Model.fs,shaders/Model.vs",
+            ResourceType.Program, ResourceScope.Master)
