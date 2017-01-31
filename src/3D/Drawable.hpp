@@ -23,7 +23,7 @@ public:
 
   virtual btRigidBody* getRigidBody() = 0;
 
-  virtual void updateFromPhysics();
+  virtual void updateFromPhysics() = 0;
 
   static Asset* mAsset;
 
