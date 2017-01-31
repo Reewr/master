@@ -30,7 +30,9 @@ public:
 
   bool hasPhysics();
 
-  btRigidBody* getRigidBody();
+  const mmm::vec3& position();
+
+  btRigidBody* rigidBody();
 
 protected:
   Drawable3D();

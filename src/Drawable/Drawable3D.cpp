@@ -17,10 +17,14 @@ void Drawable3D::updateFromPhysics() {
   mPosition        = vec3(origin.x(), origin.y(), origin.z());
 }
 
+const mmm::vec3& Drawable3D::position() {
+  return mPosition;
+}
+
 bool Drawable3D::hasPhysics() {
   return mShape != nullptr && mMotion != nullptr && mBody != nullptr;
 }
 
-btRigidBody* Drawable3D::getRigidBody() {
+btRigidBody* Drawable3D::rigidiBody() {
   return mBody;
 }
