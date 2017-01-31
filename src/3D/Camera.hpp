@@ -52,8 +52,6 @@ public:
   void update(float dt);
   void zoom(int sign);
 
-  void input(const Input::Event& event, float dt);
-
 private:
   Asset* mAsset;
 

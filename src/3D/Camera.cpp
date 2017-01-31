@@ -86,7 +86,39 @@ void Camera::setMVPUniforms(std::shared_ptr<Program> program) {
   program->setUniform("proj", mProjection);
 }
 
-void Camera::update(float) {
+void Camera::update(float dt) {
+  // handle input first so that you get smooth movement
+  vec4          dir     = vec4(0, 0, -1, 0) * mSpeed * dt;
+  vec3          forward = vec3(mmm::rotate_y(mHoriRotation) * dir);
+  vec3          strafe  = vec3(mmm::rotate_y(mHoriRotation + 90) * dir);
+  CFG*          cfg     = mAsset->cfg();
+  Input::Input* input   = mAsset->input();
+
+  std::vector<int> actions = input->getPressedActions();
+
+  for(auto a : actions) {
+    if (a == Input::Action::MoveUp)
+      mTarget += forward;
+    else if (a == Input::Action::MoveDown)
+      mTarget -= forward;
+    else if (a == Input::Action::MoveRight)
+      mTarget += strafe;
+    else if (a == Input::Action::MoveLeft)
+      mTarget -= strafe;
+    else if (a == Input::Action::Rotate) {
+      int  key   = input->getKey(Input::Action::Rotate).key1;
+      vec2 press = input->getPressedCoord(key);
+      vec2 diff  = input->getMouseCoords() - press;
+
+      float rsh     = cfg->camera.rotSpeed * (cfg->camera.rotInvH ? -1 : 1);
+      float rsv     = cfg->camera.rotSpeed * (cfg->camera.rotInvV ? -1 : 1);
+      mHoriRotation = mPHoriRotation + diff.x / cfg->graphics.res.x * rsh;
+      mVertRotation = mPVertRotation + diff.y / cfg->graphics.res.y * rsv;
+    }
+  }
+
+  // now that input has been handled, handle the new positions and stuff
+  // that may have been set
   mView = updateViewMatrix();
 
   /* mLight.day -= light.speed * dt; */
@@ -131,32 +163,4 @@ void Camera::zoom(int sign) {
 
   if (mHeight < 0.2)
     mHeight = 0.2;
-}
-
-void Camera::input(const Input::Event& event, float dt) {
-  vec4 dir     = vec4(0, 0, -1, 0) * mSpeed * dt;
-  vec3 forward = vec3(mmm::rotate_y(mHoriRotation) * dir);
-  vec3 strafe  = vec3(mmm::rotate_y(mHoriRotation + 90) * dir);
-  CFG* cfg     = mAsset->cfg();
-
-  if (event.isAction(Input::Action::MoveUp))
-    mTarget += forward;
-  if (event.isAction(Input::Action::MoveDown))
-    mTarget -= forward;
-
-  if (event.isAction(Input::Action::MoveLeft))
-    mTarget += strafe;
-  if (event.isAction(Input::Action::MoveRight))
-    mTarget -= strafe;
-
-  if (event.isAction(Input::Action::Rotate)) {
-    int  key   = event.getKeysForAction(Input::Action::Rotate).key1;
-    vec2 press = event.getPressedPosition(key);
-    vec2 diff  = event.currentMousePosition() - press;
-
-    float rsh     = cfg->camera.rotSpeed * (cfg->camera.rotInvH ? -1 : 1);
-    float rsv     = cfg->camera.rotSpeed * (cfg->camera.rotInvV ? -1 : 1);
-    mHoriRotation = mPHoriRotation + diff.x / cfg->graphics.res.x * rsh;
-    mVertRotation = mPVertRotation + diff.y / cfg->graphics.res.y * rsv;
-  }
 }
