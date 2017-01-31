@@ -100,9 +100,8 @@ namespace Input {
     void setPressedCoord(int btn);
 
     //! Returns the latest recorded pressed coordinates for the button. (0, 0)
-    //! if
-    //! not recorded.
-    mmm::vec2 getPressedCoord(int btn);
+    //! if not recorded.
+    const mmm::vec2& getPressedCoord(int btn);
 
     //! Adds an action. Unlike `setKeys` this also allows you to set
     //! the string representation of that action

@@ -246,9 +246,11 @@ namespace Input {
    *
    * @return
    */
-  vec2 Input::getPressedCoord(int btn) {
+  const vec2& Input::getPressedCoord(int btn) {
+    // return an object to a non-existant button
     if (!pressedCoords.count(btn))
-      return vec2();
+      return pressedCoords.at(-1);
+
     return pressedCoords.at(btn);
   }
 
@@ -302,6 +304,7 @@ namespace Input {
     CFG::Bindings* b = &cfg->bindings;
 
     actionsString.clear();
+    pressedCoords[-1] = vec2();
     addAction(Action::PauseMenu, b->pauseMenu, "Pause Menu");
     addAction(Action::MoveUp, b->moveUp, "Move up");
     addAction(Action::MoveDown, b->moveDown, "Move down");
