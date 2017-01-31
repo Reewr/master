@@ -163,6 +163,7 @@ set(DDDGP_CPP
   ${SRC_DIR}/3D/Camera.cpp
   ${SRC_DIR}/3D/Terrain.cpp
   ${SRC_DIR}/3D/Cube.cpp
+  ${SRC_DIR}/3D/World.cpp
 
   # src/Console
   ${SRC_DIR}/Console/Console.cpp
@@ -256,6 +257,7 @@ set(DDDGP_HPP
   ${SRC_DIR}/3D/Camera.hpp
   ${SRC_DIR}/3D/Terrain.hpp
   ${SRC_DIR}/3D/Cube.hpp
+  ${SRC_DIR}/3D/World.hpp
 
   # src/Console
   ${SRC_DIR}/Console/Console.hpp
