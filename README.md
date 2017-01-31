@@ -12,7 +12,7 @@ This folder contains the .ini file that is used to set the different options use
 
 This folder contains all the dependencies of the project as source files. All of these, except for one, is git submodules. This means that these are retrieved from other repositories when you are cloning it and therefore need the `--recursive` flag.
 
-The only dependency that is not a submodule is the `OGL` library, which are files that have been generated. For more information about the dependencies, please checkout [Licenses](#licenses)
+The only dependency that is not a submodule is the `OGL` library, which are files that have been generated. For more information about the dependencies, please checkout [Dependencies](#dependencies)
 
 **lua**
 
