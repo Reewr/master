@@ -471,7 +471,7 @@ namespace Input {
     if (mInput == nullptr)
       throw std::runtime_error("Invalid input manager");
 
-    mInput->getKey(a);
+    return mInput->getKey(a);
   }
 
   /**
