@@ -35,8 +35,8 @@ Camera::Camera(Asset* asset)
     , mPVertRotation(0) {
 
   mProjection    = updateProjectionMatrix();
-  mShadowProgram = mAsset->rManager()->get<Program>("Program::shadow");
-  mModelProgram  = mAsset->rManager()->get<Program>("Program::model");
+  mShadowProgram = mAsset->rManager()->get<Program>("Program::Shadow");
+  mModelProgram  = mAsset->rManager()->get<Program>("Program::Model");
   mModelProgram->setUniform("proj", mProjection);
   update(0);
 }

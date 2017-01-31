@@ -27,7 +27,7 @@ Master::Master(Asset* a) {
 
   mCamera    = new Camera(a);
   mWorld     = new World(vec3(0, 1, 0));
-  mShadowmap = new Framebuffer(a->rManager()->get<Program>("Program::shadow"),
+  mShadowmap = new Framebuffer(a->rManager()->get<Program>("Program::Shadow"),
                                shadowRes,
                                true);
 
