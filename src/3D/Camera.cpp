@@ -2,9 +2,12 @@
 
 #include "../GLSL/Program.hpp"
 #include "../Resource/ResourceManager.hpp"
+#include "../Input/Event.hpp"
+#include "../Input/Input.hpp"
 #include "../Utils/Asset.hpp"
 #include "../Utils/CFG.hpp"
 
+using mmm::vec2;
 using mmm::vec3;
 using mmm::vec4;
 using mmm::mat4;
@@ -26,8 +29,10 @@ Camera::Camera(Asset* asset)
     , mProjection(mat4::identity)
     , mHeight(2)
     , mHoriRotation(0)
-    , mVertRotation(-45) {
-  /* , mSpeed(4) { */
+    , mVertRotation(-45)
+    , mSpeed(4)
+    , mPHoriRotation(0)
+    , mPVertRotation(0) {
 
   mProjection    = updateProjectionMatrix();
   mShadowProgram = mAsset->rManager()->get<Program>("Program::shadow");
@@ -130,33 +135,30 @@ void Camera::zoom(int sign) {
     mHeight = 0.2;
 }
 
-/* void Camera::handleKeys(const Input::Event& event, float dt) { */
-/*   vec4 dir     = vec4(0, 0, -1, 0) * speed * dt; */
-/*   vec3 forward = vec3(rotate_y(hrot) * dir); */
-/*   vec3 strafe  = vec3(rotate_y(hrot + 90) * dir); */
-/*   CFG* cfg     = asset->cfg(); */
-/*   Input::Input* input = asset->input(); */
+void Camera::input(const Input::Event& event, float dt) {
+  vec4 dir     = vec4(0, 0, -1, 0) * mSpeed * dt;
+  vec3 forward = vec3(mmm::rotate_y(mHoriRotation) * dir);
+  vec3 strafe  = vec3(mmm::rotate_y(mHoriRotation + 90) * dir);
+  CFG* cfg     = mAsset->cfg();
 
-/*   if (event.isAction(Input::Action::MoveUp)) */
-/*     target += forward; */
-/*   if (event.isAction(Input::Action::MoveDown)) */
-/*     target -= forward; */
+  if (event.isAction(Input::Action::MoveUp))
+    mTarget += forward;
+  if (event.isAction(Input::Action::MoveDown))
+    mTarget -= forward;
 
-/*   if (event.isAction(Input::Action::MoveLeft)) */
-/*     target += strafe; */
-/*   if (event.isAction(Input::Action::MoveRight)) */
-/*     target -= strafe; */
+  if (event.isAction(Input::Action::MoveLeft))
+    mTarget += strafe;
+  if (event.isAction(Input::Action::MoveRight))
+    mTarget -= strafe;
 
-/*   if (event.isAction(Input::Action::Rotate)) { */
-/*     vec2 press = */
-/*       event->getPressedCoord(input->getKey(Input::Action::Rotate).key1); */
-/*     vec2 curr = input->getMouseCoords(); */
+  if (event.isAction(Input::Action::Rotate)) {
+    int  key   = event.getKeysForAction(Input::Action::Rotate).key1;
+    vec2 press = event.getPressedPosition(key);
+    vec2 diff  = event.currentMousePosition() - press;
 
-/*     float rsh = */
-/*       cfg->camera.rotSpeed * (cfg->camera.rotInvH ? -1 : 1); */
-/*     float rsv = */
-/*       cfg->camera.rotSpeed * (cfg->camera.rotInvV ? -1 : 1); */
-/*     hrot = p_hrot + (curr - press).x / cfg->graphics.res.x * rsh; */
-/*     vrot = p_vrot + (curr - press).y / cfg->graphics.res.y * rsv; */
-/*   } */
-/* } */
+    float rsh     = cfg->camera.rotSpeed * (cfg->camera.rotInvH ? -1 : 1);
+    float rsv     = cfg->camera.rotSpeed * (cfg->camera.rotInvV ? -1 : 1);
+    mHoriRotation = mPHoriRotation + diff.x / cfg->graphics.res.x * rsh;
+    mVertRotation = mPVertRotation + diff.y / cfg->graphics.res.y * rsv;
+  }
+}

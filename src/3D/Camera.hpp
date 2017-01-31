@@ -7,6 +7,10 @@
 class Asset;
 class Program;
 
+namespace Input {
+  class Event;
+}
+
 class Camera {
 public:
   struct Light {
@@ -49,6 +53,8 @@ public:
   void update(float dt);
   void zoom(int sign);
 
+  void input(const Input::Event& event, float dt);
+
 private:
   Asset* mAsset;
 
@@ -63,10 +69,9 @@ private:
   float mHeight;
   float mHoriRotation;
   float mVertRotation;
-  /* float mSpeed; */
+  float mSpeed;
   Light mLight;
 
-  // What are these two?
-  /* float p_hrot = 0; */
-  /* float p_vrot = 0; */
+  float mPHoriRotation;
+  float mPVertRotation;
 };
