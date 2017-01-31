@@ -6,18 +6,18 @@
 #include "../Utils/Utils.hpp"
 
 #include "Console/LConsole.hpp"
-#include "GUI/LText.hpp"
-#include "GUI/LMenu.hpp"
 #include "GUI/LDropdown.hpp"
-#include "GUI/LSlider.hpp"
 #include "GUI/LInputbox.hpp"
+#include "GUI/LMenu.hpp"
+#include "GUI/LSlider.hpp"
+#include "GUI/LText.hpp"
 #include "GUI/LWindow.hpp"
 #include "Input/LEvent.hpp"
 #include "LEngine.hpp"
 #include "Math/LMath.hpp"
 #include "Resource/LFont.hpp"
-#include "State/LState.hpp"
 #include "Shape/LRectangle.hpp"
+#include "State/LState.hpp"
 #include "Utils/LCFG.hpp"
 
 #include <sol.hpp>
@@ -49,7 +49,7 @@ namespace Lua {
    * @return
    */
   std::string solTypetoStr(sol::type t) {
-    switch(t) {
+    switch (t) {
       case sol::type::none:
         return "none";
         break;
@@ -166,17 +166,18 @@ namespace Lua {
 
     emit("reInitialize");
 
-    engine.set_function("toVectorStr", [](sol::table t) -> std::vector<std::string> {
-      std::vector<std::string> s;
+    engine.set_function("toVectorStr",
+                        [](sol::table t) -> std::vector<std::string> {
+                          std::vector<std::string> s;
 
-      for (auto pair : t) {
-        if (pair.second.get_type() == sol::type::string) {
-          s.push_back(pair.second.as<std::string>());
-        }
-      }
+                          for (auto pair : t) {
+                            if (pair.second.get_type() == sol::type::string) {
+                              s.push_back(pair.second.as<std::string>());
+                            }
+                          }
 
-      return s;
-    });
+                          return s;
+                        });
   }
 
   /**
@@ -262,7 +263,7 @@ namespace Lua {
    */
   void Lua::on(const std::string& eventName, EventHandler&& e) {
     if (!mHandlers.count(eventName))
-      mHandlers[eventName] = {e};
+      mHandlers[eventName] = { e };
     else
       mHandlers[eventName].push_back(e);
   }
@@ -325,10 +326,10 @@ namespace Lua {
     sol::type secondType = pair.second.get_type();
 
     if (firstType == sol::type::string) {
-      return {pair.first.as<std::string>(), solTypetoStr(secondType)};
+      return { pair.first.as<std::string>(), solTypetoStr(secondType) };
     }
 
-    return {solTypetoStr(firstType), solTypetoStr(secondType)};
+    return { solTypetoStr(firstType), solTypetoStr(secondType) };
   }
 
   /**
@@ -344,8 +345,9 @@ namespace Lua {
    *
    * @return
    */
-  std::vector<Typenames> Lua::getScope(sol::table& table, const std::string& name) {
-    size_t pos = name.find_first_of(":");
+  std::vector<Typenames> Lua::getScope(sol::table&        table,
+                                       const std::string& name) {
+    size_t                 pos   = name.find_first_of(":");
     std::vector<Typenames> types = {};
 
     if (pos == std::string::npos) {
@@ -360,7 +362,7 @@ namespace Lua {
     }
 
     std::string scopeName = name.substr(0, pos);
-    std::string rest = name.substr(pos + 1);
+    std::string rest      = name.substr(pos + 1);
 
     sol::table newTable = engine[scopeName];
 
@@ -381,13 +383,13 @@ namespace Lua {
    * @return
    */
   std::vector<Typenames> Lua::getTypenames(const std::string name) {
-    size_t pos = name.find_first_of(":");
+    size_t                 pos   = name.find_first_of(":");
     std::vector<Typenames> types = {};
 
     // No scoping, just retrieve the variables
     // that match name in global scope
     if (pos == std::string::npos) {
-      for(auto a : engine) {
+      for (auto a : engine) {
         Typenames t = getTypename(a);
 
         if (shouldIncludeType(t.name, name))
@@ -401,11 +403,11 @@ namespace Lua {
     // There's scoping to be done. Find the variables that are
     // valid under that scope.
     std::string scopeName = name.substr(0, pos);
-    std::string rest = name.substr(pos + 1);
+    std::string rest      = name.substr(pos + 1);
 
     sol::object obj = engine[scopeName];
 
-    switch(obj.get_type()) {
+    switch (obj.get_type()) {
 
       // Userdata has a special handler since in order to retrieve the variables
       // you have to check the metatable instead of iterating over keys
@@ -417,8 +419,7 @@ namespace Lua {
           std::string key = pair.first.as<std::string>();
 
           if (shouldIncludeType(key, rest))
-            types.push_back({key, solTypetoStr(pair.second.get_type())});
-
+            types.push_back({ key, solTypetoStr(pair.second.get_type()) });
         }
         break;
       }
@@ -428,20 +429,19 @@ namespace Lua {
       case sol::type::table: {
         sol::table table = obj;
 
-        for(auto pair : table) {
+        for (auto pair : table) {
           std::string key = pair.first.as<std::string>();
 
           if (shouldIncludeType(key, rest))
-            types.push_back({key, solTypetoStr(pair.second.get_type())});
+            types.push_back({ key, solTypetoStr(pair.second.get_type()) });
         }
         break;
       }
       default:
-        types.push_back({scopeName, solTypetoStr(obj.get_type())});
+        types.push_back({ scopeName, solTypetoStr(obj.get_type()) });
     }
 
     std::sort(types.begin(), types.end(), compare_by_word);
     return types;
   }
-
 }

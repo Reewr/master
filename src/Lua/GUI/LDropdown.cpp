@@ -15,7 +15,8 @@ void Lua::dropdown_as_lua(sol::state& state) {
   sol::table GUITable = state["GUI"];
 
   sol::constructors<
-    sol::types<const std::vector<std::string>&, const mmm::vec2&>> dropdownCtor;
+    sol::types<const std::vector<std::string>&, const mmm::vec2&>>
+    dropdownCtor;
 
   // clang-format off
   sol::usertype<Dropdown> dropdownType(dropdownCtor,

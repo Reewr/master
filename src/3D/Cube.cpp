@@ -18,14 +18,14 @@ Cube::Cube() {
   mMotion  = new btDefaultMotionState(
     btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 50, 0)));
 
-  btScalar mass = 1;
+  btScalar  mass = 1;
   btVector3 fallInertia(0, 0, 0);
   mShape->calculateLocalInertia(mass, fallInertia);
   btRigidBody::btRigidBodyConstructionInfo consInfo(mass,
                                                     mMotion,
                                                     mShape,
                                                     fallInertia);
-  mBody = new btRigidBody(consInfo);
+  mBody     = new btRigidBody(consInfo);
   mPosition = vec3(0, 50, 0);
 }
 
@@ -58,5 +58,5 @@ void Cube::updateFromPhysics() {
   mBody->getMotionState()->getWorldTransform(trans);
 
   btVector3 origin = trans.getOrigin();
-  mPosition = vec3(origin.x(), origin.y(), origin.z());
+  mPosition        = vec3(origin.x(), origin.y(), origin.z());
 }

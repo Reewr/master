@@ -1,9 +1,9 @@
 #pragma once
 
-#include <sol.hpp>
-#include <map>
-#include <vector>
 #include <functional>
+#include <map>
+#include <sol.hpp>
+#include <vector>
 
 class Engine;
 class CFG;
@@ -32,7 +32,6 @@ namespace Lua {
 
   class Lua {
   public:
-
     // Creates a Lua instance that holds the Lua State.
     // This allows you to load files that will have C++ object representations
     // in them
@@ -64,12 +63,11 @@ namespace Lua {
     // Returns a list of types that is accessible based on the name given.
     // For instance, a name with "" will check global scope where as
     // a name with "config:" will check the scope of "config"
-    std::vector<Typenames> getTypenames(const std::string name="");
+    std::vector<Typenames> getTypenames(const std::string name = "");
 
     sol::state engine;
 
   private:
-
     // Simple way of creating a Typenames struct based on a pair given
     // by a table.
     Typenames getTypename(std::pair<sol::basic_object<sol::reference>,

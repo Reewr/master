@@ -38,6 +38,6 @@ protected:
   void draw3D();
   void drawGUI();
 
-  Asset* mAsset;
-  Lua::Lua*   mLua;
+  Asset*    mAsset;
+  Lua::Lua* mLua;
 };

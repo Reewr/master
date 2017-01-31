@@ -1,7 +1,7 @@
 #pragma once
 
-#include <memory>
 #include "Drawable.hpp"
+#include <memory>
 
 class GLGrid3D;
 
@@ -32,11 +32,11 @@ public:
   void updateFromPhysics();
 
 private:
-  GLGrid3D* mGrid;
-  btRigidBody* mBody;
+  GLGrid3D*                mGrid;
+  btRigidBody*             mBody;
   std::shared_ptr<Texture> mTexture;
   std::shared_ptr<Program> mProgram;
 
-  btCollisionShape* mShape;
+  btCollisionShape*     mShape;
   btDefaultMotionState* mMotion;
 };

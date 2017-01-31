@@ -1,15 +1,15 @@
 #include "Text.hpp"
 
-#include <vector>
 #include <algorithm>
-#include <vector>
 #include <stack>
+#include <vector>
+#include <vector>
 
 #include "../GLSL/Program.hpp"
-#include "../Shape/GL/Rectangle.hpp"
 #include "../Resource/Font.hpp"
 #include "../Resource/ResourceManager.hpp"
 #include "../Resource/Texture.hpp"
+#include "../Shape/GL/Rectangle.hpp"
 #include "../Utils/Asset.hpp"
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
@@ -67,14 +67,14 @@ enum ColorState {
  * @param sep
  *   This is the type of seperator, or, ending delimiter, such as ':' or '>'
  */
-void parseColor(const std::string& parsing,
+void parseColor(const std::string&           parsing,
                 std::string::const_iterator& current,
-                vec4& color,
-                char sep) {
-  std::vector<std::string> colorStrs = {"", "", "", ""};
-  int colorCount = 0;
+                vec4&                        color,
+                char                         sep) {
+  std::vector<std::string> colorStrs  = { "", "", "", "" };
+  int                      colorCount = 0;
 
-  while(*current != sep) {
+  while (*current != sep) {
 
     if (*current == ',') {
       ++colorCount;
@@ -98,12 +98,10 @@ void parseColor(const std::string& parsing,
     return;
 
   try {
-    color = {
-      std::stof(colorStrs[0]) / 255.0f,
-      std::stof(colorStrs[1]) / 255.0f,
-      std::stof(colorStrs[2]) / 255.0f,
-      std::stof(colorStrs[3]) / 255.0f
-    };
+    color = { std::stof(colorStrs[0]) / 255.0f,
+              std::stof(colorStrs[1]) / 255.0f,
+              std::stof(colorStrs[2]) / 255.0f,
+              std::stof(colorStrs[3]) / 255.0f };
   } catch (const std::invalid_argument& i) {
     throw std::runtime_error("Invalid color value: '" + parsing + "'");
   }
@@ -137,20 +135,20 @@ Text::Text(const std::string& font,
   mTextFont    = mAsset->rManager()->get<Font>(font);
   mFontProgram = mAsset->rManager()->get<Program>("Program::Font");
   mIsLimitOn   = limit.x != 0 || limit.y != 0;
-  mColor       = {vec3(), vec3(), 0, 0};
+  mColor       = { vec3(), vec3(), 0, 0 };
 
   // try to load text colors from the text, if it fails, ignore
   // it and use default colors
   try {
-    mFormattedText = parseString(text);
+    mFormattedText      = parseString(text);
     mHasBackgroundColor = false;
-    for(auto f : mFormattedText)
+    for (auto f : mFormattedText)
       if (f.color.background.w != 0) {
         mHasBackgroundColor = true;
         break;
       }
   } catch (const std::runtime_error& r) {
-    mFormattedText = {{{vec4(1, 1, 1, 1), vec4(0, 0, 0, 0)}, mText}};
+    mFormattedText = { { { vec4(1, 1, 1, 1), vec4(0, 0, 0, 0) }, mText } };
   }
 
   mBoundingBox.topleft = position;
@@ -213,15 +211,15 @@ void Text::setText(const std::string& text) {
 
   mText = text;
   try {
-    mFormattedText = parseString(text);
+    mFormattedText      = parseString(text);
     mHasBackgroundColor = false;
-    for(auto f : mFormattedText)
+    for (auto f : mFormattedText)
       if (f.color.background.w != 0) {
         mHasBackgroundColor = true;
         break;
       }
   } catch (const std::runtime_error& r) {
-    mFormattedText = {{{vec4(1, 1, 1, 1), vec4(0, 0, 0, 0)}, mText}};
+    mFormattedText = { { { vec4(1, 1, 1, 1), vec4(0, 0, 0, 0) }, mText } };
   }
   recalculateGeometry();
 }
@@ -330,15 +328,15 @@ int Text::getCharSize() {
 std::vector<Text::TextBlock> Text::parseString(const std::string& s,
                                                vec4 defaultForeground,
                                                vec4 defaultBackround) {
-  std::stack<ConsoleColor> st;
+  std::stack<ConsoleColor>     st;
   std::vector<Text::TextBlock> colors = {};
-  Text::TextBlock current = {{defaultForeground, defaultBackround}, ""};
-  int state = 0;
-  char lastChar;
+  Text::TextBlock current = { { defaultForeground, defaultBackround }, "" };
+  int             state   = 0;
+  char            lastChar;
 
-  st.push({defaultForeground, defaultBackround});
+  st.push({ defaultForeground, defaultBackround });
 
-  for (auto c = s.begin(); c != s.end(); ++c){
+  for (auto c = s.begin(); c != s.end(); ++c) {
     switch (state) {
 
       // Start state represents the catch all state. Also finds
@@ -350,7 +348,7 @@ std::vector<Text::TextBlock> Text::parseString(const std::string& s,
           current.text.pop_back();
 
           colors.push_back(current);
-          current = Text::TextBlock();
+          current       = Text::TextBlock();
           current.color = st.top();
         } else {
           current.text.push_back(*c);
@@ -398,9 +396,12 @@ std::vector<Text::TextBlock> Text::parseString(const std::string& s,
   }
 
   // remove the text that contains no elements.
-  colors.erase(std::remove_if(colors.begin(), colors.end(), [](Text::TextBlock& c) {
-      return c.text.size() == 0;
-  }), colors.end());
+  colors.erase(std::remove_if(colors.begin(),
+                              colors.end(),
+                              [](Text::TextBlock& c) {
+                                return c.text.size() == 0;
+                              }),
+               colors.end());
 
   return colors;
 }
@@ -534,7 +535,7 @@ void Text::recalculateGeometry() {
 
     // Go through each character in the string
     for (unsigned int i = 0; i < textBlock.text.size(); ++i) {
-      char c = textBlock.text[i];
+      char              c = textBlock.text[i];
       const Font::Glyph g = mTextFont->getGlyph(c, mCharacterSize);
 
       const float x2 = tempPos.x + g.bitmapLoc.x / scale;
@@ -563,13 +564,16 @@ void Text::recalculateGeometry() {
         if (tempPos.y > size.y)
           size.y = tempPos.y;
 
-        bkCords.push_back({ xLast, tempPos.y - metrics.y * 0.75, 0, 0, bColor });
-        bkCords.push_back({ x0   , tempPos.y + metrics.y * 0.25, 0, 0, bColor });
-        bkCords.push_back({ xLast, tempPos.y + metrics.y * 0.25, 0, 0, bColor });
+        bkCords.push_back(
+          { xLast, tempPos.y - metrics.y * 0.75, 0, 0, bColor });
+        bkCords.push_back({ x0, tempPos.y + metrics.y * 0.25, 0, 0, bColor });
+        bkCords.push_back(
+          { xLast, tempPos.y + metrics.y * 0.25, 0, 0, bColor });
 
-        bkCords.push_back({ x0   , tempPos.y + metrics.y * 0.25, 0, 0,  bColor });
-        bkCords.push_back({ xLast, tempPos.y - metrics.y * 0.75, 0, 0, bColor });
-        bkCords.push_back({ x0   , tempPos.y - metrics.y * 0.75, 0, 0, bColor });
+        bkCords.push_back({ x0, tempPos.y + metrics.y * 0.25, 0, 0, bColor });
+        bkCords.push_back(
+          { xLast, tempPos.y - metrics.y * 0.75, 0, 0, bColor });
+        bkCords.push_back({ x0, tempPos.y - metrics.y * 0.75, 0, 0, bColor });
         tempPos.x = mBoundingBox.topleft.x;
         tempPos.y += metrics.y;
         continue;
@@ -583,13 +587,13 @@ void Text::recalculateGeometry() {
       const float tx = g.tc.x + g.bitmapSize.x / texSize.x;
       const float ty = g.tc.y + g.bitmapSize.y / texSize.y;
 
-      coordinates.push_back({ x2 + w, -y2    , tx    , g.tc.y, fColor });
-      coordinates.push_back({ x2    , -y2 + h, g.tc.x, ty    , fColor });
-      coordinates.push_back({ x2 + w, -y2 + h, tx    , ty    , fColor });
+      coordinates.push_back({ x2 + w, -y2, tx, g.tc.y, fColor });
+      coordinates.push_back({ x2, -y2 + h, g.tc.x, ty, fColor });
+      coordinates.push_back({ x2 + w, -y2 + h, tx, ty, fColor });
 
-      coordinates.push_back({ x2    , -y2 + h, g.tc.x, ty    , fColor });
-      coordinates.push_back({ x2 + w, -y2    , tx    , g.tc.y, fColor });
-      coordinates.push_back({ x2    , -y2    , g.tc.x, g.tc.y, fColor });
+      coordinates.push_back({ x2, -y2 + h, g.tc.x, ty, fColor });
+      coordinates.push_back({ x2 + w, -y2, tx, g.tc.y, fColor });
+      coordinates.push_back({ x2, -y2, g.tc.x, g.tc.y, fColor });
     }
 
     if (xLast > size.x)
@@ -600,17 +604,17 @@ void Text::recalculateGeometry() {
 
     if (mHasBackgroundColor) {
       bkCords.push_back({ xLast, tempPos.y - metrics.y * 0.75, 0, 0, bColor });
-      bkCords.push_back({ x0   , tempPos.y + metrics.y * 0.25, 0, 0, bColor });
+      bkCords.push_back({ x0, tempPos.y + metrics.y * 0.25, 0, 0, bColor });
       bkCords.push_back({ xLast, tempPos.y + metrics.y * 0.25, 0, 0, bColor });
 
-      bkCords.push_back({ x0   , tempPos.y + metrics.y * 0.25, 0, 0,  bColor });
+      bkCords.push_back({ x0, tempPos.y + metrics.y * 0.25, 0, 0, bColor });
       bkCords.push_back({ xLast, tempPos.y - metrics.y * 0.75, 0, 0, bColor });
-      bkCords.push_back({ x0   , tempPos.y - metrics.y * 0.75, 0, 0, bColor });
+      bkCords.push_back({ x0, tempPos.y - metrics.y * 0.75, 0, 0, bColor });
     }
   }
 
-  size.x = size.x - mBoundingBox.topleft.x;
-  size.y = mmm::max(size.y - mBoundingBox.topleft.y, metrics.y);
+  size.x            = size.x - mBoundingBox.topleft.x;
+  size.y            = mmm::max(size.y - mBoundingBox.topleft.y, metrics.y);
   mBoundingBox.size = size;
 
   mNumVertices = coordinates.size();
@@ -636,8 +640,18 @@ void Text::recalculateGeometry() {
   glEnableVertexAttribArray(1);
   glEnableVertexAttribArray(2);
   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GL_FLOAT), 0);
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GL_FLOAT), (void*) (2 * sizeof(GL_FLOAT)));
-  glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 8 * sizeof(GL_FLOAT), (void*) (4 * sizeof(GL_FLOAT)));
+  glVertexAttribPointer(1,
+                        2,
+                        GL_FLOAT,
+                        GL_FALSE,
+                        8 * sizeof(GL_FLOAT),
+                        (void*) (2 * sizeof(GL_FLOAT)));
+  glVertexAttribPointer(2,
+                        4,
+                        GL_FLOAT,
+                        GL_FALSE,
+                        8 * sizeof(GL_FLOAT),
+                        (void*) (4 * sizeof(GL_FLOAT)));
   glBindVertexArray(0);
 
   // No need to create lots of background color stuff if its never
@@ -666,8 +680,18 @@ void Text::recalculateGeometry() {
   glEnableVertexAttribArray(0);
   glEnableVertexAttribArray(2);
   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GL_FLOAT), 0);
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GL_FLOAT), (void*) (2 * sizeof(GL_FLOAT)));
-  glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 8 * sizeof(GL_FLOAT), (void*) (4 * sizeof(GL_FLOAT)));
+  glVertexAttribPointer(1,
+                        2,
+                        GL_FLOAT,
+                        GL_FALSE,
+                        8 * sizeof(GL_FLOAT),
+                        (void*) (2 * sizeof(GL_FLOAT)));
+  glVertexAttribPointer(2,
+                        4,
+                        GL_FLOAT,
+                        GL_FALSE,
+                        8 * sizeof(GL_FLOAT),
+                        (void*) (4 * sizeof(GL_FLOAT)));
   glBindVertexArray(0);
 }
 

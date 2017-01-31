@@ -4,8 +4,8 @@
 #include <sol.hpp>
 
 #include "../GLSL/Program.hpp"
-#include "../GUI/Text.hpp"
 #include "../GUI/Menu.hpp"
+#include "../GUI/Text.hpp"
 #include "../Input/Event.hpp"
 #include "../Input/Input.hpp"
 #include "../Lua/Lua.hpp"
@@ -191,7 +191,7 @@ void Console::doCommand(const Input::Event& event) {
   try {
     log("> " + mCurrentText);
     mCommandHistory.push_back(mCurrentText);
-    mCommandHistoryIndex = mCommandHistory.size();
+    mCommandHistoryIndex                  = mCommandHistory.size();
     mAsset->lua()->engine["currentEvent"] = &event;
     mAsset->lua()->engine.script(mCurrentText);
   } catch (const sol::error& e) {
@@ -232,11 +232,12 @@ void Console::setText() {
     return mText->setText("> " + mCurrentText +
                           "\\<0,0,0,255:255,255,255,125> \\</>");
 
-  std::string before = mCurrentText.substr(0, mLocation);
+  std::string before    = mCurrentText.substr(0, mLocation);
   std::string character = mCurrentText.substr(mLocation, 1);
-  std::string after  = mCurrentText.substr(mLocation + 1);
+  std::string after     = mCurrentText.substr(mLocation + 1);
 
-  mText->setText("> " + before + "\\<0,0,0,255:255,255,255,125>" + character + "\\</>" + after);
+  mText->setText("> " + before + "\\<0,0,0,255:255,255,255,125>" + character +
+                 "\\</>" + after);
 }
 
 /**
@@ -261,7 +262,7 @@ void Console::setAutoComplete() {
 
   // find the max length of name and type so that they
   // can be aligned properly
-  for(int i = 0; i < namesLen; i++) {
+  for (int i = 0; i < namesLen; i++) {
     isEqual    = isEqual && names[i] == mLuaAutoComplete[i];
     maxNameLen = mmm::max(names[i].name.size(), maxNameLen);
     maxTypeLen = mmm::max(names[i].typeName.size(), maxTypeLen);
@@ -276,13 +277,13 @@ void Console::setAutoComplete() {
   mAutoComplete->clearMenuItems();
   mAutoComplete->setActiveMenu(-1);
 
-  Menu::MenuSettings settings(12, 10, Menu::VERTICAL, Text::WHITE);
-  vec2 startPos = vec2(10, res.y / 2);
-  std::vector<std::string> row = {};
+  Menu::MenuSettings       settings(12, 10, Menu::VERTICAL, Text::WHITE);
+  vec2                     startPos = vec2(10, res.y / 2);
+  std::vector<std::string> row      = {};
 
-  for(int i = 0; i < namesLen; ++i) {
-    std::string name = names[i].name;
-    std::string type = names[i].typeName;
+  for (int i = 0; i < namesLen; ++i) {
+    std::string name    = names[i].name;
+    std::string type    = names[i].typeName;
     std::string content = "";
 
     if (name.size() < maxNameLen)
@@ -313,7 +314,7 @@ void Console::setAutoComplete() {
   }
 
   const vec2& size = mAutoComplete->size();
-  Rectangle box = Rectangle(0, res.y / 2, size.x + 20, size.y + 10);
+  Rectangle   box  = Rectangle(0, res.y / 2, size.x + 20, size.y + 10);
   mAutoCompleteBox->change(box);
   mShowAutoComplete = true;
 }

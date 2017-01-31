@@ -1,13 +1,13 @@
 #include "LWindow.hpp"
 
-#include "../../GUI/Window.hpp"
-#include "../../GUI/Slider.hpp"
+#include "../../GUI/Checkbox.hpp"
 #include "../../GUI/Dropdown.hpp"
 #include "../../GUI/Inputbox.hpp"
+#include "../../GUI/Menu.hpp"
+#include "../../GUI/Slider.hpp"
 #include "../../GUI/Text.hpp"
 #include "../../GUI/Tooltip.hpp"
-#include "../../GUI/Menu.hpp"
-#include "../../GUI/Checkbox.hpp"
+#include "../../GUI/Window.hpp"
 #include "../../Input/Event.hpp"
 
 #include <sol.hpp>
@@ -21,9 +21,8 @@ void Lua::window_as_lua(sol::state& state) {
 
   sol::table GUITable = state["GUI"];
 
-  sol::constructors<
-    sol::types<>,
-    sol::types<std::string&, const Rectangle&>> windowCtor;
+  sol::constructors<sol::types<>, sol::types<std::string&, const Rectangle&>>
+    windowCtor;
 
   // clang-format off
   sol::usertype<Window> windowType(windowCtor,

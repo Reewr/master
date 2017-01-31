@@ -33,7 +33,7 @@ public:
 
   struct TextBlock {
     ConsoleColor color;
-    std::string text = "";
+    std::string  text = "";
   };
 
   //! Only takes a pointer to a Font. Do NOT destroy the font object.
@@ -118,11 +118,11 @@ private:
   GLuint mVBOBackground;
   GLuint mVAOBackground;
 
-  std::shared_ptr<Font> mTextFont;
+  std::shared_ptr<Font>    mTextFont;
   std::shared_ptr<Program> mFontProgram;
 
   std::vector<TextBlock> mFormattedText;
-  std::string mText;
+  std::string            mText;
 
   mmm::vec2 mLimit;
   bool      mIsLimitOn;

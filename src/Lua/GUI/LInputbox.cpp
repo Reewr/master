@@ -15,9 +15,9 @@ void Lua::inputbox_as_lua(sol::state& state) {
 
   sol::table GUITable = state["GUI"];
 
-  sol::constructors<
-    sol::types<const Rectangle&>,
-    sol::types<const Rectangle&, const std::string&>> inputboxCtor;
+  sol::constructors<sol::types<const Rectangle&>,
+                    sol::types<const Rectangle&, const std::string&>>
+    inputboxCtor;
 
   // clang-format off
   sol::usertype<Inputbox> dropdownType(inputboxCtor,

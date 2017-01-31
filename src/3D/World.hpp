@@ -1,7 +1,7 @@
 #pragma once
 
-#include <vector>
 #include <mmm.hpp>
+#include <vector>
 
 class btDbvtBroadphase;
 class btDefaultCollisionConfiguration;
@@ -28,7 +28,6 @@ public:
   void doPhysics(float deltaTime);
 
 private:
-
   btDbvtBroadphase*                    phase;
   btSequentialImpulseConstraintSolver* solver;
   btDefaultCollisionConfiguration*     collision;

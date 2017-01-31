@@ -34,12 +34,12 @@ public:
   void updateFromPhysics();
 
 private:
-  GLCube* mCube;
-  btRigidBody* mBody;
+  GLCube*                  mCube;
+  btRigidBody*             mBody;
   std::shared_ptr<Program> mProgram;
 
   mmm::vec3 mPosition;
 
-  btCollisionShape* mShape;
+  btCollisionShape*     mShape;
   btDefaultMotionState* mMotion;
 };

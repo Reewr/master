@@ -1,8 +1,8 @@
 #include "LText.hpp"
 
 #include "../../GUI/Text.hpp"
-#include "../../Resource/Font.hpp"
 #include "../../Input/Event.hpp"
+#include "../../Resource/Font.hpp"
 
 #include <sol.hpp>
 

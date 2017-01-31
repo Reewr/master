@@ -154,7 +154,7 @@ bool Engine::initialize(int argc, char* argv[], int isRefresh, int initState) {
   mInput = new Input::Input(mWindow, mCFG);
 
   log("Engine :: Loading Lua");
-  mLua   = new Lua::Lua();
+  mLua = new Lua::Lua();
   log("Engine :: Done loading Lua");
 
   mLua->add(mCFG);

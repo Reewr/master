@@ -122,13 +122,13 @@ bool Font::load(int size) {
   unsigned int h    = 0;
 
   FT_ULong charCode;
-  FT_UInt glyphIndex;
+  FT_UInt  glyphIndex;
 
   // goes through the different characters, loading them
   // into memory and figuring out the size of the texture
   // that should hold it
   charCode = FT_Get_First_Char(mFace, &glyphIndex);
-  while(glyphIndex != 0) {
+  while (glyphIndex != 0) {
     if (charCode > 255) {
       w = mmm::max(w, rowW);
       h += rowH;
@@ -167,8 +167,8 @@ bool Font::load(int size) {
   page.texture->clampToEdge();
   page.texture->linear();
 
-  int offsetX = 0;
-  int offsetY = 0;
+  int offsetX  = 0;
+  int offsetY  = 0;
   int maxWidth = 0;
 
   rowH = 0;
@@ -178,7 +178,7 @@ bool Font::load(int size) {
   // to that texture
   charCode = FT_Get_First_Char(mFace, &glyphIndex);
   Utils::getGLError("Before loading");
-  while(glyphIndex != 0) {
+  while (glyphIndex != 0) {
     if (charCode > 255)
       break;
 

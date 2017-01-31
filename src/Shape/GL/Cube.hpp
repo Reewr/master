@@ -12,6 +12,7 @@ public:
 
   void setup();
   void draw();
+
 private:
   mmm::vec2 mSize;
 };

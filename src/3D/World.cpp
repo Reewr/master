@@ -1,8 +1,8 @@
 #include "World.hpp"
 
 #include "Drawable.hpp"
-#include <btBulletDynamicsCommon.h>
 #include <algorithm>
+#include <btBulletDynamicsCommon.h>
 
 using mmm::vec3;
 

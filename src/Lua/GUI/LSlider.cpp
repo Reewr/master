@@ -15,10 +15,10 @@ void Lua::slider_as_lua(sol::state& state) {
 
   sol::table GUITable = state["GUI"];
 
-  sol::constructors<
-    sol::types<const mmm::vec2&>,
-    sol::types<const mmm::vec2&, float>,
-    sol::types<const mmm::vec2&, float, const std::string&>> dropdownCtor;
+  sol::constructors<sol::types<const mmm::vec2&>,
+                    sol::types<const mmm::vec2&, float>,
+                    sol::types<const mmm::vec2&, float, const std::string&>>
+    dropdownCtor;
 
   // clang-format off
   sol::usertype<Slider> dropdownType(dropdownCtor,

@@ -15,6 +15,7 @@ void Lua::menu_as_lua(sol::state& state) {
   sol::table GUITable = state["GUI"];
 
   // Enable the menu settings
+  // clang-format off
   sol::constructors<
     sol::types<float>,
     sol::types<float, float>,
@@ -44,7 +45,6 @@ void Lua::menu_as_lua(sol::state& state) {
                const mmm::vec2&,
                const Menu::MenuSettings&>> menuCtors;
 
-  // clang-format off
   sol::usertype<Menu> menuType(menuCtors,
     // Inherited from GUI
     // Overloading functions

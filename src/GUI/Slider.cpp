@@ -127,7 +127,8 @@ bool Slider::moveSlider(const vec2& position) {
   int x = position.x;
 
   // limit x to the size of the slider
-  x = mmm::max(mmm::min(x, mBoundingBox.bottomright().x), mBoundingBox.topleft.x);
+  x =
+    mmm::max(mmm::min(x, mBoundingBox.bottomright().x), mBoundingBox.topleft.x);
 
   // Move the slider
   mButtonOffset.x = x - mBoundingBox.topleft.x - mButtonRect.size.x / 2;

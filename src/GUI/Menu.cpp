@@ -267,13 +267,14 @@ void Menu::addMenuItems(const std::vector<std::string>& texts,
     addMenuItem(texts[i], { newX, newY }, m);
   }
 
-  vec2 bottomright = {0, 0};
-  vec2 topleft = { std::numeric_limits<float>::max(), std::numeric_limits<float>::max()};
+  vec2 bottomright = { 0, 0 };
+  vec2 topleft     = { std::numeric_limits<float>::max(),
+                   std::numeric_limits<float>::max() };
 
   // Update the size of the menu element.
   for (auto a : mMenuItems) {
-    const Rectangle& r = a->box();
-    vec2 textBR = r.bottomright();
+    const Rectangle& r      = a->box();
+    vec2             textBR = r.bottomright();
 
     if (r.topleft.x < topleft.x)
       topleft.x = r.topleft.x;

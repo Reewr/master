@@ -28,6 +28,5 @@ public:
   static Asset* mAsset;
 
 protected:
-
   Drawable();
 };
