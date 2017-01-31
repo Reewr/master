@@ -8,6 +8,7 @@
 #include "../Resource/Texture.hpp"
 #include "../Shape/GL/Grid3D.hpp"
 #include "../Utils/Asset.hpp"
+#include "Camera.hpp"
 
 using mmm::vec2;
 
@@ -35,9 +36,11 @@ Terrain::~Terrain() {
 
 void Terrain::update(float) {}
 
-void Terrain::draw(Camera*, float) {
+void Terrain::draw(Camera* c, float) {
   mProgram->bind();
-  mTexture->bind(0);
+  c->setMVPUniforms(mProgram);
+  c->setLightVPUniforms(mProgram, "light");
+  mTexture->bind(1);
   mGrid->draw();
 }
 
