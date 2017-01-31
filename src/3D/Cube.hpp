@@ -9,7 +9,7 @@ class GLCube;
 
 class btRigidBody;
 class btCollisionShape;
-class btDefaultMotionState;
+struct btDefaultMotionState;
 
 class Texture;
 class Program;

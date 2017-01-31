@@ -7,7 +7,7 @@ class GLGrid3D;
 
 class btRigidBody;
 class btCollisionShape;
-class btDefaultMotionState;
+struct btDefaultMotionState;
 
 class Texture;
 class Program;
