@@ -6,6 +6,7 @@
 namespace Input {
   enum Action : int;
   class Input;
+  struct Keys;
 
   //! The event class is a class that is a wrapper around an input event.
   //! It differentiates between what type of input it is by which constructor
@@ -106,6 +107,14 @@ namespace Input {
     //! the event is a mouse event.
     const mmm::vec2& position() const;
 
+    //! Returns the current mouse positions by querying GLFW for it.
+    //! This should only be used sparingly
+    mmm::vec2 currentMousePosition() const;
+
+    // Returns the position of where the mouse was when
+    // the specified button was last pressed down.
+    const mmm::vec2& getPressedPosition(int glfwKey) const;
+
     //! Checks whether the scroll was made left.
     //! This will always return false unless the event is a MouseScroll
     //! event
@@ -132,6 +141,9 @@ namespace Input {
     // Returns the character if the type is Type::CharacterInput, otherwise
     // it returns an empty string
     std::string character() const;
+
+    // Returns the keys bound to one specific action as a Keys structure
+    const Keys& getKeysForAction(Action a) const;
 
     // If `stopPropagation` is called, it will change the type to equal
     // Event::Type::Consumed. This means that all == or type() calls

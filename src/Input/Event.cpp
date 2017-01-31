@@ -371,6 +371,43 @@ namespace Input {
    */
   const vec2& Event::position() const { return mPosition; }
 
+
+  /**
+   * @brief
+   *   Returns the position of the mouse retrieved from GLFW. This function
+   *   can be used with any event and it will retrieve the coordinates
+   *   by quering GLFW for it.
+   *
+   *   Please note that if this is a mouse event, you are better of using
+   *   `position()`.
+   *
+   * @return
+   */
+  vec2 Event::currentMousePosition() const {
+    if (mInput == nullptr)
+      throw std::runtime_error("Invalid input manager");
+
+    return mInput->getMouseCoords();
+  }
+
+  /**
+   * @brief
+   *   Returns the position of the mouse when the given button was
+   *   pressed down. This function is useful when you are trying
+   *   to retrieve the difference between events where one was the press
+   *   and the other was release.
+   *
+   * @param glfwKey
+   *
+   * @return
+   */
+  const mmm::vec2& Event::getPressedPosition(int glfwKey) const {
+    if (mInput == nullptr)
+      throw std::runtime_error("Invalid input manager");
+
+    return mInput->getPressedCoord(glfwKey);
+  }
+
   /**
    * @brief
    *   Checks whether a scroll left event happened
@@ -421,6 +458,21 @@ namespace Input {
    * @return
    */
   std::string Event::character() const { return mCharacter; }
+
+  /**
+   * @brief
+   *   Returns the keys for a specific action.
+   *
+   * @param a
+   *
+   * @return
+   */
+  const Keys& Event::getKeysForAction(Action a) const {
+    if (mInput == nullptr)
+      throw std::runtime_error("Invalid input manager");
+
+    mInput->getKey(a);
+  }
 
   /**
    * @brief
