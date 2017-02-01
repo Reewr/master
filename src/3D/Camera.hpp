@@ -27,13 +27,10 @@ public:
     mmm::mat4 projection;
   };
 
-  /* Program* model; */
-
   Camera(Asset* a);
-  /* Camera (Input* i, Program* shadow, Program* model); */
 
-  mmm::mat4 updateViewMatrix();
-  mmm::mat4 updateProjectionMatrix();
+  mmm::mat4 updateViewMatrix() const;
+  mmm::mat4 updateProjectionMatrix() const;
 
   void setLightVPUniforms(std::shared_ptr<Program> program,
                           const std::string&       name = "light");
@@ -48,6 +45,13 @@ public:
                      const std::string&       name = "MVP");
 
   void setMVPUniforms(std::shared_ptr<Program> program);
+
+  const Light& light() const;
+
+  const mmm::mat4& model() const;
+  const mmm::mat4& view() const;
+  const mmm::mat4& projection() const;
+  const mmm::vec3& target() const;
 
   void update(float dt);
   void zoom(int sign);

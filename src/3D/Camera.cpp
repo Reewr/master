@@ -42,7 +42,17 @@ Camera::Camera(Asset* asset)
   setMVPUniforms(mModelProgram);
 }
 
-mat4 Camera::updateViewMatrix() {
+/**
+ * @brief
+ *   Updates the view matrix based on the vertical and horizontal rotation as
+ *   well as the target.
+ *
+ *   Does not store or change any values and is entirely constant, returns
+ *   a new matrix
+ *
+ * @return
+ */
+mat4 Camera::updateViewMatrix() const {
   vec3 cameraEye =
     mTarget + vec3(mmm::rotate_y(mHoriRotation) * mmm::rotate_x(mVertRotation) *
                    vec4(0, 0, mHeight, 1));
@@ -52,41 +62,158 @@ mat4 Camera::updateViewMatrix() {
   return mmm::lookAt(cameraEye, mTarget, cameraUp);
 }
 
-mat4 Camera::updateProjectionMatrix() {
+/**
+ * @brief
+ *   Retrieves a projection matrix based on the aspect ratio and view distance
+ *   defined in the configuration file.
+ *
+ * @return
+ */
+mat4 Camera::updateProjectionMatrix() const {
   return mmm::perspective<float>(67.0f,
                                  mAsset->cfg()->graphics.aspect,
                                  0.1f,
                                  mAsset->cfg()->graphics.viewDistance);
 }
 
+/**
+ * @brief
+ *   Sets a uniform of `name` in `program` to the MVP value calculated
+ *   by multiplying projection, view and model together
+ *
+ *   This uses the Light's MVP.
+ *
+ * @param program the program to set the variable in
+ * @param name the name of the uniform variable.
+ */
 void Camera::setLightMVPUniform(std::shared_ptr<Program> program,
                                 const std::string&       name) {
   program->setUniform(name, mLight.projection * mLight.view * mLight.model);
 }
 
+/**
+ * @brief
+ *   Sets three uniforms that is expected to be within a struct. The struct
+ *   is expected to have three members, `model`, `view` and `proj`, all
+ *   of which are mat4 types.
+ *
+ *   The `name` indicates the name of an instance of the structure.
+ *
+ * @param program
+ * @param name
+ */
 void Camera::setLightMVPUniforms(std::shared_ptr<Program> program,
                                  const std::string&       name) {
   program->setUniform(name + ".model", mLight.model);
   setLightVPUniforms(program, name);
 }
 
+/**
+ * @brief
+ *   Does the same as the function above, but does not set
+ *   the `model` type.
+ *
+ * @param program
+ * @param name
+ */
 void Camera::setLightVPUniforms(std::shared_ptr<Program> program,
                                const std::string&       name) {
   program->setUniform(name + ".view", mLight.view);
   program->setUniform(name + ".proj", mLight.projection);
 }
 
+/**
+ * @brief
+ *   Sets a uniform of `name` in `program` to the MVP value calculated
+ *   by multiplying projection, view and model together
+ *
+ *   This uses the model, view and projection stored on the camera
+ *
+ * @param program the program to set the variable in
+ * @param name the name of the uniform variable.
+ */
 void Camera::setMVPUniform(std::shared_ptr<Program> program,
                            const std::string&       name) {
   program->setUniform(name, mProjection * mView * mModel);
 }
 
+/**
+ * @brief
+ *   This function expects to find three different uniform mat4
+ *   variables in the given program with name `model`, `view`
+ *   and `proj` and sets them to be the model matrix, view matrix
+ *   and projection matrix, respectively.
+ *
+ * @param program
+ */
 void Camera::setMVPUniforms(std::shared_ptr<Program> program) {
   program->setUniform("model", mModel);
   program->setUniform("view", mView);
   program->setUniform("proj", mProjection);
 }
 
+/**
+ * @brief
+ *   Returns a const reference to the Light instance that
+ *   the camera has.
+ *
+ * @return
+ */
+const Camera::Light& Camera::light() const {
+  return mLight;
+}
+
+/**
+ * @brief
+ *   Returns a const reference to the model matrix
+ *
+ * @return
+ */
+const mat4& Camera::model() const {
+  return mModel;
+}
+
+/**
+ * @brief
+ *   Returns a const reference to the view matrix
+ *
+ * @return
+ */
+const mat4& Camera::view() const {
+  return mView;
+}
+
+/**
+ * @brief
+ *   Returns a const reference to the projection matrix
+ *
+ * @return
+ */
+const mat4& Camera::projection() const {
+  return mProjection;
+}
+
+/**
+ * @brief
+ *   Returns a const reference to the target vector
+ *
+ * @return
+ */
+const vec3& Camera::target() const {
+  return mTarget;
+}
+
+/**
+ * @brief
+ *   This function should be updated on every iteration as it handles
+ *   both the input and changes to the camera values.
+ *
+ *   It first handles input and this is done in this update function
+ *   instead of a separate input function in order to get fluent
+ *   movement.
+ *
+ * @param dt
+ */
 void Camera::update(float dt) {
   // handle input first so that you get smooth movement
   vec4          dir     = vec4(0, 0, -1, 0) * mSpeed * dt;
@@ -97,6 +224,7 @@ void Camera::update(float dt) {
 
   std::vector<int> actions = input->getPressedActions();
 
+  // handle all the inputs that have been pressed
   for(auto a : actions) {
     if (a == Input::Action::MoveUp)
       mTarget += forward;
@@ -153,6 +281,13 @@ void Camera::update(float dt) {
   // terrain->setUniform ("sunLight.ambient", light.ambient);
 }
 
+/**
+ * @brief
+ *   When a user uses the scroll wheel, zoom in and out
+ *   with the camera.
+ *
+ * @param sign
+ */
 void Camera::zoom(int sign) {
   CFG* cfg = mAsset->cfg();
 
