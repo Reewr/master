@@ -34,9 +34,8 @@ Master::Master(Asset* a) {
                                shadowRes,
                                true);
 
-  mDrawable3D = { new Terrain(), new Cube() };
+  mDrawable3D = { new Terrain() };
 
-  Utils::getGLError("Draw6");
   for (auto d : mDrawable3D)
     mWorld->addObject(d);
 }
@@ -65,8 +64,6 @@ void Master::draw3D() {
 
   for (auto d : mDrawable3D)
     d->draw(mCamera, mDeltaTime);
-
-  Utils::getGLError("Draw6");
 }
 
 void Master::drawGUI() {
