@@ -25,6 +25,8 @@ Terrain::Terrain() {
   mBody    = new btRigidBody(consInfo);
   mProgram = mAsset->rManager()->get<Program>("Program::Model");
   mTexture = mAsset->rManager()->get<Texture>("Texture::Terrain");
+  mTexture->generateMipmaps();
+  mTexture->linearMipmap();
 }
 
 Terrain::~Terrain() {
@@ -40,7 +42,7 @@ void Terrain::draw(Camera* c, float) {
   mProgram->bind();
   c->setMVPUniforms(mProgram);
   c->setLightVPUniforms(mProgram, "light");
-  mTexture->bind(1);
+  mTexture->bind(0);
   mGrid->draw();
 }
 
