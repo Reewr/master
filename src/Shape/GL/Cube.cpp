@@ -29,16 +29,16 @@ void GLCube::setup() {
   // clang-format off
   GLfloat vertices[] = {
     // front
-    -1.0, -1.0, 1.0,    0.0, 1.0,   // 0 left  bottom front
-     1.0, -1.0, 1.0,    1.0, 1.0,   // 1 right bottom front
-     1.0,  1.0, 1.0,    1.0, 0.0,   // 2 right top    front
-    -1.0,  1.0, 1.0,    0.0, 0.0,   // 3 left  top    front
+    -0.5, -0.5, 0.5,    0.0, 1.0,   // 0 left  bottom front
+     0.5, -0.5, 0.5,    1.0, 1.0,   // 1 right bottom front
+     0.5,  0.5, 0.5,    1.0, 0.0,   // 2 right top    front
+    -0.5,  0.5, 0.5,    0.0, 0.0,   // 3 left  top    front
 
     // back
-    -1.0, -1.0, -1.0,   1.0, 1.0,  // 4 left  bottom back
-     1.0, -1.0, -1.0,   0.0, 1.0,  // 5 right bottom back
-     1.0,  1.0, -1.0,   0.0, 0.0,  // 6 right top    back
-    -1.0,  1.0, -1.0,   1.0, 0.0,  // 7 left  top    back
+    -0.5, -0.5, -0.5,   1.0, 1.0,  // 4 left  bottom back
+     0.5, -0.5, -0.5,   0.0, 1.0,  // 5 right bottom back
+     0.5,  0.5, -0.5,   0.0, 0.0,  // 6 right top    back
+    -0.5,  0.5, -0.5,   1.0, 0.0,  // 7 left  top    back
   };
 
   GLuint elements[] = {
@@ -81,7 +81,7 @@ void GLCube::setup() {
                         GL_FLOAT,
                         GL_FALSE,
                         5 * sizeof(GL_FLOAT),
-                        (void*) (2 * sizeof(GL_FLOAT)));
+                        (void*) (3 * sizeof(GL_FLOAT)));
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER,
