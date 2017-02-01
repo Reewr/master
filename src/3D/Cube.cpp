@@ -41,11 +41,16 @@ Cube::~Cube() {
 void Cube::update(float) {}
 
 void Cube::draw(Camera* c, float) {
+  Utils::getGLError("Draw1");
   mProgram->bind();
+  Utils::getGLError("Draw2");
   c->setMVPUniforms(mProgram);
   c->setLightVPUniforms(mProgram, "light");
-  mTexture->bind(1);
+  Utils::getGLError("Draw3");
+  mTexture->bind(0);
+  Utils::getGLError("Draw4");
   mCube->draw();
+  Utils::getGLError("Draw5");
 }
 
 void Cube::input(const Input::Event&) {}
