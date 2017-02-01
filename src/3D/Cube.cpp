@@ -14,11 +14,11 @@ using mmm::vec3;
 
 Cube::Cube() {
   mCube    = new GLCube(vec2(256, 256));
-  mShape   = new btBoxShape(btVector3(1, 1, 1));
+  mShape   = new btBoxShape(btVector3(0.5, 0.5, 0.5));
   mMotion  = new btDefaultMotionState(
     btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 20, 0)));
 
-  btScalar  mass = 1;
+  btScalar  mass = 1000;
   btVector3 fallInertia(0, 0, 0);
   mShape->calculateLocalInertia(mass, fallInertia);
   btRigidBody::btRigidBodyConstructionInfo consInfo(mass,
@@ -28,8 +28,7 @@ Cube::Cube() {
   mBody     = new btRigidBody(consInfo);
   mTexture  = mAsset->rManager()->get<Texture>("Texture::Cube");
   mProgram  = mAsset->rManager()->get<Program>("Program::Model");
-  mPosition = vec3(0, 0.0001, 0);
-  mScale    = mmm::scale(0.5f, 0.5f, 0.5f);
+  mScale    = mmm::scale(1.0f, 1.0f, 1.0f);
 }
 
 Cube::~Cube() {
@@ -43,7 +42,7 @@ void Cube::update(float) {}
 
 void Cube::draw(Camera* c, float) {
   mProgram->bind();
-  mmm::mat4 model = c->model() * mmm::translate(mPosition) * mScale;
+  mmm::mat4 model = mScale * mRotation * mmm::translate(mPosition);
   mProgram->setUniform("model", model);
   mProgram->setUniform("view", c->view());
   mProgram->setUniform("proj", c->projection());
