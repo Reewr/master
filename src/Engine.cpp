@@ -280,6 +280,9 @@ void Engine::initGL() {
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+  // useful for debug, draw wire-frame edges
+  // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
 
