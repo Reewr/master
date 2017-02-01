@@ -5,7 +5,11 @@
 using mmm::vec3;
 
 Drawable3D::Drawable3D()
-    : mPosition(0, 0, 0), mShape(nullptr), mMotion(nullptr), mBody(nullptr) {}
+    : mPosition(0, 0, 0)
+    , mScale(mmm::scale(1.0f, 1.0f, 1.0f))
+    , mShape(nullptr)
+    , mMotion(nullptr)
+    , mBody(nullptr) {}
 
 Drawable3D::~Drawable3D() {}
 

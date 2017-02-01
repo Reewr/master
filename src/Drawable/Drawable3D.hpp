@@ -38,6 +38,7 @@ protected:
   Drawable3D();
 
   mmm::vec3             mPosition;
+  mmm::mat4             mScale;
   btCollisionShape*     mShape;
   btDefaultMotionState* mMotion;
   btRigidBody*          mBody;
