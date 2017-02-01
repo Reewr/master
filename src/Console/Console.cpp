@@ -54,6 +54,7 @@ Console::~Console() {
   delete mRect;
   delete mText;
   delete mAutoComplete;
+  delete mAutoCompleteBox;
 
   for (auto h : mHistory)
     delete h;
