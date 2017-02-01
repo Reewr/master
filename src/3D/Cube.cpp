@@ -16,7 +16,7 @@ Cube::Cube() {
   mCube    = new GLCube(vec2(256, 256));
   mShape   = new btBoxShape(btVector3(1, 1, 1));
   mMotion  = new btDefaultMotionState(
-    btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 50, 0)));
+    btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 10, 0)));
 
   btScalar  mass = 1;
   btVector3 fallInertia(0, 0, 0);
@@ -28,8 +28,8 @@ Cube::Cube() {
   mBody     = new btRigidBody(consInfo);
   mTexture  = mAsset->rManager()->get<Texture>("Texture::Cube");
   mProgram  = mAsset->rManager()->get<Program>("Program::Model");
-  mPosition = vec3(0, 50, 0);
-  mScale    = mmm::scale(0.25f, 0.25f, 0.25f);
+  mPosition = vec3(0, 0.0001, 0);
+  mScale    = mmm::scale(0.1f, 0.1f, 0.1f);
 }
 
 Cube::~Cube() {
@@ -43,7 +43,10 @@ void Cube::update(float) {}
 
 void Cube::draw(Camera* c, float) {
   mProgram->bind();
-  c->setMVPUniforms(mProgram);
+  mmm::mat4 model = c->model() * mmm::translate(mPosition) * mScale;
+  mProgram->setUniform("model", model);
+  mProgram->setUniform("view", c->view());
+  mProgram->setUniform("proj", c->projection());
   c->setLightVPUniforms(mProgram, "light");
 
   mTexture->bind(0);
