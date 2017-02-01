@@ -1,5 +1,7 @@
 #include "Cube.hpp"
 
+#include "../../Utils/Utils.hpp"
+
 GLCube::GLCube(const mmm::vec2& size) : mSize(size) {
   setup();
 }
@@ -17,11 +19,11 @@ GLCube::~GLCube() {
  *   FIXME: Optimize for changes
  */
 void GLCube::setup() {
-  if (IBO != 0)
+  if (IBO == 0)
     glGenBuffers(1, &IBO);
-  if (VBO != 0)
+  if (VBO == 0)
     glGenBuffers(1, &VBO);
-  if (VAO != 0)
+  if (VAO == 0)
     glGenVertexArrays(1, &VAO);
 
   // clang-format off
@@ -86,4 +88,5 @@ void GLCube::draw() {
   glBindVertexArray(VAO);
   glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, 0);
   glBindVertexArray(0);
+  Utils::getGLError("Draw");
 }
