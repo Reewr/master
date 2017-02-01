@@ -45,9 +45,11 @@ Master::Master(Asset* a) {
   for (auto d : mDrawable3D)
     mWorld->addObject(d);
 
-  a->lua()->engine.set_function("addCube", [&]() {
-    mDrawable3D.push_back(new Cube());
-    mWorld->addObject(mDrawable3D.back());
+  a->lua()->engine.set_function("addCubes", [&](int i) {
+    for (int j = 0; j <= i; ++j) {
+      mDrawable3D.push_back(new Cube());
+      mWorld->addObject(mDrawable3D.back());
+    }
   });
 }
 
