@@ -17,6 +17,8 @@
 #include "../3D/Terrain.hpp"
 #include "../3D/Cube.hpp"
 #include "../3D/World.hpp"
+#include "../Lua/Lua.hpp"
+#include "../Console/Console.hpp"
 
 using mmm::vec2;
 using mmm::vec3;
@@ -24,6 +26,7 @@ using mmm::vec3;
 Master::Master(Asset* a) {
   CFG* c         = a->cfg();
   vec2 shadowRes = vec2(c->graphics.shadowRes, c->graphics.shadowRes);
+  Console* con   = new Console(a);
 
   a->rManager()->unloadUnnecessary(ResourceScope::Master);
   a->rManager()->loadRequired(ResourceScope::Master);
@@ -35,9 +38,17 @@ Master::Master(Asset* a) {
                                true);
 
   mDrawable3D = { new Terrain(), new Cube()};
+  mGUIElements = { con };
+
+  a->lua()->add(con);
 
   for (auto d : mDrawable3D)
     mWorld->addObject(d);
+
+  a->lua()->engine.set_function("addCube", [&]() {
+    mDrawable3D.push_back(new Cube());
+    mWorld->addObject(mDrawable3D.back());
+  });
 }
 
 Master::~Master() {
@@ -48,7 +59,11 @@ Master::~Master() {
   for(auto d : mDrawable3D)
     delete d;
 
+  for(auto g : mGUIElements)
+    delete g;
+
   mDrawable3D.clear();
+  mGUIElements.clear();
 }
 
 void Master::draw3D() {
@@ -68,9 +83,15 @@ void Master::draw3D() {
 
 void Master::drawGUI() {
   glDisable(GL_DEPTH_TEST);
+
+  for (auto g : mGUIElements)
+    g->draw();
 }
 
 void Master::input(const Input::Event& event) {
+  for (auto g : mGUIElements)
+    g->input(event);
+
   if (event.keyPressed(GLFW_KEY_ESCAPE)) {
     event.sendStateChange(States::Quit);
     event.stopPropgation();
