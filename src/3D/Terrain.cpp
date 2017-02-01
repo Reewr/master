@@ -42,8 +42,7 @@ void Terrain::update(float) {}
 
 void Terrain::draw(Camera* c, float) {
   mProgram->bind();
-  mmm::mat4 model =  mScale * mmm::translate(mPosition);
-  mProgram->setUniform("model", model);
+  mProgram->setUniform("model", mScale * mRotation * mmm::translate(mPosition));
   mProgram->setUniform("view", c->view());
   mProgram->setUniform("proj", c->projection());
   c->setLightVPUniforms(mProgram, "light");
