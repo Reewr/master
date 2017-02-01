@@ -28,7 +28,7 @@ Terrain::Terrain() {
   mTexture = mAsset->rManager()->get<Texture>("Texture::Terrain");
   mTexture->generateMipmaps();
   mTexture->linearMipmap();
-  mScale = mmm::scale(3.0f, 3.0f, 3.0f);
+  mScale = mmm::scale(50.0f, 50.0f, 50.0f);
 }
 
 Terrain::~Terrain() {
