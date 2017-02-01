@@ -23,7 +23,7 @@ Camera::Light::Light()
 
 Camera::Camera(Asset* asset)
     : mAsset(asset)
-    , mTarget(0, 1.183, 0)
+    , mTarget(0, 1, 0)
     , mModel(mat4::identity)
     , mView(mat4::identity)
     , mProjection(mat4::identity)
@@ -37,8 +37,9 @@ Camera::Camera(Asset* asset)
   mProjection    = updateProjectionMatrix();
   mShadowProgram = mAsset->rManager()->get<Program>("Program::Shadow");
   mModelProgram  = mAsset->rManager()->get<Program>("Program::Model");
-  mModelProgram->setUniform("proj", mProjection);
   update(0);
+
+  setMVPUniforms(mModelProgram);
 }
 
 mat4 Camera::updateViewMatrix() {
@@ -158,9 +159,9 @@ void Camera::zoom(int sign) {
   sign = cfg->camera.zoomInv ^ (sign > 0) ? -1 : 1;
   mHeight += cfg->camera.zoomSpeed * sign;
 
-  if (mHeight > 40)
-    mHeight = 40;
+  if (mHeight > 60)
+    mHeight = 60;
 
-  if (mHeight < 0.2)
-    mHeight = 0.2;
+  if (mHeight < 0.1)
+    mHeight = 0.1;
 }
