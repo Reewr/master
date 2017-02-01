@@ -205,16 +205,12 @@ const vec3& Camera::target() const {
 
 /**
  * @brief
- *   This function should be updated on every iteration as it handles
- *   both the input and changes to the camera values.
- *
- *   It first handles input and this is done in this update function
- *   instead of a separate input function in order to get fluent
- *   movement.
+ *   This function should be called on every iteration, prior to calling
+ *   update(float). This handles the input.
  *
  * @param dt
  */
-void Camera::update(float dt) {
+void Camera::input(float dt) {
   // handle input first so that you get smooth movement
   vec4          dir     = vec4(0, 0, -1, 0) * mSpeed * dt;
   vec3          forward = vec3(mmm::rotate_y(mHoriRotation) * dir);
@@ -245,7 +241,16 @@ void Camera::update(float dt) {
       mVertRotation = mVertRotation + diff.y / cfg->graphics.res.y * rsv;
     }
   }
+}
 
+/**
+ * @brief
+ *   This function should be updated on every iteration as it
+ *   handles changes to the camera values.
+ *
+ * @param dt
+ */
+void Camera::update(float) {
   // now that input has been handled, handle the new positions and stuff
   // that may have been set
   mView = updateViewMatrix();

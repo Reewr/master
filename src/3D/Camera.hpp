@@ -66,6 +66,8 @@ public:
   void update(float dt);
   void zoom(int sign);
 
+  void input(float dt);
+
 private:
   Asset* mAsset;
 
