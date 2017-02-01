@@ -29,6 +29,7 @@ Cube::Cube() {
   mTexture  = mAsset->rManager()->get<Texture>("Texture::Cube");
   mProgram  = mAsset->rManager()->get<Program>("Program::Model");
   mPosition = vec3(0, 50, 0);
+  mScale    = mmm::scale(0.25f, 0.25f, 0.25f);
 }
 
 Cube::~Cube() {
@@ -41,16 +42,12 @@ Cube::~Cube() {
 void Cube::update(float) {}
 
 void Cube::draw(Camera* c, float) {
-  Utils::getGLError("Draw1");
   mProgram->bind();
-  Utils::getGLError("Draw2");
   c->setMVPUniforms(mProgram);
   c->setLightVPUniforms(mProgram, "light");
-  Utils::getGLError("Draw3");
+
   mTexture->bind(0);
-  Utils::getGLError("Draw4");
   mCube->draw();
-  Utils::getGLError("Draw5");
 }
 
 void Cube::input(const Input::Event&) {}
