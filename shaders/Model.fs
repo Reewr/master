@@ -105,7 +105,7 @@ void main () {
   }
 
 
-  fragment = texture(diffuseMap, texCoord);
+  fragment = texture(shadowMap, texCoord);
   /* fragment = vec4((specular + diffuse) * visibility + ambient, 1.0); */
   /* fragment.rgb = fog(fragment); */
 }
