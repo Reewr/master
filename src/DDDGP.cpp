@@ -48,6 +48,8 @@ int main(int argc, char* argv[]) {
   engine->runLoop();
 
   delete engine;
+  delete DEBUG_MODE;
+  delete ENABLE_COLORS;
 
   return 0;
 }
