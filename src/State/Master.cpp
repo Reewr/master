@@ -32,7 +32,7 @@ Master::Master(Asset* a) {
   a->rManager()->loadRequired(ResourceScope::Master);
 
   mCamera    = new Camera(a);
-  mWorld     = new World(vec3(0, -9.81, 0));
+  mWorld     = new World(vec3(0, -9.807, 0));
   mShadowmap = new Framebuffer(a->rManager()->get<Program>("Program::Shadow"),
                                shadowRes,
                                true);
