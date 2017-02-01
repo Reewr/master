@@ -16,7 +16,7 @@ Cube::Cube() {
   mCube    = new GLCube(vec2(256, 256));
   mShape   = new btBoxShape(btVector3(1, 1, 1));
   mMotion  = new btDefaultMotionState(
-    btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 10, 0)));
+    btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 20, 0)));
 
   btScalar  mass = 1;
   btVector3 fallInertia(0, 0, 0);
@@ -29,7 +29,7 @@ Cube::Cube() {
   mTexture  = mAsset->rManager()->get<Texture>("Texture::Cube");
   mProgram  = mAsset->rManager()->get<Program>("Program::Model");
   mPosition = vec3(0, 0.0001, 0);
-  mScale    = mmm::scale(0.1f, 0.1f, 0.1f);
+  mScale    = mmm::scale(0.5f, 0.5f, 0.5f);
 }
 
 Cube::~Cube() {

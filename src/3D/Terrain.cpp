@@ -11,6 +11,7 @@
 #include "Camera.hpp"
 
 using mmm::vec2;
+using mmm::vec3;
 
 Terrain::Terrain() {
   mGrid    = new GLGrid3D(vec2(128, 128));
@@ -27,6 +28,7 @@ Terrain::Terrain() {
   mTexture = mAsset->rManager()->get<Texture>("Texture::Terrain");
   mTexture->generateMipmaps();
   mTexture->linearMipmap();
+  mScale = mmm::scale(3.0f, 3.0f, 3.0f);
 }
 
 Terrain::~Terrain() {
@@ -40,7 +42,11 @@ void Terrain::update(float) {}
 
 void Terrain::draw(Camera* c, float) {
   mProgram->bind();
-  c->setMVPUniforms(mProgram);
+  tlog("Position Terrain: ", mPosition + vec3(0, 1, 0), "");
+  mmm::mat4 model = c->model() * mmm::translate(mPosition + vec3(0, 1, 0)) * mScale;
+  mProgram->setUniform("model", model);
+  mProgram->setUniform("view", c->view());
+  mProgram->setUniform("proj", c->projection());
   c->setLightVPUniforms(mProgram, "light");
   mTexture->bind(0);
   mGrid->draw();
