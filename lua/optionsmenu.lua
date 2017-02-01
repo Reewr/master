@@ -22,25 +22,33 @@ local category  = window:menu("Category")
 local innerRect = Rectangle.new(200, 54, rect.size.x - 200, rect.size.y - 125)
 
 -- -- Accept and cancel buttons
-category:addMenuItem("Accept", Rectangle.new(rect.middle().x - 200,
-                                             rect.bottomright().y - 50))
+category:addMenuItem("Accept", vec2.new(rect:middle().x - 200,
+                                        rect:bottomright().y - 50),
+                               GUI.MenuSettings.new(20,
+                                                    50,
+                                                    GUI.Orientation.Vertical,
+                                                    GUI.TextColor.White))
 
-category:addMenuItem("Cancel", Rectangle.new(rect.middle().x + 100,
-                                             rect.bottomright().y - 50))
+category:addMenuItem("Cancel", vec2.new(rect:middle().x + 100,
+                                        rect:bottomright().y - 50),
+                               GUI.MenuSettings.new(20,
+                                                    50,
+                                                    GUI.Orientation.Vertical,
+                                                    GUI.TextColor.White))
 
--- window:addWindow("Audio", innerRect)
--- window:addWindow("Graphics", innerRect)
--- window:addWindow("Keybindings", innerRect)
--- window:addWindow("Mouse", innerRect)
--- window:addWindow("Game", innerRect)
+window:addWindow("Audio", innerRect)
+window:addWindow("Graphics", innerRect)
+window:addWindow("Keybindings", innerRect)
+window:addWindow("Mouse", innerRect)
+window:addWindow("Game", innerRect)
 
--- local windows = {
---   Audio       = window:window("Audio"),
---   Graphics    = window:window("Graphics"),
---   Keybindings = window:window("Keybindings"),
---   Mouse       = window:window("Mouse"),
---   Game        = window:window("Game")
--- }
+local windows = {
+  Audio       = window:window("Audio"),
+  Graphics    = window:window("Graphics"),
+  Keybindings = window:window("Keybindings"),
+  Mouse       = window:window("Mouse"),
+  Game        = window:window("Game")
+}
 
 -- -- This function basically clears everything. In order to keep everything away
 -- -- from everything else, I've created this function
