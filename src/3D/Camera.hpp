@@ -44,13 +44,23 @@ public:
   void setMVPUniform(std::shared_ptr<Program> program,
                      const std::string&       name = "MVP");
 
+  // sets the model, view, projection matrices as separate
+  // variables called model, view and proj
   void setMVPUniforms(std::shared_ptr<Program> program);
 
+  // returns the light instance
   const Light& light() const;
 
+  // Returns the model matrix
   const mmm::mat4& model() const;
+
+  // returns the view matrix
   const mmm::mat4& view() const;
+
+  // returns the projection matrix
   const mmm::mat4& projection() const;
+
+  // returns the target vector
   const mmm::vec3& target() const;
 
   void update(float dt);
