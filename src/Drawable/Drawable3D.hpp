@@ -39,6 +39,7 @@ protected:
 
   mmm::vec3             mPosition;
   mmm::mat4             mScale;
+  mmm::mat4             mRotation;
   btCollisionShape*     mShape;
   btDefaultMotionState* mMotion;
   btRigidBody*          mBody;
