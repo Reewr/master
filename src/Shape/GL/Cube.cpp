@@ -32,6 +32,7 @@ void GLCube::setup() {
                           1.0, -1.0, 1.0,
                           1.0,  1.0, 1.0,
                          -1.0,  1.0, 1.0,
+
                          // back
                          -1.0, -1.0, -1.0,
                           1.0, -1.0, -1.0,
@@ -88,5 +89,4 @@ void GLCube::draw() {
   glBindVertexArray(VAO);
   glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, 0);
   glBindVertexArray(0);
-  Utils::getGLError("Draw");
 }
