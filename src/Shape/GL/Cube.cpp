@@ -28,41 +28,41 @@ void GLCube::setup() {
 
   // clang-format off
   GLfloat vertices[] = { // front
-                         -1.0, -1.0, 1.0,
-                          1.0, -1.0, 1.0,
-                          1.0,  1.0, 1.0,
-                         -1.0,  1.0, 1.0,
+                         -1.0, -1.0, 1.0,    // 0 left  bottom front
+                          1.0, -1.0, 1.0,    // 1 right bottom front
+                          1.0,  1.0, 1.0,    // 2 right top    front
+                         -1.0,  1.0, 1.0,    // 3 left  top    front
 
                          // back
-                         -1.0, -1.0, -1.0,
-                          1.0, -1.0, -1.0,
-                          1.0,  1.0, -1.0,
-                         -1.0,  1.0, -1.0 };
+                         -1.0, -1.0, -1.0,   // 4 left  bottom back
+                          1.0, -1.0, -1.0,   // 5 right bottom back
+                          1.0,  1.0, -1.0,   // 6 right top    back
+                         -1.0,  1.0, -1.0 }; // 7 left  top    back
 
   GLuint elements[] = {
     // front
     0, 1, 2,
     2, 3, 0,
 
-    // top
-    1, 5, 6,
-    6, 2, 1,
-
     // back
-    7, 6, 5,
-    5, 4, 7,
-
-    // bottom
-    4, 0, 3,
-    3, 7, 4,
+    5, 7, 6,
+    7, 5, 4,
 
     // left
-    4, 5, 1,
-    1, 0, 4,
+    0, 7, 4,
+    0, 3, 7,
 
     // right
-    3, 2, 6,
-    6, 7, 3
+    1, 6, 2,
+    6, 1, 5,
+
+    // top
+    6, 7, 3,
+    6, 3, 2,
+
+    // bottom
+    1, 4, 5,
+    4, 5, 0
   };
   // clang-format on
 
@@ -87,6 +87,6 @@ void GLCube::setup() {
  */
 void GLCube::draw() {
   glBindVertexArray(VAO);
-  glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, 0);
+  glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
   glBindVertexArray(0);
 }
