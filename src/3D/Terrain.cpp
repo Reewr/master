@@ -28,7 +28,7 @@ Terrain::Terrain() {
   mTexture = mAsset->rManager()->get<Texture>("Texture::Terrain");
   mTexture->generateMipmaps();
   mTexture->linearMipmap();
-  mScale = mmm::scale(50.0f, 50.0f, 50.0f);
+  mScale = mmm::scale(50.0f, 0.0f, 50.0f);
 }
 
 Terrain::~Terrain() {
@@ -42,7 +42,7 @@ void Terrain::update(float) {}
 
 void Terrain::draw(Camera* c, float) {
   mProgram->bind();
-  mmm::mat4 model = c->model() * mmm::translate(mPosition + vec3(0, 1, 0)) * mScale;
+  mmm::mat4 model =  mScale * mmm::translate(mPosition);
   mProgram->setUniform("model", model);
   mProgram->setUniform("view", c->view());
   mProgram->setUniform("proj", c->projection());
