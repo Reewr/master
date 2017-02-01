@@ -34,7 +34,7 @@ Master::Master(Asset* a) {
                                shadowRes,
                                true);
 
-  mDrawable3D = { new Terrain() };
+  mDrawable3D = { new Terrain(), new Cube()};
 
   for (auto d : mDrawable3D)
     mWorld->addObject(d);
