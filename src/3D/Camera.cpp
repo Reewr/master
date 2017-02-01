@@ -241,8 +241,8 @@ void Camera::update(float dt) {
 
       float rsh     = cfg->camera.rotSpeed * (cfg->camera.rotInvH ? -1 : 1);
       float rsv     = cfg->camera.rotSpeed * (cfg->camera.rotInvV ? -1 : 1);
-      mHoriRotation = mPHoriRotation + diff.x / cfg->graphics.res.x * rsh;
-      mVertRotation = mPVertRotation + diff.y / cfg->graphics.res.y * rsv;
+      mHoriRotation = mHoriRotation + diff.x / cfg->graphics.res.x * rsh;
+      mVertRotation = mVertRotation + diff.y / cfg->graphics.res.y * rsv;
     }
   }
 
