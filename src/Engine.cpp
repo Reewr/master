@@ -276,7 +276,7 @@ bool Engine::initWindow() {
  */
 void Engine::initGL() {
   glViewport(0, 0, mCFG->graphics.res.x, mCFG->graphics.res.y);
-  glEnable(GL_BLEND);
+
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
