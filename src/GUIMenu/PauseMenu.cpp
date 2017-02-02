@@ -23,7 +23,7 @@ PauseMenu::PauseMenu(Input::Input* i) {
   mBackground->setTexture(
     mAsset->rManager()->get<Texture>("Texture::Background"));
 
-  if (!mUiLoader.loadXMLSettings(TEMP::getPath(TEMP::XMLOPT), "Pause", this))
+  if (!mUiLoader.loadXMLSettings("./media/XML/GUI.xml", "Pause", this))
     throw Error("Read log above");
 }
 

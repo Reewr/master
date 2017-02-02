@@ -57,7 +57,7 @@ OptionsMenu::OptionsMenu(Input::Input* input) {
   addWindow("Mouse", innerRect);
   addWindow("Game", innerRect);
 
-  if (!mUiLoader.loadXMLSettings(TEMP::getPath(TEMP::XMLOPT), "Options", this))
+  if (!mUiLoader.loadXMLSettings("./media/XML/GUI.xml", "Options", this))
     throw std::runtime_error("Read log above");
 
   std::vector<std::string> actions = input->getActionsString();

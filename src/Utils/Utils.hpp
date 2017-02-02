@@ -86,28 +86,4 @@ void tlog();
 template <typename... Ts>
 void tlog(Ts... args);
 
-namespace TEMP {
-  enum {
-    OPTSMENU,
-    DROPDOWN,
-    SLIDER,
-    SLIDERB,
-    SPACE,
-    TERRAIN,
-    TREE,
-    BLACK,
-    POWERI,
-    ROCKI,
-    PLANKI,
-    COGSI,
-    WIREI,
-    XMLOPT,
-    XMLBUILD,
-    XMLRES,
-    FONT
-  };
-  std::string getPath(int i);
-}
-
-
 #include "Utils.tpp"
