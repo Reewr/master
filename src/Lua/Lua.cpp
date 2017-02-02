@@ -102,7 +102,7 @@ namespace Lua {
    *   Initializes the Lua class, creating the Lua State and exporting
    *   several C++ objects to Lua.
    */
-  Lua::Lua() : mConsole(nullptr), mCFG(nullptr) { reInitialize(); }
+  Lua::Lua(CFG* c) : mConsole(nullptr), mCFG(c) { reInitialize(); }
 
   Lua::~Lua() {}
 
@@ -153,14 +153,13 @@ namespace Lua {
 
     engine.create_named_table("lua");
 
+    engine["cfg"] = mCFG;
     engine["lua"]["loadFile"] = [&](const std::string& filename) {
       loadFile(filename);
     };
 
     if (mConsole != nullptr)
       add(mConsole);
-    if (mCFG != nullptr)
-      add(mCFG);
 
     loadFile("lua/main.lua");
 
@@ -197,25 +196,6 @@ namespace Lua {
     engine["console"] = console;
     mConsole          = console;
   }
-
-  /**
-   * @brief
-   *   Tells the Lua engine to add the cfg to global scope
-   *   as a `cfg` variable, making it available to Lua code.
-   *
-   *   It will store the pointer to the cfg so that when
-   *   `reinitialize` is done, it can include it again.
-   *
-   * @param cfg
-   */
-  void Lua::add(CFG* cfg) {
-    if (cfg == nullptr)
-      return;
-
-    engine["cfg"] = cfg;
-    mCFG          = cfg;
-  }
-
 
   /**
    * @brief

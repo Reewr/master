@@ -35,16 +35,13 @@ namespace Lua {
     // Creates a Lua instance that holds the Lua State.
     // This allows you to load files that will have C++ object representations
     // in them
-    Lua();
+    Lua(CFG* cfg);
     ~Lua();
 
     // TODO: Add removal functions
 
     //! Adds the console object to Lua, making it available to Lua runtime
     void add(Console* c);
-
-    //! Adds teh CFG object to Lua, making it available to Lua runtime.
-    void add(CFG* cfg);
 
     //! Recreates the lua engine, adding the console and config
     //! objects and reruns the files that are loaded
