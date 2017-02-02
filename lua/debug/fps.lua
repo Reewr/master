@@ -1,22 +1,36 @@
--- This module defines a new object on the global debug object called
--- `fps`. The `fps` object has two functions:
---
--- - `show(x, y, textSize)`
--- - `hide()`
---
--- The `x` and `y` are coordinates for where to draw the fps, but this
--- defaults to upper right corner of the screen. The `textSize` defaults to 16
---
--- It returns the FPS object that can be assigned to where ever you want it.
+--[[
+
+  This module defines a new object on the global debug object called
+  `fps`. The `fps` object has two functions:
+
+  - `show(x, y, textSize)`
+  - `hide()`
+
+  The `x` and `y` are coordinates for where to draw the fps, but this
+  defaults to upper right corner of the screen. The `textSize` defaults to 16
+
+  It returns the FPS object that can be assigned to where ever you want it.
+
+]]
 local FPS = {}
 local textElement = nil
 
--- Shows the FPS at position (X, Y) with size `textSize`
--- which defaults to (screenRes.x - 100, 100, 16)
---
--- Calling this multiple times after each other has no purpose
--- as it will just hide and delete the previous one before
--- creating a new text element
+--[[
+
+  Shows the FPS at position (X, Y) with size `textSize`
+  which defaults to (screenRes.x - 100, 100, 16)
+
+  Calling this multiple times after each other has no purpose
+  as it will just hide and delete the previous one before
+  creating a new text element
+
+  @class function
+  @param x         x-coordinate
+  @param y         y-coordinate
+  @param textSize  the size of the text
+  @param printInfo whether or not to print FPS as it updates
+
+]]
 function FPS.show(x, y, textSize, printInfo)
   if textElement ~= nil then
     FPS:hide()
@@ -77,8 +91,12 @@ function FPS.show(x, y, textSize, printInfo)
   addtoDrawable(element, 'fpsText')
 end
 
--- Hides the text if it is showing by disabling
--- it entirely and removing the text object
+--[[
+  Hides the text if it is showing by disabling
+  it entirely and removing the text object
+
+  @class function
+]]
 function FPS.hide()
   if textElement == nil then
     return
