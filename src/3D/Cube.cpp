@@ -12,13 +12,22 @@
 using mmm::vec2;
 using mmm::vec3;
 
-Cube::Cube() {
+Cube::Cube(const mmm::vec3& size, int weight, const mmm::vec3& position) {
+  btVector3 btSize = btVector3(size.x / 2.0f, size.y / 2.0f, size.z / 2.0f);
   mCube   = new GLCube();
-  mShape  = new btBoxShape(btVector3(0.5, 0.5, 0.5));
+  mShape  = new btBoxShape(btSize);
   mMotion = new btDefaultMotionState(
-    btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 20, 0)));
+    btTransform(btQuaternion(0, 0, 0, 1),
+                btVector3(position.x, position.y, position.z)));
 
-  btScalar  mass = 1000;
+  // Figure out the mass if not set
+  // by assuming the cube contains water
+  btScalar mass;
+  if (weight == -1)
+    mass = size.x * size.y * size.z * 1000;
+  else
+    mass = weight;
+
   btVector3 fallInertia(0, 0, 0);
   mShape->calculateLocalInertia(mass, fallInertia);
   btRigidBody::btRigidBodyConstructionInfo consInfo(mass,
@@ -28,7 +37,7 @@ Cube::Cube() {
   mBody    = new btRigidBody(consInfo);
   mTexture = mAsset->rManager()->get<Texture>("Texture::Cube");
   mProgram = mAsset->rManager()->get<Program>("Program::Model");
-  mScale   = mmm::scale(1.0f, 1.0f, 1.0f);
+  mScale   = mmm::scale(size);
 }
 
 Cube::~Cube() {

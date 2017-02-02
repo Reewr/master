@@ -16,7 +16,15 @@ class Program;
 
 class Cube : public Drawable3D {
 public:
-  Cube();
+  // Creates a cube of a specific size in meters. If weight is -1,
+  // it is assumed that the cube contains water,
+  // i.e 1m^3 (1,1,1) cube weighs 1000kg
+  //     8m^3 (2,2,2) cube weighs 8000kg
+  //
+  // The position is where the box will start at
+  Cube(const mmm::vec3& size = mmm::vec3(1.0f, 1.0f, 1.0f),
+       int weight = -1,
+       const mmm::vec3& position = mmm::vec3(0, 20, 0));
   ~Cube();
 
   // Update the element, phusics etc
