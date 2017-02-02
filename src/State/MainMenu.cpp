@@ -20,7 +20,6 @@ MainMenu::MainMenu(Asset* asset) {
   mAsset->rManager()->unloadUnnecessary(ResourceScope::MainMenu);
   mAsset->rManager()->loadRequired(ResourceScope::MainMenu);
 
-  Console*     console = new Console(mAsset);
   OptionsMenu* opts    = new OptionsMenu(mAsset->input());
   CFG*         cfg     = mAsset->cfg();
   Window*      menu =
@@ -36,16 +35,11 @@ MainMenu::MainMenu(Asset* asset) {
 
 
   // Order is important
-  mGUIElements = { menu, opts, console };
+  mGUIElements = { menu, opts };
 
-  auto handler = [&, opts, menu, console](const Input::Event& event) {
+  auto handler = [&, opts, menu](const Input::Event& event) {
     if (!menu->isVisible() || menu->isAnimating())
       return;
-
-    if (event.isAction(Input::Action::Console)) {
-      console->isVisible(true);
-      return event.stopPropgation();
-    }
 
     menu->defaultInputHandler(event);
 
@@ -76,8 +70,14 @@ MainMenu::MainMenu(Asset* asset) {
     }
   };
 
+  // add CFG is enabled
+  if (cfg->console.enabled) {
+    Console* console = new Console(mAsset);
+    mLua->add(console);
+    mGUIElements.push_back(console);
+  }
+
   menu->setInputHandler(handler);
-  mLua->add(console);
   mLua->loadFile("lua/states/mainmenu.lua");
 
   /* mLua->on("reInitialize", [&](){ */

@@ -28,7 +28,6 @@ using mmm::vec3;
 Master::Master(Asset* a) {
   CFG*     c         = a->cfg();
   vec2     shadowRes = vec2(c->graphics.shadowRes, c->graphics.shadowRes);
-  Console* con       = new Console(a);
 
   a->rManager()->unloadUnnecessary(ResourceScope::Master);
   a->rManager()->loadRequired(ResourceScope::Master);
@@ -40,13 +39,9 @@ Master::Master(Asset* a) {
                                true);
 
   mDrawable3D  = { new Terrain(), new Cube() };
-  mGUIElements = { con };
-
-  a->lua()->add(con);
 
   for (auto d : mDrawable3D)
     mWorld->addObject(d);
-
 
   a->lua()->engine.set_function("addCubes", [&](int i) {
     std::random_device rd;
@@ -74,6 +69,13 @@ Master::Master(Asset* a) {
     while(mDrawable3D.size() > 1)
       mDrawable3D.pop_back();
   });
+
+  // add CFG is enabled
+  if (a->cfg()->console.enabled) {
+    Console* console = new Console(a);
+    a->lua()->add(console);
+    mGUIElements.push_back(console);
+  }
 }
 
 Master::~Master() {
@@ -132,7 +134,7 @@ void Master::update(float deltaTime) {
   mDeltaTime = deltaTime;
   mWorld->doPhysics(deltaTime);
 
-  if (!mGUIElements.back()->isVisible())
+  if (mGUIElements.size() == 0 || !mGUIElements.back()->isVisible())
     mCamera->input(deltaTime);
   mCamera->update(deltaTime);
 }

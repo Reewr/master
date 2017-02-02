@@ -27,4 +27,6 @@ function update(deltaTime)
   end
 end
 
-require 'console/main'
+if cfg.console.enabled then
+  require 'console/main'
+end
