@@ -30,6 +30,11 @@ The following commands are available:
     is not a .clang-format file in the directory. Will show changes made
     to files. It will only consider '.cpp', '.hpp', or '.tpp' files.
 
+  doc
+    Builds the documentation for the project and places it under 'doc/html'
+    and 'doc/latex'. This requires 'doxygen' to be able to build the
+    documentation.
+
 The following flags are available:
 
   -h, --help
@@ -187,6 +192,33 @@ clean_build_dir() {
   fi
 }
 
+# Generates the documentation via the use of Doxygen
+# and the doxygen file located in 'doc'
+#
+# This function will fail if:
+#
+# 1. Doxygen isnt installed
+# 2. The doxygen config file cannot be found
+# 3. The executable isnt run from the root of the project folder
+gen_docs() {
+  if [ ! -d "./doc" ]; then
+    echo "Error: doc folder not found. Must be executed in root of project"
+    exit 1
+  fi
+
+  if [ ! -f "./doc/Doxyfile" ]; then
+    echo "Error: Doxyfile not found in 'doc' folder"
+    exit 1
+  fi
+
+  if hash doxygen 2/dev/null; then
+    doxygen "./doc/Doxyfile"
+  else
+    echo "Error: 'doxygen' not installed. Please install it"
+    exit 1
+  fi
+}
+
 # If we try to run a debug build with a release build
 # within the build directory, we clean the build dir
 different_build_type() {
@@ -245,6 +277,10 @@ while [ $# -gt 0 ]; do
       ;;
     clang-format)
       COMMAND="clang-format"
+      ;;
+    doc)
+      gen_docs
+      exit
       ;;
     -r | --release)
       clean_build_dir
