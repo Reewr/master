@@ -26,8 +26,6 @@ namespace Utils {
 
   static std::map<unsigned int, std::string> utf8Characters;
 
-  bool fileExists(const std::string& name);
-
   bool getGLError(const std::string& place = "");
   void clearGLError();
 

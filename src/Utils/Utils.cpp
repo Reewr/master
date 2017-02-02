@@ -20,39 +20,6 @@ static int  MS_MINUTE = 60 * MS_SECOND;
 
 static std::map<unsigned int, std::string> utf8Characters = {};
 
-/* Utils::Time::Time(double s) { */
-/*   ms = s * 1000; */
-/*   seconds = 0; */
-/*   minutes = 0; */
-/*   hours = 0; */
-/*   while (ms >= 1000) { */
-/*     if (ms >= 3600000) { */
-/*       hours += 1; */
-/*       ms -= 3600000; */
-/*     } else if (ms >= 60000) { */
-/*       minutes += 1; */
-/*       ms -= 60000; */
-/*     } else if (ms >= 1000) { */
-/*       seconds += 1; */
-/*       ms -= 1000; */
-/*     } */
-/*   } */
-/* } */
-
-/* std::string Utils::Time::toString() { */
-/*   std::string t = "["; */
-/*   t += Utils::toStr(hours) + "h" + ((minutes < 10) ? " 0" : " "); */
-/*   t += Utils::toStr(minutes)  + "m" + ((seconds < 10) ? " 0" : " "); */
-/*   t += Utils::toStr(seconds)  + "s" + ((ms < 10) ? " 00" : (ms < 100) ? " 0"
- * : " "); */
-/*   t += Utils::toStr(ms)   + "ms] "; */
-/*   return t; */
-/* } */
-
-/* void Utils::Time::log() { */
-/*   std::cout << toString(); */
-/* } */
-
 std::string timeSinceStart() {
   auto   finish = std::chrono::high_resolution_clock::now();
   double micro =
@@ -74,23 +41,6 @@ std::string timeSinceStart() {
   std::string sNano = Utils::toStr(micro) + "μs";
 
   return "[" + sMinutes + " " + sSeconds + " " + sMs + " " + sNano + "]";
-}
-
-/**
- * @brief
- *   Checks if a file exists, returns true
- *   if it does, otherwise false
- *
- * @param name
- *   the path to the file
- *
- * @return
- */
-bool Utils::fileExists(const std::string& name) {
-  std::ifstream f(name.c_str());
-  bool          isGood = f.good();
-  f.close();
-  return isGood;
 }
 
 /**

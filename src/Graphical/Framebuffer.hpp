@@ -111,7 +111,6 @@ public:
 
   static void init(CFG*        cfg,
                    std::string screenshotLoc = "./media/Screenshots/");
-  static void initScreenshot();
   static void takeScreenshot();
   static void printFramebufferLimits();
 

@@ -430,63 +430,68 @@ void Framebuffer::init(CFG* c, std::string screenshotLoc) {
   Framebuffer::cfg = c;
   ssLoc            = screenshotLoc;
   numSS            = 0;
-
-  initScreenshot();
 }
 
-void Framebuffer::initScreenshot() {
-  std::string name = Utils::toStr((int) cfg->graphics.res.x) + "x";
-  name += Utils::toStr((int) cfg->graphics.res.y);
-  name += " - ";
-  while (true) {
-    std::string test = ssLoc + name + Utils::toStr(numSS) + ".tga";
-    if (!Utils::fileExists(test)) {
-      log("Saving Screenshots to: " + test);
-      return;
-    }
-    numSS += 1;
-  }
-}
-
+/**
+ * @brief
+ *   Takes a screenshot of what is currently being displayed on
+ *   the screen. This function will not overwrite previous images
+ *   and will try to save them to a filename that is as follows:
+ *
+ *   `N_XxY.tga`
+ *
+ *   where
+ *
+ *   - `N` is a number given to it to find a unique name, will
+ *     be incremented each time a new screenshot is saved.
+ *   - `X` is the resolution in the X axis
+ *   - `Y` is the resolution in the Y axis
+ */
 void Framebuffer::takeScreenshot() {
-  std::string filename = ssLoc + Utils::toStr((int) cfg->graphics.res.x) + "x";
-  filename += Utils::toStr((int) cfg->graphics.res.y);
-  filename += " - " + Utils::toStr(numSS) + ".tga";
-  numSS++;
-  vec2           size      = cfg->graphics.res;
-  const long     imageSize = cfg->graphics.res.x * cfg->graphics.res.y * 3;
-  unsigned char* data      = new unsigned char[imageSize];
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
-  glReadPixels(0, 0, size.x, size.y, GL_BGR, GL_UNSIGNED_BYTE, data);
-  int           xa         = (int) size.x % 256;
-  int           xb         = (size.x - xa) / 256;
-  int           ya         = (int) size.y % 256;
-  int           yb         = (size.y - ya) / 256;
-  unsigned char header[18] = { 0,
-                               0,
-                               2,
-                               0,
-                               0,
-                               0,
-                               0,
-                               0,
-                               0,
-                               0,
-                               0,
-                               0,
-                               (unsigned char) xa,
-                               (unsigned char) xb,
-                               (unsigned char) ya,
-                               (unsigned char) yb,
-                               24,
-                               0 };
+  int  i   = 0;
+  vec2 res = cfg->graphics.res;
 
+  std::string filename = "";
+  std::string endStr   = std::to_string((int) res.x) + "x" +
+                         std::to_string((int) res.y) + ".tga";
+
+  // find a filename that isn't already taken
+  do {
+    filename = std::to_string(i) + "_" + endStr;
+  } while (std::ifstream(filename));
+
+  // create a buffer to contain this in. RGB colors for the whole screen
+  // therefore x*y*3
+  const long     imageSize = res.x * res.y * 3;
+  unsigned char* data      = new unsigned char[imageSize];
+
+  // make sure the framebuffer is the actual screen
+  // and not some other framebuffer then read pixels
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  glReadPixels(0, 0, res.x, res.y, GL_BGR, GL_UNSIGNED_BYTE, data);
+
+  // store them as values between 0 and 255
+  int xa = (int) res.x % 256;
+  int xb = (res.x - xa) / 256;
+  int ya = (int) res.y % 256;
+  int yb = (res.y - ya) / 256;
+
+  // clang-format off
+  unsigned char header[18] = { 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                               (unsigned char) xa, (unsigned char) xb,
+                               (unsigned char) ya, (unsigned char) yb,
+                               24, 0 };
+  // clang-format on
+
+  // finally write to file
   std::fstream f(filename, std::ios::out | std::ios::binary);
   f.write(reinterpret_cast<char*>(header), sizeof(char) * 18);
   f.write(reinterpret_cast<char*>(data), sizeof(char) * imageSize);
   f.close();
+
+  // clean up
   delete[] data;
-  data = NULL;
+  data = nullptr;
   log("Saved screenshot to: '", filename, "'");
 }
 
