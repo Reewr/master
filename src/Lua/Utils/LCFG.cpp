@@ -11,13 +11,13 @@ void Lua::cfg_as_lua(sol::state& state) {
   // bit cleaner
   //
   // CFG::Graphics
+  // clang-format off
   {
     // Add the type of constructors, since we don't have one
     // we just say no types.
     sol::constructors<sol::types<>> ctor;
 
     // add the variables that should be accessible via lua.
-    // clang-format off
     sol::usertype<CFG::Graphics> type(ctor,
       "aliasing"     , &CFG::Graphics::aliasing,
       "aniso"        , &CFG::Graphics::aniso,
@@ -29,9 +29,8 @@ void Lua::cfg_as_lua(sol::state& state) {
       "vsync"        , &CFG::Graphics::vsync,
       "viewDistance" , &CFG::Graphics::viewDistance,
       "winMode"      , &CFG::Graphics::winMode);
-    // clang-format on
 
-    state.set_usertype("CFG_Graphics", type);
+    state.set_usertype("_CFG_Graphics", type);
   }
 
   // CFG::General
@@ -39,12 +38,10 @@ void Lua::cfg_as_lua(sol::state& state) {
     sol::constructors<sol::types<>> ctor;
 
     // add the variables that should be accessible via lua.
-    // clang-format off
     sol::usertype<CFG::General> type(ctor,
       "debug", &CFG::General::debug);
-    // clang-format on
 
-    state.set_usertype("CFG_General", type);
+    state.set_usertype("_CFG_General", type);
   }
 
   // CFG::Camera
@@ -52,29 +49,35 @@ void Lua::cfg_as_lua(sol::state& state) {
     sol::constructors<sol::types<>> ctor;
 
     // add the variables that should be accessible via lua.
-    // clang-format off
     sol::usertype<CFG::Camera> type(ctor,
       "rotSpeed" , &CFG::Camera::rotSpeed,
       "rotInvH"  , &CFG::Camera::rotInvH,
       "rotInvV"  , &CFG::Camera::rotInvV,
       "zoomSpeed", &CFG::Camera::zoomSpeed,
       "zoomInv"  , &CFG::Camera::zoomInv);
-    // clang-format on
 
-    state.set_usertype("CFG_Camera", type);
+    state.set_usertype("_CFG_Camera", type);
+  }
+
+  // CFG::Console
+  {
+    sol::constructors<sol::types<>> ctor;
+
+    sol::usertype<CFG::Console> type(ctor,
+      "enabled", &CFG::Console::enabled);
+
+    state.set_usertype("_CFG_Console", type);
   }
 
   // ActB
   {
     sol::constructors<sol::types<>, sol::types<int>, sol::types<int, int>> ctor;
 
-    // clang-format off
     sol::usertype<ActB> type(ctor,
         "key1", &ActB::key1,
         "key2", &ActB::key2);
-    // clang-format on
 
-    state.set_usertype("CFG_ActB", type);
+    state.set_usertype("_CFG_ActB", type);
   }
 
   // CFG::Bindings
@@ -83,7 +86,6 @@ void Lua::cfg_as_lua(sol::state& state) {
     sol::constructors<sol::types<>> ctor;
 
     // add the variables that should be accessible via lua.
-    // clang-format off
     sol::usertype<CFG::Bindings> type(ctor,
       "moveUp"     , &CFG::Bindings::moveUp,
       "moveDown"   , &CFG::Bindings::moveDown,
@@ -93,9 +95,8 @@ void Lua::cfg_as_lua(sol::state& state) {
       "rotate"     , &CFG::Bindings::rotate,
       "showConsole", &CFG::Bindings::showConsole,
       "screenshot" , &CFG::Bindings::screenshot);
-    // clang-format on
 
-    state.set_usertype("CFG_Bindings", type);
+    state.set_usertype("_CFG_Bindings", type);
   }
 
   // CFG::Audio
@@ -103,13 +104,12 @@ void Lua::cfg_as_lua(sol::state& state) {
     sol::constructors<sol::types<>> ctor;
 
     // add the variables that should be accessible via lua.
-    // clang-format off
     sol::usertype<CFG::Audio> type(ctor,
       "SFXVolume"   , &CFG::Audio::SFXVolume,
       "musicVolume" , &CFG::Audio::musicVolume,
       "masterVolume", &CFG::Audio::masterVolume);
 
-    state.set_usertype("CFG_Audio", type);
+    state.set_usertype("_CFG_Audio", type);
   }
 
   // Finally, since all the child structures of the CFG has been
@@ -117,16 +117,16 @@ void Lua::cfg_as_lua(sol::state& state) {
   sol::constructors<sol::types<>> ctor;
 
   // add the variables that should be accessible via lua.
-  // clang-format off
   sol::usertype<CFG> type(ctor,
     "graphics", &CFG::graphics,
     "general" , &CFG::general,
     "camera"  , &CFG::camera,
+    "console" , &CFG::console,
     "bindings", &CFG::bindings,
     "audio"   , &CFG::audio);
-  // clang-format on
 
   state.set_usertype("CFG", type);
+  // clang-format on
 
   // At this point, you can load the state and use the CFG
   // as such:

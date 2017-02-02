@@ -46,6 +46,10 @@ public:
     bool  zoomInv   = false;
   } camera;
 
+  struct Console {
+    bool enabled = false;
+  } console;
+
   struct Bindings {
     ActB moveUp      = ActB(87);
     ActB moveDown    = ActB(83);
@@ -149,6 +153,8 @@ private:
          { "Bindings.move_right", bindings.moveRight },
          { "Bindings.pause_menu", bindings.pauseMenu },
          { "Bindings.rotate", bindings.rotate },
+
+         { "Console.enabled", console.enabled },
 
          { "Bindings.screenshot", bindings.screenshot },
          { "Bindings.show_console", bindings.showConsole },
