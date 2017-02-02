@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 # =====================================
 
 # Set the project name and what type of program it is
-project(DDDGP CXX)
+project(Woooo CXX)
 
 # Export compile commands to a JSON file
 # so that it can be used by IDEs if needed
@@ -153,10 +153,10 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${WARN_FLAGS}")
 set(SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
 # Store the CPP files
-set(DDDGP_CPP
+set(SOURCE_FILES
 
   # Top level files
-  ${SRC_DIR}/DDDGP.cpp
+  ${SRC_DIR}/main.cpp
   ${SRC_DIR}/Engine.cpp
 
   # src/3D
@@ -248,7 +248,7 @@ set(DDDGP_CPP
   ${SRC_DIR}/Utils/str.cpp
 )
 
-set(DDDGP_HPP
+set(HEADER_FILES
 
   # Top level headers
   ${SRC_DIR}/Engine.hpp
@@ -349,11 +349,11 @@ set(DDDGP_HPP
 # if the platform isnt windows
 #if (NOT WIN32 AND CMAKE_BUILD_TYPE EQUAL "DEBUG")
 #else (NOT WIN32)
-#  add_executable(DDDGP ${DDDGP_CPP} ${DDDGP_HPP})
+#  add_executable(Woooo ${SOURCE_FILES} ${HEADER_FILES})
 #endif ()
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/backward-cpp)
-add_executable(DDDGP ${DDDGP_CPP} ${DDDGP_HPP} ${BACKWARD_ENABLE})
-add_backward(DDDGP)
+add_executable(Woooo ${SOURCE_FILES} ${HEADER_FILES} ${BACKWARD_ENABLE})
+add_backward(Woooo)
 
 # Find the libraries that we've just added since the CMake documentation
 # advises against using `set_link_directory`
@@ -379,19 +379,19 @@ find_library(MultiNEAT_LIBRARY NAME MultiNEAT)
 # been made regarding this, but the maintainer / author said:
 # "No way to address / test. Would accept a PR"
 # ------------------------
-target_link_libraries(DDDGP ${LUA_LIBRARIES})
-target_link_libraries(DDDGP tinyxml2
+target_link_libraries(Woooo ${LUA_LIBRARIES})
+target_link_libraries(Woooo tinyxml2
                       ${CMAKE_CURRENT_SOURCE_DIR}/deps/tinyxml2/tinyxml2.cpp)
-target_link_libraries(DDDGP glfw ${GLFW_LIBRARIES})
-target_link_libraries(DDDGP ogl)
-target_link_libraries(DDDGP SOIL)
-target_link_libraries(DDDGP freetype)
-target_link_libraries(DDDGP assimp)
-target_link_libraries(DDDGP
+                    target_link_libraries(Woooo glfw ${GLFW_LIBRARIES})
+                    target_link_libraries(Woooo ogl)
+                    target_link_libraries(Woooo SOIL)
+                    target_link_libraries(Woooo freetype)
+                    target_link_libraries(Woooo assimp)
+                    target_link_libraries(Woooo
                       BulletDynamics
                       BulletCollision)
-target_link_libraries(DDDGP mmm)
-target_link_libraries(DDDGP MultiNEAT)
+                    target_link_libraries(Woooo mmm)
+                    target_link_libraries(Woooo MultiNEAT)
 
 # =======================================
 # Custom commands
@@ -399,7 +399,7 @@ target_link_libraries(DDDGP MultiNEAT)
 
 # Add a custom `run` command so that you can do `ninja run` to run the
 # the executable.
-add_custom_target(run COMMAND DDDGP DEPENDS DDDGP WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH} USES_TERMINAL)
+add_custom_target(run COMMAND Woooo DEPENDS Woooo WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH} USES_TERMINAL)
 
 # Add custom command for checking what build version we're using
 add_custom_target(print_build_type COMMAND ${CMAKE_COMMAND} -E echo ${CMAKE_BUILD_TYPE})
@@ -415,7 +415,7 @@ if(WIN32)
 else(WIN32)
   add_custom_target(
     cleanbuild
-    COMMAND cd .. && rm -r build && mkdir build && rm DDDGP && rm -r lib && rm -r bin
+    COMMAND cd .. && rm -r build && mkdir build && rm Woooo && rm -r lib && rm -r bin
     WORKING_DIRECTORY
     "${CMAKE_SOURCE_DIR}/build")
 endif(WIN32)

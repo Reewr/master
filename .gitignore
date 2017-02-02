@@ -5,6 +5,7 @@ build
 lib
 tags
 DDDGP
+Woooo
 bin
 compile_commands.json
 *.gch

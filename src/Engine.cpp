@@ -251,7 +251,7 @@ bool Engine::initWindow() {
   GLFWmonitor* monitor = getMonitor();
   mWindow              = glfwCreateWindow(cfg->graphics.res.x,
                              cfg->graphics.res.y,
-                             "DDDGP",
+                             "Wooooo",
                              monitor,
                              NULL);
 
