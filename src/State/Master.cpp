@@ -62,6 +62,18 @@ Master::Master(Asset* a) {
       mWorld->addObject(mDrawable3D.back());
     }
   });
+
+  a->lua()->engine.set_function("clearCubes", [&]() {
+    for(unsigned int i = 0; i < mDrawable3D.size(); ++i) {
+      if (i != 0) {
+        mWorld->removeObject(mDrawable3D[i]);
+        delete mDrawable3D[i];
+      }
+    }
+
+    while(mDrawable3D.size() > 1)
+      mDrawable3D.pop_back();
+  });
 }
 
 Master::~Master() {
