@@ -61,10 +61,16 @@ static void glfwErrorHandler(int, const char* k) {
   error("GLFW_ERROR: ", k);
 }
 
-Engine::Engine(std::string cfgPath) : mCurrent(nullptr) {
-  mCFGPath       = cfgPath;
-  mWindowRefresh = false;
-}
+Engine::Engine(std::string cfgPath)
+  : mCFGPath(cfgPath)
+  , mCFG(nullptr)
+  , mCurrent(nullptr)
+  , mInput(nullptr)
+  , mWindow(nullptr)
+  , mAsset(nullptr)
+  , mLua(nullptr)
+  , mResourceManager(nullptr)
+  , mWindowRefresh(false) {}
 
 Engine::~Engine() {
   deinitialize();
