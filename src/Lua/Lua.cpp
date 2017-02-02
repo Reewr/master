@@ -116,7 +116,7 @@ namespace Lua {
    */
   void Lua::reInitialize() {
     engine = sol::state();
-    engine.open_libraries(sol::lib::base, sol::lib::package);
+    engine.open_libraries(sol::lib::base, sol::lib::table, sol::lib::package);
 
     // Load math
     math_as_lua(engine);
