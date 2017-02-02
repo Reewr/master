@@ -14,6 +14,12 @@ struct btDefaultMotionState;
 class Texture;
 class Program;
 
+/**
+ * @brief
+ *   This represents a Cube with Physics in the world. It can be changed
+ *   to have a certain size and weight and can also be specificed to be
+ *   at a specificied position
+ */
 class Cube : public Drawable3D {
 public:
   // Creates a cube of a specific size in meters. If weight is -1,
