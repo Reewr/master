@@ -1,9 +1,8 @@
 #pragma once
-
-#include "../../OpenGLHeaders.hpp"
-#include <mmm.hpp>
-
 #include "Shape.hpp"
+
+#include <mmm.hpp>
+#include "../../OpenGLHeaders.hpp"
 
 class GLCube : GLShape {
 public:

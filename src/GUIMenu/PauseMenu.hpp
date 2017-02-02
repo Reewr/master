@@ -3,7 +3,6 @@
 #include <string>
 
 #include "../GUI/Window.hpp"
-#include "../Import/UILoader.hpp"
 
 namespace Input {
   class Input;
@@ -17,6 +16,5 @@ public:
   void input(const Input::Event& event);
 
 private:
-  Import::UILoader mUiLoader;
-  Input::Input*    mInput;
+  Input::Input* mInput;
 };

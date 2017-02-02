@@ -10,6 +10,7 @@
 #include "../GUI/Slider.hpp"
 #include "../Input/Event.hpp"
 #include "../Input/Input.hpp"
+#include "../Import/UILoader.hpp"
 #include "../Resource/ResourceManager.hpp"
 #include "../Resource/Texture.hpp"
 #include "../Shape/GL/Rectangle.hpp"
@@ -57,7 +58,8 @@ OptionsMenu::OptionsMenu(Input::Input* input) {
   addWindow("Mouse", innerRect);
   addWindow("Game", innerRect);
 
-  if (!mUiLoader.loadXMLSettings("./media/XML/GUI.xml", "Options", this))
+  Import::UILoader uiLoader;
+  if (!uiLoader.loadXMLSettings("./media/XML/GUI.xml", "Options", this))
     throw std::runtime_error("Read log above");
 
   std::vector<std::string> actions = input->getActionsString();

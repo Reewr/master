@@ -1,7 +1,6 @@
 #pragma once
 
 #include <iostream>
-#include <list>
 #include <string>
 
 extern bool* DEBUG_MODE;

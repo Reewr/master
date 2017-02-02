@@ -1,7 +1,6 @@
 #pragma once
 
 #include <mmm.hpp>
-#include <string>
 
 #include "GUI.hpp"
 
@@ -16,7 +15,6 @@ namespace tinyxml2 {
 namespace Input {
   class Input;
 }
-
 
 class Checkbox : public GUI {
 public:

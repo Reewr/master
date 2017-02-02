@@ -3,7 +3,6 @@
 #include <mmm.hpp>
 #include <vector>
 
-
 #include "Shape.hpp"
 
 class GLGrid : public GLShape {

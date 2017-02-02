@@ -2,6 +2,7 @@
 
 #include "../OpenGLHeaders.hpp"
 
+#include "../Import/UILoader.hpp"
 #include "../Input/Event.hpp"
 #include "../Input/Input.hpp"
 #include "../Resource/ResourceManager.hpp"
@@ -23,7 +24,8 @@ PauseMenu::PauseMenu(Input::Input* i) {
   mBackground->setTexture(
     mAsset->rManager()->get<Texture>("Texture::Background"));
 
-  if (!mUiLoader.loadXMLSettings("./media/XML/GUI.xml", "Pause", this))
+  Import::UILoader uiLoader;
+  if (!uiLoader.loadXMLSettings("./media/XML/GUI.xml", "Pause", this))
     throw std::runtime_error("Read log above");
 }
 

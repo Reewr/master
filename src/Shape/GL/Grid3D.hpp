@@ -1,9 +1,8 @@
 #pragma once
-
 #include "Grid.hpp"
-#include <mmm.hpp>
 
 #include <vector>
+#include <mmm.hpp>
 
 class GLGrid3D : public GLGrid {
 public:

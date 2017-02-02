@@ -1,9 +1,10 @@
 #pragma once
-
-#include "../Rectangle.hpp"
 #include "Shape.hpp"
+
 #include <memory>
 #include <mmm.hpp>
+
+#include "../Rectangle.hpp"
 
 class Texture;
 /**

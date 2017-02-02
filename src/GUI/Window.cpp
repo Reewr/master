@@ -1,6 +1,7 @@
 #include "Window.hpp"
 
 #include <tinyxml2.h>
+#include <algorithm>
 
 #include "Checkbox.hpp"
 #include "Dropdown.hpp"
@@ -497,9 +498,11 @@ void Window::sortDropdowns() {
   for (auto a : mDropdowns)
     mDrawDropdowns.push_back(a.second);
 
-  mDrawDropdowns.sort([](Dropdown* a, Dropdown* b) {
-    return a->box().topleft.y > b->box().topleft.y;
-  });
+  std::sort(mDrawDropdowns.begin(),
+            mDrawDropdowns.end(),
+            [](Dropdown* a, Dropdown* b) {
+              return a->box().topleft.y > b->box().topleft.y;
+            });
 }
 
 void Window::draw() {

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <list>
 #include <map>
 #include <string>
 #include <vector>
@@ -95,7 +94,7 @@ protected:
   GLRectangle* mBackground;
   Text*        mTitle;
 
-  std::list<Dropdown*> mDrawDropdowns;
+  std::vector<Dropdown*> mDrawDropdowns;
 
   std::map<std::string, Menu*>     mMenues;
   std::map<std::string, Slider*>   mSliders;
