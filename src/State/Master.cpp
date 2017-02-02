@@ -32,6 +32,7 @@ Master::Master(Asset* a) {
   a->rManager()->unloadUnnecessary(ResourceScope::Master);
   a->rManager()->loadRequired(ResourceScope::Master);
 
+  mLua       = a->lua();
   mCamera    = new Camera(a);
   mWorld     = new World(vec3(0, -9.807, 0));
   mShadowmap = new Framebuffer(a->rManager()->get<Program>("Program::Shadow"),
@@ -43,7 +44,7 @@ Master::Master(Asset* a) {
   for (auto d : mDrawable3D)
     mWorld->addObject(d);
 
-  a->lua()->engine.set_function("addCubes", [&](int i) {
+  mLua->engine.set_function("addCubes", [&](int i) {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<> dis(1, 5);
@@ -58,7 +59,7 @@ Master::Master(Asset* a) {
     }
   });
 
-  a->lua()->engine.set_function("clearCubes", [&]() {
+  mLua->engine.set_function("clearCubes", [&]() {
     for(unsigned int i = 0; i < mDrawable3D.size(); ++i) {
       if (i != 0) {
         mWorld->removeObject(mDrawable3D[i]);
@@ -73,7 +74,7 @@ Master::Master(Asset* a) {
   // add CFG is enabled
   if (a->cfg()->console.enabled) {
     Console* console = new Console(a);
-    a->lua()->add(console);
+    mLua->add(console);
     mGUIElements.push_back(console);
   }
 }
@@ -113,6 +114,12 @@ void Master::drawGUI() {
 
   for (auto g : mGUIElements)
     g->draw();
+
+  try {
+    mLua->engine["draw"]();
+  } catch (const sol::error& e) {
+    error("Failed to draw: ", e.what());
+  }
 }
 
 void Master::input(const Input::Event& event) {
@@ -137,6 +144,12 @@ void Master::update(float deltaTime) {
   if (mGUIElements.size() == 0 || !mGUIElements.back()->isVisible())
     mCamera->input(deltaTime);
   mCamera->update(deltaTime);
+
+  try {
+    mLua->engine["update"](deltaTime);
+  } catch (const sol::error& e) {
+    error("Failed to update: ", e.what());
+  }
 }
 
 void Master::draw(float) {

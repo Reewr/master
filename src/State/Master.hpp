@@ -7,6 +7,10 @@ namespace Input {
   class Event;
 }
 
+namespace Lua {
+  class Lua;
+}
+
 class Console;
 class Asset;
 class Camera;
@@ -32,6 +36,7 @@ private:
   Camera*      mCamera;
   Framebuffer* mShadowmap;
   World*       mWorld;
+  Lua::Lua*    mLua;
   /* Input::Input* mInput; */
   /* Asset*        mAsset; */
 };
