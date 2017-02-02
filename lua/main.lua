@@ -28,5 +28,6 @@ function update(deltaTime)
 end
 
 if cfg.console.enabled then
+  print('Loading console')
   require 'console/main'
 end

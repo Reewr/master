@@ -17,22 +17,28 @@ local textElement = nil
 -- Calling this multiple times after each other has no purpose
 -- as it will just hide and delete the previous one before
 -- creating a new text element
-function FPS.show(x, y, textSize)
+function FPS.show(x, y, textSize, printInfo)
   if textElement ~= nil then
     FPS:hide()
   end
 
-  print("Showing FPS")
+  local _x         = type(x) == "number" and x or cfg.graphics.res.x - 50
+  local _y         = type(y) == "number" and y or 25
+  local _textSize  = type(textSize) == "number" and textSize or 16
+  local _printInfo = false
 
-  -- set default X and Y if they are not numbers
-  x = type(x) == "number" and x or cfg.graphics.res.x - 50
-  y = type(y) == "number" and y or 25
-  textSize = type(x) == "number" and texSize or 16
+  -- Check if printInfo was sent as any other variable
+  if type(x) == "boolean" then _printInfo = x end
+  if type(y) == "boolean" then _printInfo = y end
+  if type(textSize) == "boolean" then _printInfo = textSize end
+  if type(printInfo) == "boolean" then _printInfo = printInfo end
+
+  print("Showing FPS")
 
   textElement = GUI.Text.new("Font::Dejavu",
                              "0",
-                             vec2.new(x, y),
-                             textSize,
+                             vec2.new(_x, _y),
+                             _textSize,
                              GUI.TextColor.Yellow)
   local element   = {}
   local frames    = 0
@@ -58,7 +64,10 @@ function FPS.show(x, y, textSize)
     stored    = textElement:getText()
     totalTime = 0
     frames    = 0
-    print("FPS: ", strFrames)
+
+    if _printInfo then
+      print("FPS: ", strFrames)
+    end
 
     if strFrames ~= stored then
       textElement:setText(strFrames)
