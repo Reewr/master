@@ -1,11 +1,21 @@
 require 'console'
+hud   = {}
+hud.fps = require 'debug/fps'
 
 local drawable = {}
-local index = 0
 
-function addtoDrawable(item)
-  drawable[index] = item
-  index = index + 1
+function addtoDrawable(item, name)
+  if name ~= nil then
+    drawable[name] = item
+  else
+    table.insert(drawable, item)
+  end
+end
+
+function removefromDrawable(name)
+  if drawable[name] ~= nil then
+    drawable[name] = nil
+  end
 end
 
 function draw()
@@ -14,5 +24,8 @@ function draw()
   end
 end
 
-function update()
+function update(deltaTime)
+  for k, v in pairs(drawable) do
+    v:update(deltaTime)
+  end
 end
