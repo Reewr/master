@@ -73,7 +73,6 @@ protected:
   void createState();
   void closeWindow();
 
-  int mFPS;
   std::stack<int> mActiveStates;
 
   std::string mCFGPath;

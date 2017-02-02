@@ -407,13 +407,11 @@ void Engine::deinitialize(bool isFullDeinit) {
 void Engine::runLoop() {
   // Used to check the difference between the loops
   static float startTime = glfwGetTime();
-  static int fps = 0;
 
   while (!glfwWindowShouldClose(mWindow)) {
     float currentTime = glfwGetTime();
     float deltaTime   = currentTime - startTime;
     startTime         = currentTime;
-    ++fps;
 
     LOOP_LOGGER += deltaTime;
 
@@ -431,9 +429,6 @@ void Engine::runLoop() {
 
     if (LOOP_LOGGER > 1) {
       LOOP_LOGGER = 0;
-      mFPS = fps;
-      fps = 0;
-      log("FPS is: ", mFPS);
     }
 
     // Special case for when the engine has to be entirely

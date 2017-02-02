@@ -58,6 +58,7 @@ function FPS.show(x, y, textSize)
     stored    = textElement:getText()
     totalTime = 0
     frames    = 0
+    print("FPS: ", strFrames)
 
     if strFrames ~= stored then
       textElement:setText(strFrames)
