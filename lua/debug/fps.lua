@@ -74,8 +74,8 @@ function FPS.show(x, y, textSize, printInfo)
       return
     end
 
-    strFrames = tostring(frames)
-    stored    = textElement:getText()
+    local strFrames = tostring(frames)
+    local stored    = textElement:getText()
     totalTime = 0
     frames    = 0
 
