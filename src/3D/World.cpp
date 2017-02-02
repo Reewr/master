@@ -60,6 +60,13 @@ void World::addObject(Drawable3D* element) {
  * @param element the drawable element to remove
  */
 void World::removeObject(Drawable3D* element) {
+  // remove them from the world first
+  for (auto a : mElements) {
+    if (a == element && element != nullptr)
+      world->removeRigidBody(a->rigidBody());
+  }
+
+  // then remove them from the list
   mElements.erase(std::remove_if(mElements.begin(),
                                  mElements.end(),
                                  [element](Drawable* e) {
