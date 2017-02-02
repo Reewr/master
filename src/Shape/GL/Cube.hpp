@@ -6,12 +6,9 @@
 
 class GLCube : GLShape {
 public:
-  GLCube(const mmm::vec2& size);
+  GLCube();
   ~GLCube();
 
   void setup();
   void draw();
-
-private:
-  mmm::vec2 mSize;
 };

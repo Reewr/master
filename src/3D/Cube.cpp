@@ -13,7 +13,7 @@ using mmm::vec2;
 using mmm::vec3;
 
 Cube::Cube() {
-  mCube   = new GLCube(vec2(256, 256));
+  mCube   = new GLCube();
   mShape  = new btBoxShape(btVector3(0.5, 0.5, 0.5));
   mMotion = new btDefaultMotionState(
     btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 20, 0)));
@@ -38,8 +38,23 @@ Cube::~Cube() {
   delete mMotion;
 }
 
+/**
+ * @brief
+ *   The update handler is reversed for things that do not have
+ *   anything to do with drawing but should be updated every loop.
+ *
+ * @param float
+ */
 void Cube::update(float) {}
 
+/**
+ * @brief
+ *   Draw the cube by binding the program and setting the required
+ *   uniforms.
+ *
+ * @param c
+ * @param float
+ */
 void Cube::draw(Camera* c, float) {
   mProgram->bind();
   mProgram->setUniform("model", mScale * mRotation * mmm::translate(mPosition));

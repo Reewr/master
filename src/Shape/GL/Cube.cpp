@@ -2,7 +2,7 @@
 
 #include "../../Utils/Utils.hpp"
 
-GLCube::GLCube(const mmm::vec2& size) : mSize(size) {
+GLCube::GLCube() {
   setup();
 }
 
