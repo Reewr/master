@@ -1,6 +1,3 @@
-require 'console'
-hud   = {}
-hud.fps = require 'debug/fps'
 
 local drawable = {}
 
@@ -29,3 +26,5 @@ function update(deltaTime)
     v:update(deltaTime)
   end
 end
+
+require 'console/main'
