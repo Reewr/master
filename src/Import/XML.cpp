@@ -19,7 +19,7 @@ Import::XML::XML(const char* filePath) {
     if (doc->GetErrorStr2() != NULL)
       ss << "XMLDocument error: " << doc->GetErrorStr2() << std::endl;
 
-    throw Error(ss.str().c_str());
+    throw std::runtime_error(ss.str().c_str());
   }
 }
 

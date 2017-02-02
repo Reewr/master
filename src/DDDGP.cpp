@@ -41,7 +41,7 @@ int main(int argc, char* argv[]) {
   Engine* engine = new Engine();
 
   if (!engine->initialize(argc, argv)) {
-    throw Error("Engined failed to initialize");
+    throw std::runtime_error("Engined failed to initialize");
   }
 
   // runs the loop, exiting on any errors

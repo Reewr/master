@@ -454,7 +454,7 @@ void Engine::refreshState(int refreshType) {
   deinitialize(refreshType == States::WinRefresh);
 
   if (!initialize(0, NULL, refreshType)) {
-    throw Error("Engine failed to refresh!");
+    throw std::runtime_error("Engine failed to refresh!");
   }
 }
 /**
@@ -500,12 +500,12 @@ void Engine::changeState(int newState) {
       mCurrent = new MainMenu(mAsset);
       break;
     case States::Game:
-      throw Error("Tried to make game. THROW FIT. (╯°□°）╯︵ ┻━┻)");
+      throw std::runtime_error("Tried to make game. THROW FIT (╯°□°）╯︵ ┻━┻)");
     case States::MasterThesis:
       mCurrent = new Master(mAsset);
       break;
     default:
-      throw Error("Tried to non-existant state. THROW FIT. (╯°□°）╯︵ ┻━┻)");
+      throw std::runtime_error("No state! THROW FIT. (╯°□°）╯︵ ┻━┻)");
   }
 }
 

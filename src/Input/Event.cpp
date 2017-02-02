@@ -506,7 +506,7 @@ namespace Input {
    */
   int Event::prevType() const {
     if (!hasBeenHandled())
-      throw Error("Calling prevType on non-handled event is not legal");
+      throw std::runtime_error("Calling prevType on unhandled event");
 
     return mPrev;
   }

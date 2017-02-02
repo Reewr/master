@@ -38,18 +38,18 @@ std::vector<float> map_to_float(std::vector<std::string> ws) {
 }
 
 Import::Animation::Animation(const char* filePath) : XML(filePath) {
-  Error err     = "Error while parsing '" + std::string(filePath) + "'.";
-  int   success = tinyxml2::XMLError::XML_SUCCESS;
+  std::string err     = "Error while parsing '" + std::string(filePath) + "'.";
+  int         success = tinyxml2::XMLError::XML_SUCCESS;
 
   tinyxml2::XMLElement* root = this->doc->RootElement();
 
   if (root->QueryIntAttribute("frame_size", &n) != success) {
     fatalError("missing 'frame_size' attribute in anim file");
-    throw err;
+    throw std::runtime_error(err);
   }
   if (root->QueryIntAttribute("frames", &l) != success) {
     fatalError("missing 'frames' attribute in anim file");
-    throw err;
+    throw std::runtime_error(err);
   }
 
   fs.resize(n * l + l);
@@ -59,13 +59,13 @@ Import::Animation::Animation(const char* filePath) : XML(filePath) {
   for (int i = 0; i < l; ++i) {
     if (frame == NULL) {
       fatalError("inconsistent or bad data in anim file");
-      throw err;
+      throw std::runtime_error(err);
     }
 
     float t = 0;
     if (frame->QueryFloatAttribute("time", &t) != success) {
       fatalError("missing or malformed time attribute in anim file");
-      throw err;
+      throw std::runtime_error(err);
     }
     *ptr = t;
     ptr++;
@@ -76,7 +76,7 @@ Import::Animation::Animation(const char* filePath) : XML(filePath) {
     for (int j = 0; j < n; ++j) {
       if (f.size() <= (size_t) j) {
         fatalError("incomplete frame data in anim file");
-        throw err;
+        throw std::runtime_error(err);
       }
 
       *ptr = f[j];

@@ -24,7 +24,7 @@ PauseMenu::PauseMenu(Input::Input* i) {
     mAsset->rManager()->get<Texture>("Texture::Background"));
 
   if (!mUiLoader.loadXMLSettings("./media/XML/GUI.xml", "Pause", this))
-    throw Error("Read log above");
+    throw std::runtime_error("Read log above");
 }
 
 void PauseMenu::input(const Input::Event& event) {

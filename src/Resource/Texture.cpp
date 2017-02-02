@@ -104,7 +104,7 @@ bool Texture::loadTexture() {
     SOIL_load_image(mFilename.c_str(), &width, &height, 0, SOIL_LOAD_RGBA);
 
   if (image == 0)
-    throw Error("Failed to load SOIL_IMAGE");
+    throw std::runtime_error("Failed to load SOIL_IMAGE");
 
   glTexImage2D(GL_TEXTURE_2D,
                0,
@@ -117,7 +117,7 @@ bool Texture::loadTexture() {
                image);
 
   if (!Utils::getGLError())
-    throw Error("Failed to load SOIL_IMAGE");
+    throw std::runtime_error("Failed to load SOIL_IMAGE");
 
   if (mMode == TEXTURE) {
     generateMipmaps();
@@ -143,7 +143,7 @@ bool Texture::loadDDS() {
                           SOIL_FLAG_MIPMAPS | SOIL_FLAG_COMPRESS_TO_DXT);
 
   if (mTextureId == 0 || !Utils::getGLError())
-    throw Error("Failed to load DDS image");
+    throw std::runtime_error("Failed to load DDS image");
 
   linearMipmap();
   // if(cfg->graphics.aniso >= 1)
@@ -197,7 +197,7 @@ bool Texture::createTexture(const vec2&    s,
                data);
 
   if (!Utils::getGLError())
-    throw Error("createTexture failed. View OpenGL error above");
+    throw std::runtime_error("createTexture failed. View OpenGL error above");
 
   mSize = s;
   return true;
@@ -294,7 +294,7 @@ void Texture::setSamplerFiltering(GLenum param, GLenum value) {
   glSamplerParameteri(mSamplerId, param, value);
 
   if (!Utils::getGLError())
-    throw Error("Failed to set Sampler Parameteri");
+    throw std::runtime_error("Failed to set Sampler Parameteri");
 }
 
 Texture& Texture::generateMipmaps(GLenum target) {
@@ -303,7 +303,7 @@ Texture& Texture::generateMipmaps(GLenum target) {
 
   glGenerateMipmap(target);
   if (!Utils::getGLError())
-    throw Error("Failed to generateMipmaps");
+    throw std::runtime_error("Failed to generateMipmaps");
 
   return *this;
 }

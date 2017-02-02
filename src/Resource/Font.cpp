@@ -46,7 +46,7 @@ Font::Page::~Page() {
 Font::Font() {
   if (numFonts == 0) {
     if (FT_Init_FreeType(&fontLib))
-      throw Error("FreeType not initialized correctly");
+      throw std::runtime_error("FreeType not initialized correctly");
     log("Font :: Loaded FreeType");
   }
 

@@ -11,17 +11,6 @@ extern bool* DEBUG_MODE;
 extern bool* ENABLE_COLORS;
 extern float LOOP_LOGGER;
 
-//! fucking crash already. Seriously stopping program execution should not be
-//! this hard. Take a hint and throw a fucking string!
-struct Error {
-  Error(std::string str) : err(str.c_str()) {}
-  Error(const char* errStr) : err(errStr) {}
-  const char*       what() const throw() { return err; }
-
-private:
-  const char* err;
-};
-
 namespace Utils {
 
   static std::map<unsigned int, std::string> utf8Characters;

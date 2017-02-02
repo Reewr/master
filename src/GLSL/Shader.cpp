@@ -11,7 +11,7 @@ std::string loadTextfile(const std::string& filename) {
   std::string   line;
 
   if (!fs.is_open()) {
-    throw Error("Unable to open file: " + filename);
+    throw std::runtime_error("Unable to open file: " + filename);
   }
 
   while (fs.good()) {
@@ -100,13 +100,19 @@ GLuint Shader::loadShader(const std::string& filename) {
 bool Shader::checkShader(const GLuint id, const std::string& filename) {
   GLint isCompiled = 0;
   GLint maxLength  = 0;
+
+  // retrieve the shader information
   glGetShaderiv(id, GL_COMPILE_STATUS, &isCompiled);
   glGetShaderiv(id, GL_INFO_LOG_LENGTH, &maxLength);
+
+  // throw error if it cant compile
   if (isCompiled == GL_FALSE) {
     std::vector<GLchar> infoLog(maxLength);
+    std::string s = filename + ": ";
+
     glGetShaderInfoLog(id, maxLength, &maxLength, &infoLog[0]);
     glDeleteShader(id);
-    std::string s = filename + ": ";
+
     log("Errors in shader: ", filename, " - see below:");
     for (unsigned int i = 0; i < infoLog.size(); i++) {
       if (infoLog[i] == '\n') {
@@ -116,14 +122,20 @@ bool Shader::checkShader(const GLuint id, const std::string& filename) {
         s += infoLog[i];
     }
     log("");
-    throw Error("Shader.cpp");
-    return false;
-  } else if (maxLength > 1) {
+
+    throw std::runtime_error("Shader.cpp");
+  }
+
+  // if there some information
+  if (maxLength > 1) {
     std::vector<GLchar> infoLog(maxLength);
-    glGetShaderInfoLog(id, maxLength, &maxLength, &infoLog[0]);
     std::string s = "";
+
+    glGetShaderInfoLog(id, maxLength, &maxLength, &infoLog[0]);
+
     for (unsigned int i = 0; i < infoLog.size(); i++)
       s += infoLog[i];
+
     warning(s.c_str(), filename.c_str());
   }
 

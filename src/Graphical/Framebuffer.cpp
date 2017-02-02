@@ -194,7 +194,7 @@ void Framebuffer::bind(bool bindProgram) {
  */
 void Framebuffer::bind(std::shared_ptr<Program> program) {
   if (program == nullptr)
-    throw Error("Program is null");
+    throw std::runtime_error("Program is null");
 
   bind(false);
   program->bind();
@@ -235,7 +235,7 @@ void Framebuffer::nonClearBind(bool bindProgram) {
  */
 void Framebuffer::nonClearBind(std::shared_ptr<Program> program) {
   if (program == nullptr)
-    throw Error("Pointer to program is null");
+    throw std::runtime_error("Pointer to program is null");
 
   nonClearBind(false);
   program->bind();
@@ -329,12 +329,15 @@ void Framebuffer::queueQuad(GLRectangle*                 inQuad,
                             const std::vector<Texture*>& t,
                             unsigned int                 tStart) {
   if (!mIsBound)
-    throw Error("Tried using queue without starting");
+    throw std::runtime_error("Tried using queue without starting");
+
   p->bind();
+
   for (unsigned int i = 0; i < t.size(); i++) {
     t[i]->bind(tStart);
     tStart++;
   }
+
   inQuad->draw();
 }
 
@@ -511,7 +514,7 @@ void Framebuffer::printFramebufferLimits() {
 
 bool Framebuffer::failCheck() {
   if (!isInitialized())
-    throw Error("Using unintialized framebuffer!");
+    throw std::runtime_error("Using unintialized framebuffer!");
   return true;
 }
 
@@ -530,6 +533,6 @@ void Framebuffer::checkFramebuffer() {
         error("Not supported");
         break;
     }
-    throw Error("Framebuffer is not complete.");
+    throw std::runtime_error("Framebuffer is not complete.");
   }
 }

@@ -11,25 +11,25 @@ Asset::Asset(CFG* c) : mCFG(c) {}
 
 CFG* Asset::cfg() {
   if (mCFG == nullptr)
-    throw Error("Tried to access CFG when nullptr");
+    throw std::runtime_error("Tried to access CFG when nullptr");
   return mCFG;
 }
 
 Input::Input* Asset::input() {
   if (mInput == nullptr)
-    throw Error("Tried to access Input when nullptr");
+    throw std::runtime_error("Tried to access Input when nullptr");
   return mInput;
 }
 
 Lua::Lua* Asset::lua() {
   if (mLua == nullptr)
-    throw Error("Tried to access Lua when nullptr");
+    throw std::runtime_error("Tried to access Lua when nullptr");
   return mLua;
 }
 
 ResourceManager* Asset::rManager() {
   if (mResourceManager == nullptr)
-    throw Error("Tried to access ResourceManager when nullptr");
+    throw std::runtime_error("Tried to access ResourceManager when nullptr");
   return mResourceManager;
 }
 
