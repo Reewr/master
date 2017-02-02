@@ -7,6 +7,7 @@
 
 #include "../Input/Input.hpp"
 #include "Utils.hpp"
+#include "str.hpp"
 
 using mmm::vec2;
 
@@ -56,7 +57,7 @@ CFG::Wrapper::Wrapper(int& i) {
       unknown_parameter(p, ps[0], " number");
   };
 
-  show = [&i]() { return Utils::toStr(i); };
+  show = [&i]() { return std::to_string(i); };
 }
 CFG::Wrapper::Wrapper(float& f) {
   valid_params = " number";
@@ -70,7 +71,7 @@ CFG::Wrapper::Wrapper(float& f) {
       unknown_parameter(p, ps[0], " number");
   };
 
-  show = [&f]() { return Utils::toStr(f); };
+  show = [&f]() { return std::to_string(f); };
 }
 CFG::Wrapper::Wrapper(vec2& v) : args(2) {
   valid_params = " number number";
@@ -90,9 +91,9 @@ CFG::Wrapper::Wrapper(vec2& v) : args(2) {
 
   show = [&v]() {
     std::string s;
-    s += Utils::toStr(v.x);
+    s += std::to_string(v.x);
     s += " ";
-    s += Utils::toStr(v.y);
+    s += std::to_string(v.y);
     return s;
   };
 }
@@ -183,7 +184,7 @@ void CFG::assimilate(const std::string& filepath) {
   std::string line;
 
   while (std::getline(file, line)) {
-    Utils::lTrim(line);
+    str::lTrim(line);
 
     // comment
     if (line.substr(0, 1) == "#")
@@ -212,7 +213,7 @@ void CFG::assimilate(const std::string& filepath) {
     // while more values
     while (true) {
       std::string val;
-      Utils::lTrim(line);
+      str::lTrim(line);
 
       if (line.substr(0, 1) == "#")
         break;

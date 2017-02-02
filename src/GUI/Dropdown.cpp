@@ -9,7 +9,7 @@
 #include "../Resource/Texture.hpp"
 #include "../Shape/GL/Rectangle.hpp"
 #include "../Utils/Asset.hpp"
-#include "../Utils/Utils.hpp"
+#include "../Utils/str.hpp"
 #include "Text.hpp"
 
 using mmm::vec2;
@@ -313,10 +313,10 @@ bool Dropdown::setActiveItem(const vec2& position) {
  * @param text
  */
 void Dropdown::setActiveItem(const std::string text) {
-  std::string loweredText = Utils::toLower(text);
+  std::string loweredText = str::toLower(text);
 
   for (unsigned int i = 0; i < mOptions.size(); i++) {
-    if (Utils::toLower(mOptions[i]->getText()) == loweredText) {
+    if (str::toLower(mOptions[i]->getText()) == loweredText) {
       mActiveOption = i;
       setActiveOptionPosition();
     }

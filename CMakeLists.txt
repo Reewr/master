@@ -245,6 +245,7 @@ set(DDDGP_CPP
   ${SRC_DIR}/Utils/Asset.cpp
   ${SRC_DIR}/Utils/CFG.cpp
   ${SRC_DIR}/Utils/Utils.cpp
+  ${SRC_DIR}/Utils/str.cpp
 )
 
 set(DDDGP_HPP
@@ -337,6 +338,7 @@ set(DDDGP_HPP
   ${SRC_DIR}/Utils/Asset.hpp
   ${SRC_DIR}/Utils/CFG.hpp
   ${SRC_DIR}/Utils/Utils.hpp
+  ${SRC_DIR}/Utils/str.hpp
 )
 
 # =======================================

@@ -178,7 +178,7 @@ bool Texture::createTexture(const vec2&    s,
                             GLenum         inColor) {
   static unsigned int nameNumber = 0;
   nameNumber++;
-  mFilename = "createTexture" + Utils::toStr(nameNumber);
+  mFilename = "createTexture" + std::to_string(nameNumber);
   mMode     = EMPTY;
   inColor   = color == GL_DEPTH_COMPONENT ? GL_DEPTH_COMPONENT : inColor;
 

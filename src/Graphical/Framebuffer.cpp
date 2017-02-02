@@ -403,7 +403,7 @@ void Framebuffer::printPixels(const Rectangle& r,
   for (unsigned int i = 0; i < data.size(); i += mult) {
     std::string output = "  [";
     for (int j = 0; j < mult; j++)
-      output += Utils::toStr(data[i + j]) + ((j + 1 < mult) ? ", " : "");
+      output += std::to_string(data[i + j]) + ((j + 1 < mult) ? ", " : "");
     output += "]";
     log(output);
   }

@@ -11,6 +11,7 @@
 #include "Utils/Asset.hpp"
 #include "Utils/CFG.hpp"
 #include "Utils/Utils.hpp"
+#include "Utils/str.hpp"
 /* #include <3D/Spider.hpp> */
 /* #include <3D/Model.hpp> */
 #include "Input/Event.hpp"
@@ -52,7 +53,7 @@ static void placementMouseScrollCB(GLFWwindow* w, double ox, double oy) {
 
 static void placementCharCB(GLFWwindow* w, unsigned int codePoint) {
   Engine*      e = static_cast<Engine*>(glfwGetWindowUserPointer(w));
-  Input::Event event(e->input(), Utils::utf8toStr(codePoint));
+  Input::Event event(e->input(), str::utf8toStr(codePoint));
   e->sendEvent(event);
 }
 

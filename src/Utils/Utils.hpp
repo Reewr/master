@@ -2,18 +2,13 @@
 
 #include <iostream>
 #include <list>
-#include <map>
-#include <sstream>
 #include <string>
-#include <vector>
 
 extern bool* DEBUG_MODE;
 extern bool* ENABLE_COLORS;
 extern float LOOP_LOGGER;
 
 namespace Utils {
-
-  static std::map<unsigned int, std::string> utf8Characters;
 
   bool getGLError(const std::string& place = "");
   void clearGLError();
@@ -33,19 +28,6 @@ namespace Utils {
   void lineLog(Ts... args);
 
   void logTimeNoEnd();
-
-  std::string toUpper(std::string s);
-  std::string toLower(std::string s);
-
-  std::string utf8toStr(unsigned int utf8);
-
-  void rTrim(std::string& s);
-  void lTrim(std::string& s);
-  void trim(std::string& s);
-
-  template <typename N>
-  std::string toStr(N n);
-
   void logPercent(int percent, std::string msg = "");
 }
 

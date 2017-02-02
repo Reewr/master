@@ -16,7 +16,7 @@
 #include "../State/State.hpp"
 #include "../Utils/Asset.hpp"
 #include "../Utils/CFG.hpp"
-#include "../Utils/Utils.hpp"
+#include "../Utils/str.hpp"
 
 using mmm::vec2;
 
@@ -71,7 +71,7 @@ OptionsMenu::OptionsMenu(Input::Input* input) {
     vec2 place = vec2(250, 105);
     place += vec2((i % 2 == 0) ? 0 : 250, (i / 2 * 32));
     window("Keybindings")
-      ->addInputbox("Input" + Utils::toStr(i),
+      ->addInputbox("Input" + std::to_string(i),
                     Rectangle(place, vec2(200, 25)),
                     "");
   }
@@ -179,8 +179,8 @@ void OptionsMenu::setDefaultOptions() {
   Window* au = window("Audio");
 
   gr->dropdown("Resolution")
-    ->setActiveItem(Utils::toStr((int) mCFG->graphics.res.x) + "x" +
-                    Utils::toStr((int) mCFG->graphics.res.y));
+    ->setActiveItem(std::to_string((int) mCFG->graphics.res.x) + "x" +
+                    std::to_string((int) mCFG->graphics.res.y));
   gr->dropdown("Monitor")->setActiveItemIndex(mCFG->graphics.monitor + 1);
   gr->dropdown("Vsync")->setActiveItem(mCFG->getProp("Graphics.vsync"));
   gr->dropdown("DisplayMode")
@@ -197,13 +197,13 @@ void OptionsMenu::setDefaultOptions() {
     ->setActiveItem(mCFG->getProp("Graphics.view_distance"));
 
   ga->dropdown("CamRotSpeed")
-    ->setActiveItem(Utils::toStr((int) mCFG->camera.rotSpeed));
+    ->setActiveItem(std::to_string((int) mCFG->camera.rotSpeed));
   ga->dropdown("CamRotInvH")
     ->setActiveItem(mCFG->getProp("Camera.rotation_inverse_horizontal"));
   ga->dropdown("CamRotInvV")
     ->setActiveItem(mCFG->getProp("Camera.rotation_inverse_vertical"));
   ga->dropdown("CamZoomSpeed")
-    ->setActiveItem(Utils::toStr((int) mCFG->camera.zoomSpeed));
+    ->setActiveItem(std::to_string((int) mCFG->camera.zoomSpeed));
   ga->dropdown("CamZoomInv")
     ->setActiveItem(mCFG->getProp("Camera.zoom_inverse"));
 
@@ -215,7 +215,7 @@ void OptionsMenu::setDefaultOptions() {
   int index  = 0;
 
   for (unsigned int i = 0; i < kb->inputboxes().size(); i++) {
-    kb->inputboxes()["Input" + Utils::toStr(i)]
+    kb->inputboxes()["Input" + std::to_string(i)]
       ->changeText(mInput->getActionKeysToString(action)[index], true);
     index = (index == 1) ? 0 : 1;
     action += (index == 0) ? 1 : 0;
@@ -243,9 +243,9 @@ void OptionsMenu::parseGameOptions() {
 
   mCFG->setProp("Camera.rotation_speed", { opts["CamRotSpeed"] });
   mCFG->setProp("Camera.rotation_inverse",
-                { Utils::toLower(opts["CamRotInv"]) });
+                { str::toLower(opts["CamRotInv"]) });
   mCFG->setProp("Camera.zoom_speed", { opts["CamZoomSpeed"] });
-  mCFG->setProp("Camera.zoom_inverse", { Utils::toLower(opts["CamZoomInv"]) });
+  mCFG->setProp("Camera.zoom_inverse", { str::toLower(opts["CamZoomInv"]) });
 }
 
 void OptionsMenu::parseAudioOptions() {
@@ -273,11 +273,11 @@ void OptionsMenu::parseKeybindingOptions() {
 
   std::vector<std::string> actions = mInput->getActionsString();
   for (unsigned int i = 0; i < actions.size(); i++) {
-    std::string s = Utils::toLower(actions[i]);
+    std::string s = str::toLower(actions[i]);
     std::replace(s.begin(), s.end(), ' ', '_');
     mCFG->setProp("Bindings." + s,
-                  { keybinds["Input" + Utils::toStr(i * 2)],
-                    keybinds["Input" + Utils::toStr(i * 2 + 1)] });
+                  { keybinds["Input" + std::to_string(i * 2)],
+                    keybinds["Input" + std::to_string(i * 2 + 1)] });
   }
   mInput->initialize();
 }
@@ -301,19 +301,19 @@ int OptionsMenu::parseGraphicsOptions() {
                 { opts["Resolution"].substr(0, index) });
   mCFG->setProp("Graphics.resolution.y",
                 { opts["Resolution"].substr(index + 1) });
-  mCFG->setProp("Graphics.antialiasing", { Utils::toLower(opts["Aliasing"]) });
+  mCFG->setProp("Graphics.antialiasing", { str::toLower(opts["Aliasing"]) });
   mCFG->setProp("Graphics.anisotropicfiltering",
-                { Utils::toLower(opts["Aniso"]) });
+                { str::toLower(opts["Aniso"]) });
   mCFG->setProp("Graphics.shadow_samples",
-                { Utils::toLower(opts["ShadowSamples"]) });
-  mCFG->setProp("Graphics.vsync", { Utils::toLower(opts["Vsync"]) });
-  mCFG->setProp("Graphics.windowmode", { Utils::toLower(opts["DisplayMode"]) });
+                { str::toLower(opts["ShadowSamples"]) });
+  mCFG->setProp("Graphics.vsync", { str::toLower(opts["Vsync"]) });
+  mCFG->setProp("Graphics.windowmode", { str::toLower(opts["DisplayMode"]) });
   mCFG->setProp("Graphics.view_distance",
-                { Utils::toLower(opts["ViewDistance"]) });
+                { str::toLower(opts["ViewDistance"]) });
   mCFG->graphics.monitor =
     window("Graphics")->dropdown("Monitor")->activeItemIndex() - 1;
   mCFG->setProp("Graphics.shadow_resolution",
-                { Utils::toLower(opts["ShadowRes"]) });
+                { str::toLower(opts["ShadowRes"]) });
 
   bool shouldRefresh = g->dropdown("Aliasing")->hasChanged() ||
                        g->dropdown("DisplayMode")->hasChanged();

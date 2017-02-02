@@ -123,10 +123,3 @@ void tlog(Ts... xs) {
     _utils_detail::log(xs...);
   }
 }
-
-template <typename N>
-std::string Utils::toStr(N n) {
-  std::ostringstream buff;
-  buff << n;
-  return buff.str();
-}
