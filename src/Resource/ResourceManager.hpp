@@ -5,8 +5,8 @@
 #include <string>
 #include <type_traits>
 
-#include "Resource.hpp"
 #include "../Utils/Utils.hpp"
+#include "Resource.hpp"
 
 class Texture;
 

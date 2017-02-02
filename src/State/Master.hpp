@@ -29,7 +29,7 @@ private:
   void draw3D();
   void drawGUI();
 
-  Camera* mCamera;
+  Camera*      mCamera;
   Framebuffer* mShadowmap;
   World*       mWorld;
   /* Input::Input* mInput; */

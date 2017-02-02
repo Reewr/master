@@ -1,7 +1,7 @@
 #include "Window.hpp"
 
-#include <tinyxml2.h>
 #include <algorithm>
+#include <tinyxml2.h>
 
 #include "Checkbox.hpp"
 #include "Dropdown.hpp"

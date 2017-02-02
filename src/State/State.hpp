@@ -43,5 +43,5 @@ protected:
   float mDeltaTime;
 
   std::vector<Drawable3D*> mDrawable3D;
-  std::vector<GUI*>      mGUIElements;
+  std::vector<GUI*>        mGUIElements;
 };

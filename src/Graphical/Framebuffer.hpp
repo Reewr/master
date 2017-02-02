@@ -1,8 +1,8 @@
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
-#include <memory>
 
 #include "../OpenGLHeaders.hpp"
 
@@ -63,7 +63,7 @@ public:
   void doQuad(GLRectangle*                 inQuad,
               const std::vector<Texture*>& t,
               unsigned int                 tStart = 0);
-  void doQuad(std::shared_ptr<Program>    p,
+  void doQuad(std::shared_ptr<Program>     p,
               const std::vector<Texture*>& t,
               unsigned int                 tStart = 0);
   void doQuad(const std::vector<Texture*>& t, unsigned int tStart = 0);
@@ -75,7 +75,7 @@ public:
   void nonClearQuad(GLRectangle*                 inQuad,
                     const std::vector<Texture*>& t,
                     unsigned int                 tStart = 0);
-  void nonClearQuad(std::shared_ptr<Program>    p,
+  void nonClearQuad(std::shared_ptr<Program>     p,
                     const std::vector<Texture*>& t,
                     unsigned int                 tStart = 0);
   void nonClearQuad(const std::vector<Texture*>& t, unsigned int tStart = 0);
@@ -127,10 +127,10 @@ private:
 
   mmm::vec2 mFrameSize;
 
-  GLRectangle* mQuad;
+  GLRectangle*             mQuad;
   std::shared_ptr<Program> mProgram;
-  Texture*     mTexture;
-  GLuint       mFrameBuffer;
+  Texture*                 mTexture;
+  GLuint                   mFrameBuffer;
 
   static int         numSS;
   static std::string ssLoc;

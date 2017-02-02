@@ -108,7 +108,7 @@ bool Shader::checkShader(const GLuint id, const std::string& filename) {
   // throw error if it cant compile
   if (isCompiled == GL_FALSE) {
     std::vector<GLchar> infoLog(maxLength);
-    std::string s = filename + ": ";
+    std::string         s = filename + ": ";
 
     glGetShaderInfoLog(id, maxLength, &maxLength, &infoLog[0]);
     glDeleteShader(id);
@@ -129,7 +129,7 @@ bool Shader::checkShader(const GLuint id, const std::string& filename) {
   // if there some information
   if (maxLength > 1) {
     std::vector<GLchar> infoLog(maxLength);
-    std::string s = "";
+    std::string         s = "";
 
     glGetShaderInfoLog(id, maxLength, &maxLength, &infoLog[0]);
 

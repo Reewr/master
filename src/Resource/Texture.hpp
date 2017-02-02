@@ -1,8 +1,8 @@
 #pragma once
 
 #include <map>
-#include <string>
 #include <mmm.hpp>
+#include <string>
 
 #include "../OpenGLHeaders.hpp"
 #include "Resource.hpp"

@@ -13,9 +13,9 @@ using mmm::vec2;
 using mmm::vec3;
 
 Cube::Cube() {
-  mCube    = new GLCube(vec2(256, 256));
-  mShape   = new btBoxShape(btVector3(0.5, 0.5, 0.5));
-  mMotion  = new btDefaultMotionState(
+  mCube   = new GLCube(vec2(256, 256));
+  mShape  = new btBoxShape(btVector3(0.5, 0.5, 0.5));
+  mMotion = new btDefaultMotionState(
     btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 20, 0)));
 
   btScalar  mass = 1000;
@@ -25,10 +25,10 @@ Cube::Cube() {
                                                     mMotion,
                                                     mShape,
                                                     fallInertia);
-  mBody     = new btRigidBody(consInfo);
-  mTexture  = mAsset->rManager()->get<Texture>("Texture::Cube");
-  mProgram  = mAsset->rManager()->get<Program>("Program::Model");
-  mScale    = mmm::scale(1.0f, 1.0f, 1.0f);
+  mBody    = new btRigidBody(consInfo);
+  mTexture = mAsset->rManager()->get<Texture>("Texture::Cube");
+  mProgram = mAsset->rManager()->get<Program>("Program::Model");
+  mScale   = mmm::scale(1.0f, 1.0f, 1.0f);
 }
 
 Cube::~Cube() {

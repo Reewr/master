@@ -117,7 +117,7 @@ void Camera::setLightMVPUniforms(std::shared_ptr<Program> program,
  * @param name
  */
 void Camera::setLightVPUniforms(std::shared_ptr<Program> program,
-                               const std::string&       name) {
+                                const std::string&       name) {
   program->setUniform(name + ".view", mLight.view);
   program->setUniform(name + ".proj", mLight.projection);
 }
@@ -221,7 +221,7 @@ void Camera::input(float dt) {
   std::vector<int> actions = input->getPressedActions();
 
   // handle all the inputs that have been pressed
-  for(auto a : actions) {
+  for (auto a : actions) {
     if (a == Input::Action::MoveUp)
       mTarget += forward;
     else if (a == Input::Action::MoveDown)

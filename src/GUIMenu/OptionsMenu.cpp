@@ -8,9 +8,9 @@
 #include "../GUI/Dropdown.hpp"
 #include "../GUI/Inputbox.hpp"
 #include "../GUI/Slider.hpp"
+#include "../Import/UILoader.hpp"
 #include "../Input/Event.hpp"
 #include "../Input/Input.hpp"
-#include "../Import/UILoader.hpp"
 #include "../Resource/ResourceManager.hpp"
 #include "../Resource/Texture.hpp"
 #include "../Shape/GL/Rectangle.hpp"
@@ -244,8 +244,7 @@ void OptionsMenu::parseGameOptions() {
     opts[d.first] = d.second->activeItemText();
 
   mCFG->setProp("Camera.rotation_speed", { opts["CamRotSpeed"] });
-  mCFG->setProp("Camera.rotation_inverse",
-                { str::toLower(opts["CamRotInv"]) });
+  mCFG->setProp("Camera.rotation_inverse", { str::toLower(opts["CamRotInv"]) });
   mCFG->setProp("Camera.zoom_speed", { opts["CamZoomSpeed"] });
   mCFG->setProp("Camera.zoom_inverse", { str::toLower(opts["CamZoomInv"]) });
 }

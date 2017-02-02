@@ -2,31 +2,31 @@
 
 #include "../OpenGLHeaders.hpp"
 
-#include "../Drawable/Drawable3D.hpp"
-#include "../Resource/Texture.hpp"
-#include "../Resource/ResourceManager.hpp"
+#include "../3D/Camera.hpp"
+#include "../3D/Cube.hpp"
+#include "../3D/Terrain.hpp"
+#include "../3D/World.hpp"
 #include "../Console/Console.hpp"
-#include "../Input/Event.hpp"
-#include "../Input/Input.hpp"
-#include "../Utils/Asset.hpp"
-#include "../Utils/Utils.hpp"
-#include "../Utils/CFG.hpp"
+#include "../Console/Console.hpp"
+#include "../Drawable/Drawable3D.hpp"
 #include "../GLSL/Program.hpp"
 #include "../Graphical/Framebuffer.hpp"
-#include "../3D/Camera.hpp"
-#include "../3D/Terrain.hpp"
-#include "../3D/Cube.hpp"
-#include "../3D/World.hpp"
+#include "../Input/Event.hpp"
+#include "../Input/Input.hpp"
 #include "../Lua/Lua.hpp"
-#include "../Console/Console.hpp"
+#include "../Resource/ResourceManager.hpp"
+#include "../Resource/Texture.hpp"
+#include "../Utils/Asset.hpp"
+#include "../Utils/CFG.hpp"
+#include "../Utils/Utils.hpp"
 
 using mmm::vec2;
 using mmm::vec3;
 
 Master::Master(Asset* a) {
-  CFG* c         = a->cfg();
-  vec2 shadowRes = vec2(c->graphics.shadowRes, c->graphics.shadowRes);
-  Console* con   = new Console(a);
+  CFG*     c         = a->cfg();
+  vec2     shadowRes = vec2(c->graphics.shadowRes, c->graphics.shadowRes);
+  Console* con       = new Console(a);
 
   a->rManager()->unloadUnnecessary(ResourceScope::Master);
   a->rManager()->loadRequired(ResourceScope::Master);
@@ -37,7 +37,7 @@ Master::Master(Asset* a) {
                                shadowRes,
                                true);
 
-  mDrawable3D = { new Terrain(), new Cube()};
+  mDrawable3D  = { new Terrain(), new Cube() };
   mGUIElements = { con };
 
   a->lua()->add(con);
@@ -58,10 +58,10 @@ Master::~Master() {
   delete mShadowmap;
   delete mWorld;
 
-  for(auto d : mDrawable3D)
+  for (auto d : mDrawable3D)
     delete d;
 
-  for(auto g : mGUIElements)
+  for (auto g : mGUIElements)
     delete g;
 
   mDrawable3D.clear();

@@ -260,7 +260,7 @@ void Framebuffer::finalize() {
 }
 
 void Framebuffer::doQuad(GLRectangle*                 inQuad,
-                         std::shared_ptr<Program>                     program,
+                         std::shared_ptr<Program>     program,
                          const std::vector<Texture*>& t,
                          unsigned int                 textureStart) {
   bind(program);
@@ -455,8 +455,8 @@ void Framebuffer::takeScreenshot() {
   vec2 res = cfg->graphics.res;
 
   std::string filename = "";
-  std::string endStr   = std::to_string((int) res.x) + "x" +
-                         std::to_string((int) res.y) + ".tga";
+  std::string endStr =
+    std::to_string((int) res.x) + "x" + std::to_string((int) res.y) + ".tga";
 
   // find a filename that isn't already taken
   do {

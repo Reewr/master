@@ -1,6 +1,6 @@
 #include "str.hpp"
-#include <map>
 #include <algorithm>
+#include <map>
 
 static std::map<unsigned int, std::string> utf8Characters = {};
 
