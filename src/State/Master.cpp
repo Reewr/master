@@ -20,6 +20,8 @@
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
 
+#include <random>
+
 using mmm::vec2;
 using mmm::vec3;
 
@@ -45,9 +47,18 @@ Master::Master(Asset* a) {
   for (auto d : mDrawable3D)
     mWorld->addObject(d);
 
+
   a->lua()->engine.set_function("addCubes", [&](int i) {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<> dis(1, 5);
     for (int j = 0; j <= i; ++j) {
-      mDrawable3D.push_back(new Cube());
+      vec3 size = vec3(
+          mmm::max(dis(gen), 0.0001f),
+          mmm::max(dis(gen), 0.0001f),
+          mmm::max(dis(gen), 0.0001f));
+      log("Creating cube with: ", size, "");
+      mDrawable3D.push_back(new Cube(size));
       mWorld->addObject(mDrawable3D.back());
     }
   });
