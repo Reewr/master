@@ -152,6 +152,8 @@ bool OptionsMenu::handleOptionsAction(const Input::Event& event) {
       int stateChange = parseOptionstoCFG();
       if (stateChange != 0)
         event.sendStateChange(stateChange);
+      else
+        event.sendStateChange(States::OptionsMenuClose);
       return true;
     }
     case 6:
