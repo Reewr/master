@@ -231,6 +231,7 @@ bool Engine::initOpenGLBindings() {
  */
 bool Engine::initWindow() {
   CFG* cfg = mAsset->cfg();
+  bool isFullscreen = cfg->graphics.winMode == 1;
 
   // Set version we want
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -244,10 +245,10 @@ bool Engine::initWindow() {
 
   // No resizing, because of the resolutions in settings
   glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+  glfwWindowHint(GLFW_FLOATING, isFullscreen ? GL_FALSE : GL_TRUE);
 
   // If window mode, do decorated
-  glfwWindowHint(GLFW_DECORATED,
-                 cfg->graphics.winMode == 1 ? GL_FALSE : GL_TRUE);
+  glfwWindowHint(GLFW_DECORATED, isFullscreen ? GL_FALSE : GL_TRUE);
 
   // get monitor, may be null, but thats okay since glfw supports it
   GLFWmonitor* monitor = getMonitor();
