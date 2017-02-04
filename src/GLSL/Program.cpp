@@ -54,12 +54,12 @@ bool Program::createProgram(const std::string& fsvs, bool link) {
 }
 
 bool Program::load() {
-  log("Loading Program :: ", mFilename);
+  log("Program :: Loading", mFilename);
   return createProgram(mFilename, true);
 }
 
 void Program::unload() {
-  log("Unloading Program :: ", mFilename);
+  log("Program :: Unloading ", mFilename);
   if (program != 0) {
     if (activeProgram == program)
       activeProgram = 0;

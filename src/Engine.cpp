@@ -174,11 +174,12 @@ bool Engine::initialize(int argc, char* argv[], int isRefresh, int initState) {
   /* Model::init(&asset->cfg); */
   Framebuffer::init(mAsset->cfg());
 
+  log("Engine :: Initialized successfully...");
+
   if (isRefresh == States::Init) {
     changeState(initState);
   }
 
-  log("Engine: Initialized successfully...");
   return true;
 }
 
@@ -197,7 +198,7 @@ bool Engine::initGLFW() {
     return false;
   }
 
-  log("Engine: GLFW started successfully");
+  log("Engine :: GLFW started successfully");
   return true;
 }
 
@@ -218,7 +219,7 @@ bool Engine::initOpenGLBindings() {
   if (!Utils::getGLError())
     return false;
 
-  log("Engine: OGL initialized successfully...");
+  log("Engine :: OGL initialized successfully...");
   return true;
 }
 
@@ -270,7 +271,7 @@ bool Engine::initWindow() {
   // Set vsync if set by config
   glfwSwapInterval((cfg->graphics.vsync) ? 1 : 0);
 
-  log("Engine: GLFW Window settings initalized successfully...");
+  log("Engine :: GLFW Window settings initalized successfully...");
   return true;
 }
 
@@ -520,6 +521,6 @@ void Engine::changeState(int newState) {
  *   main loop and therefore stops the program
  */
 void Engine::closeWindow() {
-  log("Now closing GLFW window..");
+  log("Engine :: Now closing GLFW window..");
   glfwSetWindowShouldClose(mWindow, GL_TRUE);
 }

@@ -172,7 +172,7 @@ int CFG::get_num_params(const Prop& p) {
 
 void CFG::assimilate(const std::string& filepath) {
 
-  log("cfg: assimilating '", filepath, "'");
+  log("CFG :: assimilating '", filepath, "'");
 
   // spaghetti mode enabled!
 
@@ -241,7 +241,7 @@ void CFG::assimilate(const std::string& filepath) {
 
 void CFG::assimilate(int argc, char* argv[]) {
   if (argc > 1)
-    log("cfg: assimilating launch parameters");
+    log("CFG :: assimilating launch parameters");
 
   int i = 1;
 
@@ -268,14 +268,14 @@ bool CFG::writetoFile(std::string filename) {
   std::ofstream file(filename);
   if (file.is_open()) {
     file << *this;
-    log("cfg: writing to '", filename, "'");
+    log("CFG :: writing to '", filename, "'");
   } else {
     file.open(filename,
               std::ios_base::in | std::ios_base::out | std::ios_base::trunc);
-    log("cfg: creating '", filename, "'");
+    log("CFG :: creating '", filename, "'");
     if (file.is_open()) {
       file << *this;
-      log("cfg: writing to '", filename, "'");
+      log("CFG :: writing to '", filename, "'");
     } else {
       error("Could not create file");
       return false;

@@ -13,7 +13,7 @@ GLuint Texture::activeTexture = 0;
 Texture::Texture() : mMode(0), mTextureId(0), mSamplerId(0), mSize(0, 0) {}
 
 void Texture::unload() {
-  log("Unloading Texture :: ", mFilename);
+  log("Texture :: Unloading ", mFilename);
 
   if (activeTexture == mTextureId)
     activeTexture = 0;
@@ -79,7 +79,7 @@ GLuint Texture::generateGLTexture() {
 }
 
 bool Texture::load() {
-  log("Loading Texture :: ", mFilename);
+  log("Texture :: Loading ", mFilename);
   if (mTextureId != 0)
     return true;
 
