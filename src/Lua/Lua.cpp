@@ -382,14 +382,18 @@ namespace Lua {
    *   For example, given a variable `MyTable:MySubTable:MySubSubTable`, it
    *   will return the variables that are available to `MySubSubTable`
    *
-   * @param t
-   * @param name
+   * @param table the table to inspect
+   * @param name the scope name
+   * @param divider
+   *   defaults to ":", but can be overriden to also
+   *   work on normal tables with "."
    *
    * @return
    */
   std::vector<Typenames> Lua::getScope(sol::table&        table,
-                                       const std::string& name) {
-    size_t                 pos   = name.find_first_of(":");
+                                       const std::string& name,
+                                       const std::string& divider) {
+    size_t                 pos   = name.find_first_of(divider);
     std::vector<Typenames> types = {};
 
     if (pos == std::string::npos) {
@@ -417,8 +421,11 @@ namespace Lua {
         return getScope(meta, rest);
       }
       case sol::type::table: {
+        if (divider.find(".") == std::string::npos)
+          return {};
+
         sol::table t = obj;
-        return getScope(t, rest);
+        return getScope(t, rest, ".");
       }
       default:
         types.push_back({ scopeName, solTypetoStr(obj.get_type()) });
@@ -440,6 +447,6 @@ namespace Lua {
    */
   std::vector<Typenames> Lua::getTypenames(const std::string name) {
     sol::table t = engine.globals();
-    return getScope(t, name);
+    return getScope(t, name, ":.");
   }
 }

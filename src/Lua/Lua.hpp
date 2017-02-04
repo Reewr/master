@@ -71,7 +71,9 @@ namespace Lua {
                                     sol::basic_object<sol::reference>>& a);
 
     // Checks the scope, this function will work recurisvely.
-    std::vector<Typenames> getScope(sol::table& t, const std::string& name);
+    std::vector<Typenames> getScope(sol::table& t,
+                                    const std::string& name,
+                                    const std::string& divider=":");
     // Function used by both getTypenames and getScope to see if they should
     // ignore a variable based on what the name contains / does not contain
     bool shouldIncludeType(const std::string& name, const std::string& search);
