@@ -410,7 +410,6 @@ namespace Lua {
 
     std::string scopeName = name.substr(0, pos);
     std::string rest      = name.substr(pos + 1);
-    log("ScopeName: ", scopeName, ", rest: ", rest);
 
     sol::object obj = table[scopeName];
 
