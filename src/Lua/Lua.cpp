@@ -11,6 +11,32 @@
 
 /**
  * @brief
+ *   Checks if flat b exists in a
+ *
+ * @param a
+ * @param b
+ *
+ * @return
+ */
+bool hasFlag(Lua::Lib::Native a, Lua::Lib::Native b) {
+  return int(a & b) != 0;
+}
+
+/**
+ * @brief
+ *   Checks if flat b exists in a
+ *
+ * @param a
+ * @param b
+ *
+ * @return
+ */
+bool hasFlag(Lua::Lib::Engine a, Lua::Lib::Engine b) {
+  return int(a & b) != 0;
+}
+
+/**
+ * @brief
  *   Compare two Typenames structures, returning
  *   a result so that they are sorted alphabetically.
  *
@@ -89,9 +115,198 @@ namespace Lua {
    *   Initializes the Lua class, creating the Lua State and exporting
    *   several C++ objects to Lua.
    */
-  Lua::Lua(CFG* c) : mConsole(nullptr), mCFG(c) { reInitialize(); }
+  Lua::Lua(CFG* c, Lib::Native n, Lib::Engine e)
+      : mConsole(nullptr), mCFG(c), mNativeLibraries(n), mEngineLibraries(e) {
+    reInitialize();
+  }
 
   Lua::~Lua() {}
+
+  /**
+   * @brief
+   *   Loads all the libraries that have been specified in
+   *   the bitcode sent to the function
+   *
+   * @param nativeLib
+   */
+  void Lua::openLibraries(Lib::Native nativeLib) {
+    if (hasFlag(nativeLib, Lib::Native::Base))
+      engine.open_libraries(sol::lib::base);
+
+    if (hasFlag(nativeLib, Lib::Native::Package))
+      engine.open_libraries(sol::lib::package);
+
+    if (hasFlag(nativeLib, Lib::Native::Coroutine))
+      engine.open_libraries(sol::lib::coroutine);
+
+    if (hasFlag(nativeLib, Lib::Native::String))
+      engine.open_libraries(sol::lib::string);
+
+    if (hasFlag(nativeLib, Lib::Native::OS))
+      engine.open_libraries(sol::lib::os);
+
+    if (hasFlag(nativeLib, Lib::Native::Math))
+      engine.open_libraries(sol::lib::math);
+
+    if (hasFlag(nativeLib, Lib::Native::Table))
+      engine.open_libraries(sol::lib::table);
+
+    if (hasFlag(nativeLib, Lib::Native::Debug))
+      engine.open_libraries(sol::lib::debug);
+
+    if (hasFlag(nativeLib, Lib::Native::Bit32))
+      engine.open_libraries(sol::lib::bit32);
+
+    if (hasFlag(nativeLib, Lib::Native::IO))
+      engine.open_libraries(sol::lib::io);
+
+    if (hasFlag(nativeLib, Lib::Native::FFI))
+      engine.open_libraries(sol::lib::ffi);
+
+    if (hasFlag(nativeLib, Lib::Native::JIT))
+      engine.open_libraries(sol::lib::jit);
+
+    if (hasFlag(nativeLib, Lib::Native::UTF8))
+      engine.open_libraries(sol::lib::utf8);
+
+    if (hasFlag(nativeLib, Lib::Native::Count))
+      engine.open_libraries(sol::lib::count);
+  }
+  /**
+   * @brief
+   *   Loads all the libraries that have been specified in
+   *   the bitcode sent to the function
+   *
+   * @param nativeLib
+   */
+  void Lua::openLibraries(Lib::Engine enginelib) {
+    if (hasFlag(Lib::Engine::Console, enginelib)) {
+      engine.require("Console",
+                     sol::c_call<decltype(&LuaLib::openConsole),
+                                 &LuaLib::openConsole>,
+                     false);
+    }
+
+    if (hasFlag(Lib::Engine::Math, enginelib)) {
+      engine.require("Math",
+                     sol::c_call<decltype(&LuaLib::Math::openMath),
+                                 &LuaLib::Math::openMath>,
+                     false);
+      engine.require("Math.vec2",
+                     sol::c_call<decltype(&LuaLib::Math::openVec2),
+                                 &LuaLib::Math::openVec2>,
+                     false);
+    }
+
+    if (hasFlag(Lib::Engine::Shape, enginelib)) {
+      engine.require("Shape",
+                     sol::c_call<decltype(&LuaLib::Shape::openShape),
+                                 &LuaLib::Shape::openShape>,
+                     false);
+      engine.require("Shape.Rectangle",
+                     sol::c_call<decltype(&LuaLib::Shape::openRectangle),
+                                 &LuaLib::Shape::openRectangle>,
+                     false);
+    }
+
+    if (hasFlag(Lib::Engine::GUI, enginelib)) {
+      engine.require("GUI",
+                     sol::c_call<decltype(&LuaLib::GUI::openGUI),
+                                 &LuaLib::GUI::openGUI>,
+                     false);
+
+      engine.require("GUI.Dropdown",
+                     sol::c_call<decltype(&LuaLib::GUI::openDropdown),
+                                 &LuaLib::GUI::openDropdown>,
+                     false);
+
+      engine.require("GUI.Text",
+                     sol::c_call<decltype(&LuaLib::GUI::openText),
+                                 &LuaLib::GUI::openText>,
+                     false);
+
+      engine.require("GUI.Menu",
+                     sol::c_call<decltype(&LuaLib::GUI::openMenu),
+                                 &LuaLib::GUI::openMenu>,
+                     false);
+
+      engine.require("GUI.Menu.Settings",
+                     sol::c_call<decltype(&LuaLib::GUI::openMenuSettings),
+                                 &LuaLib::GUI::openMenuSettings>,
+                     false);
+
+      engine.require("GUI.Menu.Orientation",
+                     sol::c_call<decltype(&LuaLib::GUI::openMenuOrientation),
+                                 &LuaLib::GUI::openMenuOrientation>,
+                     false);
+
+      engine.require("GUI.Text.Color",
+                     sol::c_call<decltype(&LuaLib::GUI::openTextColor),
+                                 &LuaLib::GUI::openTextColor>,
+                     false);
+
+      engine.require("GUI.Text.Style",
+                     sol::c_call<decltype(&LuaLib::GUI::openTextStyle),
+                                 &LuaLib::GUI::openTextStyle>,
+                     false);
+
+      engine.require("GUI.Inputbox",
+                     sol::c_call<decltype(&LuaLib::GUI::openInputbox),
+                                 &LuaLib::GUI::openInputbox>,
+                     false);
+
+
+      engine.require("GUI.Slider",
+                     sol::c_call<decltype(&LuaLib::GUI::openSlider),
+                                 &LuaLib::GUI::openSlider>,
+                     false);
+
+      engine.require("GUI.Window",
+                     sol::c_call<decltype(&LuaLib::GUI::openWindow),
+                                 &LuaLib::GUI::openWindow>,
+                     false);
+    }
+
+    if (hasFlag(Lib::Engine::Input, enginelib)) {
+      engine.require("Input",
+                     sol::c_call<decltype(&LuaLib::Input::openInput),
+                                 &LuaLib::Input::openInput>,
+                     false);
+      engine.require("Input.Event",
+                     sol::c_call<decltype(&LuaLib::Input::openEvent),
+                                 &LuaLib::Input::openEvent>,
+                     false);
+
+      engine.require("Input.Event.Type",
+                     sol::c_call<decltype(&LuaLib::Input::openEventType),
+                                 &LuaLib::Input::openEventType>,
+                     false);
+    }
+
+    if (hasFlag(Lib::Engine::CFG, enginelib)) {
+      engine.require("CFG",
+                     sol::c_call<decltype(&LuaLib::openCFG), &LuaLib::openCFG>,
+                     false);
+    }
+
+    if (hasFlag(Lib::Engine::State, enginelib)) {
+      engine.require("State",
+                     sol::c_call<decltype(&LuaLib::State::openState),
+                                 &LuaLib::State::openState>,
+                     false);
+      engine.require("State.Type",
+                     sol::c_call<decltype(&LuaLib::State::openStateTypes),
+                                 &LuaLib::State::openStateTypes>,
+                     false);
+    }
+
+    if (hasFlag(Lib::Engine::Util, enginelib)) {
+      engine.require("Util",
+                     sol::c_call<decltype(&LuaLib::Util::openUtil),
+                                 &LuaLib::Util::openUtil>,
+                     false);
+    }
+  }
 
   /**
    * @brief
@@ -103,133 +318,14 @@ namespace Lua {
    */
   void Lua::reInitialize() {
     engine = sol::state();
-    engine.open_libraries(sol::lib::base, sol::lib::table, sol::lib::package);
-    engine.require("Console",
-                   sol::c_call<decltype(&LuaLib::openConsole),
-                               &LuaLib::openConsole>,
-                   false);
 
-    engine.require("Math",
-                   sol::c_call<decltype(&LuaLib::Math::openMath),
-                               &LuaLib::Math::openMath>,
-                   false);
-    // Load math
-    engine.require("Math.vec2",
-                   sol::c_call<decltype(&LuaLib::Math::openVec2),
-                               &LuaLib::Math::openVec2>,
-                   false);
-
-    // Shapes
-    engine.require("Shape",
-                   sol::c_call<decltype(&LuaLib::Shape::openShape),
-                               &LuaLib::Shape::openShape>,
-                   false);
-    engine.require("Shape.Rectangle",
-                   sol::c_call<decltype(&LuaLib::Shape::openRectangle),
-                               &LuaLib::Shape::openRectangle>,
-                   false);
-
-    // Load GUI
-    engine.require("GUI",
-                   sol::c_call<decltype(&LuaLib::GUI::openGUI),
-                               &LuaLib::GUI::openGUI>,
-                   false);
-
-    engine.require("GUI.Dropdown",
-                   sol::c_call<decltype(&LuaLib::GUI::openDropdown),
-                               &LuaLib::GUI::openDropdown>,
-                   false);
-
-    engine.require("GUI.Text",
-                   sol::c_call<decltype(&LuaLib::GUI::openText),
-                               &LuaLib::GUI::openText>,
-                   false);
-
-    engine.require("GUI.Menu",
-                   sol::c_call<decltype(&LuaLib::GUI::openMenu),
-                               &LuaLib::GUI::openMenu>,
-                   false);
-
-    engine.require("GUI.Menu.Settings",
-                   sol::c_call<decltype(&LuaLib::GUI::openMenuSettings),
-                               &LuaLib::GUI::openMenuSettings>,
-                   false);
-
-    engine.require("GUI.Menu.Orientation",
-                   sol::c_call<decltype(&LuaLib::GUI::openMenuOrientation),
-                               &LuaLib::GUI::openMenuOrientation>,
-                   false);
-
-    engine.require("GUI.Text.Color",
-                   sol::c_call<decltype(&LuaLib::GUI::openTextColor),
-                               &LuaLib::GUI::openTextColor>,
-                   false);
-
-    engine.require("GUI.Text.Style",
-                   sol::c_call<decltype(&LuaLib::GUI::openTextStyle),
-                               &LuaLib::GUI::openTextStyle>,
-                   false);
-
-    engine.require("GUI.Inputbox",
-                   sol::c_call<decltype(&LuaLib::GUI::openInputbox),
-                               &LuaLib::GUI::openInputbox>,
-                   false);
-
-
-    engine.require("GUI.Slider",
-                   sol::c_call<decltype(&LuaLib::GUI::openSlider),
-                               &LuaLib::GUI::openSlider>,
-                   false);
-
-    engine.require("GUI.Window",
-                   sol::c_call<decltype(&LuaLib::GUI::openWindow),
-                               &LuaLib::GUI::openWindow>,
-                   false);
-
-    // Load event
-    engine.require("Input",
-                   sol::c_call<decltype(&LuaLib::Input::openInput),
-                               &LuaLib::Input::openInput>,
-                   false);
-    engine.require("Input.Event",
-                   sol::c_call<decltype(&LuaLib::Input::openEvent),
-                               &LuaLib::Input::openEvent>,
-                   false);
-
-    engine.require("Input.Event.Type",
-                   sol::c_call<decltype(&LuaLib::Input::openEventType),
-                               &LuaLib::Input::openEventType>,
-                   false);
-    // Load CFG
-    engine.require("CFG",
-                   sol::c_call<decltype(&LuaLib::openCFG),
-                               &LuaLib::openCFG>,
-                   false);
-    // Load State
-    engine.require("State",
-                   sol::c_call<decltype(&LuaLib::State::openState),
-                               &LuaLib::State::openState>,
-                   false);
-    engine.require("State.Type",
-                   sol::c_call<decltype(&LuaLib::State::openStateTypes),
-                               &LuaLib::State::openStateTypes>,
-                   false);
-
-    engine.require("Util",
-                   sol::c_call<decltype(&LuaLib::Util::openUtil),
-                               &LuaLib::Util::openUtil>,
-                   false);
+    openLibraries(mNativeLibraries);
+    openLibraries(mEngineLibraries);
 
     std::string path          = engine["package"]["path"];
     std::string sep           = path.empty() ? "" : ";";
     engine["package"]["path"] = path + sep + "./lua/?.lua";
-
-    engine.create_named_table("lua");
-
     engine["cfg"] = mCFG;
-    engine["lua"]["loadFile"] = [&](const std::string& filename) {
-      loadFile(filename);
-    };
 
     if (mConsole != nullptr)
       add(mConsole);

@@ -30,18 +30,63 @@ namespace Lua {
     bool operator==(const Typenames& rhs) const;
   };
 
+  // This namespace describes the libraries that can
+  // be loaded with the Lua engine
+  namespace Lib {
+
+    // This enum describes the Lua native libraries
+    // that can loaded
+    enum class Native : int {
+      Base      = 0x01,
+      Package   = 0x02,
+      Coroutine = 0x04,
+      String    = 0x08,
+      OS        = 0x16,
+      Math      = 0x32,
+      Table     = 0x64,
+      Debug     = 0x128,
+      Bit32     = 0x256,
+      IO        = 0x512,
+      FFI       = 0x1024,
+      JIT       = 0x2048,
+      UTF8      = 0x4096,
+      Count     = 0x8192,
+      All       = 0x16384
+    };
+
+    // This enum describes the libraries made by
+    // this engine that can be loaded
+    enum class Engine : int {
+      Console = 0x01,
+      Math    = 0x02,
+      Shape   = 0x04,
+      GUI     = 0x08,
+      Input   = 0x16,
+      CFG     = 0x32,
+      State   = 0x064,
+      Util    = 0x128,
+      All     = 0x255
+    };
+  }
+
   class Lua {
   public:
     // Creates a Lua instance that holds the Lua State.
     // This allows you to load files that will have C++ object representations
     // in them
-    Lua(CFG* cfg);
+    Lua(CFG* cfg, Lib::Native n, Lib::Engine e);
     ~Lua();
 
     // TODO: Add removal functions
 
     //! Adds the console object to Lua, making it available to Lua runtime
     void add(Console* c);
+
+    // Loads one or more native libraries
+    void openLibraries(Lib::Native nativeLib);
+
+    // Loads one more more engine libraries
+    void openLibraries(Lib::Engine engine);
 
     //! Recreates the lua engine, adding the console and config
     //! objects and reruns the files that are loaded
@@ -81,5 +126,29 @@ namespace Lua {
     std::map<std::string, std::vector<EventHandler>> mHandlers;
     Console* mConsole;
     CFG*     mCFG;
+
+    Lib::Native mNativeLibraries;
+    Lib::Engine mEngineLibraries;
   };
+}
+
+// Overloading for the Lib so that bitwise operations work properly
+constexpr Lua::Lib::Native operator|(Lua::Lib::Native a, Lua::Lib::Native b) {
+  return static_cast<Lua::Lib::Native>(static_cast<int>(a) |
+                                       static_cast<int>(b));
+}
+
+constexpr Lua::Lib::Native operator&(Lua::Lib::Native a, Lua::Lib::Native b) {
+  return static_cast<Lua::Lib::Native>(static_cast<int>(a) &
+                                       static_cast<int>(b));
+}
+
+constexpr Lua::Lib::Engine operator|(Lua::Lib::Engine a, Lua::Lib::Engine b) {
+  return static_cast<Lua::Lib::Engine>(static_cast<int>(a) |
+                                       static_cast<int>(b));
+}
+
+constexpr Lua::Lib::Engine operator&(Lua::Lib::Engine a, Lua::Lib::Engine b) {
+  return static_cast<Lua::Lib::Engine>(static_cast<int>(a) &
+                                       static_cast<int>(b));
 }

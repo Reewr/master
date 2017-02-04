@@ -161,7 +161,10 @@ bool Engine::initialize(int argc, char* argv[], int isRefresh, int initState) {
 
   mInput = new Input::Input(mWindow, mCFG);
 
-  mLua = new Lua::Lua(mCFG);
+  mLua = new Lua::Lua(mCFG,
+                      Lua::Lib::Native::Package | Lua::Lib::Native::Base |
+                        Lua::Lib::Native::Table | Lua::Lib::Native::Math,
+                      Lua::Lib::Engine::All);
   mAsset->setInput(mInput);
   mAsset->setLua(mLua);
   mAsset->setResourceManager(mResourceManager);
