@@ -913,6 +913,24 @@ sol::table LuaLib::Shape::openRectangle(sol::this_state state) {
   return module;
 }
 
+/**
+ * @brief
+ *   Loads all the Shapes into one object that is returned
+ *   when Shape is required
+ *
+ * @param state
+ *
+ * @return
+ */
+sol::table LuaLib::Shape::openShape(sol::this_state state) {
+  sol::state_view lua(state);
+  sol::table      module = lua.create_table();
+
+  module["Rectangle"] = openRectangle(state);
+
+  return module;
+}
+
 sol::table LuaLib::State::openStateTypes(sol::this_state state) {
   sol::state_view lua(state);
   sol::table      module = lua.create_table();
