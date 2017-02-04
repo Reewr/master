@@ -69,5 +69,6 @@ namespace LuaLib {
 
   namespace State {
     sol::table openStateTypes(sol::this_state state);
+    sol::table openState(sol::this_state state);
   }
 }

@@ -949,6 +949,14 @@ sol::table LuaLib::Shape::openShape(sol::this_state state) {
   return module;
 }
 
+/**
+ * @brief
+ *   Loads the States enum class
+ *
+ * @param state
+ *
+ * @return
+ */
 sol::table LuaLib::State::openStateTypes(sol::this_state state) {
   sol::state_view lua(state);
   sol::table      module = lua.create_table();
@@ -967,6 +975,23 @@ sol::table LuaLib::State::openStateTypes(sol::this_state state) {
   module["WinRefresh"]       = States::WinRefresh;
   module["NoChange"]         = States::NoChange;
   module["LuaReload"]        = States::LuaReload;
+
+  return module;
+}
+
+/**
+ * @brief
+ *  Loads the entire State library
+ *
+ * @param state
+ *
+ * @return
+ */
+sol::table LuaLib::State::openState(sol::this_state state) {
+  sol::state_view lua(state);
+  sol::table      module = lua.create_table();
+
+  module["Type"] = openStateTypes(state);
 
   return module;
 }

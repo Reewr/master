@@ -202,6 +202,10 @@ namespace Lua {
                                &LuaLib::openCFG>,
                    false);
     // Load State
+    engine.require("State",
+                   sol::c_call<decltype(&LuaLib::State::openState),
+                               &LuaLib::State::openState>,
+                   false);
     engine.require("State.Type",
                    sol::c_call<decltype(&LuaLib::State::openStateTypes),
                                &LuaLib::State::openStateTypes>,
