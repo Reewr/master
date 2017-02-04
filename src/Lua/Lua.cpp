@@ -120,6 +120,10 @@ namespace Lua {
                    false);
 
     // Shapes
+    engine.require("Shape",
+                   sol::c_call<decltype(&LuaLib::Shape::openShape),
+                               &LuaLib::Shape::openShape>,
+                   false);
     engine.require("Shape.Rectangle",
                    sol::c_call<decltype(&LuaLib::Shape::openRectangle),
                                &LuaLib::Shape::openRectangle>,
