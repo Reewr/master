@@ -54,6 +54,7 @@ namespace LuaLib {
   namespace Input {
     sol::table openEvent(sol::this_state state);
     sol::table openEventType(sol::this_state state);
+    sol::table openInput(sol::this_state state);
   }
 
   namespace Math {

@@ -851,6 +851,24 @@ sol::table LuaLib::Input::openEvent(sol::this_state state) {
 
 /**
  * @brief
+ *   Loads the entire Input library when required. Currently,
+ *   this is only Event and its Type
+ *
+ * @param state
+ *
+ * @return
+ */
+sol::table LuaLib::Input::openInput(sol::this_state state) {
+  sol::state_view lua(state);
+  sol::table      module = lua.create_table();
+
+  module["Event"] = openEvent(state);
+
+  return module;
+}
+
+/**
+ * @brief
  *   Exposes the mmm::vec2 class to Lua
  *
  * @param state

@@ -183,12 +183,16 @@ namespace Lua {
                    false);
 
     // Load event
-    engine.require("Event",
+    engine.require("Input",
+                   sol::c_call<decltype(&LuaLib::Input::openInput),
+                               &LuaLib::Input::openInput>,
+                   false);
+    engine.require("Input.Event",
                    sol::c_call<decltype(&LuaLib::Input::openEvent),
                                &LuaLib::Input::openEvent>,
                    false);
 
-    engine.require("Event.Type",
+    engine.require("Input.Event.Type",
                    sol::c_call<decltype(&LuaLib::Input::openEventType),
                                &LuaLib::Input::openEventType>,
                    false);
