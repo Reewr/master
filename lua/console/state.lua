@@ -54,4 +54,22 @@ function state.windowRefresh()
   currentEvent:stopPropgation()
 end
 
+--[[
+
+  Reloads the Lua Engine by sending a state change
+  to the Engine.
+
+  If variables are defined by using the console and not
+  stored in a file, they will be erased.
+
+  This function is only available if `cfg.console.enabled` is true
+
+  @class function
+]]
+function state.luaReload()
+  console:log("Reloading LUA engine and files")
+  currentEvent:sendStateChange(StateType.LuaReload)
+  currentEvent:stopPropgation()
+end
+
 return state
