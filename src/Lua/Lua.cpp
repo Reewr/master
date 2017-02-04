@@ -5,22 +5,9 @@
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
 
-#include "Console/LConsole.hpp"
-#include "GUI/LDropdown.hpp"
-#include "GUI/LInputbox.hpp"
-#include "GUI/LMenu.hpp"
-#include "GUI/LSlider.hpp"
-#include "GUI/LText.hpp"
-#include "GUI/LWindow.hpp"
-#include "Input/LEvent.hpp"
-#include "LEngine.hpp"
-#include "Math/LMath.hpp"
-#include "Resource/LFont.hpp"
-#include "Shape/LRectangle.hpp"
-#include "State/LState.hpp"
-#include "Utils/LCFG.hpp"
-
 #include <sol.hpp>
+
+#include "LuaLib.hpp"
 
 /**
  * @brief
@@ -117,35 +104,100 @@ namespace Lua {
   void Lua::reInitialize() {
     engine = sol::state();
     engine.open_libraries(sol::lib::base, sol::lib::table, sol::lib::package);
+    engine.require("Console",
+                   sol::c_call<decltype(&LuaLib::openConsole),
+                               &LuaLib::openConsole>,
+                   false);
 
     // Load math
-    math_as_lua(engine);
-
-    // Load resources
-    font_as_lua(engine);
+    engine.require("Math.vec2",
+                   sol::c_call<decltype(&LuaLib::Math::openVec2),
+                               &LuaLib::Math::openVec2>,
+                   false);
 
     // Shapes
-    rectangle_as_lua(engine);
+    engine.require("Shape.Rectangle",
+                   sol::c_call<decltype(&LuaLib::Shape::openRectangle),
+                               &LuaLib::Shape::openRectangle>,
+                   false);
 
     // Load GUI
-    text_as_lua(engine);
-    menu_as_lua(engine);
-    dropdown_as_lua(engine);
-    slider_as_lua(engine);
-    inputbox_as_lua(engine);
-    window_as_lua(engine);
+    engine.require("GUI",
+                   sol::c_call<decltype(&LuaLib::GUI::openGUI),
+                               &LuaLib::GUI::openGUI>,
+                   false);
+
+    engine.require("GUI.Dropdown",
+                   sol::c_call<decltype(&LuaLib::GUI::openDropdown),
+                               &LuaLib::GUI::openDropdown>,
+                   false);
+
+    engine.require("GUI.Text",
+                   sol::c_call<decltype(&LuaLib::GUI::openText),
+                               &LuaLib::GUI::openText>,
+                   false);
+
+    engine.require("GUI.Menu",
+                   sol::c_call<decltype(&LuaLib::GUI::openMenu),
+                               &LuaLib::GUI::openMenu>,
+                   false);
+
+    engine.require("GUI.Menu.Settings",
+                   sol::c_call<decltype(&LuaLib::GUI::openMenuSettings),
+                               &LuaLib::GUI::openMenuSettings>,
+                   false);
+
+    engine.require("GUI.Menu.Orientation",
+                   sol::c_call<decltype(&LuaLib::GUI::openMenuOrientation),
+                               &LuaLib::GUI::openMenuOrientation>,
+                   false);
+
+    engine.require("GUI.Text.Color",
+                   sol::c_call<decltype(&LuaLib::GUI::openTextColor),
+                               &LuaLib::GUI::openTextColor>,
+                   false);
+
+    engine.require("GUI.Text.Style",
+                   sol::c_call<decltype(&LuaLib::GUI::openTextStyle),
+                               &LuaLib::GUI::openTextStyle>,
+                   false);
+
+    engine.require("GUI.Inputbox",
+                   sol::c_call<decltype(&LuaLib::GUI::openInputbox),
+                               &LuaLib::GUI::openInputbox>,
+                   false);
+
+
+    engine.require("GUI.Slider",
+                   sol::c_call<decltype(&LuaLib::GUI::openSlider),
+                               &LuaLib::GUI::openSlider>,
+                   false);
+
+    engine.require("GUI.Window",
+                   sol::c_call<decltype(&LuaLib::GUI::openWindow),
+                               &LuaLib::GUI::openWindow>,
+                   false);
 
     // Load event
-    event_as_lua(engine);
+    engine.require("Event",
+                   sol::c_call<decltype(&LuaLib::Input::openEvent),
+                               &LuaLib::Input::openEvent>,
+                   false);
 
-    // Load console
-    console_as_lua(engine);
-
+    engine.require("Event.Type",
+                   sol::c_call<decltype(&LuaLib::Input::openEventType),
+                               &LuaLib::Input::openEventType>,
+                   false);
     // Load CFG
-    cfg_as_lua(engine);
-
+    engine.require("CFG",
+                   sol::c_call<decltype(&LuaLib::openCFG),
+                               &LuaLib::openCFG>,
+                   false);
     // Load State
-    state_as_lua(engine);
+    engine.require("State.Type",
+                   sol::c_call<decltype(&LuaLib::State::openStateTypes),
+                               &LuaLib::State::openStateTypes>,
+                   false);
 
     std::string path          = engine["package"]["path"];
     std::string sep           = path.empty() ? "" : ";";
@@ -217,6 +269,8 @@ namespace Lua {
       sol::function_result res     = engine.script_file(filename);
       bool                 isValid = res.valid();
 
+      // if console is active, error to that, otherwise
+      // error to stdout
       if (!isValid && mConsole != nullptr)
         mConsole->error("Failed to load file '" + filename + "'. No such file");
       else if (!isValid)

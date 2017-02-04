@@ -177,20 +177,21 @@ set(SOURCE_FILES
   ${SRC_DIR}/Input/Event.cpp
 
   # src/Lua
-  ${SRC_DIR}/Lua/Utils/LCFG.cpp
-  ${SRC_DIR}/Lua/Console/LConsole.cpp
-  ${SRC_DIR}/Lua/LEngine.cpp
-  ${SRC_DIR}/Lua/Input/LEvent.cpp
-  ${SRC_DIR}/Lua/State/LState.cpp
-  ${SRC_DIR}/Lua/Shape/LRectangle.cpp
-  ${SRC_DIR}/Lua/Math/LMath.cpp
-  ${SRC_DIR}/Lua/Resource/LFont.cpp
-  ${SRC_DIR}/Lua/GUI/LText.cpp
-  ${SRC_DIR}/Lua/GUI/LMenu.cpp
-  ${SRC_DIR}/Lua/GUI/LDropdown.cpp
-  ${SRC_DIR}/Lua/GUI/LSlider.cpp
-  ${SRC_DIR}/Lua/GUI/LInputbox.cpp
-  ${SRC_DIR}/Lua/GUI/LWindow.cpp
+  #  ${SRC_DIR}/Lua/Utils/LCFG.cpp
+  #  ${SRC_DIR}/Lua/Console/LConsole.cpp
+  #  ${SRC_DIR}/Lua/LEngine.cpp
+  #  ${SRC_DIR}/Lua/Input/LEvent.cpp
+  #  ${SRC_DIR}/Lua/State/LState.cpp
+  #  ${SRC_DIR}/Lua/Shape/LRectangle.cpp
+  #  ${SRC_DIR}/Lua/Math/LMath.cpp
+  #  ${SRC_DIR}/Lua/Resource/LFont.cpp
+  #  ${SRC_DIR}/Lua/GUI/LText.cpp
+  #  ${SRC_DIR}/Lua/GUI/LMenu.cpp
+  #  ${SRC_DIR}/Lua/GUI/LDropdown.cpp
+  #  ${SRC_DIR}/Lua/GUI/LSlider.cpp
+  #  ${SRC_DIR}/Lua/GUI/LInputbox.cpp
+  #  ${SRC_DIR}/Lua/GUI/LWindow.cpp
+  ${SRC_DIR}/Lua/LuaLib.cpp
   ${SRC_DIR}/Lua/Lua.cpp
 
   # src/GLSL
@@ -272,20 +273,21 @@ set(HEADER_FILES
   ${SRC_DIR}/Input/Event.hpp
 
   # src/Lua
-  ${SRC_DIR}/Lua/Utils/LCFG.hpp
-  ${SRC_DIR}/Lua/Console/LConsole.hpp
-  ${SRC_DIR}/Lua/LEngine.hpp
-  ${SRC_DIR}/Lua/Input/LEvent.hpp
-  ${SRC_DIR}/Lua/State/LState.hpp
-  ${SRC_DIR}/Lua/Shape/LRectangle.hpp
-  ${SRC_DIR}/Lua/Math/LMath.hpp
-  ${SRC_DIR}/Lua/Resource/LFont.hpp
-  ${SRC_DIR}/Lua/GUI/LText.hpp
-  ${SRC_DIR}/Lua/GUI/LMenu.hpp
-  ${SRC_DIR}/Lua/GUI/LDropdown.hpp
-  ${SRC_DIR}/Lua/GUI/LSlider.hpp
-  ${SRC_DIR}/Lua/GUI/LInputbox.hpp
-  ${SRC_DIR}/Lua/GUI/LWindow.hpp
+  #  ${SRC_DIR}/Lua/Utils/LCFG.hpp
+  #  ${SRC_DIR}/Lua/Console/LConsole.hpp
+  #  ${SRC_DIR}/Lua/LEngine.hpp
+  #  ${SRC_DIR}/Lua/Input/LEvent.hpp
+  #  ${SRC_DIR}/Lua/State/LState.hpp
+  #  ${SRC_DIR}/Lua/Shape/LRectangle.hpp
+  #  ${SRC_DIR}/Lua/Math/LMath.hpp
+  #  ${SRC_DIR}/Lua/Resource/LFont.hpp
+  #  ${SRC_DIR}/Lua/GUI/LText.hpp
+  #  ${SRC_DIR}/Lua/GUI/LMenu.hpp
+  #  ${SRC_DIR}/Lua/GUI/LDropdown.hpp
+  #  ${SRC_DIR}/Lua/GUI/LSlider.hpp
+  #  ${SRC_DIR}/Lua/GUI/LInputbox.hpp
+  #  ${SRC_DIR}/Lua/GUI/LWindow.hpp
+  ${SRC_DIR}/Lua/LuaLib.hpp
   ${SRC_DIR}/Lua/Lua.hpp
 
   # src/GLSL

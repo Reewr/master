@@ -25,7 +25,7 @@
 
   @class module
 ]]
-
+local StateType = require 'State.Type'
 -- These are the global values that the console
 -- exposes
 _print = print
@@ -43,7 +43,11 @@ function print(...)
     s = s .. tostring(v) .. ' '
   end
 
-  console:log('\\<102,217,239,255:>LUA:\\</> ' .. s)
+  if console == nil then
+    _print(s)
+  else
+    console:log('\\<102,217,239,255:>LUA:\\</> ' .. s)
+  end
 end
 
 --[[
@@ -57,7 +61,7 @@ end
 ]]
 function exit()
   console:log("Quitting")
-  currentEvent:sendStateChange(States.QuitAll)
+  currentEvent:sendStateChange(StateType.QuitAll)
   currentEvent:stopPropgation()
 end
 
@@ -87,6 +91,6 @@ end
 ]]
 function lua.reload()
   console:log("Reloading LUA engine and files")
-  currentEvent:sendStateChange(States.LuaReload)
+  currentEvent:sendStateChange(StateType.LuaReload)
   currentEvent:stopPropgation()
 end

@@ -1,3 +1,4 @@
+local StateType = require 'State.Type'
 local state = {}
 
 -- Goes back a state. If the state is the current
@@ -16,7 +17,7 @@ local state = {}
 ]]
 function state.prev()
   console:log("Returning to previous state")
-  currentEvent:sendStateChange(States.Quit)
+  currentEvent:sendStateChange(StateType.Quit)
   currentEvent:stopPropgation()
 end
 
@@ -32,7 +33,7 @@ end
 ]]
 function state.reload()
   console:log("Reloading current state")
-  currentEvent:sendStateChange(States.Refresh)
+  currentEvent:sendStateChange(StateType.Refresh)
   currentEvent:stopPropgation()
 end
 
@@ -49,7 +50,7 @@ end
 ]]
 function state.windowRefresh()
   console:log("Reloading window")
-  currentEvent:sendStateChange(States.WinRefresh)
+  currentEvent:sendStateChange(StateType.WinRefresh)
   currentEvent:stopPropgation()
 end
 
