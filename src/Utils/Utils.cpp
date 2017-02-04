@@ -15,7 +15,7 @@ static int  MS_MINUTE = 60 * MS_SECOND;
 
 std::string timeSinceStart() {
   auto   finish = std::chrono::high_resolution_clock::now();
-  double micro =
+  int micro =
     std::chrono::duration_cast<std::chrono::microseconds>(finish - START)
       .count();
 
@@ -31,9 +31,10 @@ std::string timeSinceStart() {
   std::string sSeconds = (secs < 10 ? "0" : "") + std::to_string(secs) + "s";
   std::string sMs =
     (ms < 10 ? "00" : ms < 100 ? "0" : "") + std::to_string(ms) + "ms";
-  std::string sNano = std::to_string(micro) + "μs";
+  std::string sMicro =
+    (micro < 10 ? "00" : micro < 100 ? "0" : "") + std::to_string(micro) + "μs";
 
-  return "[" + sMinutes + " " + sSeconds + " " + sMs + " " + sNano + "]";
+  return "[" + sMinutes + " " + sSeconds + " " + sMs + " " + sMicro + "]";
 }
 
 void Utils::logTimeNoEnd() {
