@@ -995,3 +995,33 @@ sol::table LuaLib::State::openState(sol::this_state state) {
 
   return module;
 }
+
+/**
+ * @brief
+ *   This defines the handler for requiring 'Util'. Utils contains
+ *   a lot of useful functions that makes working with Lua and C++
+ *   easier
+ *
+ * @param state
+ *
+ * @return
+ */
+sol::table LuaLib::Util::openUtil(sol::this_state state) {
+  sol::state_view lua(state);
+  sol::table       module = lua.create_table();
+
+  module.set_function("toVectorStr",
+                      [](sol::table t) -> std::vector<std::string> {
+                        std::vector<std::string> s;
+
+                        for (auto pair : t) {
+                          if (pair.second.get_type() == sol::type::string) {
+                            s.push_back(pair.second.as<std::string>());
+                          }
+                        }
+
+                        return s;
+                      });
+
+  return module;
+}

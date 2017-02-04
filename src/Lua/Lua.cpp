@@ -215,6 +215,11 @@ namespace Lua {
                                &LuaLib::State::openStateTypes>,
                    false);
 
+    engine.require("Util",
+                   sol::c_call<decltype(&LuaLib::Util::openUtil),
+                               &LuaLib::Util::openUtil>,
+                   false);
+
     std::string path          = engine["package"]["path"];
     std::string sep           = path.empty() ? "" : ";";
     engine["package"]["path"] = path + sep + "./lua/?.lua";
@@ -232,19 +237,6 @@ namespace Lua {
     loadFile("lua/main.lua");
 
     emit("reInitialize");
-
-    engine.set_function("toVectorStr",
-                        [](sol::table t) -> std::vector<std::string> {
-                          std::vector<std::string> s;
-
-                          for (auto pair : t) {
-                            if (pair.second.get_type() == sol::type::string) {
-                              s.push_back(pair.second.as<std::string>());
-                            }
-                          }
-
-                          return s;
-                        });
   }
 
   /**
