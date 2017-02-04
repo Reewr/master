@@ -400,17 +400,31 @@ namespace Lua {
           types.push_back(getTypename(a));
       }
 
+      std::sort(types.begin(), types.end(), compare_by_word);
       return types;
     }
 
     std::string scopeName = name.substr(0, pos);
     std::string rest      = name.substr(pos + 1);
+    log("ScopeName: ", scopeName, ", rest: ", rest);
 
-    sol::table newTable = engine[scopeName];
+    sol::object obj = table[scopeName];
 
-    if (newTable)
-      return getScope(newTable, rest);
+    switch (obj.get_type()) {
+      case sol::type::userdata: {
+        sol::table userData = obj;
+        sol::table meta     = userData[sol::metatable_key];
+        return getScope(meta, rest);
+      }
+      case sol::type::table: {
+        sol::table t = obj;
+        return getScope(t, rest);
+      }
+      default:
+        types.push_back({ scopeName, solTypetoStr(obj.get_type()) });
+    }
 
+    std::sort(types.begin(), types.end(), compare_by_word);
     return types;
   }
 
@@ -425,65 +439,7 @@ namespace Lua {
    * @return
    */
   std::vector<Typenames> Lua::getTypenames(const std::string name) {
-    size_t                 pos   = name.find_first_of(":");
-    std::vector<Typenames> types = {};
-
-    // No scoping, just retrieve the variables
-    // that match name in global scope
-    if (pos == std::string::npos) {
-      for (auto a : engine) {
-        Typenames t = getTypename(a);
-
-        if (shouldIncludeType(t.name, name))
-          types.push_back(getTypename(a));
-      }
-
-      std::sort(types.begin(), types.end(), compare_by_word);
-      return types;
-    }
-
-    // There's scoping to be done. Find the variables that are
-    // valid under that scope.
-    std::string scopeName = name.substr(0, pos);
-    std::string rest      = name.substr(pos + 1);
-
-    sol::object obj = engine[scopeName];
-
-    switch (obj.get_type()) {
-
-      // Userdata has a special handler since in order to retrieve the variables
-      // you have to check the metatable instead of iterating over keys
-      case sol::type::userdata: {
-        sol::table userData = obj;
-        sol::table meta     = userData[sol::metatable_key];
-
-        for (auto pair : meta) {
-          std::string key = pair.first.as<std::string>();
-
-          if (shouldIncludeType(key, rest))
-            types.push_back({ key, solTypetoStr(pair.second.get_type()) });
-        }
-        break;
-      }
-
-      // Tables are easy to retrieve, since you can just keep
-      // iterating over key/values
-      case sol::type::table: {
-        sol::table table = obj;
-
-        for (auto pair : table) {
-          std::string key = pair.first.as<std::string>();
-
-          if (shouldIncludeType(key, rest))
-            types.push_back({ key, solTypetoStr(pair.second.get_type()) });
-        }
-        break;
-      }
-      default:
-        types.push_back({ scopeName, solTypetoStr(obj.get_type()) });
-    }
-
-    std::sort(types.begin(), types.end(), compare_by_word);
-    return types;
+    sol::table t = engine.globals();
+    return getScope(t, name);
   }
 }
