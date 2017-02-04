@@ -109,6 +109,10 @@ namespace Lua {
                                &LuaLib::openConsole>,
                    false);
 
+    engine.require("Math",
+                   sol::c_call<decltype(&LuaLib::Math::openMath),
+                               &LuaLib::Math::openMath>,
+                   false);
     // Load math
     engine.require("Math.vec2",
                    sol::c_call<decltype(&LuaLib::Math::openVec2),

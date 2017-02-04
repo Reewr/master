@@ -57,6 +57,7 @@ namespace LuaLib {
   }
 
   namespace Math {
+    sol::table openMath(sol::this_state state);
     sol::table openVec2(sol::this_state state);
   }
 

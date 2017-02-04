@@ -849,6 +849,14 @@ sol::table LuaLib::Input::openEvent(sol::this_state state) {
   return module;
 }
 
+/**
+ * @brief
+ *   Exposes the mmm::vec2 class to Lua
+ *
+ * @param state
+ *
+ * @return
+ */
 sol::table LuaLib::Math::openVec2(sol::this_state state) {
   sol::state_view lua(state);
   sol::table      module = lua.create_table();
@@ -857,6 +865,23 @@ sol::table LuaLib::Math::openVec2(sol::this_state state) {
   sol::usertype<mmm::vec2> type(ctor, "x", &mmm::vec2::x, "y", &mmm::vec2::y);
 
   module.set_usertype("vec2", type);
+
+  return module;
+}
+
+/**
+ * @brief
+ *   Loads the entire Math library
+ *
+ * @param state
+ *
+ * @return
+ */
+sol::table LuaLib::Math::openMath(sol::this_state state) {
+  sol::state_view lua(state);
+  sol::table      module = lua.create_table();
+
+  module["vec2"] = openVec2(state);
 
   return module;
 }
