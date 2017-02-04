@@ -37,7 +37,7 @@ hud    = {
 -- Override print so that it prints
 -- to console and therefore to stdout
 function print(...)
-  s = ''
+  local s = ''
 
   for i, v in ipairs({...}) do
     s = s .. tostring(v) .. ' '
