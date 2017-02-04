@@ -10,8 +10,11 @@ Firstly though, lets go over the global variables that actually exist:
 
 - `cfg`
 - `console`
+- `lua`
 
-These two is the only two global variables. `cfg` contains all the settings that the user has within their config file and `console` is defined *if* `cfg.console.enabled` is true. You should therefore always make sure that you know that `console` is active before trying to use it.
+These three are the only global variables. `cfg` contains all the settings that the user has within their config file and `console` is defined *if* `cfg.console.enabled` is true. You should therefore always make sure that you know that `console` is active before trying to use it.
+
+Lastly, `lua` is a very limited object that only contains two functions, `loadFile` and `reload`. The former one should really never be used as it kind of serves the purpose of `require`. The latter one is only available if `console` is available and when called, it will reload the entire Lua engine.
 
 ## Global functions
 
