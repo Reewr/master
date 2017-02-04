@@ -74,6 +74,12 @@ Input also only have one type exported, but with an addition enum type
 - Input.Event
 - Input.Event.Type
 
+### Util
+
+Util is a namespace that contains utility functions that helps working with C++ and Lua. For now it contains a function `toVectorStr` which takes list (table) of strings and turns it into a vector of strings.
+
+- Util
+
 ## Example
 
 What follows is an example of how to create a text element that is centered on the screen.
