@@ -37,35 +37,35 @@ namespace Lua {
     // This enum describes the Lua native libraries
     // that can loaded
     enum class Native : int {
-      Base      = 0x01,
-      Package   = 0x02,
-      Coroutine = 0x04,
-      String    = 0x08,
-      OS        = 0x16,
-      Math      = 0x32,
-      Table     = 0x64,
-      Debug     = 0x128,
-      Bit32     = 0x256,
-      IO        = 0x512,
-      FFI       = 0x1024,
-      JIT       = 0x2048,
-      UTF8      = 0x4096,
-      Count     = 0x8192,
-      All       = 0x16384
+      Base      = 1,
+      Package   = 2,
+      Coroutine = 4,
+      String    = 8,
+      OS        = 16,
+      Math      = 32,
+      Table     = 64,
+      Debug     = 128,
+      Bit32     = 256,
+      IO        = 512,
+      FFI       = 1024,
+      JIT       = 2048,
+      UTF8      = 4096,
+      Count     = 8192,
+      All       = 16383
     };
 
     // This enum describes the libraries made by
     // this engine that can be loaded
     enum class Engine : int {
-      Console = 0x01,
-      Math    = 0x02,
-      Shape   = 0x04,
-      GUI     = 0x08,
-      Input   = 0x16,
-      CFG     = 0x32,
-      State   = 0x064,
-      Util    = 0x128,
-      All     = 0x255
+      Console = 1,
+      Math    = 2,
+      Shape   = 4,
+      GUI     = 8,
+      Input   = 16,
+      CFG     = 32,
+      State   = 64,
+      Util    = 128,
+      All     = 255
     };
   }
 

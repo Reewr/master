@@ -130,47 +130,75 @@ namespace Lua {
    * @param nativeLib
    */
   void Lua::openLibraries(Lib::Native nativeLib) {
-    if (hasFlag(nativeLib, Lib::Native::Base))
+    if (hasFlag(nativeLib, Lib::Native::Base)) {
+      log("Lua :: Loading Native :: base");
       engine.open_libraries(sol::lib::base);
+    }
 
-    if (hasFlag(nativeLib, Lib::Native::Package))
+    if (hasFlag(nativeLib, Lib::Native::Package)) {
+      log("Lua :: Loading Native :: package");
       engine.open_libraries(sol::lib::package);
+    }
 
-    if (hasFlag(nativeLib, Lib::Native::Coroutine))
+    if (hasFlag(nativeLib, Lib::Native::Coroutine)) {
+      log("Lua :: Loading Native :: coroutine");
       engine.open_libraries(sol::lib::coroutine);
+    }
 
-    if (hasFlag(nativeLib, Lib::Native::String))
+    if (hasFlag(nativeLib, Lib::Native::String)) {
+      log("Lua :: Loading Native :: string");
       engine.open_libraries(sol::lib::string);
+    }
 
-    if (hasFlag(nativeLib, Lib::Native::OS))
+    if (hasFlag(nativeLib, Lib::Native::OS)) {
+      log("Lua :: Loading Native :: os");
       engine.open_libraries(sol::lib::os);
+    }
 
-    if (hasFlag(nativeLib, Lib::Native::Math))
+    if (hasFlag(nativeLib, Lib::Native::Math)) {
+      log("Lua :: Loading Native :: math");
       engine.open_libraries(sol::lib::math);
+    }
 
-    if (hasFlag(nativeLib, Lib::Native::Table))
+    if (hasFlag(nativeLib, Lib::Native::Table)) {
+      log("Lua :: Loading Native :: table");
       engine.open_libraries(sol::lib::table);
+    }
 
-    if (hasFlag(nativeLib, Lib::Native::Debug))
+    if (hasFlag(nativeLib, Lib::Native::Debug)) {
+      log("Lua :: Loading Native :: debug");
       engine.open_libraries(sol::lib::debug);
+    }
 
-    if (hasFlag(nativeLib, Lib::Native::Bit32))
+    if (hasFlag(nativeLib, Lib::Native::Bit32)) {
+      log("Lua :: Loading Native :: bit32");
       engine.open_libraries(sol::lib::bit32);
+    }
 
-    if (hasFlag(nativeLib, Lib::Native::IO))
+    if (hasFlag(nativeLib, Lib::Native::IO)) {
+      log("Lua :: Loading Native :: io");
       engine.open_libraries(sol::lib::io);
+    }
 
-    if (hasFlag(nativeLib, Lib::Native::FFI))
+    if (hasFlag(nativeLib, Lib::Native::FFI)) {
+      log("Lua :: Loading Native :: ffi");
       engine.open_libraries(sol::lib::ffi);
+    }
 
-    if (hasFlag(nativeLib, Lib::Native::JIT))
+    if (hasFlag(nativeLib, Lib::Native::JIT)) {
+      log("Lua :: Loading Native :: jit");
       engine.open_libraries(sol::lib::jit);
+    }
 
-    if (hasFlag(nativeLib, Lib::Native::UTF8))
+    if (hasFlag(nativeLib, Lib::Native::UTF8)) {
+      log("Lua :: Loading Native :: utf8");
       engine.open_libraries(sol::lib::utf8);
+    }
 
-    if (hasFlag(nativeLib, Lib::Native::Count))
+    if (hasFlag(nativeLib, Lib::Native::Count)) {
+      log("Lua :: Loading Native :: count");
       engine.open_libraries(sol::lib::count);
+    }
   }
   /**
    * @brief
@@ -181,6 +209,7 @@ namespace Lua {
    */
   void Lua::openLibraries(Lib::Engine enginelib) {
     if (hasFlag(Lib::Engine::Console, enginelib)) {
+      log("Lua :: Loading Console");
       engine.require("Console",
                      sol::c_call<decltype(&LuaLib::openConsole),
                                  &LuaLib::openConsole>,
@@ -188,6 +217,7 @@ namespace Lua {
     }
 
     if (hasFlag(Lib::Engine::Math, enginelib)) {
+      log("Lua :: Loading Math");
       engine.require("Math",
                      sol::c_call<decltype(&LuaLib::Math::openMath),
                                  &LuaLib::Math::openMath>,
@@ -199,6 +229,7 @@ namespace Lua {
     }
 
     if (hasFlag(Lib::Engine::Shape, enginelib)) {
+      log("Lua :: Loading Shape");
       engine.require("Shape",
                      sol::c_call<decltype(&LuaLib::Shape::openShape),
                                  &LuaLib::Shape::openShape>,
@@ -210,6 +241,7 @@ namespace Lua {
     }
 
     if (hasFlag(Lib::Engine::GUI, enginelib)) {
+      log("Lua :: Loading GUI");
       engine.require("GUI",
                      sol::c_call<decltype(&LuaLib::GUI::openGUI),
                                  &LuaLib::GUI::openGUI>,
@@ -268,6 +300,7 @@ namespace Lua {
     }
 
     if (hasFlag(Lib::Engine::Input, enginelib)) {
+      log("Lua :: Loading Input");
       engine.require("Input",
                      sol::c_call<decltype(&LuaLib::Input::openInput),
                                  &LuaLib::Input::openInput>,
@@ -284,12 +317,14 @@ namespace Lua {
     }
 
     if (hasFlag(Lib::Engine::CFG, enginelib)) {
+      log("Lua :: Loading CFG");
       engine.require("CFG",
                      sol::c_call<decltype(&LuaLib::openCFG), &LuaLib::openCFG>,
                      false);
     }
 
     if (hasFlag(Lib::Engine::State, enginelib)) {
+      log("Lua :: Loading State");
       engine.require("State",
                      sol::c_call<decltype(&LuaLib::State::openState),
                                  &LuaLib::State::openState>,
@@ -301,6 +336,7 @@ namespace Lua {
     }
 
     if (hasFlag(Lib::Engine::Util, enginelib)) {
+      log("Lua :: Loading Util");
       engine.require("Util",
                      sol::c_call<decltype(&LuaLib::Util::openUtil),
                                  &LuaLib::Util::openUtil>,
