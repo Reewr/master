@@ -293,6 +293,10 @@ namespace Lua {
                      sol::c_call<decltype(&LuaLib::Input::openInput),
                                  &LuaLib::Input::openInput>,
                      false);
+      engine.require("Input.Keys",
+                     sol::c_call<decltype(&LuaLib::Input::openKeys),
+                                 &LuaLib::Input::openKeys>,
+                     false);
       engine.require("Input.Event",
                      sol::c_call<decltype(&LuaLib::Input::openEvent),
                                  &LuaLib::Input::openEvent>,
