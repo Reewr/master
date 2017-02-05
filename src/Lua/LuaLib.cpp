@@ -424,10 +424,11 @@ sol::table LuaLib::GUI::openMenu(sol::this_state state) {
   sol::table menu = module["Menu"];
 
   sol::constructors<
-    sol::types<float>,
-    sol::types<float, float>,
+    sol::types<float, float, int, int>,
     sol::types<float, float, int>,
-    sol::types<float, float, int, int>> menuSettingsCtors;
+    sol::types<float, float>,
+    sol::types<float>,
+    sol::types<>> menuSettingsCtors;
 
   sol::usertype<Menu::MenuSettings> menuSettings(menuSettingsCtors,
     "size"  , &Menu::MenuSettings::size,
@@ -460,10 +461,11 @@ sol::table LuaLib::GUI::openMenuSettings(sol::this_state state) {
   // Enable the menu settings
   // clang-format off
   sol::constructors<
-    sol::types<float>,
-    sol::types<float, float>,
+    sol::types<float, float, int, int>,
     sol::types<float, float, int>,
-    sol::types<float, float, int, int>> menuSettingsCtors;
+    sol::types<float, float>,
+    sol::types<float>,
+    sol::types<>> menuSettingsCtors;
 
   sol::usertype<Menu::MenuSettings> menuSettings(menuSettingsCtors,
     "size"  , &Menu::MenuSettings::size,
@@ -884,7 +886,12 @@ sol::table LuaLib::Math::openVec2(sol::this_state state) {
   sol::state_view lua(state);
   sol::table      module = lua.create_table();
 
-  sol::constructors<sol::types<int, int>, sol::types<float, float>> ctor;
+  sol::constructors<
+    sol::types<>,
+    sol::types<int>,
+    sol::types<float>,
+    sol::types<int, int>,
+    sol::types<float, float>> ctor;
   sol::usertype<mmm::vec2> type(ctor, "x", &mmm::vec2::x, "y", &mmm::vec2::y);
 
   module.set_usertype("vec2", type);
