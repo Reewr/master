@@ -73,10 +73,10 @@ namespace Lua {
     //! Adds the console object to Lua, making it available to Lua runtime
     void add(Console* c);
 
-    // Loads one or more native libraries
+    // Loads one or more native libraries based on active bit fields
     void openLibraries(Lib::Native nativeLib);
 
-    // Loads one more more engine libraries
+    // Loads one more more engine libraries based on active bit fields
     void openLibraries(Lib::Engine engine);
 
     //! Recreates the lua engine, adding the console and config

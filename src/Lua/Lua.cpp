@@ -494,6 +494,7 @@ namespace Lua {
     size_t                 pos   = name.find_first_of(divider);
     std::vector<TypePair> types = {};
 
+    // If there's no more scoping to be done, return what we have.
     if (pos == std::string::npos) {
       for (auto a : table) {
         TypePair t = { a.first.get_type() == sol::type::string ?
@@ -509,11 +510,13 @@ namespace Lua {
       return types;
     }
 
+    // Scoping continues!
     std::string scopeName = name.substr(0, pos);
     std::string rest      = name.substr(pos + 1);
 
     sol::object obj = table[scopeName];
 
+    // Tables and userdata has to be handled a bit differently
     switch (obj.get_type()) {
       case sol::type::userdata: {
         sol::table userData = obj;
