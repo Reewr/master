@@ -12,6 +12,8 @@
   It returns the FPS object that can be assigned to where ever you want it.
 
 ]]
+local Text = require 'GUI.Text'
+local vec2 = require 'Math.vec2'
 local FPS = {}
 local textElement = nil
 
@@ -49,11 +51,11 @@ function FPS.show(x, y, textSize, printInfo)
 
   print("Showing FPS")
 
-  textElement = GUI.Text.new("Font::Dejavu",
-                             "0",
-                             vec2.new(_x, _y),
-                             _textSize,
-                             GUI.TextColor.Yellow)
+  textElement = Text.new("Font::Dejavu",
+                         "0",
+                         vec2.new(_x, _y),
+                         _textSize,
+                         Text.Color.Yellow)
   local element   = {}
   local frames    = 0
   local totalTime = 0
