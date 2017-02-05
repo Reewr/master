@@ -84,7 +84,4 @@ private:
   float mVertRotation;
   float mSpeed;
   Light mLight;
-
-  float mPHoriRotation;
-  float mPVertRotation;
 };

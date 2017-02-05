@@ -30,9 +30,7 @@ Camera::Camera(Asset* asset)
     , mHeight(2)
     , mHoriRotation(0)
     , mVertRotation(45)
-    , mSpeed(4)
-    , mPHoriRotation(0)
-    , mPVertRotation(0) {
+    , mSpeed(4) {
 
   mProjection    = updateProjectionMatrix();
   mShadowProgram = mAsset->rManager()->get<Program>("Program::Shadow");
