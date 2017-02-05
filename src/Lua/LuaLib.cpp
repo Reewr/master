@@ -12,6 +12,7 @@
 #include "../GUI/Text.hpp"
 #include "../GUI/Window.hpp"
 #include "../Input/Event.hpp"
+#include "../Input/Input.hpp"
 #include "../State/State.hpp"
 #include "../Utils/CFG.hpp"
 
@@ -858,6 +859,31 @@ sol::table LuaLib::Input::openEvent(sol::this_state state) {
 
 /**
  * @brief
+ *   Goes through all the keys defined in Input::keyMap and adds
+ *   them to module.
+ *
+ * @param state
+ *
+ * @return
+ */
+sol::table LuaLib::Input::openKeys(sol::this_state state) {
+  sol::state_view lua(state);
+  sol::table module = lua.create_table();
+
+  // Add all the keys that defined on Input
+  for(auto& a : ::Input::keyMap) {
+    module[a.first] = a.second;
+  }
+
+  module.set_function("toString", [](int key) {
+    return ::Input::glfwKeyToString(key);
+  });
+
+  return module;
+}
+
+/**
+ * @brief
  *   Loads the entire Input library when required. Currently,
  *   this is only Event and its Type
  *
@@ -870,6 +896,7 @@ sol::table LuaLib::Input::openInput(sol::this_state state) {
   sol::table      module = lua.create_table();
 
   module["Event"] = openEvent(state);
+  module["Keys"] = openKeys(state);
 
   return module;
 }

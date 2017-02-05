@@ -70,6 +70,9 @@ namespace LuaLib {
     // Exposes the Input::Event::Type enums
     sol::table openEventType(sol::this_state state);
 
+    // Exposes all the keys from the Input class
+    sol::table openKeys(sol::this_state state);
+
     // Exposes all the Input classes
     sol::table openInput(sol::this_state state);
   }
