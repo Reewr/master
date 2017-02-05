@@ -136,7 +136,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} \
 # are warnings that GCC does not automatically include due to their
 # possible contraversy. Adding them now to see how bad it gets
 # TODO: Go through and add needed warnings
-set(WARN_FLAGS "-Wall -Wextra -fdiagnostics-color=always")
+set(WARN_FLAGS "-std=c++14 -Wall -Wextra -fdiagnostics-color=always")
 set(WARN_FLAGS "${WARN_FLAGS} -Wshadow")
 set(WARN_FLAGS "${WARN_FLAGS} -Wcast-qual -Wno-cast-align")
 set(WARN_FLAGS "${WARN_FLAGS} -Wwrite-strings -Wsign-compare")
@@ -144,9 +144,16 @@ set(WARN_FLAGS "${WARN_FLAGS} -Wmissing-declarations")
 set(WARN_FLAGS "${WARN_FLAGS} -Wredundant-decls -Wunreachable-code -Winline")
 set(WARN_FLAGS "${WARN_FLAGS} -ferror-limit=1")
 set(WARN_FLAGS "${WARN_FLAGS} -ftemplate-depth=512")
-#set(WARN_FLAGS "${WARN_FLAGS} -pedantic-errors")
+set(WARN_FLAGS "${WARN_FLAGS} -pedantic-errors")
 
-#set(WARN_FLAGS "${WARN_FLAGS} -float-equal -Wundef -Wconversion")
+
+# This will throw lots of warnings due to MMM and other libraries
+# using undefined `defined`
+# set(WARN_FLAGS "${WARN_FLAGS} -Wundef")
+
+#
+#set(WARN_FLAGS "${WARN_FLAGS} -float-equal")
+#set(WARN_FLAGS "${WARN_FLAGS} -Wconversion")
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${WARN_FLAGS}")
 
