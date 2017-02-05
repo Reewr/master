@@ -187,7 +187,7 @@ sol::table LuaLib::openCFG(sol::this_state state) {
   // print(myCFG.graphics.res.x)
   // print(myCFG.bindings.moveUp.key1)
   // -- and so on.
-  return module;
+  return module["CFG"];
 }
 
 /**
@@ -272,7 +272,7 @@ sol::table LuaLib::GUI::openDropdown(sol::this_state state) {
   module.set_usertype("Dropdown", dropdownType);
   // clang-format on
 
-  return module;
+  return module["Dropdown"];
 }
 
 /**
@@ -344,7 +344,7 @@ sol::table LuaLib::GUI::openInputbox(sol::this_state state) {
   module.set_usertype("Inputbox", dropdownType);
   // clang-format on
 
-  return module;
+  return module["Inputbox"];
 }
 
 /**
@@ -362,22 +362,6 @@ sol::table LuaLib::GUI::openMenu(sol::this_state state) {
 
   // Enable the menu settings
   // clang-format off
-  sol::constructors<
-    sol::types<float>,
-    sol::types<float, float>,
-    sol::types<float, float, int>,
-    sol::types<float, float, int, int>> menuSettingsCtors;
-
-  sol::usertype<Menu::MenuSettings> menuSettings(menuSettingsCtors,
-    "size"  , &Menu::MenuSettings::size,
-    "offset", &Menu::MenuSettings::offset,
-    "ori"   , &Menu::MenuSettings::ori,
-    "color" , &Menu::MenuSettings::color);
-
-  module.set_usertype("MenuSettings", menuSettings);
-  module.create_named("Orientation",
-                      "Horizontal", Menu::HORIZONTAL,
-                      "Vertical"  , Menu::VERTICAL);
 
   sol::constructors<
     sol::types<const std::string&, const mmm::vec2&>,
@@ -437,9 +421,27 @@ sol::table LuaLib::GUI::openMenu(sol::this_state state) {
     sol::base_classes, sol::bases<class GUI>());
 
   module.set_usertype("Menu", menuType);
+  sol::table menu = module["Menu"];
+
+  sol::constructors<
+    sol::types<float>,
+    sol::types<float, float>,
+    sol::types<float, float, int>,
+    sol::types<float, float, int, int>> menuSettingsCtors;
+
+  sol::usertype<Menu::MenuSettings> menuSettings(menuSettingsCtors,
+    "size"  , &Menu::MenuSettings::size,
+    "offset", &Menu::MenuSettings::offset,
+    "ori"   , &Menu::MenuSettings::ori,
+    "color" , &Menu::MenuSettings::color);
+
+  menu.set_usertype("MenuSettings", menuSettings);
+  menu.create_named("Orientation",
+                    "Horizontal", Menu::HORIZONTAL,
+                    "Vertical"  , Menu::VERTICAL);
   // clang-format on
 
-  return module;
+  return menu;
 }
 
 /**
@@ -471,7 +473,7 @@ sol::table LuaLib::GUI::openMenuSettings(sol::this_state state) {
 
   module.set_usertype("MenuSettings", menuSettings);
 
-  return module;
+  return module["MenuSettings"];
 }
 
 /**
@@ -555,7 +557,7 @@ sol::table LuaLib::GUI::openSlider(sol::this_state state) {
   module.set_usertype("Slider", dropdownType);
   // clang-format on
 
-  return module;
+  return module["Slider"];
 }
 
 sol::table LuaLib::GUI::openText(sol::this_state state) {
@@ -563,18 +565,6 @@ sol::table LuaLib::GUI::openText(sol::this_state state) {
   sol::table      module = lua.create_table();
 
   // clang-format off
-  module["Color"] = module.create_with(
-    "Black" , Text::BLACK,
-    "White" , Text::WHITE,
-    "Redj"  , Text::RED,
-    "Green" , Text::GREEN,
-    "Blue"  , Text::BLUE,
-    "Yellow", Text::YELLOW);
-
-  module["Style"] = module.create_with(
-    "Bold"     ,  Text::BOLD,
-    "Underline",  Text::UNDERLINE,
-    "Italic"   ,  Text::ITALIC);
 
   sol::constructors<
     sol::types<std::string, std::string, mmm::vec2>,
@@ -631,9 +621,23 @@ sol::table LuaLib::GUI::openText(sol::this_state state) {
     sol::base_classes, sol::bases<class GUI>());
 
   module.set_usertype("Text", type);
-  // clang-format on
 
-  return module;
+  sol::table text = module["Text"];
+  // clang-format on
+  text["Color"] = text.create_with(
+    "Black" , Text::BLACK,
+    "White" , Text::WHITE,
+    "Redj"  , Text::RED,
+    "Green" , Text::GREEN,
+    "Blue"  , Text::BLUE,
+    "Yellow", Text::YELLOW);
+
+  text["Style"] = text.create_with(
+    "Bold"     ,  Text::BOLD,
+    "Underline",  Text::UNDERLINE,
+    "Italic"   ,  Text::ITALIC);
+
+  return text;
 }
 
 sol::table LuaLib::GUI::openTextColor(sol::this_state state) {
@@ -734,7 +738,7 @@ sol::table LuaLib::GUI::openWindow(sol::this_state state) {
   module.set_usertype("Window", windowType);
   // clang-format on
 
-  return module;
+  return module["Window"];
 }
 
 /**
@@ -805,17 +809,6 @@ sol::table LuaLib::Input::openEvent(sol::this_state state) {
   sol::table      module = lua.create_table();
 
   // clang-format off
-  module["Type"] = module.create_with(
-    "Consumed"      , ::Input::Event::Type::Consumed,
-    "MouseMovement" , ::Input::Event::Type::MouseMovement,
-    "MousePress"    , ::Input::Event::Type::MousePress,
-    "MouseRelease"  , ::Input::Event::Type::MouseRelease,
-    "MouseScroll"   , ::Input::Event::Type::MouseScroll,
-    "KeyPress"      , ::Input::Event::Type::KeyPress,
-    "KeyRelease"    , ::Input::Event::Type::KeyRelease,
-    "CharacterInput", ::Input::Event::Type::CharacterInput);
-  // clang-format on
-
   // Add all the functions that the Event class exposes.
   // The idea is that you're never allowed to do `Event.new()`, since
   // that is only done by the Engine.
@@ -844,9 +837,21 @@ sol::table LuaLib::Input::openEvent(sol::this_state state) {
     "state"          , &::Input::Event::state,
     "sendStateChange", &::Input::Event::sendStateChange,
     "stopPropgation" , &::Input::Event::stopPropgation);
+
+  sol::table event = module["Event"];
+
+  event["Type"] = module.create_with(
+    "Consumed"      , ::Input::Event::Type::Consumed,
+    "MouseMovement" , ::Input::Event::Type::MouseMovement,
+    "MousePress"    , ::Input::Event::Type::MousePress,
+    "MouseRelease"  , ::Input::Event::Type::MouseRelease,
+    "MouseScroll"   , ::Input::Event::Type::MouseScroll,
+    "KeyPress"      , ::Input::Event::Type::KeyPress,
+    "KeyRelease"    , ::Input::Event::Type::KeyRelease,
+    "CharacterInput", ::Input::Event::Type::CharacterInput);
   // clang-format on
 
-  return module;
+  return event;
 }
 
 /**
@@ -884,7 +889,7 @@ sol::table LuaLib::Math::openVec2(sol::this_state state) {
 
   module.set_usertype("vec2", type);
 
-  return module;
+  return module["vec2"];
 }
 
 /**
@@ -928,7 +933,7 @@ sol::table LuaLib::Shape::openRectangle(sol::this_state state) {
   module.set_usertype("Rectangle", type);
   // clang-format on
 
-  return module;
+  return module["Rectangle"];
 }
 
 /**
