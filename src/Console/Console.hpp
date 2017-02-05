@@ -13,7 +13,7 @@ class Asset;
 class Menu;
 
 namespace Lua {
-  struct Typenames;
+  typedef std::pair<std::string, std::string> TypePair;
 }
 
 namespace Input {
@@ -123,5 +123,5 @@ private:
 
   std::vector<Text*>          mHistory;
   std::vector<std::string>    mCommandHistory;
-  std::vector<Lua::Typenames> mLuaAutoComplete;
+  std::vector<Lua::TypePair>  mLuaAutoComplete;
 };

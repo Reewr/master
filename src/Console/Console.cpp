@@ -253,7 +253,7 @@ void Console::setText() {
  *   @TODO: Make this work with Lua
  */
 void Console::setAutoComplete() {
-  std::vector<Lua::Typenames> names = mAsset->lua()->getTypenames(mCurrentText);
+  std::vector<Lua::TypePair> names = mAsset->lua()->getTypenames(mCurrentText);
 
   vec2         res        = mAsset->cfg()->graphics.res;
   unsigned int maxNameLen = 0;
@@ -265,8 +265,8 @@ void Console::setAutoComplete() {
   // can be aligned properly
   for (int i = 0; i < namesLen; i++) {
     isEqual    = isEqual && names[i] == mLuaAutoComplete[i];
-    maxNameLen = mmm::max(names[i].name.size(), maxNameLen);
-    maxTypeLen = mmm::max(names[i].typeName.size(), maxTypeLen);
+    maxNameLen = mmm::max(names[i].first.size(), maxNameLen);
+    maxTypeLen = mmm::max(names[i].second.size(), maxTypeLen);
   }
 
   if (isEqual) {
@@ -283,8 +283,8 @@ void Console::setAutoComplete() {
   std::vector<std::string> row      = {};
 
   for (int i = 0; i < namesLen; ++i) {
-    std::string name    = names[i].name;
-    std::string type    = names[i].typeName;
+    std::string name    = names[i].first;
+    std::string type    = names[i].second;
     std::string content = "";
 
     if (name.size() < maxNameLen)

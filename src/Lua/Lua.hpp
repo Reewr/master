@@ -17,18 +17,9 @@ namespace Lua {
 
 
   typedef std::function<void()> EventHandler;
+  typedef std::pair<std::string, std::string> TypePair;
   // Turns a sol::type to a string of max 6 characters
   std::string solTypetoStr(sol::type t);
-
-  // This is a simple struct used to make it easier to
-  // store the variables available in lua
-  struct Typenames {
-    std::string name;
-    std::string typeName;
-
-    // equal operator
-    bool operator==(const Typenames& rhs) const;
-  };
 
   // This namespace describes the libraries that can
   // be loaded with the Lua engine
@@ -105,20 +96,16 @@ namespace Lua {
     // Returns a list of types that is accessible based on the name given.
     // For instance, a name with "" will check global scope where as
     // a name with "config:" will check the scope of "config"
-    std::vector<Typenames> getTypenames(const std::string name = "");
+    std::vector<TypePair> getTypenames(const std::string name = "");
 
     sol::state engine;
 
   private:
-    // Simple way of creating a Typenames struct based on a pair given
-    // by a table.
-    Typenames getTypename(std::pair<sol::basic_object<sol::reference>,
-                                    sol::basic_object<sol::reference>>& a);
-
     // Checks the scope, this function will work recurisvely.
-    std::vector<Typenames> getScope(sol::table& t,
-                                    const std::string& name,
-                                    const std::string& divider=":");
+    std::vector<TypePair> getScope(sol::table&        t,
+                                   const std::string& name,
+                                   const std::string& divider = ":");
+
     // Function used by both getTypenames and getScope to see if they should
     // ignore a variable based on what the name contains / does not contain
     bool shouldIncludeType(const std::string& name, const std::string& search);

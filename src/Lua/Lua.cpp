@@ -45,8 +45,8 @@ bool hasFlag(Lua::Lib::Engine a, Lua::Lib::Engine b) {
  *
  * @return
  */
-bool compare_by_word(const Lua::Typenames& t1, const Lua::Typenames t2) {
-  return t1.name < t2.name;
+bool compare_by_word(const Lua::TypePair& t1, const Lua::TypePair t2) {
+  return t1.first < t2.first;
 }
 
 namespace Lua {
@@ -96,18 +96,6 @@ namespace Lua {
       default:
         return "Undef";
     }
-  }
-
-  /**
-   * @brief
-   *   Equal operator for Typenames
-   *
-   * @param rhs
-   *
-   * @return
-   */
-  bool Typenames::operator==(const Typenames& rhs) const {
-    return name == rhs.name && typeName == rhs.typeName;
   }
 
   /**
@@ -486,28 +474,6 @@ namespace Lua {
 
   /**
    * @brief
-   *   Turns a pair, retrieved from iterating over tables/states,
-   *   into a Typenames structure.
-   *
-   * @param pair
-   *
-   * @return
-   */
-  Typenames
-  Lua::getTypename(std::pair<sol::basic_object<sol::reference>,
-                             sol::basic_object<sol::reference>>& pair) {
-    sol::type firstType  = pair.first.get_type();
-    sol::type secondType = pair.second.get_type();
-
-    if (firstType == sol::type::string) {
-      return { pair.first.as<std::string>(), solTypetoStr(secondType) };
-    }
-
-    return { solTypetoStr(firstType), solTypetoStr(secondType) };
-  }
-
-  /**
-   * @brief
    *   If this is given a table and a search string that contains `:`, it will
    *   recrusively try to find the variables that is valid for the scope.
    *
@@ -522,18 +488,21 @@ namespace Lua {
    *
    * @return
    */
-  std::vector<Typenames> Lua::getScope(sol::table&        table,
+  std::vector<TypePair> Lua::getScope(sol::table&        table,
                                        const std::string& name,
                                        const std::string& divider) {
     size_t                 pos   = name.find_first_of(divider);
-    std::vector<Typenames> types = {};
+    std::vector<TypePair> types = {};
 
     if (pos == std::string::npos) {
       for (auto a : table) {
-        Typenames t = getTypename(a);
+        TypePair t = { a.first.get_type() == sol::type::string ?
+                          a.first.as<std::string>() :
+                          solTypetoStr(a.first.get_type()),
+                        solTypetoStr(a.second.get_type()) };
 
-        if (shouldIncludeType(t.name, name))
-          types.push_back(getTypename(a));
+        if (shouldIncludeType(t.first, name))
+          types.push_back(t);
       }
 
       std::sort(types.begin(), types.end(), compare_by_word);
@@ -576,7 +545,7 @@ namespace Lua {
    *
    * @return
    */
-  std::vector<Typenames> Lua::getTypenames(const std::string name) {
+  std::vector<TypePair> Lua::getTypenames(const std::string name) {
     sol::table t = engine.globals();
     return getScope(t, name, ":.");
   }
