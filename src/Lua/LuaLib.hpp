@@ -64,27 +64,43 @@ namespace LuaLib {
   }
 
   namespace Input {
+    // Exposes the Input::Event class
     sol::table openEvent(sol::this_state state);
+
+    // Exposes the Input::Event::Type enums
     sol::table openEventType(sol::this_state state);
+
+    // Exposes all the Input classes
     sol::table openInput(sol::this_state state);
   }
 
   namespace Math {
+    // exposes the vec2 class
     sol::table openVec2(sol::this_state state);
+
+    // exposes all the objects defined above
     sol::table openMath(sol::this_state state);
   }
 
   namespace Shape {
+    // Exposes the Rectangle class
     sol::table openRectangle(sol::this_state state);
+
+    // Exposes all objects defined above
     sol::table openShape(sol::this_state state);
   }
 
   namespace State {
+    // Exposes the States enums
     sol::table openStateTypes(sol::this_state state);
+
+    // Exposes all the State functions above
     sol::table openState(sol::this_state state);
   }
 
   namespace Util {
+    // Util exposes neat utility functions
+    // that helps working with Lua and C++
     sol::table openUtil(sol::this_state state);
   }
 }
