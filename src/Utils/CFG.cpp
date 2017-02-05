@@ -318,7 +318,7 @@ std::ostream& operator<<(std::ostream& os, const CFG& cfg) {
     os << "[" << section.first << "]" << std::endl;
 
     if (section.first == "Bindings") {
-      os << "  # List of possible keybinding values:" << std::endl;
+      os << "  # List of possible keybindings on a US Keyboard: " << std::endl;
       os << "  #";
       int i = 0;
       for (const auto& kv : Input::keyMap) {
