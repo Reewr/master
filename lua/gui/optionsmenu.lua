@@ -1,4 +1,12 @@
 -- This file describes the implementation and setup of the options menu.
+local Rectangle       = require 'Shape.Rectangle'
+local vec2            = require 'Math.vec2'
+local Window          = require 'GUI.Window'
+local MenuSettings    = require 'GUI.Menu.Settings'
+local MenuOrientation = require 'GUI.Menu.Orientation'
+local TextColor       = require 'GUI.Text.Color'
+local Util            = require 'Util'
+
 local OptionsMenu = {}
 
 local startX = cfg.graphics.res.x * 0.50 - 500
@@ -11,12 +19,12 @@ local activeWindow = ""
 
 -- Add the sidebar menu
 window:addMenu("Category",
-               toVectorStr(categories),
+               Util.toVectorStr(categories),
                vec2.new(25, 100),
-               GUI.MenuSettings.new(20,
-                                    50,
-                                    GUI.Orientation.Vertical,
-                                    GUI.TextColor.White))
+               MenuSettings.new(20,
+                                50,
+                                MenuOrientation.Vertical,
+                                TextColor.White))
 
 local category  = window:menu("Category")
 local innerRect = Rectangle.new(200, 54, rect.size.x - 200, rect.size.y - 125)
@@ -24,17 +32,17 @@ local innerRect = Rectangle.new(200, 54, rect.size.x - 200, rect.size.y - 125)
 -- -- Accept and cancel buttons
 category:addMenuItem("Accept", vec2.new(rect:middle().x - 200,
                                         rect:bottomright().y - 50),
-                               GUI.MenuSettings.new(20,
-                                                    50,
-                                                    GUI.Orientation.Vertical,
-                                                    GUI.TextColor.White))
+                               MenuSettings.new(20,
+                                                50,
+                                                MenuOrientation.Vertical,
+                                                TextColor.White))
 
 category:addMenuItem("Cancel", vec2.new(rect:middle().x + 100,
                                         rect:bottomright().y - 50),
-                               GUI.MenuSettings.new(20,
-                                                    50,
-                                                    GUI.Orientation.Vertical,
-                                                    GUI.TextColor.White))
+                               MenuSettings.new(20,
+                                                50,
+                                                MenuOrientation.Vertical,
+                                                TextColor.White))
 
 window:addWindow("Audio", innerRect)
 window:addWindow("Graphics", innerRect)
