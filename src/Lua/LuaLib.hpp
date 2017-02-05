@@ -15,6 +15,18 @@
  *
  * Feel free to namespace things under this namespace as you would in a normal
  * folder directory
+ *
+ * The namespace in this file represents how it will be exported to Lua,
+ * in some sense.
+ *
+ * For instance:
+ *
+ * - `LuaLib::openConsole` will be exported as `Console`
+ * - `LuaLib::GUI::openDropdown` will be exported as `GUI.Dropdown`
+ *
+ * In addition, to make things simpler for the users of the API, the namespaces
+ * should also make one function available that exposes the entire namespace as
+ * one `sol::table`, as in the case of LuaLib::GUI::openGUI.
  */
 namespace LuaLib {
 
