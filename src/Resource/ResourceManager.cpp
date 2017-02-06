@@ -4,8 +4,7 @@
 #include "../Utils/Utils.hpp"
 #include "Font.hpp"
 #include "Texture.hpp"
-
-#include <sol.hpp>
+#include "../Lua/Lua.hpp"
 
 ResourceManager::ResourceManager() : mCurrentScope(ResourceScope::None) {}
 

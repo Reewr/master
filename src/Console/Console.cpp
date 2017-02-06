@@ -1,7 +1,6 @@
 #include "Console.hpp"
 
 #include "../OpenGLHeaders.hpp"
-#include <sol.hpp>
 
 #include "../GLSL/Program.hpp"
 #include "../GUI/Menu.hpp"
