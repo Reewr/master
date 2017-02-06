@@ -2,7 +2,6 @@
 
 #include "../GUI/GUI.hpp"
 
-#include <functional>
 #include <map>
 #include <string>
 #include <vector>
