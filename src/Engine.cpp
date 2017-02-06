@@ -132,6 +132,9 @@ bool Engine::initialize(int argc, char* argv[], int isRefresh, int initState) {
   if (isRefresh == States::Init)
     mCFG->assimilate(argc, argv);
 
+  DEBUG_MODE    = mCFG->general.debug;
+  ENABLE_COLORS = mCFG->general.debugColors;
+
   // Init the different libraries if
   // this is the first init call
   if (isRefresh != States::Refresh) {

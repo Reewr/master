@@ -28,13 +28,6 @@
  *   Error code if any
  */
 int main(int argc, char* argv[]) {
-
-  DEBUG_MODE    = true;
-  ENABLE_COLORS = true;
-
-  error("Testing");
-  warning("Testing");
-  log("Starting!");
   Engine* engine = new Engine();
 
   if (!engine->initialize(argc, argv)) {
