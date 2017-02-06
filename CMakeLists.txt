@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
 
-# =======================================
+# ==============================================================================
 # Project initialization
-# =====================================
+# ==============================================================================
 
 # Set the project name and what type of program it is
 project(Woooo CXX)
@@ -19,12 +19,12 @@ if (NOT CMAKE_BUILD_TYPE STREQUAL "Release")
   set(CMAKE_BUILD_TYPE Debug)
 endif()
 
-# =======================================
+# ==============================================================================
 # Dependency inclusion
-# =======================================
+# ==============================================================================
 
-# Macro to simply set the difference options of the dependencies
-# Mostly used to not build tests and stuff
+# Macro to simply set the different options of the dependencies
+# Mostly used to not build tests and examples
 macro(SET_OPTION opt value)
   set(${opt} ${value} CACHE "" INTERNAL FORCE)
 endmacro()
@@ -91,7 +91,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/bullet/src)
 SET_OPTION(BUILD_MMM_TESTS OFF)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/mmm)
 
-# Find and add LUA51
+# Find and add Lua 5.3
 find_package(Lua 5.3 REQUIRED)
 
 # Include sol2
@@ -101,9 +101,9 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/sol2)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/MultiNEAT)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/MultiNEAT)
 
-# =======================================
-# Project files
-# =======================================
+# ==============================================================================
+# Project file
+# ==============================================================================
 
 # Set this later so ASSIMP doesnt add the binary files
 # to root
@@ -117,7 +117,7 @@ message("=========================================")
 # find our headers when we specify them.
 include_directories(src)
 
-# We must require C++11
+# We must require C++14
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -320,9 +320,9 @@ set(HEADER_FILES
   ${SRC_DIR}/Utils/str.hpp
 )
 
-# =======================================
+# ==============================================================================
 # Dependency inclusion and linking
-# =======================================
+# ==============================================================================
 
 # Add backward-cpp to the exectuable, but only do so
 # if the platform isnt windows
@@ -379,9 +379,9 @@ target_link_libraries(Woooo tinyxml2
                     target_link_libraries(Woooo mmm)
                     target_link_libraries(Woooo MultiNEAT)
 
-# =======================================
+# ==============================================================================
 # Custom commands
-# =======================================
+# ==============================================================================
 
 # Add a custom `run` command so that you can do `ninja run` to run the
 # the executable.
@@ -395,7 +395,7 @@ add_custom_target(run
 add_custom_target(print_build_type
   COMMAND ${CMAKE_COMMAND} -E echo ${CMAKE_BUILD_TYPE})
 
-# Add special clean commands
+# Add special clean commands for linux and windows
 if(WIN32)
   add_custom_target(cleanbuild
     COMMAND
