@@ -40,7 +40,6 @@ set(BUILD_SHARED_LIBS ON)
 # glfw, unlike TinyXML, actually checks whether `uninstall` already exists.
 #
 # Added issue: https://github.com/leethomason/tinyxml2/issues/516
-
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/tinyxml2)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/tinyxml2)
 
@@ -91,7 +90,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/bullet/src)
 # Find and add mmm
 SET_OPTION(BUILD_MMM_TESTS OFF)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/mmm)
-# include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/mmm/src)
 
 # Find and add LUA51
 find_package(Lua 5.3 REQUIRED)
@@ -184,20 +182,6 @@ set(SOURCE_FILES
   ${SRC_DIR}/Input/Event.cpp
 
   # src/Lua
-  #  ${SRC_DIR}/Lua/Utils/LCFG.cpp
-  #  ${SRC_DIR}/Lua/Console/LConsole.cpp
-  #  ${SRC_DIR}/Lua/LEngine.cpp
-  #  ${SRC_DIR}/Lua/Input/LEvent.cpp
-  #  ${SRC_DIR}/Lua/State/LState.cpp
-  #  ${SRC_DIR}/Lua/Shape/LRectangle.cpp
-  #  ${SRC_DIR}/Lua/Math/LMath.cpp
-  #  ${SRC_DIR}/Lua/Resource/LFont.cpp
-  #  ${SRC_DIR}/Lua/GUI/LText.cpp
-  #  ${SRC_DIR}/Lua/GUI/LMenu.cpp
-  #  ${SRC_DIR}/Lua/GUI/LDropdown.cpp
-  #  ${SRC_DIR}/Lua/GUI/LSlider.cpp
-  #  ${SRC_DIR}/Lua/GUI/LInputbox.cpp
-  #  ${SRC_DIR}/Lua/GUI/LWindow.cpp
   ${SRC_DIR}/Lua/LuaLib.cpp
   ${SRC_DIR}/Lua/Lua.cpp
 
@@ -280,20 +264,6 @@ set(HEADER_FILES
   ${SRC_DIR}/Input/Event.hpp
 
   # src/Lua
-  #  ${SRC_DIR}/Lua/Utils/LCFG.hpp
-  #  ${SRC_DIR}/Lua/Console/LConsole.hpp
-  #  ${SRC_DIR}/Lua/LEngine.hpp
-  #  ${SRC_DIR}/Lua/Input/LEvent.hpp
-  #  ${SRC_DIR}/Lua/State/LState.hpp
-  #  ${SRC_DIR}/Lua/Shape/LRectangle.hpp
-  #  ${SRC_DIR}/Lua/Math/LMath.hpp
-  #  ${SRC_DIR}/Lua/Resource/LFont.hpp
-  #  ${SRC_DIR}/Lua/GUI/LText.hpp
-  #  ${SRC_DIR}/Lua/GUI/LMenu.hpp
-  #  ${SRC_DIR}/Lua/GUI/LDropdown.hpp
-  #  ${SRC_DIR}/Lua/GUI/LSlider.hpp
-  #  ${SRC_DIR}/Lua/GUI/LInputbox.hpp
-  #  ${SRC_DIR}/Lua/GUI/LWindow.hpp
   ${SRC_DIR}/Lua/LuaLib.hpp
   ${SRC_DIR}/Lua/Lua.hpp
 
@@ -415,22 +385,27 @@ target_link_libraries(Woooo tinyxml2
 
 # Add a custom `run` command so that you can do `ninja run` to run the
 # the executable.
-add_custom_target(run COMMAND Woooo DEPENDS Woooo WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH} USES_TERMINAL)
+add_custom_target(run
+  COMMAND Woooo
+  DEPENDS Woooo
+  WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}
+  USES_TERMINAL)
 
 # Add custom command for checking what build version we're using
-add_custom_target(print_build_type COMMAND ${CMAKE_COMMAND} -E echo ${CMAKE_BUILD_TYPE})
+add_custom_target(print_build_type
+  COMMAND ${CMAKE_COMMAND} -E echo ${CMAKE_BUILD_TYPE})
 
 # Add special clean commands
 if(WIN32)
-  add_custom_target(
-    cleanbuild
+  add_custom_target(cleanbuild
     COMMAND
-    cd .. & rmdir /S /Q build & mkdir build & cd build & cmake -G \"MinGW Makefiles\" .. & mingw31-make -j5
+    cd .. & rmdir /S /Q build &
+    mkdir build & cd build &
+    cmake -G \"MinGW Makefiles\" .. & mingw31-make -j5
     WORKING_DIRECTORY
     "${CMAKE_SOURCE_DIR}/build")
 else(WIN32)
-  add_custom_target(
-    cleanbuild
+  add_custom_target(cleanbuild
     COMMAND cd .. && rm -r build && mkdir build && rm Woooo && rm -r lib && rm -r bin
     WORKING_DIRECTORY
     "${CMAKE_SOURCE_DIR}/build")
