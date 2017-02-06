@@ -376,6 +376,9 @@ find_library(ASSIMP_LIBRARY NAME assimp)
 find_library(BULLET_LIBRARY NAME bullet)
 find_library(MultiNEAT_LIBRARY NAME MultiNEAT)
 
+# Below follows defines that is defined for all our code base. These
+# defines are defined here so that they're defined for all the code as
+# defining them inside the main file did not work properly.
 add_definitions(-DSOL_CHECK_ARGUMENTS=1)
 add_definitions(-DSOL_SAFE_USERTYPE=1)
 add_definitions(-DBACKWARD_HAS_DW=1)
