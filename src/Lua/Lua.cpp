@@ -398,8 +398,7 @@ namespace Lua {
     // Output errors to console, if it exists, instead of
     // our error function
     try {
-      sol::function_result res     = engine.script_file(filename);
-      bool                 isValid = res.valid();
+      bool isValid = engine.script_file(filename).valid();
 
       // if console is active, error to that, otherwise
       // error to stdout
