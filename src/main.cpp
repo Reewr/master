@@ -1,8 +1,7 @@
-#include "OpenGLHeaders.hpp"
 #include <backward.hpp>
 
 #include "Engine.hpp"
-#include "Utils/Utils.hpp"
+#include <stdexcept>
 
 /**
  * @brief
