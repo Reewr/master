@@ -376,6 +376,8 @@ find_library(ASSIMP_LIBRARY NAME assimp)
 find_library(BULLET_LIBRARY NAME bullet)
 find_library(MultiNEAT_LIBRARY NAME MultiNEAT)
 
+add_definitions(-DSOL_CHECK_ARGUMENTS=1)
+add_definitions(-DSOL_SAFE_USERTYPE=1)
 # Note regarding TinyXML2:
 # ------------------------
 # Due to a strange usecase in TinyXML2, there's some issue with undefined

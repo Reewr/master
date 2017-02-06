@@ -1,5 +1,3 @@
-#define SOL_SAFE_USERTYPE 1
-#define SOL_CHECK_ARGUMENTS 1
 #define BACKWARD_HAS_DW 1
 #include "OpenGLHeaders.hpp"
 #include <backward.hpp>
