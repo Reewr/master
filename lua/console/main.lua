@@ -37,6 +37,12 @@ hud    = {
 -- Override print so that it prints
 -- to console and therefore to stdout
 function print(...)
+
+  -- No printing of debug is off
+  if not cfg.general.debug then
+    return
+  end
+
   local s = ''
 
   for i, v in ipairs({...}) do
