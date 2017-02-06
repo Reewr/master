@@ -1,4 +1,3 @@
-#define BACKWARD_HAS_DW 1
 #include "OpenGLHeaders.hpp"
 #include <backward.hpp>
 
