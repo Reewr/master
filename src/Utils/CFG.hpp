@@ -36,6 +36,7 @@ public:
 
   struct General {
     bool debug = false;
+    bool debugColors = false;
   } general;
 
   struct Camera {
@@ -140,6 +141,7 @@ private:
              { { "window", 0 }, { "borderless", 1 }, { "fullscreen", 2 } } } },
 
          { "General.debug", general.debug },
+         { "General.debugColors", general.debugColors },
 
          { "Camera.rotation_speed", camera.rotSpeed },
          { "Camera.rotation_inverse_horizontal", camera.rotInvH },

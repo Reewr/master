@@ -92,7 +92,8 @@ sol::table LuaLib::openCFG(sol::this_state state) {
 
     // add the variables that should be accessible via lua.
     sol::usertype<CFG::General> type(ctor,
-      "debug", &CFG::General::debug);
+      "debug", &CFG::General::debug,
+      "debugColors", &CFG::General::debugColors);
 
     module.set_usertype("_CFG_General", type);
   }
