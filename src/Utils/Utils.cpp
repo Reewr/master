@@ -5,8 +5,8 @@
 
 #include "../OpenGLHeaders.hpp"
 
-bool* DEBUG_MODE;
-bool* ENABLE_COLORS;
+bool DEBUG_MODE = false;
+bool ENABLE_COLORS = false;
 float LOOP_LOGGER = 1000;
 
 static auto START     = std::chrono::high_resolution_clock::now();
@@ -60,17 +60,17 @@ void fatalError() {
 }
 
 void error() {
-  if (DEBUG_MODE && *DEBUG_MODE)
+  if (DEBUG_MODE)
     std::cout << "Error!" << std::endl;
 }
 
 void warning() {
-  if (DEBUG_MODE && *DEBUG_MODE)
+  if (DEBUG_MODE)
     std::cout << "Warning!" << std::endl;
 }
 
 void log() {
-  if (DEBUG_MODE && *DEBUG_MODE)
+  if (DEBUG_MODE)
     std::cout << std::endl;
 }
 

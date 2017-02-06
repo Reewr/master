@@ -29,8 +29,8 @@
  */
 int main(int argc, char* argv[]) {
 
-  DEBUG_MODE    = new bool(true); //&asset->cfg.general.debug;
-  ENABLE_COLORS = new bool(true);
+  DEBUG_MODE    = true;
+  ENABLE_COLORS = true;
 
   error("Testing");
   warning("Testing");
@@ -45,8 +45,6 @@ int main(int argc, char* argv[]) {
   engine->runLoop();
 
   delete engine;
-  delete DEBUG_MODE;
-  delete ENABLE_COLORS;
 
   return 0;
 }
