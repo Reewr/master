@@ -29,5 +29,4 @@ end
 
 if cfg.console.enabled then
   require 'console/main'
-  print('Console loaded')
 end
