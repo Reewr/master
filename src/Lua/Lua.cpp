@@ -197,7 +197,7 @@ namespace Lua {
    */
   void Lua::openLibraries(Lib::Engine enginelib) {
     if (hasFlag(Lib::Engine::Console, enginelib)) {
-      log("Lua :: Loading Console");
+      log("Lua :: Loading Engine :: Console");
       engine.require("Console",
                      sol::c_call<decltype(&LuaLib::openConsole),
                                  &LuaLib::openConsole>,
@@ -205,7 +205,7 @@ namespace Lua {
     }
 
     if (hasFlag(Lib::Engine::Math, enginelib)) {
-      log("Lua :: Loading Math");
+      log("Lua :: Loading Engine :: Math");
       engine.require("Math",
                      sol::c_call<decltype(&LuaLib::Math::openMath),
                                  &LuaLib::Math::openMath>,
@@ -217,7 +217,7 @@ namespace Lua {
     }
 
     if (hasFlag(Lib::Engine::Shape, enginelib)) {
-      log("Lua :: Loading Shape");
+      log("Lua :: Loading Engine :: Shape");
       engine.require("Shape",
                      sol::c_call<decltype(&LuaLib::Shape::openShape),
                                  &LuaLib::Shape::openShape>,
@@ -229,7 +229,7 @@ namespace Lua {
     }
 
     if (hasFlag(Lib::Engine::GUI, enginelib)) {
-      log("Lua :: Loading GUI");
+      log("Lua :: Loading Engine :: GUI");
       engine.require("GUI",
                      sol::c_call<decltype(&LuaLib::GUI::openGUI),
                                  &LuaLib::GUI::openGUI>,
@@ -288,7 +288,7 @@ namespace Lua {
     }
 
     if (hasFlag(Lib::Engine::Input, enginelib)) {
-      log("Lua :: Loading Input");
+      log("Lua :: Loading Engine :: Input");
       engine.require("Input",
                      sol::c_call<decltype(&LuaLib::Input::openInput),
                                  &LuaLib::Input::openInput>,
@@ -309,14 +309,14 @@ namespace Lua {
     }
 
     if (hasFlag(Lib::Engine::CFG, enginelib)) {
-      log("Lua :: Loading CFG");
+      log("Lua :: Loading Engine :: CFG");
       engine.require("CFG",
                      sol::c_call<decltype(&LuaLib::openCFG), &LuaLib::openCFG>,
                      false);
     }
 
     if (hasFlag(Lib::Engine::State, enginelib)) {
-      log("Lua :: Loading State");
+      log("Lua :: Loading Engine :: State");
       engine.require("State",
                      sol::c_call<decltype(&LuaLib::State::openState),
                                  &LuaLib::State::openState>,
@@ -328,7 +328,7 @@ namespace Lua {
     }
 
     if (hasFlag(Lib::Engine::Util, enginelib)) {
-      log("Lua :: Loading Util");
+      log("Lua :: Loading Engine :: Util");
       engine.require("Util",
                      sol::c_call<decltype(&LuaLib::Util::openUtil),
                                  &LuaLib::Util::openUtil>,
