@@ -424,25 +424,10 @@ sol::table LuaLib::GUI::openMenu(sol::this_state state) {
   module.set_usertype("Menu", menuType);
   sol::table menu = module["Menu"];
 
-  sol::constructors<
-    sol::types<float, float, int, int>,
-    sol::types<float, float, int>,
-    sol::types<float, float>,
-    sol::types<float>,
-    sol::types<>> menuSettingsCtors;
+  menu["Settings"] = openMenuSettings(state);
+  menu["Orientation"] = openMenuOrientation(state);
 
-  sol::usertype<Menu::MenuSettings> menuSettings(menuSettingsCtors,
-    "size"  , &Menu::MenuSettings::size,
-    "offset", &Menu::MenuSettings::offset,
-    "ori"   , &Menu::MenuSettings::ori,
-    "color" , &Menu::MenuSettings::color);
-
-  menu.set_usertype("MenuSettings", menuSettings);
-  menu.create_named("Orientation",
-                    "Horizontal", Menu::HORIZONTAL,
-                    "Vertical"  , Menu::VERTICAL);
   // clang-format on
-
   return menu;
 }
 
@@ -627,18 +612,9 @@ sol::table LuaLib::GUI::openText(sol::this_state state) {
 
   sol::table text = module["Text"];
   // clang-format on
-  text["Color"] = text.create_with(
-    "Black" , Text::BLACK,
-    "White" , Text::WHITE,
-    "Redj"  , Text::RED,
-    "Green" , Text::GREEN,
-    "Blue"  , Text::BLUE,
-    "Yellow", Text::YELLOW);
 
-  text["Style"] = text.create_with(
-    "Bold"     ,  Text::BOLD,
-    "Underline",  Text::UNDERLINE,
-    "Italic"   ,  Text::ITALIC);
+  text["Color"] = openTextColor(state);
+  text["Style"] = openTextStyle(state);
 
   return text;
 }
@@ -843,15 +819,8 @@ sol::table LuaLib::Input::openEvent(sol::this_state state) {
 
   sol::table event = module["Event"];
 
-  event["Type"] = module.create_with(
-    "Consumed"      , ::Input::Event::Type::Consumed,
-    "MouseMovement" , ::Input::Event::Type::MouseMovement,
-    "MousePress"    , ::Input::Event::Type::MousePress,
-    "MouseRelease"  , ::Input::Event::Type::MouseRelease,
-    "MouseScroll"   , ::Input::Event::Type::MouseScroll,
-    "KeyPress"      , ::Input::Event::Type::KeyPress,
-    "KeyRelease"    , ::Input::Event::Type::KeyRelease,
-    "CharacterInput", ::Input::Event::Type::CharacterInput);
+  event["Type"] = openEventType(state);
+
   // clang-format on
 
   return event;
