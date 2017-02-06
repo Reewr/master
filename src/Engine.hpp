@@ -3,14 +3,15 @@
 #include <stack>
 #include <string>
 
-#include "OpenGLHeaders.hpp"
-
 #include "State/State.hpp"
 
 class Asset;
 class CFG;
 class ResourceManager;
 class State;
+
+struct GLFWmonitor;
+struct GLFWwindow;
 
 namespace Input {
   class Input;
