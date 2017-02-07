@@ -26,8 +26,8 @@ using mmm::vec2;
 using mmm::vec3;
 
 Master::Master(Asset* a) {
-  CFG*     c         = a->cfg();
-  vec2     shadowRes = vec2(c->graphics.shadowRes, c->graphics.shadowRes);
+  CFG* c         = a->cfg();
+  vec2 shadowRes = vec2(c->graphics.shadowRes, c->graphics.shadowRes);
 
   a->rManager()->unloadUnnecessary(ResourceScope::Master);
   a->rManager()->loadRequired(ResourceScope::Master);
@@ -39,20 +39,19 @@ Master::Master(Asset* a) {
                                shadowRes,
                                true);
 
-  mDrawable3D  = { new Terrain(), new Cube() };
+  mDrawable3D = { new Terrain(), new Cube() };
 
   for (auto d : mDrawable3D)
     mWorld->addObject(d);
 
   mLua->engine.set_function("addCubes", [&](int i) {
-    std::random_device rd;
-    std::mt19937 gen(rd());
+    std::random_device               rd;
+    std::mt19937                     gen(rd());
     std::uniform_real_distribution<> dis(1, 5);
     for (int j = 0; j <= i; ++j) {
-      vec3 size = vec3(
-          mmm::max(dis(gen), 0.0001f),
-          mmm::max(dis(gen), 0.0001f),
-          mmm::max(dis(gen), 0.0001f));
+      vec3 size = vec3(mmm::max(dis(gen), 0.0001f),
+                       mmm::max(dis(gen), 0.0001f),
+                       mmm::max(dis(gen), 0.0001f));
       log("Creating cube with: ", size, "");
       mDrawable3D.push_back(new Cube(size));
       mWorld->addObject(mDrawable3D.back());
@@ -60,14 +59,14 @@ Master::Master(Asset* a) {
   });
 
   mLua->engine.set_function("clearCubes", [&]() {
-    for(unsigned int i = 0; i < mDrawable3D.size(); ++i) {
+    for (unsigned int i = 0; i < mDrawable3D.size(); ++i) {
       if (i != 0) {
         mWorld->removeObject(mDrawable3D[i]);
         delete mDrawable3D[i];
       }
     }
 
-    while(mDrawable3D.size() > 1)
+    while (mDrawable3D.size() > 1)
       mDrawable3D.pop_back();
   });
 

@@ -5,17 +5,17 @@
 
 #include "../OpenGLHeaders.hpp"
 
-bool DEBUG_MODE = false;
-bool ENABLE_COLORS = false;
-float LOOP_LOGGER = 1000;
+bool  DEBUG_MODE    = false;
+bool  ENABLE_COLORS = false;
+float LOOP_LOGGER   = 1000;
 
 static auto START     = std::chrono::high_resolution_clock::now();
 static int  MS_SECOND = 1000;
 static int  MS_MINUTE = 60 * MS_SECOND;
 
 std::string timeSinceStart() {
-  auto   finish = std::chrono::high_resolution_clock::now();
-  int micro =
+  auto finish = std::chrono::high_resolution_clock::now();
+  int  micro =
     std::chrono::duration_cast<std::chrono::microseconds>(finish - START)
       .count();
 

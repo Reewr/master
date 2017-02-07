@@ -120,7 +120,7 @@ private:
   std::shared_ptr<Program> mProgram;
   Asset*                   mAsset;
 
-  std::vector<Text*>          mHistory;
-  std::vector<std::string>    mCommandHistory;
-  std::vector<Lua::TypePair>  mLuaAutoComplete;
+  std::vector<Text*>         mHistory;
+  std::vector<std::string>   mCommandHistory;
+  std::vector<Lua::TypePair> mLuaAutoComplete;
 };

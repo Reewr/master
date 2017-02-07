@@ -20,8 +20,8 @@ MainMenu::MainMenu(Asset* asset) {
   mAsset->rManager()->unloadUnnecessary(ResourceScope::MainMenu);
   mAsset->rManager()->loadRequired(ResourceScope::MainMenu);
 
-  OptionsMenu* opts    = new OptionsMenu(mAsset->input());
-  CFG*         cfg     = mAsset->cfg();
+  OptionsMenu* opts = new OptionsMenu(mAsset->input());
+  CFG*         cfg  = mAsset->cfg();
   Window*      menu =
     new Window("NONE",
                Rectangle(vec2(cfg->graphics.res.x - 175,

@@ -62,15 +62,15 @@ static void glfwErrorHandler(int, const char* k) {
 }
 
 Engine::Engine(std::string cfgPath)
-  : mCFGPath(cfgPath)
-  , mCFG(nullptr)
-  , mCurrent(nullptr)
-  , mInput(nullptr)
-  , mWindow(nullptr)
-  , mAsset(nullptr)
-  , mLua(nullptr)
-  , mResourceManager(nullptr)
-  , mWindowRefresh(false) {}
+    : mCFGPath(cfgPath)
+    , mCFG(nullptr)
+    , mCurrent(nullptr)
+    , mInput(nullptr)
+    , mWindow(nullptr)
+    , mAsset(nullptr)
+    , mLua(nullptr)
+    , mResourceManager(nullptr)
+    , mWindowRefresh(false) {}
 
 Engine::~Engine() {
   deinitialize();
@@ -237,7 +237,7 @@ bool Engine::initOpenGLBindings() {
  * @return
  */
 bool Engine::initWindow() {
-  CFG* cfg = mAsset->cfg();
+  CFG* cfg          = mAsset->cfg();
   bool isFullscreen = cfg->graphics.winMode == 1;
 
   // Set version we want

@@ -28,7 +28,7 @@
  */
 sol::table LuaLib::openConsole(sol::this_state state) {
   sol::state_view lua(state);
-  sol::table module = lua.create_table();
+  sol::table      module = lua.create_table();
 
   // clang-format off
   module.new_usertype<Console>("_Console",
@@ -55,7 +55,7 @@ sol::table LuaLib::openConsole(sol::this_state state) {
  */
 sol::table LuaLib::openCFG(sol::this_state state) {
   sol::state_view lua(state);
-  sol::table module = lua.create_table();
+  sol::table      module = lua.create_table();
 
   // Add Graphics as a lua struct, so it can
   // be accessed when using CFG.
@@ -838,16 +838,15 @@ sol::table LuaLib::Input::openEvent(sol::this_state state) {
  */
 sol::table LuaLib::Input::openKeys(sol::this_state state) {
   sol::state_view lua(state);
-  sol::table module = lua.create_table();
+  sol::table      module = lua.create_table();
 
   // Add all the keys that defined on Input
-  for(auto& a : ::Input::keyMap) {
+  for (auto& a : ::Input::keyMap) {
     module[a.first] = a.second;
   }
 
-  module.set_function("toString", [](int key) {
-    return ::Input::glfwKeyToString(key);
-  });
+  module.set_function("toString",
+                      [](int key) { return ::Input::glfwKeyToString(key); });
 
   return module;
 }
@@ -866,7 +865,7 @@ sol::table LuaLib::Input::openInput(sol::this_state state) {
   sol::table      module = lua.create_table();
 
   module["Event"] = openEvent(state);
-  module["Keys"] = openKeys(state);
+  module["Keys"]  = openKeys(state);
 
   return module;
 }
@@ -883,12 +882,12 @@ sol::table LuaLib::Math::openVec2(sol::this_state state) {
   sol::state_view lua(state);
   sol::table      module = lua.create_table();
 
-  sol::constructors<
-    sol::types<>,
-    sol::types<int>,
-    sol::types<float>,
-    sol::types<int, int>,
-    sol::types<float, float>> ctor;
+  sol::constructors<sol::types<>,
+                    sol::types<int>,
+                    sol::types<float>,
+                    sol::types<int, int>,
+                    sol::types<float, float>>
+                           ctor;
   sol::usertype<mmm::vec2> type(ctor, "x", &mmm::vec2::x, "y", &mmm::vec2::y);
 
   module.set_usertype("vec2", type);
@@ -1017,7 +1016,7 @@ sol::table LuaLib::State::openState(sol::this_state state) {
  */
 sol::table LuaLib::Util::openUtil(sol::this_state state) {
   sol::state_view lua(state);
-  sol::table       module = lua.create_table();
+  sol::table      module = lua.create_table();
 
   module.set_function("toVectorStr",
                       [](sol::table t) -> std::vector<std::string> {

@@ -462,8 +462,8 @@ namespace Input {
       { GLFW_KEY_RIGHT_SUPER, "RightSuper" },
       { GLFW_KEY_MENU, "Menu" } };
 
-  std::map<std::string, int> keyMap = {
-      { "Unbound", GLFW_KEY_UNKNOWN },
+  std::map<std::string, int> keyMap =
+    { { "Unbound", GLFW_KEY_UNKNOWN },
       { "MouseButton1", GLFW_MOUSE_BUTTON_1 },
       { "MouseButton2", GLFW_MOUSE_BUTTON_2 },
       { "MouseButton3", GLFW_MOUSE_BUTTON_3 },
@@ -589,6 +589,5 @@ namespace Input {
       { "RightControl", GLFW_KEY_RIGHT_CONTROL },
       { "RightAlt", GLFW_KEY_RIGHT_ALT },
       { "RightSuper", GLFW_KEY_RIGHT_SUPER },
-      { "Menu", GLFW_KEY_MENU }
-  };
+      { "Menu", GLFW_KEY_MENU } };
 }

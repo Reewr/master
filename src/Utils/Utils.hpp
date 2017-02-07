@@ -3,8 +3,8 @@
 #include <iostream>
 #include <string>
 
-extern bool DEBUG_MODE;
-extern bool ENABLE_COLORS;
+extern bool  DEBUG_MODE;
+extern bool  ENABLE_COLORS;
 extern float LOOP_LOGGER;
 
 namespace Utils {

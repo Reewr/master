@@ -35,7 +35,7 @@ public:
   } graphics;
 
   struct General {
-    bool debug = false;
+    bool debug       = false;
     bool debugColors = false;
   } general;
 

@@ -28,8 +28,8 @@ public:
   //     8m^3 (2,2,2) cube weighs 8000kg
   //
   // The position is where the box will start at
-  Cube(const mmm::vec3& size = mmm::vec3(1.0f, 1.0f, 1.0f),
-       int weight = -1,
+  Cube(const mmm::vec3& size     = mmm::vec3(1.0f, 1.0f, 1.0f),
+       int              weight   = -1,
        const mmm::vec3& position = mmm::vec3(0, 20, 0));
   ~Cube();
 

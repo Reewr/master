@@ -353,7 +353,7 @@ namespace Lua {
     std::string path          = engine["package"]["path"];
     std::string sep           = path.empty() ? "" : ";";
     engine["package"]["path"] = path + sep + "./lua/?.lua";
-    engine["cfg"] = mCFG;
+    engine["cfg"]             = mCFG;
 
     if (mConsole != nullptr)
       add(mConsole);
@@ -492,18 +492,18 @@ namespace Lua {
    * @return
    */
   std::vector<TypePair> Lua::getScope(sol::table&        table,
-                                       const std::string& name,
-                                       const std::string& divider) {
-    size_t                 pos   = name.find_first_of(divider);
+                                      const std::string& name,
+                                      const std::string& divider) {
+    size_t                pos   = name.find_first_of(divider);
     std::vector<TypePair> types = {};
 
     // If there's no more scoping to be done, return what we have.
     if (pos == std::string::npos) {
       for (auto a : table) {
         TypePair t = { a.first.get_type() == sol::type::string ?
-                          a.first.as<std::string>() :
-                          solTypetoStr(a.first.get_type()),
-                        solTypetoStr(a.second.get_type()) };
+                         a.first.as<std::string>() :
+                         solTypetoStr(a.first.get_type()),
+                       solTypetoStr(a.second.get_type()) };
 
         if (shouldIncludeType(t.first, name))
           types.push_back(t);

@@ -1,10 +1,10 @@
 #include "ResourceManager.hpp"
 
 #include "../GLSL/Program.hpp"
+#include "../Lua/Lua.hpp"
 #include "../Utils/Utils.hpp"
 #include "Font.hpp"
 #include "Texture.hpp"
-#include "../Lua/Lua.hpp"
 
 ResourceManager::ResourceManager() : mCurrentScope(ResourceScope::None) {}
 
