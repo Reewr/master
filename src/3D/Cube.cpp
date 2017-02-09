@@ -66,7 +66,7 @@ void Cube::update(float) {}
  */
 void Cube::draw(Camera* c, float) {
   mProgram->bind();
-  mProgram->setUniform("model", mScale * mRotation * mmm::translate(mPosition));
+  mProgram->setUniform("model", mmm::translate(mPosition) * mRotation * mScale);
   mProgram->setUniform("view", c->view());
   mProgram->setUniform("proj", c->projection());
   c->setLightVPUniforms(mProgram, "light");
