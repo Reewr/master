@@ -54,6 +54,12 @@ function state.windowRefresh()
   currentEvent:stopPropgation()
 end
 
+function state.load(statetoLoad)
+  console:log("Loading State")
+  currentEvent:sendStateChange(statetoLoad)
+  currentEvent:stopPropgation()
+end
+
 --[[
 
   Reloads the Lua Engine by sending a state change
