@@ -2,12 +2,13 @@
 
 #include <btBulletDynamicsCommon.h>
 
-#include "../GLSL/Program.hpp"
-#include "../Resource/ResourceManager.hpp"
-#include "../Resource/Texture.hpp"
-#include "../Shape/GL/Cube.hpp"
-#include "../Utils/Asset.hpp"
 #include "Camera.hpp"
+#include "GLSL/Program.hpp"
+#include "Graphical/Framebuffer.hpp"
+#include "Resource/ResourceManager.hpp"
+#include "Resource/Texture.hpp"
+#include "Shape/GL/Cube.hpp"
+#include "Utils/Asset.hpp"
 
 using mmm::vec2;
 using mmm::vec3;
@@ -56,6 +57,16 @@ Cube::~Cube() {
  */
 void Cube::update(float) {}
 
+void Cube::drawShadow(Framebuffer* shadowMap, Camera* camera) {
+  auto program = shadowMap->program();
+
+  program->bind();
+  program->setUniform("model", mmm::translate(mPosition) * mRotation * mScale);
+  camera->setLightVPUniforms(program, "light");
+
+  mCube->draw();
+}
+
 /**
  * @brief
  *   Draw the cube by binding the program and setting the required
@@ -70,7 +81,7 @@ void Cube::draw(Camera* c) {
   mProgram->setUniform("proj", c->projection());
   c->setLightVPUniforms(mProgram, "light");
 
-  mTexture->bind(0);
+  mTexture->bind(1);
   mCube->draw();
 }
 
