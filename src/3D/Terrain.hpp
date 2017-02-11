@@ -17,7 +17,7 @@ public:
   void update(float deltaTime);
 
   // Draw it. Keep it seperate from update
-  void draw(Camera* camera, float deltaTime);
+  void draw(Camera* camera);
 
   // Input handler
   void input(const Input::Event& event);

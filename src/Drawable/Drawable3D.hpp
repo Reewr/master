@@ -22,7 +22,7 @@ public:
   virtual void update(float deltaTime) = 0;
 
   // Draw it. Keep it separate from update
-  virtual void draw(Camera* camera, float deltaTime) = 0;
+  virtual void draw(Camera* camera) = 0;
 
   virtual void input(const Input::Event& event) = 0;
 

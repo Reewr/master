@@ -62,9 +62,8 @@ void Cube::update(float) {}
  *   uniforms.
  *
  * @param c
- * @param float
  */
-void Cube::draw(Camera* c, float) {
+void Cube::draw(Camera* c) {
   mProgram->bind();
   mProgram->setUniform("model", mmm::translate(mPosition) * mRotation * mScale);
   mProgram->setUniform("view", c->view());

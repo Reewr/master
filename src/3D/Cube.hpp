@@ -37,7 +37,7 @@ public:
   void update(float deltaTime);
 
   // Draw it. Keep it separate from update
-  void draw(Camera* camera, float deltaTime);
+  void draw(Camera* camera);
 
   // Input handler for cube
   void input(const Input::Event& event);

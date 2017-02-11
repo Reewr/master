@@ -40,7 +40,7 @@ Terrain::~Terrain() {
 
 void Terrain::update(float) {}
 
-void Terrain::draw(Camera* c, float) {
+void Terrain::draw(Camera* c) {
   mProgram->bind();
   mProgram->setUniform("model", mmm::translate(mPosition) * mRotation * mScale);
   mProgram->setUniform("view", c->view());
