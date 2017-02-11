@@ -18,10 +18,10 @@ class Drawable3D : public Drawable {
 public:
   virtual ~Drawable3D();
 
-  // Update the element, phusics etc
+  // Update the element, physics etc
   virtual void update(float deltaTime) = 0;
 
-  // Draw it. Keep it seperate from update
+  // Draw it. Keep it separate from update
   virtual void draw(Camera* camera, float deltaTime) = 0;
 
   virtual void input(const Input::Event& event) = 0;
