@@ -13,10 +13,10 @@ public:
   Terrain();
   ~Terrain();
 
-  // Update the element, phusics etc
+  // Update the element, physics etc
   void update(float deltaTime);
 
-  // Draw it. Keep it seperate from update
+  // Draw it. Keep it separate from update
   void draw(Camera* camera);
 
   // Input handler
