@@ -6,6 +6,7 @@ struct btDefaultMotionState;
 
 class Asset;
 class Camera;
+class Framebuffer;
 
 #include "Drawable.hpp"
 #include <mmm.hpp>
@@ -20,6 +21,9 @@ public:
 
   // Update the element, physics etc
   virtual void update(float deltaTime) = 0;
+
+  // First pass draw from light's point of view
+  virtual void drawShadow(Framebuffer* shadowMap, Camera* camera);
 
   // Draw it. Keep it separate from update
   virtual void draw(Camera* camera) = 0;

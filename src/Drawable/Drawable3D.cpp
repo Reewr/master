@@ -1,5 +1,8 @@
 #include "Drawable3D.hpp"
 
+#include "3D/Camera.hpp"
+#include "Graphical/Framebuffer.hpp"
+
 #include <btBulletDynamicsCommon.h>
 
 using mmm::vec3;
@@ -13,6 +16,8 @@ Drawable3D::Drawable3D()
     , mBody(nullptr) {}
 
 Drawable3D::~Drawable3D() {}
+
+void Drawable3D::drawShadow(Framebuffer*, Camera*) {}
 
 void Drawable3D::updateFromPhysics() {
   btTransform trans;
