@@ -17,8 +17,8 @@ class Program;
 /**
  * @brief
  *   This represents a Cube with Physics in the world. It can be changed
- *   to have a certain size and weight and can also be specificed to be
- *   at a specificied position
+ *   to have a certain size and weight and can also be specified to be
+ *   at a specified position
  */
 class Cube : public Drawable3D {
 public:
@@ -33,10 +33,10 @@ public:
        const mmm::vec3& position = mmm::vec3(0, 20, 0));
   ~Cube();
 
-  // Update the element, phusics etc
+  // Update the element, physics etc
   void update(float deltaTime);
 
-  // Draw it. Keep it seperate from update
+  // Draw it. Keep it separate from update
   void draw(Camera* camera, float deltaTime);
 
   // Input handler for cube
