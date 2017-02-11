@@ -514,7 +514,7 @@ void Framebuffer::printFramebufferLimits() {
 
 bool Framebuffer::failCheck() {
   if (!isInitialized())
-    throw std::runtime_error("Using unintialized framebuffer!");
+    throw std::runtime_error("Using uninitialized framebuffer!");
   return true;
 }
 
