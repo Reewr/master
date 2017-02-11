@@ -11,7 +11,7 @@ class CFG;
 class ResourceManager;
 
 //! Texture contains information about the loaded texture,
-//! can load .PNG & .dds. Can also draw simple squared texture
+//! can load .PNG & .dds.
 class Texture : public Resource {
 public:
   //! Textures to load - MODE
