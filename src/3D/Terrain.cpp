@@ -3,12 +3,13 @@
 #include <btBulletDynamicsCommon.h>
 #include <mmm.hpp>
 
-#include "../GLSL/Program.hpp"
-#include "../Resource/ResourceManager.hpp"
-#include "../Resource/Texture.hpp"
-#include "../Shape/GL/Grid3D.hpp"
-#include "../Utils/Asset.hpp"
 #include "Camera.hpp"
+#include "GLSL/Program.hpp"
+#include "Graphical/Framebuffer.hpp"
+#include "Resource/ResourceManager.hpp"
+#include "Resource/Texture.hpp"
+#include "Shape/GL/Grid3D.hpp"
+#include "Utils/Asset.hpp"
 
 using mmm::vec2;
 using mmm::vec3;
@@ -40,13 +41,22 @@ Terrain::~Terrain() {
 
 void Terrain::update(float) {}
 
+void Terrain::drawShadow(Framebuffer* shadowMap, Camera* camera) {
+  auto program = shadowMap->program();
+
+  program->bind();
+  program->setUniform("model", mmm::translate(mPosition) * mRotation * mScale);
+  camera->setLightVPUniforms(program, "light");
+  mGrid->draw();
+}
+
 void Terrain::draw(Camera* c) {
   mProgram->bind();
   mProgram->setUniform("model", mmm::translate(mPosition) * mRotation * mScale);
   mProgram->setUniform("view", c->view());
   mProgram->setUniform("proj", c->projection());
   c->setLightVPUniforms(mProgram, "light");
-  mTexture->bind(0);
+  mTexture->bind(1);
   mGrid->draw();
 }
 
