@@ -105,7 +105,7 @@ void Master::draw3D() {
   mShadowmap->texture()->bind(0);
 
   for (auto d : mDrawable3D)
-    d->draw(mCamera, mDeltaTime);
+    d->draw(mCamera);
 }
 
 void Master::drawGUI() {
