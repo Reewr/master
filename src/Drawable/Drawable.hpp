@@ -18,7 +18,7 @@ class Drawable {
 public:
   virtual ~Drawable();
 
-  // Update the element, phusics etc
+  // Update the element, physics etc
   virtual void update(float deltaTime) = 0;
 
   // Update based on input
