@@ -106,10 +106,13 @@ void main () {
 
 
   // ignore shadows:
-  fragment = texture(diffuseMap, texCoord);
+  // fragment = texture(diffuseMap, texCoord);
 
   // with shadows:
   // fragment = vec4((specular + diffuse) * visibility + ambient, 1.0);
+
+  // without phong shading, until we fix normals...
+  fragment = vec4(texel * visibility + ambient, 1.0);
 
   // with fog:
   // fragment.rgb = fog(fragment);
