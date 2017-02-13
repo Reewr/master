@@ -16,6 +16,7 @@
 #include "../Lua/Lua.hpp"
 #include "../Resource/ResourceManager.hpp"
 #include "../Resource/Texture.hpp"
+#include "../Shape/GL/Rectangle.hpp"
 #include "../Utils/Asset.hpp"
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
@@ -111,6 +112,11 @@ void Master::drawGUI() {
 
   for (auto g : mGUIElements)
     g->draw();
+
+  // render shadowMap as a GUI overlay for debugging...
+  // mAsset->rManager()->get<Program>("Program::GUI")->bind();
+  // mShadowmap->texture()->bind(0);
+  // mShadowmap->quad()->draw();
 
   try {
     mLua->engine["draw"]();
