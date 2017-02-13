@@ -80,7 +80,7 @@ void main () {
   float visibility = 1.0;
 
   float bias = 0.005 * tan(acos(theta));
-  bias = clamp(bias, 0, 0.01);
+  bias = clamp(bias, 0.0, 0.01);
 
   // poisson sampling
   for (int i = 0; i < shadowSamples; i++) {
