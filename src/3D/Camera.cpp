@@ -264,11 +264,6 @@ void Camera::update(float) {
   mLight.projection = mmm::ortho(-7.f, 7.f, -7.f, 7.f, -7.f, 7.f);
   mLight.direction  = mmm::normalize(lightUp - mTarget);
 
-  setLightVPUniforms(mShadowProgram);
-  setLightVPUniforms(mModelProgram);
-  mModelProgram->setUniform("view", mView);
-  mModelProgram->setUniform("dir", mLight.direction);
-  // terrain->setUniform("lightDir", ld);
 
   /*
   mat4 inv_view = transpose(view);
