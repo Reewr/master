@@ -260,9 +260,9 @@ void Camera::update(float dt) {
   vec3 lightUp  = vec3(lt * vec4(0, 0, -1, 0));
 
   mLight.view = mmm::lookAt(lightEye, mTarget, lightUp);
-  /* float h = mHeight; */
-  /* mLight.projection = ortho (-5*h, 5*h, -5*h, 5*h, -5*h, 5*h); */
-  mLight.projection = mmm::ortho(-7.f, 7.f, -7.f, 7.f, -7.f, 7.f);
+  float h = 5*mHeight;
+  mLight.projection = mmm::ortho(-h, h, -h, h, -h, h);
+  // mLight.projection = mmm::ortho(-7.f, 7.f, -7.f, 7.f, -7.f, 7.f);
   mLight.direction  = mmm::normalize(lightUp - mTarget);
 
 
