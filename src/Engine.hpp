@@ -37,7 +37,7 @@ public:
    *   the path is relative to the executable. This is
    *   where it expects to find the configuration file
    */
-  Engine(std::string cfgPath = "config/config.ini");
+  explicit Engine(std::string cfgPath = "config/config.ini");
 
   //! Desctructor that deletes all the allocated objects
   ~Engine();
