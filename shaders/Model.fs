@@ -92,10 +92,10 @@ void main () {
     // int index = int (16.0 * random (floor (position * 1000), i)) % 16;
 
     vec2 sc = vec2(shadowCoord.xy + poisson[index]/spread);
-    float sample = texture(shadowMap, sc).x;
+    float sample_ = texture(shadowMap, sc).x;
 
 
-    if (sample < shadowCoord.z - bias) {
+    if (sample_ < shadowCoord.z - bias) {
       visibility -= 1.0/shadowSamples;
     }
   }
@@ -105,7 +105,12 @@ void main () {
   }
 
 
-  fragment = texture(shadowMap, texCoord);
-  /* fragment = vec4((specular + diffuse) * visibility + ambient, 1.0); */
-  /* fragment.rgb = fog(fragment); */
+  // ignore shadows:
+  fragment = texture(diffuseMap, texCoord);
+
+  // with shadows:
+  // fragment = vec4((specular + diffuse) * visibility + ambient, 1.0);
+
+  // with fog:
+  // fragment.rgb = fog(fragment);
 }
