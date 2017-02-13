@@ -96,12 +96,10 @@ Master::~Master() {
 void Master::draw3D() {
   glEnable(GL_DEPTH_TEST);
 
-  /* mShadowmap->bind(); */
-
-  /* for (auto d : mDrawable3D) */
-  /*   d->draw(mCamera, mDeltaTime); */
-
-  /* mShadowmap->finalize(); */
+  mShadowmap->bind(true);
+  for (auto d : mDrawable3D)
+    d->drawShadow(mShadowmap, mCamera);
+  mShadowmap->finalize();
   mShadowmap->texture()->bind(0);
 
   for (auto d : mDrawable3D)
