@@ -224,6 +224,7 @@ set(SOURCE_FILES
 
   # src/Resource
   ${SRC_DIR}/Resource/Font.cpp
+  ${SRC_DIR}/Resource/Mesh.cpp
   ${SRC_DIR}/Resource/Texture.cpp
   ${SRC_DIR}/Resource/Resource.cpp
   ${SRC_DIR}/Resource/ResourceManager.cpp
@@ -304,6 +305,7 @@ set(HEADER_FILES
 
   # src/Resource
   ${SRC_DIR}/Resource/Font.hpp
+  ${SRC_DIR}/Resource/Mesh.hpp
   ${SRC_DIR}/Resource/Texture.hpp
   ${SRC_DIR}/Resource/Resource.hpp
   ${SRC_DIR}/Resource/ResourceManager.hpp
