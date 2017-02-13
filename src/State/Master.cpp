@@ -25,7 +25,7 @@
 using mmm::vec2;
 using mmm::vec3;
 
-Master::Master(Asset* a) {
+Master::Master(Asset* a) : mAsset(a) {
   CFG* c         = a->cfg();
   vec2 shadowRes = vec2(c->graphics.shadowRes, c->graphics.shadowRes);
 

@@ -37,6 +37,6 @@ private:
   Framebuffer* mShadowmap;
   World*       mWorld;
   Lua::Lua*    mLua;
-  /* Input::Input* mInput; */
-  /* Asset*        mAsset; */
+  // Input::Input* mInput;
+  Asset*       mAsset;
 };
