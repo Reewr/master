@@ -1,11 +1,11 @@
 #pragma once
 
-#include <mmm.hpp>
 #include <memory>
+#include <mmm.hpp>
 #include <vector>
 
-#include "Resource.hpp"
 #include "../OpenGLHeaders.hpp"
+#include "Resource.hpp"
 
 class Texture;
 class Asset;
@@ -21,10 +21,10 @@ class SubMesh {
 public:
   SubMesh();
 
-  SubMesh(Mesh* model,
+  SubMesh(Mesh*            model,
           ResourceManager* r,
-          const aiScene* scene,
-          const aiNode* node);
+          const aiScene*   scene,
+          const aiNode*    node);
 
   //! Draws the submesh
   void draw(const mmm::mat4& modelMatrix, std::shared_ptr<Program> program);
@@ -35,7 +35,7 @@ private:
 
   mmm::mat4 mTransform;
 
-  std::vector<SubMesh> mChildren;
+  std::vector<SubMesh>     mChildren;
   std::shared_ptr<Texture> mTexture;
 };
 
@@ -47,7 +47,7 @@ public:
   Mesh();
   ~Mesh();
 
-  //Draws the mesh with the given model matrix and program
+  // Draws the mesh with the given model matrix and program
   void draw(const mmm::mat4& modelMatrix, std::shared_ptr<Program> program);
 
   // loads the mesh
@@ -66,8 +66,8 @@ private:
   GLuint mVBO;
   GLuint mVAO;
 
-  int mNumVertices;
-  SubMesh* mMesh;
-  std::vector<float> mData;
+  int                      mNumVertices;
+  SubMesh*                 mMesh;
+  std::vector<float>       mData;
   std::shared_ptr<Texture> texture;
 };

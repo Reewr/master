@@ -1,12 +1,12 @@
 #include "Mesh.hpp"
-#include "Texture.hpp"
 #include "../GLSL/Program.hpp"
 #include "../Utils/Asset.hpp"
 #include "ResourceManager.hpp"
+#include "Texture.hpp"
 
 #include <assimp/Importer.hpp>
-#include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include <assimp/scene.h>
 
 using mmm::mat4;
 
@@ -33,17 +33,17 @@ Mesh::~Mesh() {
  */
 bool Mesh::load(ResourceManager* manager) {
   Assimp::Importer importer;
-  const aiScene* scene = importer.ReadFile(filename().c_str(),
-    aiProcess_Triangulate
-    //aiProcess_CalcTangentSpace |
-    //aiProcess_GenUVCoords |
-    //aiProcess_OptimizeGraph |
-    //aiProcess_OptimizeMeshes
-    //aiProcess_ValidateDataStructure
-    //aiProcess_PreTransformVertices
-    //aiProcess_SplitLargeMeshes |
-    //aiProcess_RemoveComponent
-  );
+  const aiScene*   scene =
+    importer.ReadFile(filename().c_str(), aiProcess_Triangulate
+                      // aiProcess_CalcTangentSpace |
+                      // aiProcess_GenUVCoords |
+                      // aiProcess_OptimizeGraph |
+                      // aiProcess_OptimizeMeshes
+                      // aiProcess_ValidateDataStructure
+                      // aiProcess_PreTransformVertices
+                      // aiProcess_SplitLargeMeshes |
+                      // aiProcess_RemoveComponent
+                      );
 
   if (!scene) {
     error("Unable to load mesh: ", filename());
@@ -59,19 +59,19 @@ bool Mesh::load(ResourceManager* manager) {
   glBindBuffer(GL_ARRAY_BUFFER, mVBO);
   glBindVertexArray(mVAO);
 
-  uint64_t elSize = 8 * sizeof(float);
+  uint64_t elSize     = 8 * sizeof(float);
   uint64_t offsetVert = 3 * sizeof(float);
   uint64_t offsetNorm = 5 * sizeof(float);
-  GLuint normalize = GL_FALSE;
+  GLuint   normalize  = GL_FALSE;
 
   glBufferData(GL_ARRAY_BUFFER, size() * elSize, &mData[0], GL_STATIC_DRAW);
 
-  glEnableVertexAttribArray (0);
-  glVertexAttribPointer (0, 3, GL_FLOAT, normalize, elSize, (void*)(0));
-  glEnableVertexAttribArray (1);
-  glVertexAttribPointer (1, 2, GL_FLOAT, normalize, elSize, (void*)offsetVert);
-  glEnableVertexAttribArray (2);
-  glVertexAttribPointer (2, 3, GL_FLOAT, normalize, elSize, (void*)offsetNorm);
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, normalize, elSize, (void*) (0));
+  glEnableVertexAttribArray(1);
+  glVertexAttribPointer(1, 2, GL_FLOAT, normalize, elSize, (void*) offsetVert);
+  glEnableVertexAttribArray(2);
+  glVertexAttribPointer(2, 3, GL_FLOAT, normalize, elSize, (void*) offsetNorm);
 
   glBindVertexArray(0);
   return true;
@@ -161,7 +161,7 @@ void Mesh::addNormals(float x, float y, float z) {
  *
  * @return
  */
-int Mesh::size(){
+int Mesh::size() {
   return mNumVertices;
 }
 
@@ -171,7 +171,7 @@ int Mesh::size(){
  *
  * @param numVerts
  */
-void Mesh::setSize(int numVerts){
+void Mesh::setSize(int numVerts) {
   mNumVertices = numVerts;
 }
 
@@ -193,12 +193,22 @@ SubMesh::SubMesh(Mesh*            model,
                  const aiNode*    node)
     : mStartIndex(0), mSize(0) {
   aiMatrix4x4 am = node->mTransformation;
-  mTransform = mat4(
-    am.a1, am.a2, am.a3, am.a4,
-    am.b1, am.b2, am.b3, am.b4,
-    am.c1, am.c2, am.c3, am.c4,
-    am.d1, am.d2, am.d3, am.d4
-  );
+  mTransform     = mat4(am.a1,
+                    am.a2,
+                    am.a3,
+                    am.a4,
+                    am.b1,
+                    am.b2,
+                    am.b3,
+                    am.b4,
+                    am.c1,
+                    am.c2,
+                    am.c3,
+                    am.c4,
+                    am.d1,
+                    am.d2,
+                    am.d3,
+                    am.d4);
 
   // parse the node
   for (unsigned int i = 0; i < node->mNumMeshes; i += 1) {
@@ -235,8 +245,10 @@ SubMesh::SubMesh(Mesh*            model,
 
     // load the texture for the particular mesh
     aiString texpath;
-    aiReturn hasTexture = scene->mMaterials[mesh->mMaterialIndex]->
-                          GetTexture(aiTextureType_DIFFUSE, 0, &texpath);
+    aiReturn hasTexture =
+      scene->mMaterials[mesh->mMaterialIndex]->GetTexture(aiTextureType_DIFFUSE,
+                                                          0,
+                                                          &texpath);
     if (hasTexture == AI_SUCCESS) {
       mTexture = manager->get<Texture>(texpath.C_Str());
     }
