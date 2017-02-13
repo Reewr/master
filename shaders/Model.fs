@@ -1,4 +1,4 @@
-#version 330
+#version 420
 
 in vec3 position;
 in vec3 normal;
@@ -8,8 +8,8 @@ in vec2 texCoord;
 uniform vec3 dir;
 
 uniform int shadowSamples;
-uniform sampler2D shadowMap;
-uniform sampler2D diffuseMap;
+layout(binding=0) uniform sampler2D shadowMap;
+layout(binding=1) uniform sampler2D diffuseMap;
 
 out vec4 fragment;
 
