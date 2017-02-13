@@ -8,6 +8,7 @@
 #include "Resource.hpp"
 
 class CFG;
+class ResourceManager;
 
 //! Texture contains information about the loaded texture,
 //! can load .PNG & .dds. Can also draw simple squared texture
@@ -24,7 +25,7 @@ public:
   ~Texture();
 
   //! Loads a texture using SOIL. Can load .PNG
-  bool load();
+  bool load(ResourceManager*);
 
   void unload();
 

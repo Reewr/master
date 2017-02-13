@@ -87,7 +87,7 @@ void Font::unload() {
  *
  * @return
  */
-bool Font::load() {
+bool Font::load(ResourceManager*) {
   return load(12);
 }
 

@@ -2,6 +2,8 @@
 
 #include <string>
 
+class ResourceManager;
+
 enum class ResourceType { Empty, Texture, Font, Program };
 enum class ResourceScope {
   None     = 0x00,
@@ -39,7 +41,7 @@ public:
   //! required, it will load it using this function. If you
   //! require the filename, it can be accessed via the member
   //! variable or the getter function
-  virtual bool load() = 0;
+  virtual bool load(ResourceManager* manager) = 0;
 
   //! Whenever the resource manager feels like this resource
   //! is useless, it will call unload. This function

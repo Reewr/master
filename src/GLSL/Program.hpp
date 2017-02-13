@@ -11,6 +11,7 @@
 
 class Shader;
 class fstream;
+class ResourceManager;
 
 //! Contains GLSL-Program and lets you load shaders,
 //! bind and unbinds them easily.
@@ -40,7 +41,7 @@ public:
   bool addShader(const Shader& sh);
   bool addShader(const std::string& sh);
 
-  bool load();
+  bool load(ResourceManager*);
   void unload();
 
   //! Links the program if you specified link in createProgram() as false.

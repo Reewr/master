@@ -18,7 +18,7 @@ void ResourceManager::loadRequired(ResourceScope scope) {
   for (auto& rPair : mResources) {
     if (rPair.second->includesScope(scope) && !rPair.second->loaded()) {
       log("ResourceManager :: Loading: ", rPair.second->filename());
-      rPair.second->load();
+      rPair.second->load(this);
       rPair.second->setLoaded(true);
     } else if (rPair.second->includesScope(scope) && rPair.second->loaded()) {
       log("ResourceManager :: Already loaded: ", rPair.second->filename());

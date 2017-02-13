@@ -78,7 +78,7 @@ GLuint Texture::generateGLTexture() {
   return mTextureId;
 }
 
-bool Texture::load() {
+bool Texture::load(ResourceManager*) {
   log("Texture :: Loading ", mFilename);
   if (mTextureId != 0)
     return true;

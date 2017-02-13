@@ -53,7 +53,7 @@ bool Program::createProgram(const std::string& fsvs, bool link) {
   return this->link();
 }
 
-bool Program::load() {
+bool Program::load(ResourceManager*) {
   log("Program :: Loading", mFilename);
   return createProgram(mFilename, true);
 }

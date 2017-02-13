@@ -32,7 +32,7 @@ public:
   ~Font();
 
   // Default handler, calls load with 12
-  bool load();
+  bool load(ResourceManager*);
 
   //! Loads a font from file and converts it to a OpenGL texture
   bool load(int size);
