@@ -55,7 +55,10 @@ void Terrain::draw(Camera* c) {
   mProgram->setUniform("model", mmm::translate(mPosition) * mRotation * mScale);
   mProgram->setUniform("view", c->view());
   mProgram->setUniform("proj", c->projection());
+
+  mProgram->setUniform("dir", c->light().direction);
   c->setLightVPUniforms(mProgram, "light");
+
   mTexture->bind(1);
   mGrid->draw();
 }
