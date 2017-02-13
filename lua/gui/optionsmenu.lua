@@ -2,8 +2,7 @@
 local Rectangle       = require 'Shape.Rectangle'
 local vec2            = require 'Math.vec2'
 local Window          = require 'GUI.Window'
-local MenuSettings    = require 'GUI.Menu.Settings'
-local MenuOrientation = require 'GUI.Menu.Orientation'
+local Menu            = require 'GUI.Menu'
 local TextColor       = require 'GUI.Text.Color'
 local Util            = require 'Util'
 
@@ -13,7 +12,7 @@ local startX = cfg.graphics.res.x * 0.50 - 500
 local startY = cfg.graphics.res.y * 0.50 - 350
 
 local rect         = Rectangle.new(startX, startY, 1000, 700)
-local window       = GUI.Window.new("Texture::Background", rect)
+local window       = Window.new("Texture::Background", rect)
 local categories   = {"Audio", "Game", "Graphics", "Keybindings", "Mouse"}
 local activeWindow = ""
 
@@ -21,10 +20,10 @@ local activeWindow = ""
 window:addMenu("Category",
                Util.toVectorStr(categories),
                vec2.new(25, 100),
-               MenuSettings.new(20,
-                                50,
-                                MenuOrientation.Vertical,
-                                TextColor.White))
+               Menu.Settings.new(20,
+                                 50,
+                                 Menu.Orientation.Vertical,
+                                 TextColor.White))
 
 local category  = window:menu("Category")
 local innerRect = Rectangle.new(200, 54, rect.size.x - 200, rect.size.y - 125)
@@ -32,23 +31,23 @@ local innerRect = Rectangle.new(200, 54, rect.size.x - 200, rect.size.y - 125)
 -- -- Accept and cancel buttons
 category:addMenuItem("Accept", vec2.new(rect:middle().x - 200,
                                         rect:bottomright().y - 50),
-                               MenuSettings.new(20,
+                               Menu.Settings.new(20,
                                                 50,
-                                                MenuOrientation.Vertical,
+                                                Menu.Orientation.Vertical,
                                                 TextColor.White))
 
 category:addMenuItem("Cancel", vec2.new(rect:middle().x + 100,
                                         rect:bottomright().y - 50),
-                               MenuSettings.new(20,
+                               Menu.Settings.new(20,
                                                 50,
-                                                MenuOrientation.Vertical,
+                                                Menu.Orientation.Vertical,
                                                 TextColor.White))
 
-window:addWindow("Audio", innerRect)
-window:addWindow("Graphics", innerRect)
-window:addWindow("Keybindings", innerRect)
-window:addWindow("Mouse", innerRect)
-window:addWindow("Game", innerRect)
+window:addWindow("Audio", innerRect, "NONE")
+window:addWindow("Graphics", innerRect, "NONE")
+window:addWindow("Keybindings", innerRect, "NONE")
+window:addWindow("Mouse", innerRect, "NONE")
+window:addWindow("Game", innerRect, "NONE")
 
 local windows = {
   Audio       = window:window("Audio"),
@@ -58,119 +57,125 @@ local windows = {
   Game        = window:window("Game")
 }
 
--- -- This function basically clears everything. In order to keep everything away
--- -- from everything else, I've created this function
--- function addElements()
---   local windowOptions = {
---     Graphics = {
---       menu = {
---         name = "Graphics",
---         position = vec2.new(55, 35),
---         menuOptions = GUI.Menu.MenuSettings(15, 1, 0, 1),
---         items = {{
---           pos = vec2.new(55, 35),
---           text = "Resolution"
---         }, {
---           pos = vec2.new(225, 35),
---           text = "Vsync"
---         }, {
---           pos = vec2.new(400, 35),
---           text = "Display Mode"
---         }, {
---           pos = vec2.new(575, 35),
---           text = "View distance"
---         }, {
---           pos = vec2.new(90, 125),
---           text = "Monitor"
---         }, {
---           pos = vec2.new(280, 125),
---           text = "Anti-aliasing"
---         }, {
---           pos = vec2.new(516, 125),
---           text = "Anisotrophic filtering"
---         }, {
---           pos = vec2.new(50, 225),
---           text = "Shadow Sampling"
---         }, {
---           pos = vec2.new(300, 225),
---           text = "Shadow Resolution"
---         }}
---       },
---       elements = {
---       }
---     },
+-- This function basically clears everything.
+-- In order to keep everything away from everything else,
+-- I've created this function
+function addElements()
+  local windowOptions = {
+    Graphics = {
+      menu = {
+        name = "Graphics",
+        position = vec2.new(55, 35),
+        menuOptions = Menu.Settings.new(15, 1, 0, 1),
+        items = {{
+          pos = vec2.new(55, 35),
+          text = "Resolution"
+        }, {
+          pos = vec2.new(225, 35),
+          text = "Vsync"
+        }, {
+          pos = vec2.new(400, 35),
+          text = "Display Mode"
+        }, {
+          pos = vec2.new(575, 35),
+          text = "View distance"
+        }, {
+          pos = vec2.new(90, 125),
+          text = "Monitor"
+        }, {
+          pos = vec2.new(280, 125),
+          text = "Anti-aliasing"
+        }, {
+          pos = vec2.new(516, 125),
+          text = "Anisotrophic filtering"
+        }, {
+          pos = vec2.new(50, 225),
+          text = "Shadow Sampling"
+        }, {
+          pos = vec2.new(300, 225),
+          text = "Shadow Resolution"
+        }}
+      },
+      elements = {
+      }
+    },
 
---     Audio = {
---       menu = {
---         name = "Audio",
---         position = vec2.new(225, 35),
---         menuOptions = GUI.Menu.MenuSettings(15, 1, 180, 1),
---         items = {{
---           pos = vec2.new(55, 35),
---           text = "Master Volume"
---         }, {
---           pos = vec2.new(225, 35),
---           text = "SFX Volume"
---         }, {
---           pos = vec2.new(400, 35),
---           text = "Music Volume"
---         }}
---       }
---     },
+    Audio = {
+      menu = {
+        name = "Audio",
+        position = vec2.new(225, 35),
+        menuOptions = Menu.Settings.new(15, 1, 180, 1),
+        items = {{
+          pos = vec2.new(55, 35),
+          text = "Master Volume"
+        }, {
+          pos = vec2.new(225, 35),
+          text = "SFX Volume"
+        }, {
+          pos = vec2.new(400, 35),
+          text = "Music Volume"
+        }}
+      }
+    },
 
---     Game = {
---       menu = {
---         name = "Game",
---         position = vec2.new(50, 50),
---         menuOptions = GUI.Menu.MenuSettings(15, 1, 150, 1),
---         items = {{
---           pos = vec2.new(50, 50),
---           text = "Camera Rotation"
---         }, {
---           pos = vec2.new(80, 130),
---           text = "Inverse Horizontal"
---         }, {
---           pos = vec2.new(430, 50),
---           text = "Camera Zoom"
---         }, {
---           pos = vec2.new(460, 50),
---           text = "Camera Inverse"
---         }}
---       }
---     },
+    Game = {
+      menu = {
+        name = "Game",
+        position = vec2.new(50, 50),
+        menuOptions = Menu.Settings.new(15, 1, 150, 1),
+        items = {{
+          pos = vec2.new(50, 50),
+          text = "Camera Rotation"
+        }, {
+          pos = vec2.new(80, 130),
+          text = "Inverse Horizontal"
+        }, {
+          pos = vec2.new(430, 50),
+          text = "Camera Zoom"
+        }, {
+          pos = vec2.new(460, 50),
+          text = "Camera Inverse"
+        }}
+      }
+    },
 
---     Keybindings = {
---       menu = {
---         name = "Keybindings",
---         position = vec2.new(320, 60),
---         menuOptions = GUI.Menu.MenuSettings(15, 1, 150, 1),
---         items = {{
---           pos = vec2.new(320, 60),
---           text = "Key 1"
---         }, {
---           pos = vec2.new(495, 60),
---           text = "Key 2"
---         }}
---       }
---     }
---   }
+    Keybindings = {
+      menu = {
+        name = "Keybindings",
+        position = vec2.new(320, 60),
+        menuOptions = Menu.Settings.new(15, 1, 150, 1),
+        items = {{
+          pos = vec2.new(320, 60),
+          text = "Key 1"
+        }, {
+          pos = vec2.new(495, 60),
+          text = "Key 2"
+        }}
+      }
+    }
+  }
 
---   for key, value in windowOptions do
---     windows[key]:addMenu(value.name, value.position, value.menuOptions)
---     menu = windows:menu(value.name)
---     for item in value.items do
---       menu:addMenuItem(item.pos, item.text)
---     end
---   end
+  for key, value in pairs(windowOptions) do
+    windows[key]:addMenu(value.menu.name,
+                         Util.toVectorStr({}),
+                         value.menu.position,
+                         value.menu.menuOptions)
 
---   -- windows.Graphics.addDropdown("res",
---   --                              Glfw.getAvailableResolutionsAsStrings(),
---   --                              vec2.new(50, 60))
---   -- windows.Graphics.addDropdown("vsync", {"On", "Off"}, vec2.new(230, 60))
---   -- windows.Graphics.addDropdown("")
--- end
+    local menu = windows[key]:menu(value.menu.name)
 
--- -- addElements()
+    for key, item in pairs(value.menu.items) do
+      menu:addMenuItem(item.text, item.pos, Menu.Settings.new())
+    end
+  end
+
+  -- windows.Graphics.addDropdown("res",
+  --                              Glfw.getAvailableResolutionsAsStrings(),
+  --                              vec2.new(50, 60))
+  -- windows.Graphics.addDropdown("vsync", {"On", "Off"}, vec2.new(230, 60))
+  -- windows.Graphics.addDropdown("")
+end
+
+addElements()
 
 -- -- This function handles clicks or presses enter while in the options menu
 -- -- It will only be invoked if the mouse click / key press has not already
