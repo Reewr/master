@@ -52,8 +52,8 @@ float random(vec3 seed, int i) {
 
 // fog
 const vec3 fog_colour = vec3(1.0);
-const float fog_rad_min = 5.0;
-const float fog_rad_max = 12.0;
+const float fog_rad_min = 32.0;
+const float fog_rad_max = 64.0;
 
 vec3 fog (vec4 c) {
   float dist = length(-position);
