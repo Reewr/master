@@ -248,12 +248,13 @@ void Camera::input(float dt) {
  *
  * @param dt
  */
-void Camera::update(float) {
+void Camera::update(float dt) {
   // now that input has been handled, handle the new positions and stuff
   // that may have been set
   mView = updateViewMatrix();
 
-  /* mLight.day -= light.speed * dt; */
+  // mLight.day -= mLight.speed * dt;
+
   mat4 lt       = mmm::rotate_z(mLight.day) * mmm::rotate_y(mHoriRotation);
   vec3 lightEye = mTarget + vec3(lt * vec4(0, mHeight, 0, 1));
   vec3 lightUp  = vec3(lt * vec4(0, 0, -1, 0));
