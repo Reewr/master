@@ -18,19 +18,14 @@ Program::Program(const std::string& fsvs, bool link)
 }
 
 bool Program::createProgram(const std::string& fsvs, bool link) {
-  std::map<std::string, std::string> srcs;
-  if (fsvs.find(",") != std::string::npos) {
-    srcs = loadDualShaderFilename(fsvs);
-  } else {
-    srcs = loadVSFS(fsvs);
+  if (fsvs.find(",") == std::string::npos) {
+    throw std::runtime_error("Must load program as single string of two shaders");
   }
 
-  if (!srcs.count("FRAGMENT") || !srcs.count("VERTEX"))
-    throw std::runtime_error("Failed to load one of the shaders from file '" +
-                             fsvs + "'");
+  std::map<std::string, Shader> srcs = loadDualShaderFilename(fsvs);
 
-  Shader fs(srcs["FRAGMENT"], true, fsvs);
-  Shader vs(srcs["VERTEX"], false, fsvs);
+  Shader fs = srcs["FRAGMENT"];
+  Shader vs = srcs["VERTEX"];
 
   if (program != 0)
     glDeleteProgram(program);
@@ -207,23 +202,7 @@ bool Program::isActive() const {
   return (activeProgram == program);
 }
 
-std::string Program::loadShader(std::ifstream& f) {
-  if (!f.is_open())
-    throw std::runtime_error("ifstream is closed.");
-  std::string shaderSrc = "";
-  std::string line;
-  while (f.good()) {
-    std::getline(f, line);
-    if (line.find("#endif") != std::string::npos)
-      return shaderSrc;
-    shaderSrc += '\n';
-    shaderSrc += line;
-  }
-  shaderSrc += '\0';
-  return shaderSrc;
-}
-
-std::map<std::string, std::string>
+std::map<std::string, Shader>
 Program::loadDualShaderFilename(const std::string& fsvs) {
   size_t      commaPos = fsvs.find(",");
   std::string f1       = fsvs.substr(0, commaPos);
@@ -251,55 +230,10 @@ Program::loadDualShaderFilename(const std::string& fsvs) {
     throw std::runtime_error("Dual filename '" + fsvs +
                              "' has two vertex shaders");
 
-  std::ifstream fs1(f1);
-  std::ifstream fs2(f2);
-  std::map<std::string, std::string> contents;
-
-  if (!fs1.is_open())
-    throw std::runtime_error("Unable to open file: '" + f1 + "'");
-
-  if (!fs2.is_open())
-    throw std::runtime_error("Unable to open file: '" + f2 + "'");
-
-  std::string f1Content = std::string((std::istreambuf_iterator<char>(fs1)),
-                                      std::istreambuf_iterator<char>());
-
-  std::string f2Content = std::string((std::istreambuf_iterator<char>(fs2)),
-                                      std::istreambuf_iterator<char>());
-  fs1.close();
-  fs2.close();
-
-  contents["FRAGMENT"] = f1isFrag ? f1Content : f2Content;
-  contents["VERTEX"]   = f1isVert ? f1Content : f2Content;
+  contents["FRAGMENT"] = Shader(f1isFrag ? f1 : f2);
+  contents["VERTEX"]   = Shader(f2isFrag ? f2 : f1);
 
   return contents;
-}
-
-std::map<std::string, std::string> Program::loadVSFS(const std::string& fsvs) {
-  if (!fsvs.find(".vsfs") && !fsvs.find(".fsvs"))
-    throw std::runtime_error("File extension is faulty.");
-
-  std::ifstream fs(fsvs);
-  std::map<std::string, std::string> source;
-  std::string content;
-  std::string line;
-
-  if (!fs.is_open())
-    throw std::runtime_error("Unable to open shaderfile.");
-
-  while (fs.good()) {
-    std::getline(fs, line);
-    if (line.find("#ifdef") != std::string::npos) {
-      int first  = line.find("__") + 2;
-      int second = line.find("__", first + 1) - first;
-      content    = loadShader(fs);
-      source[line.substr(first, second)] = content;
-    }
-  }
-
-  fs.close();
-
-  return source;
 }
 
 bool Program::checkErrors(const std::string&              place,

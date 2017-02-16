@@ -88,10 +88,8 @@ private:
   bool setGLUniform(GLint loc, const mmm::mat4& m);
 
   static bool checkProgram(const GLuint pro);
-  static std::string loadShader(std::ifstream& f);
-  static std::map<std::string, std::string> loadVSFS(const std::string& vsfs);
 
-  static std::map<std::string, std::string>
+  static std::map<std::string, Shader>
   loadDualShaderFilename(const std::string& vsfs);
 
   static GLuint activeProgram;
