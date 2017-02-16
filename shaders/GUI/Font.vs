@@ -7,7 +7,7 @@ layout(location=2) in vec4 colors;
 out vec2 Texcoord;
 out vec4 Colors;
 
-const vec2 screenRes = _CFG_.Graphics.Resolution;
+const vec2 screenRes = _CFG_.Graphics.resolution;
 
 uniform vec2 guiOffset;
 

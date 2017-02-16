@@ -5,7 +5,7 @@ layout(location=1) in vec2 texcoord;
 
 out vec2 Texcoord;
 
-const vec2 screenRes = _CFG_.graphics.res;
+const vec2 screenRes = _CFG_.Graphics.resolution;
 uniform vec2 guiOffset;
 
 float convertCoords(float x, float s) {
