@@ -59,7 +59,7 @@ CFG::Wrapper::Wrapper(int& i) {
   };
 
   show = [&i]() { return std::to_string(i); };
-  asType = show;
+  asType = [&i]() { return std::to_string(i); };
 }
 CFG::Wrapper::Wrapper(float& f) {
   valid_params = " number";
@@ -74,7 +74,7 @@ CFG::Wrapper::Wrapper(float& f) {
   };
 
   show = [&f]() { return std::to_string(f); };
-  asType = asType;
+  asType = [&f]() { return std::to_string(f); };
 }
 CFG::Wrapper::Wrapper(vec2& v) : args(2) {
   valid_params = " number number";
@@ -138,7 +138,7 @@ CFG::Wrapper::Wrapper(ActB& ab) : args(2) {
     return keys;
   };
 
-  asType = show;
+  asType = [&]() { return show(); };
 }
 
 void CFG::setProp(const Prop& p, const Params& ps) {

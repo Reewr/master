@@ -41,6 +41,12 @@ struct Wrapper {
           return s.first;
       return std::string();
     };
+
+    asType = [&t, m]() {
+      std::stringstream s;
+      s << t;
+      return s.str();
+    };
   }
 
   void add_special_case(std::function<void()> f) {
