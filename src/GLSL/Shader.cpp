@@ -8,6 +8,35 @@
 
 CFG* Shader::mCFG = nullptr;
 
+// this variable contains the seperators that `findFirstSeperator`
+// will look for.
+const std::string SHADER_CFG_SEPARATORS = ";+*/-, ";
+
+/**
+ * @brief
+ *   Finds the first of a series of seperators within the line. Unline
+ *   `find_first_of`, this actually checks them all and sees which is
+ *   first.
+ *
+ * @param line
+ * @param startPos The start pos of where to search.
+ *
+ * @return
+ */
+size_t findFirstSeperator(std::string& line, size_t startPos = 0) {
+  size_t pos = std::string::npos;
+
+  for(auto a : SHADER_CFG_SEPARATORS) {
+    size_t sepPos = line.find_first_of(a, startPos);
+
+    std::cout << "Testing: " << a << ", " << sepPos << std::endl;
+    if (sepPos < pos)
+      pos = sepPos;
+  }
+
+  return pos;
+}
+
 /**
  * @brief
  *   If the shader contains references to _CFG_, this function can be used
@@ -22,20 +51,24 @@ CFG* Shader::mCFG = nullptr;
  *
  * @return
  */
-std::string parseCFGMention(const std::string& line) {
-  size_t      pos     = line.find("_CFG_");
-  std::string rest    = line.substr(pos + 6);
-  std::string infront = line.substr(0, pos);
+void replaceCFGExpression(std::string& line) {
+  size_t pos = line.find("_CFG_");
 
-  if (rest.find(";") == rest.size() - 1)
-    rest.pop_back();
+  while (pos != std::string::npos) {
+    if (pos + 6 > line.size())
+      throw new std::runtime_error("Malformed CFG expression");
 
-  auto option = Shader::mCFG->getPropAsType(rest);
+    size_t      sepPos = findFirstSeperator(line, pos);
+    std::string key    = line.substr(pos + 6, sepPos - pos - 6);
+    std::string option = Shader::mCFG->getPropAsType(key);
 
-  if (option == "")
-    throw std::runtime_error("Unable to find property: '" + rest + "' in CFG");
+    if (option == "")
+      throw std::runtime_error("Unable to find property: '" + key + "' in CFG");
 
-  return infront + option + ";";
+    line.replace(pos, key.size() + 6, option);
+
+    pos = line.find("_CFG_");
+  }
 }
 
 /**
@@ -74,17 +107,18 @@ std::string loadTextfile(const std::string& filename) {
 
   while (fs.good()) {
     std::getline(fs, line);
-    bool hasInclude = line.find("#include") != std::string::npos;
-    bool hasCFGMention = line.find("_CFG_") != std::string::npos;
+    bool hasInclude       = line.find("#include") != std::string::npos;
+    bool hasCFGExpression = line.find("_CFG_") != std::string::npos;
 
     if (hasInclude) {
       int first  = line.find("<");
       int length = line.find(">") - first - 1;
       content += loadTextfile(line.substr(first, length));
-    } else if (hasCFGMention) {
-      content += parseCFGMention(line) + '\n';
-    } else
+    } else {
+      if (hasCFGExpression)
+        replaceCFGExpression(line);
       content += line + '\n';
+    }
   }
 
   fs.close();
