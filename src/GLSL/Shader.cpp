@@ -29,7 +29,6 @@ size_t findFirstSeperator(std::string& line, size_t startPos = 0) {
   for(auto a : SHADER_CFG_SEPARATORS) {
     size_t sepPos = line.find_first_of(a, startPos);
 
-    std::cout << "Testing: " << a << ", " << sepPos << std::endl;
     if (sepPos < pos)
       pos = sepPos;
   }
