@@ -89,7 +89,7 @@ private:
 
   static bool checkProgram(const GLuint pro);
 
-  static std::map<std::string, Shader>
+  static std::map<std::string, std::string>
   loadDualShaderFilename(const std::string& vsfs);
 
   static GLuint activeProgram;

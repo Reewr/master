@@ -22,10 +22,10 @@ bool Program::createProgram(const std::string& fsvs, bool link) {
     throw std::runtime_error("Must load program as single string of two shaders");
   }
 
-  std::map<std::string, Shader> srcs = loadDualShaderFilename(fsvs);
+  std::map<std::string, std::string> srcs = loadDualShaderFilename(fsvs);
 
-  Shader fs = srcs["FRAGMENT"];
-  Shader vs = srcs["VERTEX"];
+  Shader fs(srcs["FRAGMENT"]);
+  Shader vs(srcs["VERTEX"]);
 
   if (program != 0)
     glDeleteProgram(program);
@@ -39,8 +39,11 @@ bool Program::createProgram(const std::string& fsvs, bool link) {
   if (program == 0 || fs.id() == 0 || vs.id() == 0)
     throw std::runtime_error("Failed to create program");
 
-  if (!addShader(fs) || !addShader(vs))
-    throw std::runtime_error("Failed to create program");
+  if (!addShader(fs))
+    throw std::runtime_error("Failed to create program due to fragment shader");
+
+  if (!addShader(vs))
+    throw std::runtime_error("Failed to create program due to vertex shader");
 
   if (!link)
     return true;
@@ -202,7 +205,7 @@ bool Program::isActive() const {
   return (activeProgram == program);
 }
 
-std::map<std::string, Shader>
+std::map<std::string, std::string>
 Program::loadDualShaderFilename(const std::string& fsvs) {
   size_t      commaPos = fsvs.find(",");
   std::string f1       = fsvs.substr(0, commaPos);
@@ -230,10 +233,10 @@ Program::loadDualShaderFilename(const std::string& fsvs) {
     throw std::runtime_error("Dual filename '" + fsvs +
                              "' has two vertex shaders");
 
-  contents["FRAGMENT"] = Shader(f1isFrag ? f1 : f2);
-  contents["VERTEX"]   = Shader(f2isFrag ? f2 : f1);
-
-  return contents;
+  return {
+    {"FRAGMENT", f1isFrag ? f1 : f2},
+    {"VERTEX",   f1isVert ? f1 : f2},
+  };
 }
 
 bool Program::checkErrors(const std::string&              place,
