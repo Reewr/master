@@ -1,12 +1,11 @@
-
-#ifdef __VERTEX__
 #version 330
 
 layout(location=0) in vec2 position;
 layout(location=1) in vec2 texcoord;
+
 out vec2 Texcoord;
 
-uniform vec2 screenRes;
+const vec2 screenRes = _CFG_.graphics.res;
 uniform vec2 guiOffset;
 
 float convertCoords(float x, float s) {
@@ -23,23 +22,3 @@ void main() {
   gl_Position = vec4(newPos, 0.0, 1.0);
 }
 
-#endif
-#ifdef __FRAGMENT__
-
-#version 330
-
-in vec2 Texcoord;
-out vec4 outColor;
-
-uniform sampler2D inTexture;
-
-uniform vec3 guiColor;
-uniform bool isText;
-
-void main() {
-  vec4 texColor = texture(inTexture, Texcoord);
-  texColor = (isText) ? (texColor.r * vec4(guiColor, 1.0)) : texColor;
-  outColor = texColor;
-}
-
-#endif
