@@ -92,8 +92,22 @@ std::string loadTextfile(const std::string& filename) {
   return content;
 }
 
+/**
+ * @brief
+ *   Creates an empty shader
+ */
 Shader::Shader() : mId(0), mFilename("Unknown") {}
 
+/**
+ * @brief
+ *   Creates a shader from a file, assuming that the filename tells
+ *   which type of shader it is:
+ *
+ *   vs = vertex shader
+ *   fs = fragment shader
+ *
+ * @param filename
+ */
 Shader::Shader(const std::string& filename) {
   mId       = loadShader(filename);
   mFilename = filename;
