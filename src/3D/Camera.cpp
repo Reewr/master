@@ -225,9 +225,9 @@ void Camera::input(float dt) {
     else if (a == Input::Action::MoveDown)
       mTarget -= forward;
     else if (a == Input::Action::MoveRight)
-      mTarget += strafe;
-    else if (a == Input::Action::MoveLeft)
       mTarget -= strafe;
+    else if (a == Input::Action::MoveLeft)
+      mTarget += strafe;
     else if (a == Input::Action::Rotate) {
       int  key   = input->getKey(Input::Action::Rotate).key1;
       vec2 press = input->getPressedCoord(key);
