@@ -3,8 +3,66 @@
 #include <fstream>
 #include <vector>
 
+#include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
 
+CFG* Shader::mCFG = nullptr;
+
+/**
+ * @brief
+ *   If the shader contains references to _CFG_, this function can be used
+ *   to parse that expression and replace the referenced variable with an
+ *   item in the configuration file.
+ *
+ *   This can be used to increase the performance of a shader when a variable
+ *   from the config file is needed.
+ *
+ * @param line the line to parse
+ * @param cfg a reference to the CFG
+ *
+ * @return
+ */
+std::string parseCFGMention(const std::string& line) {
+  size_t      pos     = line.find("_CFG_");
+  std::string rest    = line.substr(pos + 6);
+  std::string infront = line.substr(0, pos);
+
+  if (rest.find(";") == rest.size() - 1)
+    rest.pop_back();
+
+  auto option = Shader::mCFG->getPropAsType(rest);
+
+  if (option == "")
+    throw std::runtime_error("Unable to find property: '" + rest + "' in CFG");
+
+  return infront + option + ";";
+}
+
+/**
+ * @brief
+ *   Loads the shader from file, handling any special syntax as it detects it.
+ *   This function supports two special syntaxes:
+ *
+ *   1. #include
+ *   2. _CFG_
+ *
+ *   The first, `#include`, will let you include a file from file in its
+ *   entirety. Please keep in mind that this is simple replace `include`
+ *   with whole file it is referencing.
+ *
+ *   The second, `_CFG_`, lets you reference the CFG by properties. For instance
+ *   you can say something like:
+ *
+ *   `const vec2 screenRes = _CFG_.Graphics.Resolution`
+ *
+ *   This will replace `_CFG_.Graphics.Resolution` with `vec2(screenX, screenY)
+ *   where `screenX` and `screenY` is the resolution set in the configuration
+ *   file.
+ *
+ * @param filename
+ *
+ * @return
+ */
 std::string loadTextfile(const std::string& filename) {
   std::ifstream fs(filename);
   std::string   content;
@@ -17,11 +75,14 @@ std::string loadTextfile(const std::string& filename) {
   while (fs.good()) {
     std::getline(fs, line);
     bool hasInclude = line.find("#include") != std::string::npos;
+    bool hasCFGMention = line.find("_CFG_") != std::string::npos;
 
     if (hasInclude) {
       int first  = line.find("<");
       int length = line.find(">") - first - 1;
       content += loadTextfile(line.substr(first, length));
+    } else if (hasCFGMention) {
+      content += parseCFGMention(line) + '\n';
     } else
       content += line + '\n';
   }

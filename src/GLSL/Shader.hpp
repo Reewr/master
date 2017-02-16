@@ -4,6 +4,8 @@
 
 #include "../OpenGLHeaders.hpp"
 
+class CFG;
+
 //! Contains and loads the GLSL-Shaders
 class Shader {
 public:
@@ -31,6 +33,7 @@ public:
   std::string type() const;
   GLuint      id() const;
 
+  static CFG* mCFG;
 
 private:
   //! Checks a shader for errors. If errors occure, calls handleShaderErrors

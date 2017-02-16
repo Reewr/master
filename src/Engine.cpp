@@ -5,6 +5,7 @@
 #include "Drawable/Drawable.hpp"
 #include "GUI/GUI.hpp"
 #include "Graphical/Framebuffer.hpp"
+#include "GLSL/Shader.hpp"
 #include "Lua/Lua.hpp"
 #include "State/MainMenu.hpp"
 #include "State/Master.hpp"
@@ -176,6 +177,7 @@ bool Engine::initialize(int argc, char* argv[], int isRefresh, int initState) {
 
   Drawable::mAsset = mAsset;
   GUI::mAsset      = mAsset;
+  Shader::mCFG     = mCFG;
   /* Spider::init(); */
   /* Model::init(&asset->cfg); */
   Framebuffer::init(mAsset->cfg());
