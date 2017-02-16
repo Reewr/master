@@ -111,6 +111,7 @@ Shader::~Shader() {
     return;
 
   glDeleteShader(mId);
+  mId = 0;
 }
 
 std::string Shader::filename() const {
