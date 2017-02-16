@@ -45,7 +45,6 @@ Console::Console(Asset* asset)
   // Specific program for the console since the console
   // is just drawn in black with alpha
   mProgram = mAsset->rManager()->get<Program>("Program::ColorRect");
-  mProgram->setUniform("screenRes", res);
   mProgram->setUniform("guiColor", vec4(0, 0, 0, 0.9));
 }
 
