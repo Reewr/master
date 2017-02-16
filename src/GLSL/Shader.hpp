@@ -15,18 +15,11 @@ public:
   //! Constructor with path to file, calls loadShader()
   Shader(const std::string& filename);
 
-  Shader(const std::string& src,
-         bool               isFragment,
-         const std::string& fname = "from source");
-
   //! Deconstructor that deletes the GLSL-Shader if in memory
   ~Shader();
 
-  GLuint
-  fromSource(const std::string& src, bool isFragment, const std::string& fname);
-
-  //! Loads shader from file. Chooses shaderType based on file extension(.fs ||
-  //! .vs);
+  //! Loads shader from file.
+  //! Chooses shaderType based on file extension(.fs || ! .vs);
   GLuint loadShader(const std::string& filename);
 
   std::string filename() const;

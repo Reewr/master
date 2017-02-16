@@ -99,13 +99,6 @@ Shader::Shader(const std::string& filename) {
   mFilename = filename;
 }
 
-Shader::Shader(const std::string& src,
-               bool               isFragment,
-               const std::string& fname) {
-  mId       = fromSource(src, isFragment, fname);
-  mFilename = fname;
-}
-
 Shader::~Shader() {
   if (mId == 0)
     return;
@@ -124,21 +117,6 @@ std::string Shader::type() const {
 
 GLuint Shader::id() const {
   return mId;
-}
-
-GLuint Shader::fromSource(const std::string& src,
-                          bool               isFragment,
-                          const std::string& fname) {
-  GLuint      shaderType = (isFragment) ? GL_FRAGMENT_SHADER : GL_VERTEX_SHADER;
-  GLuint      shaderID   = glCreateShader(shaderType);
-  std::string shaderSrc  = src;
-  const char* source     = shaderSrc.c_str();
-
-  glShaderSource(shaderID, 1, &source, 0);
-  glCompileShader(shaderID);
-
-  shaderID = (checkShader(shaderID, fname)) ? shaderID : 0;
-  return shaderID;
 }
 
 GLuint Shader::loadShader(const std::string& filename) {
