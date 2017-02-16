@@ -36,13 +36,13 @@ addResource("Texture::SliderButton", "media/Textures/sliderbutton.png",
 addResource("Font::Dejavu", "media/Fonts/DejaVuSansMono.ttf",
             ResourceType.Font, ResourceScope.All)
 
-addResource("Program::GUI", "shaders/GUI/GUI.vsfs",
+addResource("Program::GUI", "shaders/GUI/GUI.vs,shaders/GUI/GUI.fs",
             ResourceType.Program, ResourceScope.All)
 
-addResource("Program::Font", "shaders/GUI/Font.vsfs",
+addResource("Program::Font", "shaders/GUI/Font.vs,shaders/GUI/Font.fs",
             ResourceType.Program, ResourceScope.All)
 
-addResource("Program::ColorRect", "shaders/GUI/ColorRect.vsfs",
+addResource("Program::ColorRect", "shaders/ColorRect.vs,shaders/ColorRect.fs",
             ResourceType.Program, ResourceScope.All)
 
 addResource("Program::Clear", "shaders/Framebuffer.vs,shaders/Utils/Clear.fs",
