@@ -153,8 +153,6 @@ Text::Text(const std::string& font,
 
   mBoundingBox.topleft = position;
 
-  mFontProgram->setUniform("screenRes", mAsset->cfg()->graphics.res);
-
   isVisible(true);
   setColor(color);
   recalculateGeometry();

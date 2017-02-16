@@ -20,7 +20,6 @@ GUI::GUI()
     , mHasChanged(false)
     , mIsMouseOver(false) {
   mGUIProgram = mAsset->rManager()->get<Program>("Program::GUI");
-  mGUIProgram->setUniform("screenRes", mAsset->cfg()->graphics.res);
 }
 
 GUI::~GUI() {}
