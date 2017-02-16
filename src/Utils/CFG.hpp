@@ -79,6 +79,17 @@ public:
   //! e.g. cfg.getProp("Graphics.resolution");
   std::string getProp(const Prop& p);
 
+  //! gets a property using string properties,
+  //! e.g cfg.getPropAsType("Graphics.resolution");
+  //!
+  //! This function returns the string needed to construct
+  //! the type.
+  //! that:
+  //! - `bool` will be `true` or `false`,
+  //! - `int` and `float` will be the number
+  //! - `vec2` will be `vec2(number, number)`
+  std::string getPropAsType(const Prop& p);
+
   //! merges the default cfg with settings from a config file
   void assimilate(const std::string& filepath);
 

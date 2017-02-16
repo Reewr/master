@@ -44,6 +44,7 @@ CFG::Wrapper::Wrapper(bool& b) {
   };
 
   show = [&b]() { return b ? "on" : "off"; };
+  asType = [&b]() { return b ? "true" : "false"; };
 }
 CFG::Wrapper::Wrapper(int& i) {
   valid_params = " number";
@@ -58,6 +59,7 @@ CFG::Wrapper::Wrapper(int& i) {
   };
 
   show = [&i]() { return std::to_string(i); };
+  asType = show;
 }
 CFG::Wrapper::Wrapper(float& f) {
   valid_params = " number";
@@ -72,6 +74,7 @@ CFG::Wrapper::Wrapper(float& f) {
   };
 
   show = [&f]() { return std::to_string(f); };
+  asType = asType;
 }
 CFG::Wrapper::Wrapper(vec2& v) : args(2) {
   valid_params = " number number";
@@ -95,6 +98,10 @@ CFG::Wrapper::Wrapper(vec2& v) : args(2) {
     s += " ";
     s += std::to_string(v.y);
     return s;
+  };
+
+  asType = [&v](){
+    return "vec2(" + std::to_string(v.x) + ", " + std::to_string(v.y) + ")";
   };
 }
 
@@ -130,6 +137,8 @@ CFG::Wrapper::Wrapper(ActB& ab) : args(2) {
         keys += s.first;
     return keys;
   };
+
+  asType = show;
 }
 
 void CFG::setProp(const Prop& p, const Params& ps) {
@@ -161,6 +170,22 @@ void CFG::setProp(const Prop& p, const Params& ps) {
 
 std::string CFG::getProp(const Prop& p) {
   return map.at(p).show();
+}
+
+/**
+ * @brief
+ *   Returns the property as what is needed to normally construct it.
+ *   For instance, Graphics.Resolution will return `vec2(x, y)` where
+ *   x and y are float values.
+ *
+ * @param p the property to find, ex: `Graphics.Resolution`.
+ *
+ * @return the constructing type, or empty string if the property is not found
+ */
+std::string CFG::getPropAsType(const Prop& p) {
+  if (map.count(p) == 0)
+    return "";
+  return map.at(p).asType();
 }
 
 int CFG::get_num_params(const Prop& p) {

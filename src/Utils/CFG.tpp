@@ -6,6 +6,7 @@ int get_num_params(const Prop& p);
 struct Wrapper {
   std::function<void(const Prop& p, const Params&)> parse;
   std::function<std::string()> show;
+  std::function<std::string()> asType;
 
   std::string  valid_params = "unknown";
   unsigned int args         = 1;
