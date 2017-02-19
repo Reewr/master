@@ -33,6 +33,22 @@ addResource("Texture::Slider", "media/Textures/sliderbg.png",
 addResource("Texture::SliderButton", "media/Textures/sliderbutton.png",
             ResourceType.Texture, ResourceScope.All)
 
+addResource("Texture::m1_test.dds", "media/Textures/m1_test.png",
+            ResourceType.Texture,
+            ResourceScope.Master)
+
+addResource("Texture::m2_test.dds", "media/Textures/m2_test.png",
+            ResourceType.Texture,
+            ResourceScope.Master)
+
+addResource("Texture::m3_test.dds", "media/Textures/m3_test.png",
+            ResourceType.Texture,
+            ResourceScope.Master)
+
+addResource("Texture::m4_test.dds", "media/Textures/m4_test.png",
+            ResourceType.Texture,
+            ResourceScope.Master)
+
 addResource("Font::Dejavu", "media/Fonts/DejaVuSansMono.ttf",
             ResourceType.Font, ResourceScope.All)
 
@@ -56,3 +72,69 @@ addResource("Program::Shadow", "shaders/Shadow.fs,shaders/Shadow.vs",
 
 addResource("Program::Model", "shaders/Model.fs,shaders/Model.vs",
             ResourceType.Program, ResourceScope.Master)
+
+addResource("Mesh::Abdomen", "media/models/spider/abdomin.dae",
+            ResourceType.Mesh, ResourceScope.Master)
+
+addResource("Mesh::AbdomenInner", "media/models/spider/abdomin_inner.dae",
+            ResourceType.Mesh, ResourceScope.Master)
+
+addResource("Mesh::Coxa", "media/models/spider/coxa.dae",
+            ResourceType.Mesh, ResourceScope.Master)
+
+addResource("Mesh::Femur", "media/models/spider/femur.dae",
+            ResourceType.Mesh, ResourceScope.Master)
+
+addResource("Mesh::FemurTibiaInner", "media/models/spider/femur_tibia_inner.dae",
+            ResourceType.Mesh, ResourceScope.Master)
+
+addResource("Mesh::Head", "media/models/spider/head.dae",
+            ResourceType.Mesh, ResourceScope.Master)
+
+addResource("Mesh::HeadDisk", "media/models/spider/head_disk.dae",
+            ResourceType.Mesh, ResourceScope.Master)
+
+addResource("Mesh::HeadInner", "media/models/spider/head_inner.dae",
+            ResourceType.Mesh, ResourceScope.Master)
+
+addResource("Mesh::Hip", "media/models/spider/hip.dae",
+            ResourceType.Mesh, ResourceScope.Master)
+
+addResource("Mesh::Joint", "media/models/spider/joint.dae",
+            ResourceType.Mesh, ResourceScope.Master)
+
+addResource("Mesh::JointRot", "media/models/spider/joint_rot.dae",
+            ResourceType.Mesh, ResourceScope.Master)
+
+addResource("Mesh::Metatarsus", "media/models/spider/metatarsus.dae",
+            ResourceType.Mesh, ResourceScope.Master)
+
+addResource("Mesh::Neck", "media/models/spider/neck.dae",
+            ResourceType.Mesh, ResourceScope.Master)
+
+addResource("Mesh::Patella", "media/models/spider/patella.dae",
+            ResourceType.Mesh, ResourceScope.Master)
+
+addResource("Mesh::PatellaInner", "media/models/spider/patella_inner.dae",
+            ResourceType.Mesh, ResourceScope.Master)
+
+addResource("Mesh::SternumBack", "media/models/spider/sternum_back.dae",
+            ResourceType.Mesh, ResourceScope.Master)
+
+addResource("Mesh::SternumFront", "media/models/spider/sternum_front.dae",
+            ResourceType.Mesh, ResourceScope.Master)
+
+addResource("Mesh::TarsusBot", "media/models/spider/tarsus_bot.dae",
+           ResourceType.Mesh, ResourceScope.Master)
+
+addResource("Mesh::TarsusTop", "media/models/spider/tarsus_top.dae",
+            ResourceType.Mesh, ResourceScope.Master)
+
+addResource("Mesh::Thorax", "media/models/spider/thorax.dae",
+            ResourceType.Mesh, ResourceScope.Master)
+
+addResource("Mesh::Tibia", "media/models/spider/tibia.dae",
+            ResourceType.Mesh, ResourceScope.Master)
+
+addResource("Mesh::Trochanter", "media/models/spider/trochanter.dae",
+            ResourceType.Mesh, ResourceScope.Master)
