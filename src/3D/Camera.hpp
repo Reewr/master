@@ -4,6 +4,8 @@
 #include <mmm.hpp>
 #include <string>
 
+#include "../Log.hpp"
+
 class Asset;
 class Program;
 
@@ -11,7 +13,7 @@ namespace Input {
   class Event;
 }
 
-class Camera {
+class Camera : public Logging::Log {
 public:
   struct Light {
     Light();

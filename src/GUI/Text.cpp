@@ -121,7 +121,8 @@ Text::Text(const std::string& font,
            int                size,
            int                color,
            const vec2&        limit)
-    : mNumVertices(0)
+    : Logging::Log("Text")
+    , mNumVertices(0)
     , mCharacterSize(size)
     , mNumVerticesBackground(0)
     , mStyle(0)

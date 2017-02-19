@@ -22,6 +22,7 @@
 using mmm::vec2;
 
 OptionsMenu::OptionsMenu(Input::Input* input) {
+  setLoggerName("OptionsMenu");
   mCFG          = mAsset->cfg();
   mActiveWindow = NULL;
   mInput        = input;
@@ -157,7 +158,6 @@ bool OptionsMenu::handleOptionsAction(const Input::Event& event) {
       return true;
     }
     case 6:
-      log("Something");
       setDefaultOptions();
       isVisible(false);
       event.sendStateChange(States::OptionsMenuClose);

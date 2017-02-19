@@ -19,7 +19,8 @@ using mmm::vec2;
 using mmm::vec4;
 
 Console::Console(Asset* asset)
-    : mShowAutoComplete(false)
+    : Logging::Log("Console")
+    , mShowAutoComplete(false)
     , mLocation(0)
     , mCommandHistoryIndex(0)
     , mCurrentText("")
@@ -70,7 +71,7 @@ Console::~Console() {
  *   The message to display
  */
 void Console::error(const std::string& message) {
-  ::error("Console :: ", Text::stripColorsFromStr(message));
+  mLog->error(Text::stripColorsFromStr(message));
   addHistory(message, Text::RED);
 }
 
@@ -81,7 +82,7 @@ void Console::error(const std::string& message) {
  * @param message
  */
 void Console::log(const std::string& message) {
-  ::log("Console :: ", Text::stripColorsFromStr(message));
+  mLog->debug(Text::stripColorsFromStr(message));
   addHistory(message, Text::WHITE);
 }
 
@@ -93,7 +94,7 @@ void Console::log(const std::string& message) {
  *   The message to display
  */
 void Console::warn(const std::string& message) {
-  ::warning("Console :: ", Text::stripColorsFromStr(message));
+  mLog->warn(Text::stripColorsFromStr(message));
   addHistory(message, Text::YELLOW);
 }
 
@@ -188,7 +189,7 @@ void Console::setCommandFromHistory() {
  */
 void Console::doCommand(const Input::Event& event) {
   try {
-    log("> " + mCurrentText);
+    mLog->debug("> " + mCurrentText);
     mCommandHistory.push_back(mCurrentText);
     mCommandHistoryIndex                  = mCommandHistory.size();
     mAsset->lua()->engine["currentEvent"] = &event;

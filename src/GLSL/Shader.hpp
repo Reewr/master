@@ -2,12 +2,13 @@
 
 #include <string>
 
+#include "../Log.hpp"
 #include "../OpenGLHeaders.hpp"
 
 class CFG;
 
 //! Contains and loads the GLSL-Shaders
-class Shader {
+class Shader : public Logging::Log {
 public:
   //! Default Constructor
   Shader();
@@ -30,7 +31,7 @@ public:
 
 private:
   //! Checks a shader for errors. If errors occure, calls handleShaderErrors
-  static bool checkShader(const GLuint id, const std::string& filename);
+  bool checkShader();
 
   //! Shader ID. Used by OpenGL to get the shader from memory.
   GLuint      mId;

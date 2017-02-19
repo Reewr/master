@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../Log.hpp"
 #include <functional>
 #include <map>
 #include <sol.hpp>
@@ -60,7 +61,7 @@ namespace Lua {
     };
   }
 
-  class Lua {
+  class Lua : public Logging::Log {
   public:
     // Creates a Lua instance that holds the Lua State.
     // This allows you to load files that will have C++ object representations

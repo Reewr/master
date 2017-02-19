@@ -43,11 +43,11 @@ Font::Page::~Page() {
  *   instance of a Font it initializes the FreeType
  *   library and throws error if this does not work
  */
-Font::Font() {
+Font::Font() : Logging::Log("Font") {
   if (numFonts == 0) {
     if (FT_Init_FreeType(&fontLib))
       throw std::runtime_error("FreeType not initialized correctly");
-    log("Font :: Loaded FreeType");
+    mLog->debug("Loaded FreeType");
   }
 
   numFonts++;
@@ -63,7 +63,7 @@ Font::~Font() {
 
   if (numFonts <= 0) {
     FT_Done_FreeType(fontLib);
-    log("Font :: Unloaded FreeType");
+    mLog->debug("Unloaded FreeType");
   }
 }
 
@@ -100,10 +100,10 @@ bool Font::load(ResourceManager*) {
  * @return
  */
 bool Font::load(int size) {
-  log("Font :: Loading size: ", std::to_string(size));
+  mLog->debug("Loading size: ", std::to_string(size));
 
   if (mPages.count(size) > 0) {
-    log("Font :: Size already loaded: ", std::to_string(size));
+    mLog->debug("Size already loaded: ", std::to_string(size));
     return true;
   }
 

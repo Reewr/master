@@ -14,6 +14,7 @@
 #include "../Utils/Utils.hpp"
 
 PauseMenu::PauseMenu(Input::Input* i) {
+  setLoggerName("PauseMenu");
   mBoundingBox = Rectangle(mAsset->cfg()->graphics.res.x * 0.5 - 300,
                            mAsset->cfg()->graphics.res.y * 0.5 - 100,
                            600,

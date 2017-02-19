@@ -1,5 +1,6 @@
 #include "Framebuffer.hpp"
 
+#include "../GlobalLog.hpp"
 #include "../OpenGLHeaders.hpp"
 #include <fstream>
 
@@ -15,25 +16,31 @@ int         Framebuffer::numSS = 0;
 
 using mmm::vec2;
 
-Framebuffer::Framebuffer() {
-  mFrameBuffer  = 0;
-  mTexture      = NULL;
-  mProgram      = NULL;
-  mQuad         = NULL;
-  mIsOwnProgram = false;
-  mIsBound      = false;
-}
+Framebuffer::Framebuffer()
+    : Logging::Log("Framebuffer")
+    , mIsDepth(false)
+    , mIsOwnProgram(false)
+    , mNeedsDrawing(false)
+    , mIsBound(false)
+    , mFrameSize(0, 0)
+    , mQuad(nullptr)
+    , mProgram(nullptr)
+    , mTexture(nullptr)
+    , mFrameBuffer(0) {}
 
 Framebuffer::Framebuffer(std::shared_ptr<Program> program,
                          const mmm::vec2&         size,
-                         bool                     depth) {
-  mProgram      = program;
-  mIsDepth      = depth;
-  mFrameSize    = size;
-  mNeedsDrawing = false;
-  mIsOwnProgram = false;
-  mIsBound      = false;
-
+                         bool                     depth)
+    : Logging::Log("Framebuffer")
+    , mIsDepth(depth)
+    , mIsOwnProgram(false)
+    , mNeedsDrawing(false)
+    , mIsBound(false)
+    , mFrameSize(size)
+    , mQuad(nullptr)
+    , mProgram(program)
+    , mTexture(nullptr)
+    , mFrameBuffer(0) {
   setup();
 }
 
@@ -399,13 +406,13 @@ void Framebuffer::printPixels(const Rectangle& r,
                               std::string      name) {
   const int          mult = (type == GL_RGBA) ? 4 : (type == GL_RGB) ? 3 : 1;
   std::vector<float> data = getPixels(r, type);
-  log(name, ":");
+  mLog->debug("{}:", name);
   for (unsigned int i = 0; i < data.size(); i += mult) {
     std::string output = "  [";
     for (int j = 0; j < mult; j++)
       output += std::to_string(data[i + j]) + ((j + 1 < mult) ? ", " : "");
     output += "]";
-    log(output);
+    mLog->debug(output);
   }
 }
 
@@ -495,13 +502,13 @@ void Framebuffer::takeScreenshot() {
   // clean up
   delete[] data;
   data = nullptr;
-  log("Saved screenshot to: '", filename, "'");
+  debug("Saved screenshot to: '", filename, "'");
 }
 
 void Framebuffer::printFramebufferLimits() {
   int res;
   glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &res);
-  log("Framebuffer - Max Color Attachments: ", res);
+  debug("Framebuffer - Max Color Attachments: ", res);
   // glGetIntegerv(GL_MAX_FRAMEBUFFER_WIDTH, &res);
   // log("Framebuffer - Max Width: ", res);
   // glGetIntegerv(GL_MAX_FRAMEBUFFER_HEIGHT, &res);

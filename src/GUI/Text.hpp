@@ -5,6 +5,7 @@
 
 #include "../OpenGLHeaders.hpp"
 
+#include "../Log.hpp"
 #include "GUI.hpp"
 
 class Font;
@@ -18,7 +19,7 @@ class Program;
  *
  *   This class is exported fully in Lua and can be used as it can in C++
  */
-class Text : public GUI {
+class Text : public GUI, public Logging::Log {
 public:
   //! Enums for Text Color - use these if you want to change color of the text
   enum { BLACK, WHITE, RED, GREEN, BLUE, YELLOW };

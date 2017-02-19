@@ -5,12 +5,12 @@
 #include <string>
 #include <type_traits>
 
-#include "../Utils/Utils.hpp"
+#include "../Log.hpp"
 #include "Resource.hpp"
 
 class Texture;
 
-class ResourceManager {
+class ResourceManager : public Logging::Log {
 public:
   ResourceManager();
   ~ResourceManager();
@@ -39,7 +39,7 @@ template <typename T>
 std::shared_ptr<T> ResourceManager::get(const std::string& name) {
   bool invalid = mResources.count(name) == 0;
   if (invalid && std::is_same<T, Texture>::value && name != "Texture::Debug") {
-    error("Tried to load Texture that did not exist: ", name);
+    mLog->error("Tried to load Texture that did not exist: {}", name);
     return get<T>("Texture::Debug");
   } else if (invalid)
     throw std::runtime_error("Could not find filename for " + name);

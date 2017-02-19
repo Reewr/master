@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../Log.hpp"
+
 #include <mmm.hpp>
 #include <vector>
 
@@ -11,7 +13,7 @@ class btDiscreteDynamicsWorld;
 
 class Drawable3D;
 
-class World {
+class World : public Logging::Log {
 public:
   World(const mmm::vec3& gravity);
   ~World();

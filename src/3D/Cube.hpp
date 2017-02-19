@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Drawable/Drawable3D.hpp"
+#include "../Log.hpp"
 #include <memory>
 
 #include <mmm.hpp>
@@ -20,7 +21,7 @@ class Program;
  *   to have a certain size and weight and can also be specified to be
  *   at a specified position
  */
-class Cube : public Drawable3D {
+class Cube : public Drawable3D, public Logging::Log {
 public:
   // Creates a cube of a specific size in meters. If weight is -1,
   // it is assumed that the cube contains water,

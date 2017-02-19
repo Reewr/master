@@ -2,6 +2,7 @@
 
 #include <string>
 
+#include "../Log.hpp"
 #include "GUI.hpp"
 
 class Text;
@@ -16,7 +17,7 @@ namespace Input {
 
 class GLRectangle;
 
-class Inputbox : public GUI {
+class Inputbox : public GUI, public Logging::Log {
 public:
   //! Default and only constructor
   Inputbox(const Rectangle& r, const std::string text = "NOT SET");

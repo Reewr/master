@@ -6,24 +6,25 @@
 #include "Font.hpp"
 #include "Texture.hpp"
 
-ResourceManager::ResourceManager() : mCurrentScope(ResourceScope::None) {}
+ResourceManager::ResourceManager()
+    : Logging::Log("ResManager"), mCurrentScope(ResourceScope::None) {}
 
 ResourceManager::~ResourceManager() {
   unloadAll();
 }
 
 void ResourceManager::loadRequired(ResourceScope scope) {
-  log("ResourceManager :: loadRequired, scope: ", static_cast<int>(scope));
+  mLog->debug("Loading required for scope: '{}'", static_cast<int>(scope));
   mCurrentScope = scope;
   for (auto& rPair : mResources) {
     if (rPair.second->includesScope(scope) && !rPair.second->loaded()) {
-      log("ResourceManager :: Loading: ", rPair.second->filename());
+      mLog->debug("Loading: '{}'", rPair.second->filename());
       rPair.second->load(this);
       rPair.second->setLoaded(true);
     } else if (rPair.second->includesScope(scope) && rPair.second->loaded()) {
-      log("ResourceManager :: Already loaded: ", rPair.second->filename());
+      mLog->debug("Already loaded: '{}'", rPair.second->filename());
     } else {
-      log("ResourceManager :: Not loading: ", rPair.second->filename());
+      mLog->debug("Not loading: '{}'", rPair.second->filename());
     }
   }
 }
@@ -94,11 +95,11 @@ void ResourceManager::loadDescription(const std::string& filename) {
     mResources[name]->setFilename(path);
     mResources[name]->setScope(scope);
     mResources[name]->setType(type);
-    log("ResourceManager :: Added '", name, "'");
+    mLog->debug("Added '{}'", name);
   };
 
   lua.set_function("addResource", addResource);
 
-  log("ResourceManager :: Running script '", filename, "'");
+  mLog->debug("Running script '{}'", filename);
   lua.script_file(filename);
 }

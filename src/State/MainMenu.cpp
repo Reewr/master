@@ -15,6 +15,7 @@
 using mmm::vec2;
 
 MainMenu::MainMenu(Asset* asset) {
+  setLoggerName("MainMenu");
   mAsset = asset;
   mLua   = mAsset->lua();
   mAsset->rManager()->unloadUnnecessary(ResourceScope::MainMenu);
@@ -84,7 +85,7 @@ MainMenu::MainMenu(Asset* asset) {
   /*   mLua->add(console); */
   /*   mLua->loadFile("lua/states/mainmenu.lua"); */
   /* }); */
-  log("MainMenu :: Initialized successfully...");
+  mLog->debug("Initialized successfully...");
 }
 
 MainMenu::~MainMenu() {
@@ -102,7 +103,7 @@ void MainMenu::update(float deltaTime) {
   try {
     mLua->engine["update"](deltaTime);
   } catch (const sol::error& e) {
-    error("Failed to update: ", e.what());
+    mLog->error("Failed to update: ", e.what());
   }
 }
 
@@ -123,7 +124,7 @@ void MainMenu::drawGUI() {
   try {
     mLua->engine["draw"]();
   } catch (const sol::error& e) {
-    error("Failed to draw: ", e.what());
+    mLog->error("Failed to draw: ", e.what());
   }
 }
 

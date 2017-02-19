@@ -6,6 +6,7 @@
 
 #include <mmm.hpp>
 
+#include "../Log.hpp"
 #include "GUI.hpp"
 
 class Text;
@@ -15,7 +16,7 @@ namespace tinyxml2 {
   class XMLElement;
 }
 
-class Dropdown : public GUI {
+class Dropdown : public GUI, public Logging::Log {
 public:
   //! Creates a dropbox with predetermined textures for dropboxes.
   Dropdown(const std::vector<std::string>& options, const mmm::vec2& position);

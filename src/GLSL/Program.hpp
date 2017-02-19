@@ -6,6 +6,7 @@
 
 #include <mmm.hpp>
 
+#include "../Log.hpp"
 #include "../OpenGLHeaders.hpp"
 #include "../Resource/Resource.hpp"
 
@@ -17,7 +18,7 @@ class ResourceManager;
 //! bind and unbinds them easily.
 //! NOTE: createProgram and link will cause segmentation fault
 //! if it fails to create/link GLSL program.
-class Program : public Resource {
+class Program : public Resource, public Logging::Log {
 public:
   //! Default Constructor
   Program();

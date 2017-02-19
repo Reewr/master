@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../Log.hpp"
 #include <vector>
 
 class Asset;
@@ -30,7 +31,7 @@ namespace States {
 }
 
 //! Fully Virtual class utilized by StateGame and StateMenu
-class State {
+class State : public Logging::Log {
 public:
   virtual ~State();
   virtual void update(float deltaTime)          = 0;

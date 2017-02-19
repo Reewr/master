@@ -4,6 +4,7 @@
 #include <mmm.hpp>
 #include <vector>
 
+#include "../Log.hpp"
 #include "../OpenGLHeaders.hpp"
 #include "Resource.hpp"
 
@@ -42,7 +43,7 @@ private:
 /**
  * @brief Holds a mesh
  */
-class Mesh : Resource {
+class Mesh : public Resource, public Logging::Log {
 public:
   Mesh();
   ~Mesh();

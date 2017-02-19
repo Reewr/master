@@ -8,12 +8,13 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-#include "../Resource/Resource.hpp"
+#include "../Log.hpp"
+#include "Resource.hpp"
 
 class Program;
 class Texture;
 
-class Font : public Resource {
+class Font : public Resource, public Logging::Log {
 public:
   //! Represents a character within the font.
   struct Glyph {

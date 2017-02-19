@@ -12,7 +12,7 @@ using mmm::vec3;
  *
  * @param gravity
  */
-World::World(const vec3& gravity) {
+World::World(const vec3& gravity) : Logging::Log("World") {
   collision  = new btDefaultCollisionConfiguration();
   dispatcher = new btCollisionDispatcher(collision);
   phase      = new btDbvtBroadphase();

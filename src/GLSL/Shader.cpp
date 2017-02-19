@@ -1,5 +1,4 @@
 #include "Shader.hpp"
-
 #include <fstream>
 #include <vector>
 
@@ -26,7 +25,7 @@ const std::string SHADER_CFG_SEPARATORS = ";+*/-, ";
 size_t findFirstSeperator(std::string& line, size_t startPos = 0) {
   size_t pos = std::string::npos;
 
-  for(auto a : SHADER_CFG_SEPARATORS) {
+  for (auto a : SHADER_CFG_SEPARATORS) {
     size_t sepPos = line.find_first_of(a, startPos);
 
     if (sepPos < pos)
@@ -129,7 +128,7 @@ std::string loadTextfile(const std::string& filename) {
  * @brief
  *   Creates an empty shader
  */
-Shader::Shader() : mId(0), mFilename("Unknown") {}
+Shader::Shader() : Logging::Log("Shader"), mId(0), mFilename("Unknown") {}
 
 /**
  * @brief
@@ -141,7 +140,8 @@ Shader::Shader() : mId(0), mFilename("Unknown") {}
  *
  * @param filename
  */
-Shader::Shader(const std::string& filename) {
+Shader::Shader(const std::string& filename)
+    : Logging::Log("Shader"), mFilename(filename) {
   mId       = loadShader(filename);
   mFilename = filename;
 }
@@ -172,45 +172,47 @@ GLuint Shader::loadShader(const std::string& filename) {
   if (filename.find(".fs") != std::string::npos)
     shaderType = GL_FRAGMENT_SHADER;
 
-  GLuint      shaderID      = glCreateShader(shaderType);
+  mId = glCreateShader(shaderType);
+
   std::string shaderCodeStr = loadTextfile(filename);
   const char* source        = shaderCodeStr.c_str();
 
-  glShaderSource(shaderID, 1, &source, 0);
-  glCompileShader(shaderID);
+  glShaderSource(mId, 1, &source, 0);
+  glCompileShader(mId);
 
-  shaderID = (checkShader(shaderID, filename)) ? shaderID : 0;
+  if (!checkShader()) {
+    throw std::runtime_error("Error in shader. See below.");
+  }
 
-  return shaderID;
+  return mId;
 }
 
-bool Shader::checkShader(const GLuint id, const std::string& filename) {
+bool Shader::checkShader() {
   GLint isCompiled = 0;
   GLint maxLength  = 0;
 
   // retrieve the shader information
-  glGetShaderiv(id, GL_COMPILE_STATUS, &isCompiled);
-  glGetShaderiv(id, GL_INFO_LOG_LENGTH, &maxLength);
+  glGetShaderiv(mId, GL_COMPILE_STATUS, &isCompiled);
+  glGetShaderiv(mId, GL_INFO_LOG_LENGTH, &maxLength);
 
   // throw error if it cant compile
   if (isCompiled == GL_FALSE) {
     std::vector<GLchar> infoLog(maxLength);
-    std::string         s = filename + ": ";
+    std::string         s = mFilename + ": ";
 
-    glGetShaderInfoLog(id, maxLength, &maxLength, &infoLog[0]);
-    glDeleteShader(id);
+    glGetShaderInfoLog(mId, maxLength, &maxLength, &infoLog[0]);
+    glDeleteShader(mId);
 
-    log("Errors in shader: ", filename, " - see below:");
+    mLog->error("Errors in shader: {} - see below:", mFilename);
     for (unsigned int i = 0; i < infoLog.size(); i++) {
       if (infoLog[i] == '\n') {
-        log(s);
-        s = filename + ": ";
+        mLog->error(s);
+        s = mFilename + ": ";
       } else
         s += infoLog[i];
     }
-    log("");
 
-    throw std::runtime_error("Shader.cpp");
+    return false;
   }
 
   // if there some information
@@ -218,12 +220,14 @@ bool Shader::checkShader(const GLuint id, const std::string& filename) {
     std::vector<GLchar> infoLog(maxLength);
     std::string         s = "";
 
-    glGetShaderInfoLog(id, maxLength, &maxLength, &infoLog[0]);
+    glGetShaderInfoLog(mId, maxLength, &maxLength, &infoLog[0]);
 
     for (unsigned int i = 0; i < infoLog.size(); i++)
       s += infoLog[i];
 
-    warning(s.c_str(), filename.c_str());
+    mLog->warn("Warning in shader: {} - see below:",
+               mFilename.c_str(),
+               s.c_str());
   }
 
   return true;

@@ -1,4 +1,3 @@
 #include "State.hpp"
-
-State::State() {}
+State::State() : Logging::Log("RenameMeState") {}
 State::~State() {}

@@ -10,7 +10,8 @@
 
 using mmm::mat4;
 
-Mesh::Mesh() : mVBO(0), mVAO(0), mNumVertices(0), mMesh(nullptr) {}
+Mesh::Mesh()
+    : Logging::Log("Mesh"), mVBO(0), mVAO(0), mNumVertices(0), mMesh(nullptr) {}
 Mesh::~Mesh() {
   unload();
 }
@@ -46,12 +47,12 @@ bool Mesh::load(ResourceManager* manager) {
                       );
 
   if (!scene) {
-    error("Unable to load mesh: ", filename());
+    mLog->error("Unable to load mesh: ", filename());
     return false;
   }
   mMesh = new SubMesh(this, manager, scene, scene->mRootNode);
 
-  log("Mesh :: Loading model", filename(), ": ", size(), " vertices.");
+  mLog->debug("Loading model '{}': {} vertices", filename(), size());
 
   glGenBuffers(1, &mVBO);
   glGenVertexArrays(1, &mVAO);

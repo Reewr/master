@@ -4,6 +4,7 @@
 
 #include "../OpenGLHeaders.hpp"
 
+#include "../Log.hpp"
 #include "GUI.hpp"
 
 class Texture;
@@ -15,7 +16,7 @@ namespace tinyxml2 {
 }
 
 
-class Slider : public GUI {
+class Slider : public GUI, public Logging::Log {
 public:
   //! Loads textures and calls recalculatesGeometry
   Slider(const mmm::vec2&   pos,

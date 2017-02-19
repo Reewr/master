@@ -27,6 +27,7 @@ using mmm::vec2;
 using mmm::vec3;
 
 Master::Master(Asset* a) : mAsset(a) {
+  setLoggerName("Master");
   CFG* c         = a->cfg();
   vec2 shadowRes = vec2(c->graphics.shadowRes, c->graphics.shadowRes);
 
@@ -56,7 +57,7 @@ Master::Master(Asset* a) : mAsset(a) {
       vec3 size = vec3(mmm::max(dis(gen), 0.0001f),
                        mmm::max(dis(gen), 0.0001f),
                        mmm::max(dis(gen), 0.0001f));
-      log("Creating cube with: ", size, "");
+      mLog->debug("Creating cube with: {}", size);
       mDrawable3D.push_back(new Cube(size));
       mWorld->addObject(mDrawable3D.back());
     }
@@ -126,7 +127,7 @@ void Master::drawGUI() {
   try {
     mLua->engine["draw"]();
   } catch (const sol::error& e) {
-    error("Failed to draw: ", e.what());
+    mLog->error("Failed to draw: ", e.what());
   }
 }
 
@@ -156,7 +157,7 @@ void Master::update(float deltaTime) {
   try {
     mLua->engine["update"](deltaTime);
   } catch (const sol::error& e) {
-    error("Failed to update: ", e.what());
+    mLog->error("Failed to update: ", e.what());
   }
 }
 

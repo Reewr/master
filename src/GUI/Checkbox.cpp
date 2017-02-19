@@ -12,7 +12,8 @@
 
 using mmm::vec2;
 
-Checkbox::Checkbox(const vec2& pos) : mIsTicked(false) {
+Checkbox::Checkbox(const vec2& pos)
+    : Logging::Log("Checkbox"), mIsTicked(false) {
   mBoundingBox = Rectangle(pos, vec2(21, 21));
   mSquare      = new GLRectangle();
   mTick        = new Text("Font::Dejavu", "", vec2(pos.x, pos.y - 3), 20);

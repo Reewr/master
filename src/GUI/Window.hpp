@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include "../Log.hpp"
 #include "GUI.hpp"
 #include "Menu.hpp"
 
@@ -20,7 +21,7 @@ namespace tinyxml2 {
 }
 
 //! Window is a GUI class that creates a block to act as a window on the screen
-class Window : public GUI {
+class Window : public GUI, public Logging::Log {
 public:
   Window();
 

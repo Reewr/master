@@ -22,7 +22,8 @@ Camera::Light::Light()
     , projection(mat4::identity) {}
 
 Camera::Camera(Asset* asset)
-    : mAsset(asset)
+    : Logging::Log("Camera")
+    , mAsset(asset)
     , mTarget(0, 1.183, 1)
     , mModel(mat4::identity)
     , mView(mat4::identity)
@@ -259,11 +260,11 @@ void Camera::update(float dt) {
   vec3 lightEye = mTarget + vec3(lt * vec4(0, mHeight, 0, 1));
   vec3 lightUp  = vec3(lt * vec4(0, 0, -1, 0));
 
-  mLight.view = mmm::lookAt(lightEye, mTarget, lightUp);
-  float h = 5*mHeight;
+  mLight.view       = mmm::lookAt(lightEye, mTarget, lightUp);
+  float h           = 5 * mHeight;
   mLight.projection = mmm::ortho(-h, h, -h, h, -h, h);
   // mLight.projection = mmm::ortho(-7.f, 7.f, -7.f, 7.f, -7.f, 7.f);
-  mLight.direction  = mmm::normalize(lightUp - mTarget);
+  mLight.direction = mmm::normalize(lightUp - mTarget);
 
 
   /*

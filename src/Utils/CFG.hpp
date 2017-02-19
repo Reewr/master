@@ -2,10 +2,11 @@
 
 #include <functional>
 #include <map>
+#include <sstream>
 #include <string>
 #include <vector>
-#include <sstream>
 
+#include "../Log.hpp"
 #include <mmm.hpp>
 
 //! Actions bindings - Keybindings
@@ -16,7 +17,7 @@ struct ActB {
   int key2;
 };
 
-class CFG {
+class CFG : public Logging::Log {
 public:
   typedef std::string        Prop;
   typedef std::string        Param;

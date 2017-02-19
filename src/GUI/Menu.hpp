@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include "../Log.hpp"
 #include "GUI.hpp"
 #include "Text.hpp"
 
@@ -9,7 +10,7 @@ namespace tinyxml2 {
   class XMLElement;
 }
 
-class Menu : public GUI {
+class Menu : public GUI, public Logging::Log {
 public:
   struct MenuSettings {
     MenuSettings(float size   = 20,

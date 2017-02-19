@@ -524,20 +524,6 @@ namespace Input {
     mHandledState = stateChange;
   }
 
-#include <execinfo.h>
-#include <unistd.h>
-
-  // TESTING
-  // @TODO: REMOVE
-  void trace() {
-    void*  array[5];
-    size_t size;
-
-    size = backtrace(array, 5);
-
-    log("Handled propagation");
-    backtrace_symbols_fd(array, size, STDERR_FILENO);
-  }
   /**
    * @brief
    *   This function tells the event that it has been handled.
@@ -545,8 +531,6 @@ namespace Input {
    *   of Event::Type.
    */
   void Event::stopPropgation() const {
-    /* if (mType != Type::MouseMovement) */
-    /*   trace(); */
     mPrev = mType;
     mType = Type::Consumed;
   }

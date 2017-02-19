@@ -1,6 +1,8 @@
 #include <backward.hpp>
 
 #include "Engine.hpp"
+#include "GlobalLog.hpp"
+#include "Log.hpp"
 #include <stdexcept>
 
 /**
@@ -27,6 +29,8 @@
  *   Error code if any
  */
 int main(int argc, char* argv[]) {
+  Logging::init(spdlog::level::trace);
+
   Engine* engine = new Engine();
 
   if (!engine->initialize(argc, argv)) {

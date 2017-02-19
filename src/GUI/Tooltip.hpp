@@ -2,13 +2,14 @@
 
 #include <string>
 
+#include "../Log.hpp"
 #include "GUI.hpp"
 
 class Text;
 class GLRectangle;
 class CFG;
 
-class Tooltip : public GUI {
+class Tooltip : public GUI, public Logging::Log {
 public:
   Tooltip();
 

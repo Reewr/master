@@ -2,6 +2,7 @@
 
 #include <mmm.hpp>
 
+#include "../Log.hpp"
 #include "GUI.hpp"
 
 class Text;
@@ -16,7 +17,7 @@ namespace Input {
   class Input;
 }
 
-class Checkbox : public GUI {
+class Checkbox : public GUI, public Logging::Log {
 public:
   //! Creates a checkbox where box is the filename
   //! to the texture used

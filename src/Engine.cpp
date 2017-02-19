@@ -1,11 +1,12 @@
 #include "Engine.hpp"
 
+#include "GlobalLog.hpp"
 #include "OpenGLHeaders.hpp"
 
 #include "Drawable/Drawable.hpp"
+#include "GLSL/Shader.hpp"
 #include "GUI/GUI.hpp"
 #include "Graphical/Framebuffer.hpp"
-#include "GLSL/Shader.hpp"
 #include "Lua/Lua.hpp"
 #include "State/MainMenu.hpp"
 #include "State/Master.hpp"
@@ -63,7 +64,8 @@ static void glfwErrorHandler(int, const char* k) {
 }
 
 Engine::Engine(std::string cfgPath)
-    : mCFGPath(cfgPath)
+    : Logging::Log("Engine")
+    , mCFGPath(cfgPath)
     , mCFG(nullptr)
     , mCurrent(nullptr)
     , mInput(nullptr)
@@ -133,8 +135,8 @@ bool Engine::initialize(int argc, char* argv[], int isRefresh, int initState) {
   if (isRefresh == States::Init)
     mCFG->assimilate(argc, argv);
 
-  DEBUG_MODE    = mCFG->general.debug;
-  ENABLE_COLORS = mCFG->general.debugColors;
+  // DEBUG_MODE    = mCFG->general.debug;
+  // ENABLE_COLORS = mCFG->general.debugColors;
 
   // Init the different libraries if
   // this is the first init call
@@ -182,7 +184,7 @@ bool Engine::initialize(int argc, char* argv[], int isRefresh, int initState) {
   /* Model::init(&asset->cfg); */
   Framebuffer::init(mAsset->cfg());
 
-  log("Engine :: Initialized successfully...");
+  mLog->debug("Initialized successfully...");
 
   if (isRefresh == States::Init) {
     changeState(initState);
@@ -202,11 +204,11 @@ bool Engine::initGLFW() {
   glfwSetErrorCallback(glfwErrorHandler);
 
   if (!glfwInit()) {
-    error("Engine: Could not start GLFW - Check GLFW error");
+    mLog->error("Could not start GLFW - Check GLFW error");
     return false;
   }
 
-  log("Engine :: GLFW started successfully");
+  mLog->info("GLFW started successfully");
   return true;
 }
 
@@ -219,7 +221,7 @@ bool Engine::initGLFW() {
  */
 bool Engine::initOpenGLBindings() {
   if (ogl_LoadFunctions() != ogl_LOAD_SUCCEEDED) {
-    error("Engine: Failed to initialize OGL: ");
+    mLog->error("Failed to initialize OGL");
     return false;
   }
 
@@ -227,7 +229,7 @@ bool Engine::initOpenGLBindings() {
   if (!Utils::getGLError())
     return false;
 
-  log("Engine :: OGL initialized successfully...");
+  mLog->info("OGL initialized successfully...");
   return true;
 }
 
@@ -268,7 +270,7 @@ bool Engine::initWindow() {
                              NULL);
 
   if (!mWindow) {
-    error("Engine: Could not open window with GLFW. Check GLFW error messages");
+    mLog->error("Could not open window with GLFW. Check GLFW error messages");
     glfwTerminate();
     return false;
   }
@@ -279,7 +281,7 @@ bool Engine::initWindow() {
   // Set vsync if set by config
   glfwSwapInterval((cfg->graphics.vsync) ? 1 : 0);
 
-  log("Engine :: GLFW Window settings initalized successfully...");
+  mLog->info("GLFW Window settings initalized successfully...");
   return true;
 }
 
@@ -344,7 +346,7 @@ GLFWmonitor* Engine::getMonitor() {
 
 void Engine::sendEvent(const Input::Event& event) {
   if (mCurrent == nullptr)
-    return error("Current state is null");
+    return mLog->error("Current state is null");
 
   mCurrent->input(event);
 
@@ -419,8 +421,6 @@ void Engine::runLoop() {
     float deltaTime   = currentTime - startTime;
     startTime         = currentTime;
 
-    LOOP_LOGGER += deltaTime;
-
     // Update the stack if available
     mCurrent->update(deltaTime);
 
@@ -432,10 +432,6 @@ void Engine::runLoop() {
 
     glfwPollEvents();
     glfwSwapBuffers(mWindow);
-
-    if (LOOP_LOGGER > 1) {
-      LOOP_LOGGER = 0;
-    }
 
     // Special case for when the engine has to be entirely
     // reloaded due context setting changes.
@@ -529,6 +525,6 @@ void Engine::changeState(int newState) {
  *   main loop and therefore stops the program
  */
 void Engine::closeWindow() {
-  log("Engine :: Now closing GLFW window..");
+  mLog->info("Now closing GLFW window..");
   glfwSetWindowShouldClose(mWindow, GL_TRUE);
 }

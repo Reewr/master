@@ -18,14 +18,14 @@
 
 using mmm::vec2;
 
-Window::Window() {
+Window::Window() : Logging::Log("Window") {
   mBackground = nullptr;
   mTitle      = nullptr;
 
   mBoundingBox = Rectangle({ 0, 0 }, { 0, 0 });
 }
 
-Window::Window(std::string texture, Rectangle r) {
+Window::Window(std::string texture, Rectangle r) : Logging::Log("Window") {
   mBackground = nullptr;
   mTitle      = nullptr;
 

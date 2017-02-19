@@ -61,65 +61,30 @@ namespace _utils_detail {
 
 template <typename... Ts>
 void fatalError(Ts... args) {
-  Utils::logTimeNoEnd();
-  if (ENABLE_COLORS) {
-    std::cout << "\033[1;31mFatal Error: \033[0m";
-  } else {
-    std::cout << "Fatal Error: ";
-  }
+  std::cout << "Fatal Error: ";
   _utils_detail::fatalError(args...);
 }
 
 template <typename... Ts>
 void error(Ts... args) {
-  if (DEBUG_MODE) {
-    Utils::logTimeNoEnd();
-    if (ENABLE_COLORS) {
-      std::cout << "\033[1;31mError: \033[0m";
-    } else {
-      std::cout << "Error: ";
-    }
-
-    _utils_detail::error(args...);
-  }
+  std::cout << "Error: ";
+  _utils_detail::error(args...);
 }
 
 template <typename... Ts>
 void warning(Ts... args) {
-  if (DEBUG_MODE) {
-    Utils::logTimeNoEnd();
-    if (ENABLE_COLORS) {
-      std::cout << "\033[1;33mWarning: \033[0m";
-    } else {
-      std::cout << "Warning: ";
-    }
-    _utils_detail::warning(args...);
-  }
+  std::cout << "Warning: ";
+  _utils_detail::warning(args...);
 }
 
 template <typename... Ts>
 void log(Ts... args) {
-  if (DEBUG_MODE) {
-    Utils::logTimeNoEnd();
-    _utils_detail::log(args...);
-  }
-}
-
-namespace Utils {
-  template <typename... Ts>
-  void lineLog(Ts... args) {
-    if (DEBUG_MODE) {
-      _utils_detail::lineLog(std::string(250, '\r'));
-      Utils::logTimeNoEnd();
-      _utils_detail::lineLog(args...);
-    }
-  }
+  _utils_detail::log(args...);
 }
 
 template <typename... Ts>
 void tlog(Ts... xs) {
   if (LOOP_LOGGER > 1) {
-    Utils::logTimeNoEnd();
     _utils_detail::log(xs...);
   }
 }

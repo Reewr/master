@@ -38,5 +38,5 @@ private:
   World*       mWorld;
   Lua::Lua*    mLua;
   // Input::Input* mInput;
-  Asset*       mAsset;
+  Asset* mAsset;
 };

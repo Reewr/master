@@ -3,23 +3,26 @@
 #include <fstream>
 #include <iostream>
 
+#include "../GlobalLog.hpp"
 #include "../Utils/Utils.hpp"
 #include "Shader.hpp"
 
 GLuint Program::activeProgram = 0;
 
-Program::Program() : program(0), isLinked(false), isUsable(false) {}
+Program::Program()
+    : Logging::Log("Program"), program(0), isLinked(false), isUsable(false) {}
 
 Program::~Program() {}
 
 Program::Program(const std::string& fsvs, bool link)
-    : program(0), isLinked(false), isUsable(false) {
+    : Logging::Log("Program"), program(0), isLinked(false), isUsable(false) {
   createProgram(fsvs, link);
 }
 
 bool Program::createProgram(const std::string& fsvs, bool link) {
   if (fsvs.find(",") == std::string::npos) {
-    throw std::runtime_error("Must load program as single string of two shaders");
+    throw std::runtime_error(
+      "Must load program as single string of two shaders");
   }
 
   std::map<std::string, std::string> srcs = loadDualShaderFilename(fsvs);
@@ -52,12 +55,12 @@ bool Program::createProgram(const std::string& fsvs, bool link) {
 }
 
 bool Program::load(ResourceManager*) {
-  log("Program :: Loading", mFilename);
+  mLog->debug("Loading", mFilename);
   return createProgram(mFilename, true);
 }
 
 void Program::unload() {
-  log("Program :: Unloading ", mFilename);
+  mLog->debug("Unloading ", mFilename);
   if (program != 0) {
     if (activeProgram == program)
       activeProgram = 0;
@@ -113,10 +116,10 @@ GLint Program::getUniformLocation(const std::string& uni) {
   if (loc != -1)
     uniLocations[uni] = loc;
   else {
-    tlog(filenames[0],
-         ", ",
-         filenames[1],
-         " - " + uni + " does not exist in shader.");
+    mLog->debug("{}, {} - {} does not exist in shader",
+                filenames[0],
+                filenames[1],
+                uni);
     return loc;
   }
   checkErrors("getUniformLocation(): " + uni, filenames);
@@ -234,8 +237,7 @@ Program::loadDualShaderFilename(const std::string& fsvs) {
                              "' has two vertex shaders");
 
   return {
-    {"FRAGMENT", f1isFrag ? f1 : f2},
-    {"VERTEX",   f1isVert ? f1 : f2},
+    { "FRAGMENT", f1isFrag ? f1 : f2 }, { "VERTEX", f1isVert ? f1 : f2 },
   };
 }
 

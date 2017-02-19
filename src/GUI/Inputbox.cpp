@@ -14,7 +14,8 @@
 
 using mmm::vec2;
 
-Inputbox::Inputbox(const Rectangle& r, const std::string text) {
+Inputbox::Inputbox(const Rectangle& r, const std::string text)
+    : Logging::Log("Inputbox") {
   mTextBox  = new GLRectangle();
   mInputBox = new GLRectangle();
 

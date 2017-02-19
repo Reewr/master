@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include "../Log.hpp"
 #include "../OpenGLHeaders.hpp"
 
 #include <mmm.hpp>
@@ -14,7 +15,7 @@ class CFG;
 class GLRectangle;
 struct Rectangle;
 
-class Framebuffer {
+class Framebuffer : public Logging::Log {
 public:
   Framebuffer();
 

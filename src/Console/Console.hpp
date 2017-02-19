@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../GUI/GUI.hpp"
+#include "../Log.hpp"
 
 #include <map>
 #include <string>
@@ -38,7 +39,7 @@ class GLRectangle;
  *
  *     - Add aliases (quit, :q, exit)
  */
-class Console : public GUI {
+class Console : public GUI, public Logging::Log {
 public:
   using Command = std::string;
 

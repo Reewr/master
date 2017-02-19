@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <sstream>
 
+#include "../GlobalLog.hpp"
 #include "../Input/Input.hpp"
 #include "Utils.hpp"
 #include "str.hpp"
@@ -16,19 +17,17 @@ ActB::ActB(int k1, int k2) {
   key2 = k2;
 }
 
-CFG::CFG() {
+CFG::CFG() : Logging::Log("CFG") {
   this->special_cases();
 }
 
 void CFG::unknown_parameter(const Prop&        p,
                             const Param&       pm,
                             const std::string& v) {
-  warning("failed to parse '",
-          p,
-          "': unknown parameter '",
-          pm,
-          "' - possible parameters are:",
-          v);
+  error("Failed to parse '{}': unknown parameter: '{}'. Possible: {}",
+        p,
+        pm,
+        v);
 }
 
 CFG::Wrapper::Wrapper(bool& b) {
@@ -43,7 +42,7 @@ CFG::Wrapper::Wrapper(bool& b) {
       unknown_parameter(p, ps[0], " on off");
   };
 
-  show = [&b]() { return b ? "on" : "off"; };
+  show   = [&b]() { return b ? "on" : "off"; };
   asType = [&b]() { return b ? "true" : "false"; };
 }
 CFG::Wrapper::Wrapper(int& i) {
@@ -58,7 +57,7 @@ CFG::Wrapper::Wrapper(int& i) {
       unknown_parameter(p, ps[0], " number");
   };
 
-  show = [&i]() { return std::to_string(i); };
+  show   = [&i]() { return std::to_string(i); };
   asType = [&i]() { return std::to_string(i); };
 }
 CFG::Wrapper::Wrapper(float& f) {
@@ -73,7 +72,7 @@ CFG::Wrapper::Wrapper(float& f) {
       unknown_parameter(p, ps[0], " number");
   };
 
-  show = [&f]() { return std::to_string(f); };
+  show   = [&f]() { return std::to_string(f); };
   asType = [&f]() { return std::to_string(f); };
 }
 CFG::Wrapper::Wrapper(vec2& v) : args(2) {
@@ -100,7 +99,7 @@ CFG::Wrapper::Wrapper(vec2& v) : args(2) {
     return s;
   };
 
-  asType = [&v](){
+  asType = [&v]() {
     return "vec2(" + std::to_string(v.x) + ", " + std::to_string(v.y) + ")";
   };
 }
@@ -143,27 +142,23 @@ CFG::Wrapper::Wrapper(ActB& ab) : args(2) {
 
 void CFG::setProp(const Prop& p, const Params& ps) {
   if (map.find(p) == map.end()) {
-    warning("unknown setting '", p, "'.");
+    mLog->warn("Unknown setting '{}'", p);
     return;
   }
 
   unsigned int args = map.at(p).args;
 
   if (args > ps.size()) {
-    warning("failed to parse '",
-            p,
-            "': 'missing parameter' - expected parameters ",
-            args,
-            ".");
+    mLog->warn("Failed to parse '{}'. Missing parameter, expected: {}",
+               p,
+               args);
     return;
   }
 
   else if (args < ps.size())
-    warning("while parsing '",
-            p,
-            "': 'excessive parameters' - expected parameters ",
-            args,
-            ".");
+    mLog->warn("Failed to parse '{}'. Excessive parameter, expected: {}",
+               p,
+               args);
 
   map.at(p).parse(p, ps);
 }
@@ -197,7 +192,7 @@ int CFG::get_num_params(const Prop& p) {
 
 void CFG::assimilate(const std::string& filepath) {
 
-  log("CFG :: assimilating '", filepath, "'");
+  mLog->debug("Assimilating '{}'", filepath);
 
   // spaghetti mode enabled!
 
@@ -266,7 +261,7 @@ void CFG::assimilate(const std::string& filepath) {
 
 void CFG::assimilate(int argc, char* argv[]) {
   if (argc > 1)
-    log("CFG :: assimilating launch parameters");
+    mLog->debug("Assimilating launch parameters");
 
   int i = 1;
 
@@ -293,16 +288,16 @@ bool CFG::writetoFile(std::string filename) {
   std::ofstream file(filename);
   if (file.is_open()) {
     file << *this;
-    log("CFG :: writing to '", filename, "'");
+    mLog->debug("Writing to '{}'", filename);
   } else {
     file.open(filename,
               std::ios_base::in | std::ios_base::out | std::ios_base::trunc);
-    log("CFG :: creating '", filename, "'");
+    mLog->debug("Creating '{}'", filename);
     if (file.is_open()) {
       file << *this;
-      log("CFG :: writing to '", filename, "'");
+      mLog->debug("Writing to '{}'", filename);
     } else {
-      error("Could not create file");
+      mLog->error("Could not create file: '{}'", filename);
       return false;
     }
   }

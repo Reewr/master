@@ -23,7 +23,7 @@ Menu::MenuSettings::MenuSettings(float size, float offset, int ori, int color) {
  * @brief
  *   Initializes an empty menu
  */
-Menu::Menu() {
+Menu::Menu() : Logging::Log("Menu") {
   mActiveMenu = -1;
   isVisible(true);
 }
@@ -43,9 +43,8 @@ Menu::Menu() {
  * @param m
  *   The settings for the menu item
  */
-Menu::Menu(const std::string&  text,
-           const vec2&         position,
-           const MenuSettings& m) {
+Menu::Menu(const std::string& text, const vec2& position, const MenuSettings& m)
+    : Logging::Log("Menu") {
   mActiveMenu = -1;
   isVisible(true);
   addMenuItem(text, position, m);
@@ -69,7 +68,8 @@ Menu::Menu(const std::string&  text,
  */
 Menu::Menu(const std::vector<std::string>& names,
            const vec2&                     startPosition,
-           const MenuSettings&             m) {
+           const MenuSettings&             m)
+    : Logging::Log("Menu") {
   mActiveMenu = -1;
   isVisible(true);
   addMenuItems(names, startPosition, m);

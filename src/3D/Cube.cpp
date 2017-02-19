@@ -13,7 +13,8 @@
 using mmm::vec2;
 using mmm::vec3;
 
-Cube::Cube(const mmm::vec3& size, int weight, const mmm::vec3& position) {
+Cube::Cube(const mmm::vec3& size, int weight, const mmm::vec3& position)
+    : Logging::Log("Cube") {
   btVector3 btSize = btVector3(size.x / 2.0f, size.y / 2.0f, size.z / 2.0f);
   mCube            = new GLCube();
   mShape           = new btBoxShape(btSize);

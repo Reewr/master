@@ -13,7 +13,8 @@
 
 using mmm::vec2;
 
-Slider::Slider(const vec2& pos, const float scale, const std::string& valSign) {
+Slider::Slider(const vec2& pos, const float scale, const std::string& valSign)
+    : Logging::Log("Slider") {
   mBackground = new GLRectangle();
   mButton     = new GLRectangle();
   mInfo       = new Text("Font::Dejavu", "", pos, 15, Text::WHITE);

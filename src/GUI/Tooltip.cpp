@@ -10,7 +10,7 @@
 
 using mmm::vec2;
 
-Tooltip::Tooltip() {
+Tooltip::Tooltip() : Logging::Log("Tooltip") {
   mCFG         = mAsset->cfg();
   mBoundingBox = Rectangle(0, 0, 100, 60);
   mOffset      = vec2(0, 0);

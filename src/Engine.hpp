@@ -3,6 +3,7 @@
 #include <stack>
 #include <string>
 
+#include "Log.hpp"
 #include "State/State.hpp"
 
 class Asset;
@@ -23,7 +24,7 @@ namespace Lua {
 }
 
 //! Engine sorts out which state that is active
-class Engine {
+class Engine : public Logging::Log {
 public:
   /**
    * @brief

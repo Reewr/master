@@ -4,6 +4,7 @@
 #include <mmm.hpp>
 #include <string>
 
+#include "../Log.hpp"
 #include "../OpenGLHeaders.hpp"
 #include "Resource.hpp"
 
@@ -12,7 +13,7 @@ class ResourceManager;
 
 //! Texture contains information about the loaded texture,
 //! can load .PNG & .dds.
-class Texture : public Resource {
+class Texture : public Resource, public Logging::Log {
 public:
   //! Textures to load - MODE
   enum { GUI, TEXTURE, DDS, CUBE, MAP, EMPTY };

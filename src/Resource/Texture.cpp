@@ -10,10 +10,15 @@ using mmm::vec2;
 std::map<unsigned int, GLuint> Texture::activeTextures;
 GLuint Texture::activeTexture = 0;
 
-Texture::Texture() : mMode(0), mTextureId(0), mSamplerId(0), mSize(0, 0) {}
+Texture::Texture()
+    : Logging::Log("Texture")
+    , mMode(0)
+    , mTextureId(0)
+    , mSamplerId(0)
+    , mSize(0, 0) {}
 
 void Texture::unload() {
-  log("Texture :: Unloading ", mFilename);
+  mLog->debug("Unloading ", mFilename);
 
   if (activeTexture == mTextureId)
     activeTexture = 0;
@@ -79,7 +84,7 @@ GLuint Texture::generateGLTexture() {
 }
 
 bool Texture::load(ResourceManager*) {
-  log("Texture :: Loading ", mFilename);
+  mLog->debug("Loading ", mFilename);
   if (mTextureId != 0)
     return true;
 
@@ -248,7 +253,7 @@ void Texture::saveTexture(std::string fname, const vec2& size) {
   f.close();
   delete[] data;
   data = NULL;
-  log("Saved texture to: '", fname, "'");
+  mLog->debug("Saved texture to: '{}'", fname);
 }
 
 Texture& Texture::linear() {

@@ -101,6 +101,10 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/sol2)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/MultiNEAT)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/MultiNEAT)
 
+# Include spdlog
+SET_OPTION(SPDLOG_BUILD_TESTING OFF)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/spdlog)
+
 # ==============================================================================
 # Project file
 # ==============================================================================
@@ -144,6 +148,11 @@ set(WARN_FLAGS "${WARN_FLAGS} -ferror-limit=1")
 set(WARN_FLAGS "${WARN_FLAGS} -ftemplate-depth=512")
 set(WARN_FLAGS "${WARN_FLAGS} -pedantic-errors")
 
+# Ignore warnings since they aren't all that good:
+# http://stackoverflow.com/questions/13905200/is-it-wise-to-ignore-gcc-clangs-wmissing-braces-warning
+# Its already disabled in GCC
+set(WARN_FLAGS "${WARN_FLAGS} -Wno-missing-braces")
+
 
 # This will throw lots of warnings due to MMM and other libraries
 # using undefined `defined`
@@ -163,6 +172,7 @@ set(SOURCE_FILES
   # Top level files
   ${SRC_DIR}/main.cpp
   ${SRC_DIR}/Engine.cpp
+  ${SRC_DIR}/Log.cpp
 
   # src/3D
   ${SRC_DIR}/3D/Camera.cpp
@@ -245,6 +255,8 @@ set(HEADER_FILES
   # Top level headers
   ${SRC_DIR}/Engine.hpp
   ${SRC_DIR}/OpenGLHeaders.hpp
+  ${SRC_DIR}/Log.hpp
+  ${SRC_DIR}/GlobalLog.hpp
 
   # src/3D
   ${SRC_DIR}/3D/Camera.hpp
@@ -377,6 +389,8 @@ target_link_libraries(Woooo tinyxml2
                       BulletDynamics
                       BulletCollision)
                     target_link_libraries(Woooo mmm)
+                    target_link_libraries(Woooo spdlog)
+                    target_link_libraries(Woooo pthread)
                     target_link_libraries(Woooo MultiNEAT)
 
 # ==============================================================================

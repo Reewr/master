@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Drawable/Drawable3D.hpp"
+#include "../Log.hpp"
 #include <memory>
 
 class GLGrid3D;
@@ -8,7 +9,7 @@ class GLGrid3D;
 class Texture;
 class Program;
 
-class Terrain : public Drawable3D {
+class Terrain : public Drawable3D, public Logging::Log {
 public:
   Terrain();
   ~Terrain();

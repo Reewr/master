@@ -26,7 +26,8 @@ using mmm::vec2;
  *   Dropdown position
  */
 Dropdown::Dropdown(const std::vector<std::string>& options,
-                   const vec2&                     position) {
+                   const vec2&                     position)
+    : Logging::Log("Dropdown") {
   mBox                  = new GLRectangle();
   mOptionsList          = new GLRectangle();
   mIsVisible            = true;

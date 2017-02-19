@@ -14,7 +14,7 @@
 using mmm::vec2;
 using mmm::vec3;
 
-Terrain::Terrain() {
+Terrain::Terrain() : Logging::Log("Terrain") {
   mGrid   = new GLGrid3D(vec2(128, 128));
   mShape  = new btStaticPlaneShape(btVector3(0, 1, 0), 1);
   mMotion = new btDefaultMotionState(
