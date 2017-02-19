@@ -116,10 +116,10 @@ GLint Program::getUniformLocation(const std::string& uni) {
   if (loc != -1)
     uniLocations[uni] = loc;
   else {
-    mLog->debug("{}, {} - {} does not exist in shader",
-                filenames[0],
-                filenames[1],
-                uni);
+    mLog->warn("{}, {} - {} does not exist in shader",
+               filenames[0],
+               filenames[1],
+               uni);
     return loc;
   }
   checkErrors("getUniformLocation(): " + uni, filenames);
