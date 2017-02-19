@@ -120,19 +120,19 @@ Sol2 is a wrapper around the previously mentioned Lua C library. It exposes a mo
 The library is licensed under a [MIT license](https://raw.githubusercontent.com/ThePhD/sol2/develop/LICENSE.txt).
 
 
-# [Assimp](http://www.assimp.org)
+## [Assimp](http://www.assimp.org)
 
 Assimp (Open Asset Import Library) is a portable Open-source library to import various well-known 3D model formats. It is used to import the spider model used in this project from file into a format that can be used with OpenGL.
 
 Assimp is licensed under a [3-clause BSD license](http://assimp.org/main_license.html)
 
-# [mmm](https://github.com/Thhethssmuz/mmm)
+## [mmm](https://github.com/Thhethssmuz/mmm)
 
 mmm is a reimplementation of the original math library that was used for this engine. The math library draws inspiration from the math implementations in GLSL and extends upon the methods found in the shading language. It is widely used in the engine, but due to its reimplementation, it was moved to a different repository.
 
 mmm is licensed under a [MIT license](https://raw.githubusercontent.com/Thhethssmuz/mmm/master/LICENSE).
 
-# [spdlog](https://github.com/gabime/spdlog)
+## [spdlog](https://github.com/gabime/spdlog)
 
 spdlog is a logging library that is advertised as one of the faster ones out there. It supports multiple loggers, colours, file-logging and is thread-safe. It is used instead of our previous logging to be able to make more sense of where things are coming from without having to explicitly state this in each log message.
 
