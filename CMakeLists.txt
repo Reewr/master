@@ -216,7 +216,6 @@ set(SOURCE_FILES
   ${SRC_DIR}/Shape/GL/Cube.cpp
 
   # src/Import
-  ${SRC_DIR}/Import/Animation.cpp
   ${SRC_DIR}/Import/UILoader.cpp
   ${SRC_DIR}/Import/XML.cpp
 
@@ -299,7 +298,6 @@ set(HEADER_FILES
   ${SRC_DIR}/Shape/GL/Cube.hpp
 
   # src/Import
-  ${SRC_DIR}/Import/Animation.hpp
   ${SRC_DIR}/Import/UILoader.hpp
   ${SRC_DIR}/Import/XML.hpp
 
