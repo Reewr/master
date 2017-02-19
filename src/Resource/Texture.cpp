@@ -84,9 +84,10 @@ GLuint Texture::generateGLTexture() {
 }
 
 bool Texture::load(ResourceManager*) {
-  mLog->debug("Loading {}", mFilename);
   if (mTextureId != 0)
     return true;
+
+  mLog->debug("Loading {}", mFilename);
 
   mMode = TEXTURE;
   glGenTextures(1, &mTextureId);

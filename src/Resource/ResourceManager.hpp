@@ -57,6 +57,8 @@ std::shared_ptr<T> ResourceManager::get(const std::string& name) {
 
   if (!result)
     throw std::runtime_error("Failed to load resource: '" + name + "'");
+  else
+    mResources[name]->setLoaded(true);
 
   return std::dynamic_pointer_cast<T>(mResources[name]);
 }
