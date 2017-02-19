@@ -5,6 +5,7 @@
 #include "../Utils/Utils.hpp"
 #include "Font.hpp"
 #include "Texture.hpp"
+#include "Mesh.hpp"
 
 ResourceManager::ResourceManager()
     : Logging::Log("ResManager"), mCurrentScope(ResourceScope::None) {}
@@ -58,7 +59,8 @@ void ResourceManager::loadDescription(const std::string& filename) {
       "Empty"  , ResourceType::Empty,
       "Texture", ResourceType::Texture,
       "Program", ResourceType::Program,
-      "Font"   , ResourceType::Font);
+      "Font"   , ResourceType::Font,
+      "Mesh"   , ResourceType::Mesh);
 
   lua.create_named_table("ResourceScope",
       "MainMenu", ResourceScope::MainMenu,
@@ -87,6 +89,9 @@ void ResourceManager::loadDescription(const std::string& filename) {
         break;
       case ResourceType::Texture:
         mResources[name] = std::shared_ptr<Resource>(new class Texture());
+        break;
+      case ResourceType::Mesh:
+        mResources[name] = std::shared_ptr<Resource>(new class Mesh());
         break;
       default:
         throw std::runtime_error("ResourceType implementation does not exist");

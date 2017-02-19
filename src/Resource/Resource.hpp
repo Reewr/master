@@ -4,7 +4,7 @@
 
 class ResourceManager;
 
-enum class ResourceType { Empty, Texture, Font, Program };
+enum class ResourceType { Empty, Texture, Font, Program, Mesh };
 enum class ResourceScope {
   None     = 0x00,
   MainMenu = 0x01,
