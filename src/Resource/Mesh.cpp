@@ -47,7 +47,7 @@ bool Mesh::load(ResourceManager* manager) {
                       );
 
   if (!scene) {
-    mLog->error("Unable to load mesh: ", filename());
+    mLog->error("Unable to load mesh: {}", filename());
     return false;
   }
   mMesh = new SubMesh(this, manager, scene, scene->mRootNode);

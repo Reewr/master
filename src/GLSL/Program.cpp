@@ -55,12 +55,12 @@ bool Program::createProgram(const std::string& fsvs, bool link) {
 }
 
 bool Program::load(ResourceManager*) {
-  mLog->debug("Loading", mFilename);
+  mLog->debug("Loading: {}", mFilename);
   return createProgram(mFilename, true);
 }
 
 void Program::unload() {
-  mLog->debug("Unloading ", mFilename);
+  mLog->debug("Unloading: {}", mFilename);
   if (program != 0) {
     if (activeProgram == program)
       activeProgram = 0;

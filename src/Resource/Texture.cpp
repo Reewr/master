@@ -18,7 +18,7 @@ Texture::Texture()
     , mSize(0, 0) {}
 
 void Texture::unload() {
-  mLog->debug("Unloading ", mFilename);
+  mLog->debug("Unloading {}", mFilename);
 
   if (activeTexture == mTextureId)
     activeTexture = 0;
@@ -84,7 +84,7 @@ GLuint Texture::generateGLTexture() {
 }
 
 bool Texture::load(ResourceManager*) {
-  mLog->debug("Loading ", mFilename);
+  mLog->debug("Loading {}", mFilename);
   if (mTextureId != 0)
     return true;
 

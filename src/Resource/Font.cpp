@@ -100,10 +100,10 @@ bool Font::load(ResourceManager*) {
  * @return
  */
 bool Font::load(int size) {
-  mLog->debug("Loading size: ", std::to_string(size));
+  mLog->debug("Loading size: {}", std::to_string(size));
 
   if (mPages.count(size) > 0) {
-    mLog->debug("Size already loaded: ", std::to_string(size));
+    mLog->debug("Size already loaded: {}", std::to_string(size));
     return true;
   }
 
