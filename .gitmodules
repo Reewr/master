@@ -28,3 +28,6 @@
 [submodule "deps/MultiNEAT/MultiNEAT"]
 	path = deps/MultiNEAT/MultiNEAT
 	url = git@github.com:peter-ch/MultiNEAT.git
+[submodule "deps/spdlog"]
+	path = deps/spdlog
+	url = git@github.com:gabime/spdlog.git

@@ -132,6 +132,12 @@ mmm is a reimplementation of the original math library that was used for this en
 
 mmm is licensed under a [MIT license](https://raw.githubusercontent.com/Thhethssmuz/mmm/master/LICENSE).
 
+# [spdlog](https://github.com/gabime/spdlog)
+
+spdlog is a logging library that is advertised as one of the faster ones out there. It supports multiple loggers, colours, file-logging and is thread-safe. It is used instead of our previous logging to be able to make more sense of where things are coming from without having to explicitly state this in each log message.
+
+spdlog is licensed under a [MIT license](https://raw.githubusercontent.com/gabime/spdlog/master/LICENSE) where some of the subfiles are licensed under an BSD-like license.
+
 
 
 
