@@ -180,7 +180,7 @@ const std::vector<float>& Mesh::data() {
   return mData;
 }
 
-SubMesh::SubMesh() : mStartIndex(0), mSize(0) {}
+Mesh::SubMesh::SubMesh() : mStartIndex(0), mSize(0) {}
 
 /**
  * @brief
@@ -192,7 +192,7 @@ SubMesh::SubMesh() : mStartIndex(0), mSize(0) {}
  * @param scene
  * @param node
  */
-SubMesh::SubMesh(Mesh*            model,
+Mesh::SubMesh::SubMesh(Mesh*            model,
                  ResourceManager* manager,
                  const aiScene*   scene,
                  const aiNode*    node)
@@ -272,7 +272,7 @@ SubMesh::SubMesh(Mesh*            model,
  * @param modelMatrix
  * @param program
  */
-void SubMesh::draw(const mmm::mat4&         modelMatrix,
+void Mesh::SubMesh::draw(const mmm::mat4&         modelMatrix,
                    std::shared_ptr<Program> program) {
   mat4 m = modelMatrix * mTransform;
 

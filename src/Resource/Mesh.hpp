@@ -17,29 +17,6 @@ class Mesh;
 class ResourceManager;
 class Program;
 
-//! Structure to help loading meshes
-class SubMesh {
-public:
-  SubMesh();
-
-  SubMesh(Mesh*            model,
-          ResourceManager* r,
-          const aiScene*   scene,
-          const aiNode*    node);
-
-  //! Draws the submesh
-  void draw(const mmm::mat4& modelMatrix, std::shared_ptr<Program> program);
-
-private:
-  int mStartIndex;
-  int mSize;
-
-  mmm::mat4 mTransform;
-
-  std::vector<SubMesh>     mChildren;
-  std::shared_ptr<Texture> mTexture;
-};
-
 /**
  * @brief Holds a mesh
  */
@@ -66,6 +43,30 @@ public:
   const std::vector<float>& data();
 
 private:
+
+  //! Structure to help loading meshes
+  class SubMesh {
+  public:
+    SubMesh();
+
+    SubMesh(Mesh*            model,
+            ResourceManager* r,
+            const aiScene*   scene,
+            const aiNode*    node);
+
+    //! Draws the submesh
+    void draw(const mmm::mat4& modelMatrix, std::shared_ptr<Program> program);
+
+  private:
+    int mStartIndex;
+    int mSize;
+
+    mmm::mat4 mTransform;
+
+    std::vector<SubMesh>     mChildren;
+    std::shared_ptr<Texture> mTexture;
+  };
+
   GLuint mVBO;
   GLuint mVAO;
 
