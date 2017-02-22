@@ -6,11 +6,11 @@ class ResourceManager;
 
 enum class ResourceType { Empty, Texture, Font, Program, Mesh };
 enum class ResourceScope {
-  None     = 0x00,
-  MainMenu = 0x01,
-  Game     = 0x02,
-  Master   = 0x04,
-  All      = 0x07
+  None     = 0,
+  MainMenu = 1,
+  Game     = 2,
+  Master   = 4,
+  All      = 7
 };
 /**
  * @brief
