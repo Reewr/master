@@ -176,6 +176,10 @@ void Mesh::setSize(int numVerts) {
   mNumVertices = numVerts;
 }
 
+const std::vector<float>& Mesh::data() {
+  return mData;
+}
+
 SubMesh::SubMesh() : mStartIndex(0), mSize(0) {}
 
 /**

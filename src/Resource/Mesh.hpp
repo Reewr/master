@@ -63,6 +63,8 @@ public:
   void setSize(int numVerts);
   int size();
 
+  const std::vector<float>& data();
+
 private:
   GLuint mVBO;
   GLuint mVAO;
