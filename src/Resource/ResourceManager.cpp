@@ -4,8 +4,8 @@
 #include "../Lua/Lua.hpp"
 #include "../Utils/Utils.hpp"
 #include "Font.hpp"
-#include "Texture.hpp"
 #include "Mesh.hpp"
+#include "Texture.hpp"
 
 ResourceManager::ResourceManager()
     : Logging::Log("ResManager"), mCurrentScope(ResourceScope::None) {}

@@ -256,7 +256,7 @@ SubMesh::SubMesh(Mesh*            model,
                                                           &texpath);
     if (hasTexture == AI_SUCCESS) {
       std::string texName = texpath.C_Str();
-      mTexture = manager->get<Texture>("Texture::" + texName);
+      mTexture            = manager->get<Texture>("Texture::" + texName);
     }
   }
 
