@@ -60,7 +60,7 @@ static void placementCharCB(GLFWwindow* w, unsigned int codePoint) {
 }
 
 static void glfwErrorHandler(int, const char* k) {
-  error("GLFW_ERROR: ", k);
+  error("GLFW_ERROR: {}", k);
 }
 
 Engine::Engine(std::string cfgPath)
