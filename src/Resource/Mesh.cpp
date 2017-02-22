@@ -279,6 +279,7 @@ void SubMesh::draw(const mmm::mat4&         modelMatrix,
   if (mSize != 0) {
     mTexture->bind(1);
     program->setUniform("model", m);
+    glDrawArrays(GL_TRIANGLES, mStartIndex, mSize);
   }
 
   for (auto childMesh : mChildren)
