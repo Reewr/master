@@ -15,7 +15,7 @@ static std::map<unsigned int, std::string> utf8Characters = {};
  * @return
  *   Lowercased string
  */
-std::string str::toLower(std::string s) {
+std::string str::toLower(const std::string& s) {
   std::transform(s.begin(), s.end(), s.begin(), tolower);
   return s;
 }
@@ -31,7 +31,7 @@ std::string str::toLower(std::string s) {
  * @return
  *   Uppercased string
  */
-std::string str::toUpper(std::string s) {
+std::string str::toUpper(const std::string& s) {
   std::transform(s.begin(), s.end(), s.begin(), toupper);
 
   return s;
