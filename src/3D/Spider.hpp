@@ -1,13 +1,45 @@
 #pragma once
 
+#include <map>
+#include <string>
+
 #include "../Drawable/Drawable3D.hpp"
 #include "../Log.hpp"
 
+class Asset;
 class Mesh;
+class Program;
+
+enum SpiderPart {
+  Abdomen,
+  AbdomenInner,
+  Coxa,
+  Femur,
+  FemurTibiaInner,
+  Head,
+  HeadDisk,
+  HeadInner,
+  Hip,
+  Joint,
+  JointRot,
+  Metatarsus,
+  Neck,
+  Patella,
+  PatellaInner,
+  SternumBack,
+  SternumFront,
+  TarsusBot,
+  TarsusTop,
+  Thorax,
+  Tibia,
+  Trochanter
+};
+
+std::string toString(SpiderPart);
 
 class Spider : public Drawable3D, public Logging::Log {
 public:
-  Spider();
+  Spider(Asset*);
   ~Spider();
 
   void update(float deltaTime);
@@ -19,5 +51,6 @@ public:
   void input(const Input::Event& event);
 
 private:
-  std::vector<std::shared_ptr<Mesh>> mMeshes;
+  std::map<SpiderPart, std::shared_ptr<Mesh>> mMeshes;
+  std::shared_ptr<Program> mProgram;
 };
