@@ -74,8 +74,8 @@ Spider::Spider(Asset* asset) : Logging::Log("Spider") {
   hull->buildHull(margin);
   btConvexHullShape* reducedShape = new btConvexHullShape();
 
-  for (size_t i = 0; i < hull->numVertices(); ++i) {
-    reducedShape->addPoint(hull->getVertexPointer()[i], false);
+  for (int i = 0; i < hull->numVertices(); ++i) {
+    reducedShape->addPoint(hull->getVertexPointer()[i]);
   }
 
   mShape = reducedShape;
