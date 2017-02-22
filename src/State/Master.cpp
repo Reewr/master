@@ -4,6 +4,7 @@
 
 #include "../3D/Camera.hpp"
 #include "../3D/Cube.hpp"
+#include "../3D/Spider.hpp"
 #include "../3D/Terrain.hpp"
 #include "../3D/World.hpp"
 #include "../Console/Console.hpp"
@@ -44,7 +45,7 @@ Master::Master(Asset* a) : mAsset(a) {
     ->get<Program>("Program::Model")
     ->setUniform("shadowSamples", c->graphics.shadowSamples);
 
-  mDrawable3D = { new Terrain(), new Cube() };
+  mDrawable3D = { new Terrain(), new Cube(), new Spider(mAsset) };
 
   for (auto d : mDrawable3D)
     mWorld->addObject(d);
