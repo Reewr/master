@@ -59,8 +59,10 @@ std::string toString(SpiderPart p) {
 }
 
 Spider::Spider(Asset* asset) : Logging::Log("Spider") {
+  ResourceManager* r = asset->rManager();
 
-  mMeshes[SpiderPart::Abdomen] = asset->rManager()->get<Mesh>("Mesh::Abdomen");
+  mMeshes[SpiderPart::Abdomen]      = r->get<Mesh>("Mesh::Abdomen");
+  mMeshes[SpiderPart::AbdomenInner] = r->get<Mesh>("Mesh::AbdomenInner");
 
   btConvexHullShape* shape = new btConvexHullShape();
   const auto&        data  = mMeshes[SpiderPart::Abdomen]->data();
@@ -69,10 +71,9 @@ Spider::Spider(Asset* asset) : Logging::Log("Spider") {
     shape->addPoint(btVector3(data[i], data[i + 1], data[i + 2]));
   }
 
-  btShapeHull* hull   = new btShapeHull(shape);
-  btScalar     margin = shape->getMargin();
-  hull->buildHull(margin);
+  btShapeHull* hull               = new btShapeHull(shape);
   btConvexHullShape* reducedShape = new btConvexHullShape();
+  hull->buildHull(shape->getMargin());
 
   for (int i = 0; i < hull->numVertices(); ++i) {
     reducedShape->addPoint(hull->getVertexPointer()[i]);
@@ -82,7 +83,6 @@ Spider::Spider(Asset* asset) : Logging::Log("Spider") {
 
   delete hull;
   delete shape;
-
 
   mMotion = new btDefaultMotionState(
     btTransform(btQuaternion(0, 0, 0, 1), btVector3(0.f, 0.f, 0.f)));
@@ -95,9 +95,8 @@ Spider::Spider(Asset* asset) : Logging::Log("Spider") {
                                                     mMotion,
                                                     mShape,
                                                     fallInertia);
-  mBody = new btRigidBody(consInfo);
-
-  mProgram = asset->rManager()->get<Program>("Program::Model");
+  mBody    = new btRigidBody(consInfo);
+  mProgram = r->get<Program>("Program::Model");
 }
 
 Spider::~Spider() {
