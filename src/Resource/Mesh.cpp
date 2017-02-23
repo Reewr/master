@@ -92,9 +92,11 @@ void Mesh::unload() {
     mMesh = nullptr;
   }
 
+  setLoaded(false);
   glDeleteBuffers(1, &mVBO);
   glDeleteVertexArrays(1, &mVAO);
-  setLoaded(false);
+  mVBO = 0;
+  mVAO = 0;
 }
 
 /**
