@@ -186,6 +186,10 @@ const std::vector<float>& Mesh::data() {
   return mData;
 }
 
+void Mesh::transform(mmm::mat4& tr) {
+  mMesh->transform(tr);
+}
+
 Mesh::SubMesh::SubMesh() : mStartIndex(0), mSize(0) {}
 
 /**
@@ -269,6 +273,19 @@ Mesh::SubMesh::SubMesh(Mesh*            model,
   // recursively parse childe nodes
   for (unsigned int i = 0; i < node->mNumChildren; i += 1)
     mChildren.push_back(SubMesh(model, manager, scene, node->mChildren[i]));
+}
+
+/**
+ * @brief
+ *   Transform the submesh with a matrix
+ *
+ * @param tr
+ */
+void Mesh::SubMesh::transform(const mmm::mat4& tr) {
+  mTransform = tr * mTransform;
+
+  for (auto& childMesh : mChildren)
+    childMesh.transform(tr);
 }
 
 /**

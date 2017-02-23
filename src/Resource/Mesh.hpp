@@ -47,6 +47,9 @@ public:
   // returns a reference to the data
   const std::vector<float>& data();
 
+  // transforms the mesh and all its submeshes
+  void transform(const mmm::mat4& transform);
+
 private:
 
   //! Structure to help loading meshes
@@ -61,6 +64,8 @@ private:
 
     //! Draws the submesh
     void draw(const mmm::mat4& modelMatrix, std::shared_ptr<Program> program);
+
+    void transform(const mmm::mat4& transform);
 
   private:
     int mStartIndex;
