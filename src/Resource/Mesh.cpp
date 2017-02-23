@@ -288,6 +288,6 @@ void Mesh::SubMesh::draw(const mmm::mat4&         modelMatrix,
     glDrawArrays(GL_TRIANGLES, mStartIndex, mSize);
   }
 
-  for (auto childMesh : mChildren)
+  for (auto& childMesh : mChildren)
     childMesh.draw(m, program);
 }
