@@ -32,6 +32,9 @@ void Texture::unload() {
 
   if (mSamplerId != 0)
     glDeleteSamplers(1, &mSamplerId);
+
+  mTextureId = 0;
+  mSamplerId = 0;
 }
 
 Texture::~Texture() {
@@ -84,9 +87,6 @@ GLuint Texture::generateGLTexture() {
 }
 
 bool Texture::load(ResourceManager*) {
-  if (mTextureId != 0)
-    return true;
-
   mLog->debug("Loading {}", mFilename);
 
   mMode = TEXTURE;
