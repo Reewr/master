@@ -52,7 +52,7 @@ bool Mesh::load(ResourceManager* manager) {
   }
   mMesh = new SubMesh(this, manager, scene, scene->mRootNode);
 
-  mLog->debug("Loading model '{}': {} vertices", filename(), size());
+  mLog->debug("Loading '{}': {} vertices", filename(), size());
 
   glGenBuffers(1, &mVBO);
   glGenVertexArrays(1, &mVAO);
@@ -86,6 +86,8 @@ bool Mesh::load(ResourceManager* manager) {
 void Mesh::unload() {
   if (!loaded())
     return;
+
+  mLog->debug("Unloading '{}'", filename());
 
   if (mMesh != nullptr) {
     delete mMesh;
