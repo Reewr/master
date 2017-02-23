@@ -85,7 +85,7 @@ MainMenu::MainMenu(Asset* asset) {
   /*   mLua->add(console); */
   /*   mLua->loadFile("lua/states/mainmenu.lua"); */
   /* }); */
-  mLog->debug("Initialized successfully...");
+  mLog->info("Initialized successfully...");
 }
 
 MainMenu::~MainMenu() {

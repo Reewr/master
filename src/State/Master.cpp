@@ -82,6 +82,8 @@ Master::Master(Asset* a) : mAsset(a) {
     mLua->add(console);
     mGUIElements.push_back(console);
   }
+
+  mLog->info("Initialized successfully");
 }
 
 Master::~Master() {
