@@ -28,15 +28,15 @@ joint        trans(0, 0, ±0.4) * rot_z(90)            coxa_NX
 trochanter   trans(0, 0, ±0.4)                        coxa_NX
 
 joint        trans(0, 0, ±0.24)                       trochanter
-femtib_i     trans(0, 0, ±0.24) * trans(0, 0, ±0.59)  trochanter
+femtib_i     trans(0, 0, ±0.83)                       trochanter
 femur        trans(0, 0, ±0.24)                       trochanter
 
 joint        trans(0, 0, ±1.13)                       femur
-patella_i    trans(0, 0, ±1.13) * trans(0, 0, ±0.4)   femur
+patella_i    trans(0, 0, ±1.53)                       femur
 patella      trans(0, 0, ±1.13)                       femur
 
 joint        trans(0, 0, ±0.8)                        patella
-femtim_i     trans(0, 0, ±0.8) * trans(0, 0, ±0.57)   patella
+femtib_i     trans(0, 0, ±1.37)                       patella
 tibia        trans(0, 0, ±0.8)                        patella
 
 joint_rot    trans(0, 0.02, ±1.11)                    tibia
