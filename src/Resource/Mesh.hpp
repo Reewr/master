@@ -30,6 +30,7 @@ public:
 
   // loads the mesh
   bool load(ResourceManager* r);
+
   // unloads the mesh from memory
   void unload();
 
@@ -37,9 +38,13 @@ public:
   void addTexCoords(float x, float y);
   void addNormals(float x, float y, float z);
 
+  // sets the amount of vertices
   void setSize(int numVerts);
+
+  // returns the amount of vertices
   int size();
 
+  // returns a reference to the data
   const std::vector<float>& data();
 
 private:
