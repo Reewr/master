@@ -186,7 +186,7 @@ const std::vector<float>& Mesh::data() {
   return mData;
 }
 
-void Mesh::transform(mmm::mat4& tr) {
+void Mesh::transform(const mmm::mat4& tr) {
   mMesh->transform(tr);
 }
 
