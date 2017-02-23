@@ -73,5 +73,4 @@ private:
   int                      mNumVertices;
   SubMesh*                 mMesh;
   std::vector<float>       mData;
-  std::shared_ptr<Texture> texture;
 };
