@@ -9,7 +9,9 @@ class Camera;
 class Framebuffer;
 
 #include "Drawable.hpp"
+
 #include <mmm.hpp>
+#include <vector>
 
 namespace Input {
   class Event;
@@ -38,13 +40,16 @@ public:
 
   btRigidBody* rigidBody();
 
+  const std::vector<Drawable3D*>& children();
+
 protected:
   Drawable3D();
 
-  mmm::vec3             mPosition;
-  mmm::mat4             mScale;
-  mmm::mat4             mRotation;
-  btCollisionShape*     mShape;
-  btDefaultMotionState* mMotion;
-  btRigidBody*          mBody;
+  mmm::vec3                mPosition;
+  mmm::mat4                mScale;
+  mmm::mat4                mRotation;
+  btCollisionShape*        mShape;
+  btDefaultMotionState*    mMotion;
+  btRigidBody*             mBody;
+  std::vector<Drawable3D*> mChildren;
 };

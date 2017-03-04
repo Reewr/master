@@ -13,7 +13,8 @@ Drawable3D::Drawable3D()
     , mRotation(mmm::mat4::identity)
     , mShape(nullptr)
     , mMotion(nullptr)
-    , mBody(nullptr) {}
+    , mBody(nullptr)
+    , mChildren({}) {}
 
 Drawable3D::~Drawable3D() {}
 
@@ -59,4 +60,8 @@ bool Drawable3D::hasPhysics() {
 
 btRigidBody* Drawable3D::rigidBody() {
   return mBody;
+}
+
+const std::vector<Drawable3D*>& Drawable3D::children() {
+  return mChildren;
 }
