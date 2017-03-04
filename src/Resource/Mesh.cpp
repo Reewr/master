@@ -4,14 +4,18 @@
 #include "ResourceManager.hpp"
 #include "Texture.hpp"
 
+#include <limits>
+
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 
 using mmm::mat4;
 
-Mesh::Mesh()
-    : Logging::Log("Mesh"), mVBO(0), mVAO(0), mNumVertices(0), mMesh(nullptr) {}
+size_t Mesh::npos = std::numeric_limits<unsigned int>::max();
+
+Mesh::Mesh() : Logging::Log("Mesh"), mVBO(0), mVAO(0) {}
+
 Mesh::~Mesh() {
   unload();
 }
@@ -35,13 +39,14 @@ Mesh::~Mesh() {
 bool Mesh::load(ResourceManager* manager) {
   Assimp::Importer importer;
   const aiScene*   scene =
-    importer.ReadFile(filename().c_str(), aiProcess_Triangulate
+    importer.ReadFile(filename().c_str(),
+                      aiProcess_Triangulate |
+                      aiProcess_OptimizeGraph |
+                      aiProcess_OptimizeMeshes
                       // aiProcess_CalcTangentSpace |
                       // aiProcess_GenUVCoords |
-                      // aiProcess_OptimizeGraph |
-                      // aiProcess_OptimizeMeshes
-                      // aiProcess_ValidateDataStructure
-                      // aiProcess_PreTransformVertices
+                      // aiProcess_ValidateDataStructure |
+                      // aiProcess_PreTransformVertices |
                       // aiProcess_SplitLargeMeshes |
                       // aiProcess_RemoveComponent
                       );
@@ -50,9 +55,15 @@ bool Mesh::load(ResourceManager* manager) {
     mLog->error("Unable to load mesh: {}", filename());
     return false;
   }
-  mMesh = new SubMesh(this, manager, scene, scene->mRootNode);
 
-  mLog->debug("Loading '{}': {} vertices", filename(), size());
+  addSubMesh(SubMesh(this, manager, scene, scene->mRootNode));
+
+  mLog->debug("Loaded '{}': {} vertices", filename(), numVertices());
+
+  for (auto m& : mSubMeshes) {
+    if (m.name().size() == 0)
+      mLog->warn("Mesh of {} vertices without name", m.size());
+   }
 
   glGenBuffers(1, &mVBO);
   glGenVertexArrays(1, &mVAO);
@@ -60,21 +71,21 @@ bool Mesh::load(ResourceManager* manager) {
   glBindBuffer(GL_ARRAY_BUFFER, mVBO);
   glBindVertexArray(mVAO);
 
-  uint64_t elSize     = 8 * sizeof(float);
-  uint64_t offsetVert = 3 * sizeof(float);
+  uint64_t elSize     = sizeof(Vertex);
+  uint64_t offsetTex  = 3 * sizeof(float);
   uint64_t offsetNorm = 5 * sizeof(float);
-  GLuint   normalize  = GL_FALSE;
 
-  glBufferData(GL_ARRAY_BUFFER, size() * elSize, &mData[0], GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, numVertices() * elSize, &mData[0], GL_STATIC_DRAW);
 
   glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 3, GL_FLOAT, normalize, elSize, (void*) (0));
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, elSize, (void*) (0));
   glEnableVertexAttribArray(1);
-  glVertexAttribPointer(1, 2, GL_FLOAT, normalize, elSize, (void*) offsetVert);
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, elSize, (void*) offsetTex);
   glEnableVertexAttribArray(2);
-  glVertexAttribPointer(2, 3, GL_FLOAT, normalize, elSize, (void*) offsetNorm);
+  glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, elSize, (void*) offsetNorm);
 
   glBindVertexArray(0);
+  setLoaded(true);
   return true;
 }
 
@@ -89,18 +100,14 @@ void Mesh::unload() {
 
   mLog->debug("Unloading '{}'", filename());
 
-  if (mMesh != nullptr) {
-    delete mMesh;
-    mMesh = nullptr;
-  }
-
   setLoaded(false);
   glDeleteBuffers(1, &mVBO);
   glDeleteVertexArrays(1, &mVAO);
   mData.clear();
+  mSubMeshes.clear();
+
   mVBO = 0;
   mVAO = 0;
-  mNumVertices = 0;
 }
 
 /**
@@ -114,52 +121,61 @@ void Mesh::unload() {
  * @param modelMatrix
  * @param program
  */
-void Mesh::draw(const mmm::mat4&         modelMatrix,
-                std::shared_ptr<Program> program) {
-  glBindVertexArray(mVAO);
-  mMesh->draw(modelMatrix, program);
-  glBindVertexArray(0);
+// void Mesh::draw(const mmm::mat4&         modelMatrix,
+//                 std::shared_ptr<Program> program) {
+//   glBindVertexArray(mVAO);
+//   mMesh->draw(modelMatrix, program);
+//   glBindVertexArray(0);
+// }
+
+/**
+ * @brief
+ *   Adds the submesh to the submesh array
+ *
+ * @param mesh
+ */
+void addSubMesh(const SubMesh& mesh) {
+  mSubMeshes.push_back(mesh);
 }
 
 /**
  * @brief
- *   Adds a verticy to the Mesh's data list
+ *   Searches through the meshes for a mesh with the given name,
+ *   if one is found, a pointer to that mesh is returned.
  *
- * @param x
- * @param y
- * @param z
+ *   If no mesh can be found, it returns a nullptr
+ *
+ * @param name
+ *
+ * @return
  */
-void Mesh::addVertices(float x, float y, float z) {
-  mData.push_back(x);
-  mData.push_back(y);
-  mData.push_back(z);
+unsigned int Mesh::findMeshByName(const std::string& name) {
+  for(size_t i = 0; i < mSubMeshes.size(); ++i) {
+    if (m.name() == name)
+      return i;
+  }
+
+  return npos;
 }
 
 /**
  * @brief
- *   Adds texture coordinates to the mesh's data list
+ *   Searches through the meshes for a mesh with the given name,
+ *   if one is found, a pointer to that mesh is returned.
  *
- * @param x
- * @param y
+ *   If no mesh can be found, it returns a nullptr
+ *
+ * @param name
+ *
+ * @return
  */
-void Mesh::addTexCoords(float x, float y) {
-  mData.push_back(x);
-  mData.push_back(y);
+const SubMesh& Mesh::getMeshByIndex(unsigned int index) {
+  if (index >= mSubMeshes.size())
+    throw new std::range_error("Index is out of bounds of submeshes");
+
+  return mSubMeshes[index];
 }
 
-/**
- * @brief
- *   Adds normals to the meshes data list
- *
- * @param x
- * @param y
- * @param z
- */
-void Mesh::addNormals(float x, float y, float z) {
-  mData.push_back(x);
-  mData.push_back(y);
-  mData.push_back(z);
-}
 
 /**
  * @brief
@@ -168,29 +184,32 @@ void Mesh::addNormals(float x, float y, float z) {
  *
  * @return
  */
-int Mesh::size() {
-  return mNumVertices;
+unsigned int Mesh::numVertices() {
+  return mData.size();
 }
 
 /**
  * @brief
- *   Changes the number of vertices stored in the mesh
+ *   Returns the number of sub meshes within the mesh
  *
- * @param numVerts
+ * @return
  */
-void Mesh::setSize(int numVerts) {
-  mNumVertices = numVerts;
+unsigned int Mesh::numSubMeshes() {
+  return mSubMeshes.size();
 }
 
-const std::vector<float>& Mesh::data() {
+/**
+ * @brief
+ *   Returns the data that is stored in the mesh. The data consists of vertices,
+ *   texcoords and normals.
+ *
+ * @return
+ */
+const std::vector<Vertex>& Mesh::data() {
   return mData;
 }
 
-void Mesh::transform(const mmm::mat4& tr) {
-  mMesh->transform(tr);
-}
-
-Mesh::SubMesh::SubMesh() : mStartIndex(0), mSize(0) {}
+Mesh::SubMesh::SubMesh() : mStartIndex(0), mSize(0), mIndex(0) {}
 
 /**
  * @brief
@@ -203,34 +222,27 @@ Mesh::SubMesh::SubMesh() : mStartIndex(0), mSize(0) {}
  * @param node
  */
 Mesh::SubMesh::SubMesh(Mesh*            model,
-                 ResourceManager* manager,
-                 const aiScene*   scene,
-                 const aiNode*    node)
-    : mStartIndex(0), mSize(0) {
+                       ResourceManager* manager,
+                       const aiScene*   scene,
+                       const aiNode*    node,
+                       const mmm::mat4  transform,
+                       int              index)
+    : mStartIndex(model->size()), mSize(0), mIndex(model->numSubMeshes()) {
   aiMatrix4x4 am = node->mTransformation;
-  mTransform     = mat4(am.a1,
-                    am.a2,
-                    am.a3,
-                    am.a4,
-                    am.b1,
-                    am.b2,
-                    am.b3,
-                    am.b4,
-                    am.c1,
-                    am.c2,
-                    am.c3,
-                    am.c4,
-                    am.d1,
-                    am.d2,
-                    am.d3,
-                    am.d4);
+  mTransform     = transform * mat4(am.a1, am.a2, am.a3, am.a4,
+                                    am.b1, am.b2, am.b3, am.b4,
+                                    am.c1, am.c2, am.c3, am.c4,
+                                    am.d1, am.d2, am.d3, am.d4);
+
+  // Add name if it exists
+  if (node->mName.length == 0)
+    mName = "";
+  else
+    mName = std::string(node->mName.C_Str());
 
   // parse the node
   for (unsigned int i = 0; i < node->mNumMeshes; i += 1) {
     const aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-
-    if (i == 0)
-      mStartIndex = model->size();
 
     if (!mesh->HasPositions() || !mesh->HasTextureCoords(0) ||
         !mesh->HasNormals())
@@ -243,18 +255,17 @@ Mesh::SubMesh::SubMesh(Mesh*            model,
       if (face.mNumIndices < 3)
         break;
 
-      mSize += 3;
-      model->setSize(model->size() + 3);
-
       aiVector3D* const* texCoords = mesh->mTextureCoords;
       aiVector3D*        vertices  = mesh->mVertices;
       aiVector3D*        normals   = mesh->mNormals;
 
       for (unsigned int fIndex = 0; fIndex < 3; ++fIndex) {
         unsigned int i1 = face.mIndices[fIndex];
-        model->addVertices(vertices[i1].x, vertices[i1].y, vertices[i1].z);
-        model->addTexCoords(texCoords[0][i1].x, texCoords[0][i1].y);
-        model->addNormals(normals[i1].x, normals[i1].y, normals[i1].z);
+        mmm::vec3 vertex   = { vertices[i1].x, vertices[i1].y, vertices[i1].z };
+        mmm::vec2 texCoord = { texCoords[0][i1].x, texCoords[0][i1].y };
+        mmm::vec3 normal   = { normals[i1].x, normals[i1].y, normals[i1].z };
+
+        model->addVertex({vertex, texCoord, normal});
       }
     }
 
@@ -270,22 +281,65 @@ Mesh::SubMesh::SubMesh(Mesh*            model,
     }
   }
 
+  mSize = model->size() - mStartIndex;
+
   // recursively parse childe nodes
-  for (unsigned int i = 0; i < node->mNumChildren; i += 1)
-    mChildren.push_back(SubMesh(model, manager, scene, node->mChildren[i]));
+  for (unsigned int i = 0; i < node->mNumChildren; ++i) {
+    model->addSubmesh(
+      SubMesh(model, manager, scene, node->mChildren[i], mTransform));
+    // mChildren.push_back(SubMesh(model, manager, scene, node->mChildren[i]));
+  }
 }
 
 /**
  * @brief
- *   Transform the submesh with a matrix
+ *   Returns the index that is accociated with this mesh
  *
- * @param tr
+ * @return
  */
-void Mesh::SubMesh::transform(const mmm::mat4& tr) {
-  mTransform = tr * mTransform;
+int Mesh::SubMesh::index() {
+  return mIndex;
+}
 
-  for (auto& childMesh : mChildren)
-    childMesh.transform(tr);
+/**
+ * @brief
+ *
+ * @return
+ */
+int Mesh::SubMesh::startIndex() {
+  return mStartIndex;
+}
+
+/**
+ * @brief Returns the size of the submesh
+ *
+ * @return
+ */
+int Mesh::SubMesh::size() {
+  return mSize;
+}
+
+/**
+ * @brief
+ *   Returns the transformation for the specifc mesh
+ *
+ * @return
+ */
+const mmm::mat4& Mesh::SubMesh::transform() {
+  return mTransform;
+}
+
+/**
+ * @brief
+ *   If the submesh had a name associated with it when it was created
+ *   in a 3D editor, that name will be returned from this function.
+ *
+ *   If no name was given to it, this function will return an empty string
+ *
+ * @return
+ */
+const std::string& Mesh::SubMesh::name() {
+  return mName;
 }
 
 /**
@@ -295,16 +349,16 @@ void Mesh::SubMesh::transform(const mmm::mat4& tr) {
  * @param modelMatrix
  * @param program
  */
-void Mesh::SubMesh::draw(const mmm::mat4&         modelMatrix,
-                   std::shared_ptr<Program> program) {
-  mat4 m = modelMatrix * mTransform;
+// void Mesh::SubMesh::draw(const mmm::mat4&         modelMatrix,
+//                    std::shared_ptr<Program> program) {
+//   mat4 m = modelMatrix * mTransform;
 
-  if (mSize != 0) {
-    mTexture->bind(1);
-    program->setUniform("model", m);
-    glDrawArrays(GL_TRIANGLES, mStartIndex, mSize);
-  }
+//   if (mSize != 0) {
+//     mTexture->bind(1);
+//     program->setUniform("model", m);
+//     glDrawArrays(GL_TRIANGLES, mStartIndex, mSize);
+//   }
 
-  for (auto& childMesh : mChildren)
-    childMesh.draw(m, program);
-}
+//   for (auto& childMesh : mChildren)
+//     childMesh.draw(m, program);
+// }
