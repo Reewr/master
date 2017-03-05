@@ -51,6 +51,6 @@ public:
   void input(const Input::Event& event);
 
 private:
-  std::map<SpiderPart, std::shared_ptr<Mesh>> mMeshes;
+  std::shared_ptr<Mesh> mMesh;
   std::shared_ptr<Program> mProgram;
 };
