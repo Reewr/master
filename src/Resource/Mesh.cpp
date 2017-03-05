@@ -209,6 +209,22 @@ const std::vector<Vertex>& Mesh::data() {
   return mData;
 }
 
+/**
+ * @brief
+ *   Returns the names for all the meshes.
+ *
+ * @return
+ */
+std::vector<std::string> Mesh::names() {
+  std::vector<std::string> names;
+  names.reserve(mMeshes.size());
+
+  for(auto& p : mMeshes)
+    names.push_back(p.name());
+
+  return names;
+}
+
 Mesh::SubMesh::SubMesh() : mStartIndex(0), mSize(0), mIndex(0) {}
 
 /**

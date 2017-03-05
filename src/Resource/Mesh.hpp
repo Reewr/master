@@ -99,6 +99,9 @@ public:
   // returns a reference to the data
   const std::vector<Vertex>& data();
 
+  // Returns all the available mesh names
+  std::vector<std::string> names();
+
 private:
   GLuint mVBO;
   GLuint mVAO;
