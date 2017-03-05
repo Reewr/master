@@ -104,34 +104,34 @@ void Mesh::unload() {
   glDeleteBuffers(1, &mVBO);
   glDeleteVertexArrays(1, &mVAO);
   mData.clear();
-  mSubMeshes.clear();
+mSubMeshes.clear();
 
-  mVBO = 0;
-  mVAO = 0;
+mVBO = 0;
+mVAO = 0;
 }
 
 /**
- * @brief
- *   Adds a vertex entry to the data list in the mesh, increasing
- *   its number of vertices by 1
- *
- * @param v
- */
+* @brief
+*   Adds a vertex entry to the data list in the mesh, increasing
+*   its number of vertices by 1
+*
+* @param v
+*/
 void Mesh::addVertex(const Mesh::Vertex& v) {
-  mData.push_back(v);
+mData.push_back(v);
 }
 
 /**
- * @brief
- *   Draws the mesh and its submeshes. Requires a model matrix
- *   to set the position of the submeshes correctly.
- *
- *   It also requires a program that has the `model` variable
- *   so it can set that properly for each mesh element
- *
- * @param modelMatrix
- * @param program
- */
+* @brief
+*   Draws the mesh and its submeshes. Requires a model matrix
+*   to set the position of the submeshes correctly.
+*
+*   It also requires a program that has the `model` variable
+*   so it can set that properly for each mesh element
+*
+* @param modelMatrix
+* @param program
+*/
 // void Mesh::draw(const mmm::mat4&         modelMatrix,
 //                 std::shared_ptr<Program> program) {
 //   glBindVertexArray(mVAO);
@@ -140,12 +140,12 @@ void Mesh::addVertex(const Mesh::Vertex& v) {
 // }
 
 /**
- * @brief
- *   Adds the submesh to the submesh array
+* @brief
+*   Adds the submesh to the submesh array
  *
  * @param mesh
  */
-void Mesh::addSubMesh(const Mesh::SubMesh& mesh) {
+void Mesh::addSubMesh(const SubMesh& mesh) {
   mSubMeshes.push_back(mesh);
 }
 
@@ -180,7 +180,7 @@ unsigned int Mesh::findMeshByName(const std::string& name) {
  *
  * @return
  */
-const Mesh::SubMesh& Mesh::getMeshByIndex(unsigned int index) {
+const SubMesh& Mesh::getMeshByIndex(unsigned int index) {
   if (index >= mSubMeshes.size())
     throw new std::range_error("Index is out of bounds of submeshes");
 
@@ -236,7 +236,7 @@ std::vector<std::string> Mesh::names() {
   return names;
 }
 
-Mesh::SubMesh::SubMesh() : mStartIndex(0), mSize(0), mIndex(0) {}
+SubMesh::SubMesh() : mStartIndex(0), mSize(0), mIndex(0) {}
 
 /**
  * @brief
@@ -248,7 +248,7 @@ Mesh::SubMesh::SubMesh() : mStartIndex(0), mSize(0), mIndex(0) {}
  * @param scene
  * @param node
  */
-Mesh::SubMesh::SubMesh(Mesh*            model,
+SubMesh::SubMesh(Mesh*            model,
                        ResourceManager* manager,
                        const aiScene*   scene,
                        const aiNode*    node,
@@ -325,7 +325,7 @@ Mesh::SubMesh::SubMesh(Mesh*            model,
  *
  * @return
  */
-int Mesh::SubMesh::index() {
+int SubMesh::index() {
   return mIndex;
 }
 
@@ -334,7 +334,7 @@ int Mesh::SubMesh::index() {
  *
  * @return
  */
-int Mesh::SubMesh::startIndex() {
+int SubMesh::startIndex() {
   return mStartIndex;
 }
 
@@ -343,7 +343,7 @@ int Mesh::SubMesh::startIndex() {
  *
  * @return
  */
-int Mesh::SubMesh::size() {
+int SubMesh::size() {
   return mSize;
 }
 
@@ -353,7 +353,7 @@ int Mesh::SubMesh::size() {
  *
  * @return
  */
-const mmm::mat4& Mesh::SubMesh::transform() {
+const mmm::mat4& SubMesh::transform() {
   return mTransform;
 }
 
@@ -366,7 +366,7 @@ const mmm::mat4& Mesh::SubMesh::transform() {
  *
  * @return
  */
-const std::string& Mesh::SubMesh::name() {
+const std::string& SubMesh::name() {
   return mName;
 }
 

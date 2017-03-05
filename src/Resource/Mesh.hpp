@@ -18,6 +18,45 @@ class Mesh;
 class ResourceManager;
 class Program;
 
+//! Structure to help loading and sorting meshes
+//! These are generally used to make sure the mesh tranformation
+//! and textures are applied correctly when drawing the element.
+class SubMesh {
+public:
+  SubMesh();
+
+  SubMesh(Mesh*            model,
+          ResourceManager* r,
+          const aiScene*   scene,
+          const aiNode*    node,
+          const mmm::mat4& transform = mmm::mat4::identity);
+
+  // Returns the index of the SubMesh within the Mesh class
+  int index();
+
+  // Returns the start index of its triangles
+  int startIndex();
+
+  // Returns the amount of vertices that this mesh contains
+  int size();
+
+  // Returns the transformation of the mesh from its parent
+  const mmm::mat4& transform();
+
+  // Returns the name of the mesh, if it has one.
+  const std::string& name();
+
+private:
+  int mStartIndex;
+  int mSize;
+  int mIndex;
+  std::string mName;
+
+  mmm::mat4 mTransform;
+
+  std::shared_ptr<Texture> mTexture;
+};
+
 /**
  * @brief Holds a mesh
  */
@@ -31,44 +70,6 @@ public:
     mmm::vec3 normals;
   };
 
-  //! Structure to help loading and sorting meshes
-  //! These are generally used to make sure the mesh tranformation
-  //! and textures are applied correctly when drawing the element.
-  class SubMesh {
-  public:
-    SubMesh();
-
-    SubMesh(Mesh*            model,
-            ResourceManager* r,
-            const aiScene*   scene,
-            const aiNode*    node,
-            const mmm::mat4& transform = mmm::mat4::identity);
-
-    // Returns the index of the SubMesh within the Mesh class
-    int index();
-
-    // Returns the start index of its triangles
-    int startIndex();
-
-    // Returns the amount of vertices that this mesh contains
-    int size();
-
-    // Returns the transformation of the mesh from its parent
-    const mmm::mat4& transform();
-
-    // Returns the name of the mesh, if it has one.
-    const std::string& name();
-
-  private:
-    int mStartIndex;
-    int mSize;
-    int mIndex;
-    std::string mName;
-
-    mmm::mat4 mTransform;
-
-    std::shared_ptr<Texture> mTexture;
-  };
 
   Mesh();
   ~Mesh();
