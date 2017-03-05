@@ -6,6 +6,7 @@
 #include "Font.hpp"
 #include "Mesh.hpp"
 #include "Texture.hpp"
+#include "PhysicsMesh.hpp"
 
 ResourceManager::ResourceManager()
     : Logging::Log("ResManager"), mCurrentScope(ResourceScope::None) {}
@@ -56,11 +57,12 @@ void ResourceManager::loadDescription(const std::string& filename) {
 
   // clang-format off
   lua.create_named_table("ResourceType",
-      "Empty"  , ResourceType::Empty,
-      "Texture", ResourceType::Texture,
-      "Program", ResourceType::Program,
-      "Font"   , ResourceType::Font,
-      "Mesh"   , ResourceType::Mesh);
+      "Empty"      , ResourceType::Empty,
+      "Texture"    , ResourceType::Texture,
+      "Program"    , ResourceType::Program,
+      "Font"       , ResourceType::Font,
+      "Mesh"       , ResourceType::Mesh,
+      "PhysicsMesh", ResourceType::PhysicsMesh);
 
   lua.create_named_table("ResourceScope",
       "MainMenu", ResourceScope::MainMenu,
@@ -93,6 +95,9 @@ void ResourceManager::loadDescription(const std::string& filename) {
       case ResourceType::Mesh:
         mResources[name] = std::shared_ptr<Resource>(new class Mesh());
         break;
+      case ResourceType::PhysicsMesh:
+        mResources[name] = std::shared_ptr<Resource>(new class PhysicsMesh());
+        break;
       default:
         throw std::runtime_error("ResourceType implementation does not exist");
     }
@@ -100,6 +105,7 @@ void ResourceManager::loadDescription(const std::string& filename) {
     mResources[name]->setFilename(path);
     mResources[name]->setScope(scope);
     mResources[name]->setType(type);
+    mResources[name]->setName(name);
     mLog->debug("Added '{}'", name);
   };
 
