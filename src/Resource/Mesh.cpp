@@ -60,7 +60,7 @@ bool Mesh::load(ResourceManager* manager) {
 
   mLog->debug("Loaded '{}': {} vertices", filename(), numVertices());
 
-  for (auto m& : mSubMeshes) {
+  for (auto& m : mSubMeshes) {
     if (m.name().size() == 0)
       mLog->warn("Mesh of {} vertices without name", m.size());
    }
@@ -112,6 +112,17 @@ void Mesh::unload() {
 
 /**
  * @brief
+ *   Adds a vertex entry to the data list in the mesh, increasing
+ *   its number of vertices by 1
+ *
+ * @param v
+ */
+void Mesh::addVertex(const Mesh::Vertex& v) {
+  mData.push_back(v);
+}
+
+/**
+ * @brief
  *   Draws the mesh and its submeshes. Requires a model matrix
  *   to set the position of the submeshes correctly.
  *
@@ -134,7 +145,7 @@ void Mesh::unload() {
  *
  * @param mesh
  */
-void addSubMesh(const SubMesh& mesh) {
+void Mesh::addSubMesh(const Mesh::SubMesh& mesh) {
   mSubMeshes.push_back(mesh);
 }
 
@@ -151,7 +162,7 @@ void addSubMesh(const SubMesh& mesh) {
  */
 unsigned int Mesh::findMeshByName(const std::string& name) {
   for(size_t i = 0; i < mSubMeshes.size(); ++i) {
-    if (m.name() == name)
+    if (mSubMeshes[i].name() == name)
       return i;
   }
 
@@ -169,7 +180,7 @@ unsigned int Mesh::findMeshByName(const std::string& name) {
  *
  * @return
  */
-const SubMesh& Mesh::getMeshByIndex(unsigned int index) {
+const Mesh::SubMesh& Mesh::getMeshByIndex(unsigned int index) {
   if (index >= mSubMeshes.size())
     throw new std::range_error("Index is out of bounds of submeshes");
 
@@ -205,7 +216,7 @@ unsigned int Mesh::numSubMeshes() {
  *
  * @return
  */
-const std::vector<Vertex>& Mesh::data() {
+const std::vector<Mesh::Vertex>& Mesh::data() {
   return mData;
 }
 
@@ -217,9 +228,9 @@ const std::vector<Vertex>& Mesh::data() {
  */
 std::vector<std::string> Mesh::names() {
   std::vector<std::string> names;
-  names.reserve(mMeshes.size());
+  names.reserve(mSubMeshes.size());
 
-  for(auto& p : mMeshes)
+  for(auto& p : mSubMeshes)
     names.push_back(p.name());
 
   return names;
@@ -241,9 +252,10 @@ Mesh::SubMesh::SubMesh(Mesh*            model,
                        ResourceManager* manager,
                        const aiScene*   scene,
                        const aiNode*    node,
-                       const mmm::mat4  transform,
-                       int              index)
-    : mStartIndex(model->size()), mSize(0), mIndex(model->numSubMeshes()) {
+                       const mmm::mat4& transform)
+    : mStartIndex(model->numVertices())
+    , mSize(0)
+    , mIndex(model->numSubMeshes()) {
   aiMatrix4x4 am = node->mTransformation;
   mTransform     = transform * mat4(am.a1, am.a2, am.a3, am.a4,
                                     am.b1, am.b2, am.b3, am.b4,
@@ -297,11 +309,11 @@ Mesh::SubMesh::SubMesh(Mesh*            model,
     }
   }
 
-  mSize = model->size() - mStartIndex;
+  mSize = model->numVertices() - mStartIndex;
 
   // recursively parse childe nodes
   for (unsigned int i = 0; i < node->mNumChildren; ++i) {
-    model->addSubmesh(
+    model->addSubMesh(
       SubMesh(model, manager, scene, node->mChildren[i], mTransform));
     // mChildren.push_back(SubMesh(model, manager, scene, node->mChildren[i]));
   }
