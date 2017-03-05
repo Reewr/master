@@ -181,6 +181,7 @@ set(SOURCE_FILES
   ${SRC_DIR}/3D/Camera.cpp
   ${SRC_DIR}/3D/Cube.cpp
   ${SRC_DIR}/3D/Spider.cpp
+  ${SRC_DIR}/3D/MeshPart.cpp
   ${SRC_DIR}/3D/Terrain.cpp
   ${SRC_DIR}/3D/World.cpp
 
@@ -264,6 +265,7 @@ set(HEADER_FILES
   # src/3D
   ${SRC_DIR}/3D/Camera.hpp
   ${SRC_DIR}/3D/Cube.hpp
+  ${SRC_DIR}/3D/MeshPart.cpp
   ${SRC_DIR}/3D/Spider.hpp
   ${SRC_DIR}/3D/Terrain.hpp
   ${SRC_DIR}/3D/World.hpp
