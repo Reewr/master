@@ -12,15 +12,16 @@
 class ResourceManager;
 
 class btRigidBody;
+
 class btBulletWorldImporter;
+
+struct SubMeshPhysics {
+  const Mesh::SubMesh* subMesh;
+  btRigidBody* body;
+};
 
 class PhysicsMesh : public Resource, public Logging::Log {
 public:
-
-  struct SubMeshPhysics {
-    const Mesh::SubMesh* subMesh;
-    btRigidBody* body;
-  };
 
   PhysicsMesh();
   ~PhysicsMesh();
