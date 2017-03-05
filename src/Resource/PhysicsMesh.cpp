@@ -1,5 +1,6 @@
 #include "PhysicsMesh.hpp"
 #include "ResourceManager.hpp"
+#include "Mesh.hpp"
 
 #include <btBulletDynamicsCommon.h>
 #include <btBulletWorldImporter.h>

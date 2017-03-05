@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Resource.hpp"
-#include "Mesh.hpp"
 #include "Log.hpp"
 
 #include <memory>
@@ -10,13 +9,14 @@
 #include <string>
 
 class ResourceManager;
+class SubMesh;
+class Mesh;
 
 class btRigidBody;
-
 class btBulletWorldImporter;
 
 struct SubMeshPhysics {
-  const Mesh::SubMesh* subMesh;
+  const SubMesh* subMesh;
   btRigidBody* body;
 };
 
