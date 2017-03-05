@@ -88,7 +88,7 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/bullet)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/bullet/src)
 
 # Add bullet extras, specifically the WorldImporter
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/bullet/Extras/Serialize/BulletWorldImporter)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/bullet/Extras/Serialize/BulletWorldImporter)
 
 # Find and add mmm
 SET_OPTION(BUILD_MMM_TESTS OFF)
