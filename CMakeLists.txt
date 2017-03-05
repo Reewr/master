@@ -81,11 +81,14 @@ SET_OPTION(USE_GRAPHICAL_BENCHMARK OFF)
 SET_OPTION(BUILD_CPU_DEMOS OFF)
 SET_OPTION(BUILD_OPENGL3_DEMOS OFF)
 SET_OPTION(BUILD_BULLET2_DEMOS OFF)
-SET_OPTION(BUILD_EXTRAS OFF)
+SET_OPTION(BUILD_EXTRAS ON)
 SET_OPTION(BUILD_UNIT_TESTS OFF)
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/bullet)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/bullet/src)
+
+# Add bullet extras, specifically the WorldImporter
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/bullet/Extras/Serialize/BulletWorldImporter)
 
 # Find and add mmm
 SET_OPTION(BUILD_MMM_TESTS OFF)
@@ -230,11 +233,10 @@ set(SOURCE_FILES
   ${SRC_DIR}/Import/UILoader.cpp
   ${SRC_DIR}/Import/XML.cpp
 
-  # src/Math
-
   # src/Resource
   ${SRC_DIR}/Resource/Font.cpp
   ${SRC_DIR}/Resource/Mesh.cpp
+  ${SRC_DIR}/Resource/PhysicsMesh.cpp
   ${SRC_DIR}/Resource/Texture.cpp
   ${SRC_DIR}/Resource/Resource.cpp
   ${SRC_DIR}/Resource/ResourceManager.cpp
@@ -318,6 +320,7 @@ set(HEADER_FILES
   # src/Resource
   ${SRC_DIR}/Resource/Font.hpp
   ${SRC_DIR}/Resource/Mesh.hpp
+  ${SRC_DIR}/Resource/PhysicsMesh.hpp
   ${SRC_DIR}/Resource/Texture.hpp
   ${SRC_DIR}/Resource/Resource.hpp
   ${SRC_DIR}/Resource/ResourceManager.hpp
@@ -387,9 +390,12 @@ target_link_libraries(Woooo tinyxml2
                     target_link_libraries(Woooo SOIL)
                     target_link_libraries(Woooo freetype)
                     target_link_libraries(Woooo assimp)
+                    target_link_libraries(Woooo BulletWorldImporter)
+                    target_link_libraries(Woooo BulletFileLoader)
                     target_link_libraries(Woooo
                       BulletDynamics
-                      BulletCollision)
+                      BulletCollision
+                      LinearMath)
                     target_link_libraries(Woooo mmm)
                     target_link_libraries(Woooo spdlog)
                     target_link_libraries(Woooo pthread)
