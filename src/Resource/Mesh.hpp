@@ -31,7 +31,9 @@ public:
     mmm::vec3 normals;
   };
 
-  //! Structure to help loading meshes
+  //! Structure to help loading and sorting meshes
+  //! These are generally used to make sure the mesh tranformation
+  //! and textures are applied correctly when drawing the element.
   class SubMesh {
   public:
     SubMesh();
@@ -42,12 +44,19 @@ public:
             const aiNode*    node,
             const mmm::mat4& transform = mmm::mat4::identity);
 
+    // Returns the index of the SubMesh within the Mesh class
     int index();
+
+    // Returns the start index of its triangles
     int startIndex();
+
+    // Returns the amount of vertices that this mesh contains
     int size();
 
+    // Returns the transformation of the mesh from its parent
     const mmm::mat4& transform();
 
+    // Returns the name of the mesh, if it has one.
     const std::string& name();
 
   private:
