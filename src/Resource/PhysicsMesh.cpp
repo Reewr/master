@@ -53,8 +53,20 @@ bool PhysicsMesh::load(ResourceManager* manager) {
   }
 
   // time to load the mesh for the physics
-  std::string meshName = mName.substr(13);
-  mMesh                = manager->get<Mesh>("Mesh::" + meshName);
+  size_t      position = mName.find("::");
+
+  if (position == std::string::npos) {
+    mLog->error("Name does not contain '::', {}", mName);
+    return false;
+  }
+  std::string meshName = mName.substr(position + 2);
+
+  mLog->debug("Loading mesh :: {}", meshName);
+
+  std::string fullName = "Mesh::" + meshName;
+  mMesh                = manager->get<Mesh>(fullName);
+
+  return true;
 }
 
 /**
