@@ -8,7 +8,6 @@ class SubMesh;
 
 class MeshPart : public Drawable3D, public Logging::Log {
 public:
-
   MeshPart(const SubMeshPhysics& bodyMesh);
   ~MeshPart();
 

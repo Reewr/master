@@ -2,8 +2,8 @@
 
 #include <memory>
 #include <mmm.hpp>
-#include <vector>
 #include <string>
+#include <vector>
 
 #include "../Log.hpp"
 #include "../OpenGLHeaders.hpp"
@@ -47,9 +47,9 @@ public:
   const std::string& name();
 
 private:
-  int mStartIndex;
-  int mSize;
-  int mIndex;
+  int         mStartIndex;
+  int         mSize;
+  int         mIndex;
   std::string mName;
 
   mmm::mat4 mTransform;

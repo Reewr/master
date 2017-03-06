@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Resource.hpp"
 #include "Log.hpp"
+#include "Resource.hpp"
 
-#include <memory>
 #include <map>
-#include <vector>
+#include <memory>
 #include <string>
+#include <vector>
 
 class ResourceManager;
 class SubMesh;
@@ -17,12 +17,11 @@ class btBulletWorldImporter;
 
 struct SubMeshPhysics {
   const SubMesh* subMesh;
-  btRigidBody* body;
+  btRigidBody*   body;
 };
 
 class PhysicsMesh : public Resource, public Logging::Log {
 public:
-
   PhysicsMesh();
   ~PhysicsMesh();
 
@@ -49,6 +48,6 @@ public:
 
 private:
   btBulletWorldImporter* mFileloader;
-  std::shared_ptr<Mesh> mMesh;
+  std::shared_ptr<Mesh>  mMesh;
   std::map<std::string, btRigidBody*> mBodies;
 };

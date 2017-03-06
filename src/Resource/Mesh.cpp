@@ -40,9 +40,8 @@ bool Mesh::load(ResourceManager* manager) {
   Assimp::Importer importer;
   const aiScene*   scene =
     importer.ReadFile(filename().c_str(),
-                      aiProcess_Triangulate |
-                      aiProcess_OptimizeGraph |
-                      aiProcess_OptimizeMeshes
+                      aiProcess_Triangulate | aiProcess_OptimizeGraph |
+                        aiProcess_OptimizeMeshes
                       // aiProcess_CalcTangentSpace |
                       // aiProcess_GenUVCoords |
                       // aiProcess_ValidateDataStructure |
@@ -63,7 +62,7 @@ bool Mesh::load(ResourceManager* manager) {
   for (auto& m : mSubMeshes) {
     if (m.name().size() == 0)
       mLog->warn("Mesh of {} vertices without name", m.size());
-   }
+  }
 
   glGenBuffers(1, &mVBO);
   glGenVertexArrays(1, &mVAO);
@@ -75,7 +74,10 @@ bool Mesh::load(ResourceManager* manager) {
   uint64_t offsetTex  = 3 * sizeof(float);
   uint64_t offsetNorm = 5 * sizeof(float);
 
-  glBufferData(GL_ARRAY_BUFFER, numVertices() * elSize, &mData[0], GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER,
+               numVertices() * elSize,
+               &mData[0],
+               GL_STATIC_DRAW);
 
   glEnableVertexAttribArray(0);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, elSize, (void*) (0));
@@ -104,10 +106,10 @@ void Mesh::unload() {
   glDeleteBuffers(1, &mVBO);
   glDeleteVertexArrays(1, &mVAO);
   mData.clear();
-mSubMeshes.clear();
+  mSubMeshes.clear();
 
-mVBO = 0;
-mVAO = 0;
+  mVBO = 0;
+  mVAO = 0;
 }
 
 /**
@@ -118,7 +120,7 @@ mVAO = 0;
 * @param v
 */
 void Mesh::addVertex(const Mesh::Vertex& v) {
-mData.push_back(v);
+  mData.push_back(v);
 }
 
 /**
@@ -161,7 +163,7 @@ void Mesh::addSubMesh(const SubMesh& mesh) {
  * @return
  */
 unsigned int Mesh::findMeshByName(const std::string& name) {
-  for(size_t i = 0; i < mSubMeshes.size(); ++i) {
+  for (size_t i = 0; i < mSubMeshes.size(); ++i) {
     if (mSubMeshes[i].name() == name)
       return i;
   }
@@ -230,7 +232,7 @@ std::vector<std::string> Mesh::names() {
   std::vector<std::string> names;
   names.reserve(mSubMeshes.size());
 
-  for(auto& p : mSubMeshes)
+  for (auto& p : mSubMeshes)
     names.push_back(p.name());
 
   return names;
@@ -249,18 +251,30 @@ SubMesh::SubMesh() : mStartIndex(0), mSize(0), mIndex(0) {}
  * @param node
  */
 SubMesh::SubMesh(Mesh*            model,
-                       ResourceManager* manager,
-                       const aiScene*   scene,
-                       const aiNode*    node,
-                       const mmm::mat4& transform)
+                 ResourceManager* manager,
+                 const aiScene*   scene,
+                 const aiNode*    node,
+                 const mmm::mat4& transform)
     : mStartIndex(model->numVertices())
     , mSize(0)
     , mIndex(model->numSubMeshes()) {
   aiMatrix4x4 am = node->mTransformation;
-  mTransform     = transform * mat4(am.a1, am.a2, am.a3, am.a4,
-                                    am.b1, am.b2, am.b3, am.b4,
-                                    am.c1, am.c2, am.c3, am.c4,
-                                    am.d1, am.d2, am.d3, am.d4);
+  mTransform     = transform * mat4(am.a1,
+                                am.a2,
+                                am.a3,
+                                am.a4,
+                                am.b1,
+                                am.b2,
+                                am.b3,
+                                am.b4,
+                                am.c1,
+                                am.c2,
+                                am.c3,
+                                am.c4,
+                                am.d1,
+                                am.d2,
+                                am.d3,
+                                am.d4);
 
   // Add name if it exists
   if (node->mName.length == 0)
@@ -288,12 +302,12 @@ SubMesh::SubMesh(Mesh*            model,
       aiVector3D*        normals   = mesh->mNormals;
 
       for (unsigned int fIndex = 0; fIndex < 3; ++fIndex) {
-        unsigned int i1 = face.mIndices[fIndex];
+        unsigned int i1    = face.mIndices[fIndex];
         mmm::vec3 vertex   = { vertices[i1].x, vertices[i1].y, vertices[i1].z };
         mmm::vec2 texCoord = { texCoords[0][i1].x, texCoords[0][i1].y };
         mmm::vec3 normal   = { normals[i1].x, normals[i1].y, normals[i1].z };
 
-        model->addVertex({vertex, texCoord, normal});
+        model->addVertex({ vertex, texCoord, normal });
       }
     }
 

@@ -1,12 +1,12 @@
 #include "PhysicsMesh.hpp"
-#include "ResourceManager.hpp"
 #include "Mesh.hpp"
+#include "ResourceManager.hpp"
 
 #include <btBulletDynamicsCommon.h>
 #include <btBulletWorldImporter.h>
 
 PhysicsMesh::PhysicsMesh()
-  : Logging::Log("PhysicsMesh"), mFileloader(nullptr), mMesh(nullptr) {}
+    : Logging::Log("PhysicsMesh"), mFileloader(nullptr), mMesh(nullptr) {}
 PhysicsMesh::~PhysicsMesh() {}
 
 /**
@@ -35,8 +35,8 @@ bool PhysicsMesh::load(ResourceManager* manager) {
   // Go through each rigid body, checking that their name is there
   // and that it is unique, logging warnings if not.
   for (int i = 0; i < mFileloader->getNumRigidBodies(); ++i) {
-    btCollisionObject* obj = mFileloader->getRigidBodyByIndex(i);
-    btRigidBody* body = btRigidBody::upcast(obj);
+    btCollisionObject* obj  = mFileloader->getRigidBodyByIndex(i);
+    btRigidBody*       body = btRigidBody::upcast(obj);
 
     const char* name = mFileloader->getNameForPointer(body);
 
@@ -54,7 +54,7 @@ bool PhysicsMesh::load(ResourceManager* manager) {
 
   // time to load the mesh for the physics
   std::string meshName = mName.substr(13);
-  mMesh = manager->get<Mesh>("Mesh::" + meshName);
+  mMesh                = manager->get<Mesh>("Mesh::" + meshName);
 }
 
 /**
@@ -84,7 +84,7 @@ std::vector<std::string> PhysicsMesh::names() {
   std::vector<std::string> names;
   names.reserve(mBodies.size());
 
-  for(auto p : mBodies)
+  for (auto p : mBodies)
     names.push_back(p.first);
 
   return names;
@@ -102,7 +102,7 @@ std::vector<std::string> PhysicsMesh::names() {
  * @return
  */
 SubMeshPhysics PhysicsMesh::findByName(const std::string& name) {
-  SubMeshPhysics s = {nullptr, nullptr};
+  SubMeshPhysics s = { nullptr, nullptr };
 
   if (mBodies.count(name))
     s.body = mBodies[name];
@@ -127,7 +127,7 @@ SubMeshPhysics PhysicsMesh::findByName(const std::string& name) {
  * @return
  */
 bool hasString(std::vector<std::string>& v, const std::string& s) {
-  for(auto& element : v)
+  for (auto& element : v)
     if (element == s)
       return true;
   return false;
@@ -145,7 +145,7 @@ bool hasString(std::vector<std::string>& v, const std::string& s) {
  */
 std::vector<std::pair<std::string, SubMeshPhysics>> PhysicsMesh::getAll() {
   std::vector<std::pair<std::string, SubMeshPhysics>> meshes;
-  std::vector<std::string> meshNames      = mMesh->names();
+  std::vector<std::string> meshNames = mMesh->names();
 
   for (auto& name : names()) {
     if (!hasString(meshNames, name))

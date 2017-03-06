@@ -49,7 +49,7 @@ protected:
   mmm::mat4                mScale;
   mmm::mat4                mRotation;
   btCollisionShape*        mShape;
-  btMotionState*    mMotion;
+  btMotionState*           mMotion;
   btRigidBody*             mBody;
   std::vector<Drawable3D*> mChildren;
 };

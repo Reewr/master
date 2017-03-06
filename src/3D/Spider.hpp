@@ -52,5 +52,5 @@ public:
 
 private:
   std::shared_ptr<PhysicsMesh> mMesh;
-  std::shared_ptr<Program> mProgram;
+  std::shared_ptr<Program>     mProgram;
 };

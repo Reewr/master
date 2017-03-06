@@ -5,8 +5,8 @@
 #include "../Utils/Utils.hpp"
 #include "Font.hpp"
 #include "Mesh.hpp"
-#include "Texture.hpp"
 #include "PhysicsMesh.hpp"
+#include "Texture.hpp"
 
 ResourceManager::ResourceManager()
     : Logging::Log("ResManager"), mCurrentScope(ResourceScope::None) {}

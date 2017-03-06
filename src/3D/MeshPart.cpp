@@ -1,7 +1,7 @@
 #include "MeshPart.hpp"
 
-#include "../Resource/PhysicsMesh.hpp"
 #include "../Resource/Mesh.hpp"
+#include "../Resource/PhysicsMesh.hpp"
 
 #include <btBulletDynamicsCommon.h>
 
