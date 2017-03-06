@@ -5,7 +5,19 @@
 
 #include <btBulletDynamicsCommon.h>
 
-MeshPart::MeshPart(const SubMeshPhysics&) : Logging::Log("MeshPart"), mMesh(nullptr) { }
+MeshPart::MeshPart(const SubMeshPhysics& subMesh)
+    : Logging::Log("MeshPart"), mMesh(subMesh.subMesh) {
+  if (subMesh.body == nullptr)
+    throw std::runtime_error("Rigid body was nullptr");
+
+  if (subMesh.subMesh == nullptr)
+    throw std::runtime_error("Submesh was nullptr");
+
+  mBody   = subMesh.body;
+  mShape  = mBody->getCollisionShape();
+  mMotion = mBody->getMotionState();
+}
+
 MeshPart::~MeshPart() {}
 
 void MeshPart::update(float) {}
