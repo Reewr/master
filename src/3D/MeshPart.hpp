@@ -24,5 +24,5 @@ public:
   void input(const Input::Event& event);
 
 private:
-  SubMesh* mMesh;
+  const SubMesh* mMesh;
 };
