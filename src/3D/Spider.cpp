@@ -1,11 +1,10 @@
 #include "Spider.hpp"
 
-#include <BulletCollision/CollisionShapes/btShapeHull.h>
 #include <btBulletDynamicsCommon.h>
 
 #include "../3D/Camera.hpp"
 #include "../GLSL/Program.hpp"
-#include "../Resource/Mesh.hpp"
+#include "../Resource/PhysicsMesh.hpp"
 #include "../Resource/ResourceManager.hpp"
 #include "../Utils/Asset.hpp"
 

@@ -7,7 +7,7 @@
 #include "../Log.hpp"
 
 class Asset;
-class Mesh;
+class PhysicsMesh;
 class Program;
 
 enum SpiderPart {
@@ -51,6 +51,6 @@ public:
   void input(const Input::Event& event);
 
 private:
-  std::shared_ptr<Mesh> mMesh;
+  std::shared_ptr<PhysicsMesh> mMesh;
   std::shared_ptr<Program> mProgram;
 };
