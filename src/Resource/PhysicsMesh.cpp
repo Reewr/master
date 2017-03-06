@@ -116,3 +116,45 @@ SubMeshPhysics PhysicsMesh::findByName(const std::string& name) {
 
   return s;
 }
+
+/**
+ * @brief
+ *   Checks if a string is within the vector
+ *
+ * @param v
+ * @param s
+ *
+ * @return
+ */
+bool hasString(std::vector<std::string>& v, const std::string& s) {
+  for(auto& element : v)
+    if (element == s)
+      return true;
+  return false;
+}
+
+/**
+ * @brief
+ *   Retrieves all the names from the PhysicsMesh and the Mesh and merges these
+ *   two lists together.
+ *
+ *   It then goes through this list and retrieves all available SubMeshPhysics
+ *   where some of these may have nullptr SubMesh or nullptr.
+ *
+ * @return
+ */
+std::vector<std::pair<std::string, SubMeshPhysics>> PhysicsMesh::getAll() {
+  std::vector<std::pair<std::string, SubMeshPhysics>> meshes;
+  std::vector<std::string> meshNames      = mMesh->names();
+
+  for (auto& name : names()) {
+    if (!hasString(meshNames, name))
+      meshNames.push_back(name);
+  }
+
+  for (auto& name : meshNames) {
+    meshes.push_back(std::make_pair(name, findByName(name)));
+  }
+
+  return meshes;
+}

@@ -40,6 +40,13 @@ public:
   // Both pointers in this structure may be null
   SubMeshPhysics findByName(const std::string& name);
 
+  // Returns all the submeshes and rigid bodies merged together
+  // for one mesh together with the name of the given mesh/rigid body.
+  //
+  // This may also include mesh without rigid body and rigid body without
+  // mesh
+  std::vector<std::pair<std::string, SubMeshPhysics>> getAll();
+
 private:
   btBulletWorldImporter* mFileloader;
   std::shared_ptr<Mesh> mMesh;
