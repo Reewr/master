@@ -2,7 +2,7 @@
 
 class btRigidBody;
 class btCollisionShape;
-struct btDefaultMotionState;
+class btMotionState;
 
 class Asset;
 class Camera;
@@ -49,7 +49,7 @@ protected:
   mmm::mat4                mScale;
   mmm::mat4                mRotation;
   btCollisionShape*        mShape;
-  btDefaultMotionState*    mMotion;
+  btMotionState*    mMotion;
   btRigidBody*             mBody;
   std::vector<Drawable3D*> mChildren;
 };
