@@ -111,6 +111,8 @@ TinyXML2 is licensed under a [zlib license](https://github.com/leethomason/tinyx
 
 Lua is a programming language that was specifically built to be integrated into other languages, primarily C. This engine uses is as a form of being able to interact with the engine while it is running. It is primarily used for the GUI elements as well as for the in-engine console.
 
+Unlike all the other dependencies, this dependency is not located within the `deps` folder and is expected to be installed on the system. The version required of Lua is v5.2+.
+
 Lua is licensed under a [MIT license](https://www.lua.org/license.html).
 
 ## [SOL2](https://github.com/ThePhD/sol2)
