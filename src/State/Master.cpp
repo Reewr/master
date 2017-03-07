@@ -45,7 +45,7 @@ Master::Master(Asset* a) : mAsset(a) {
     ->get<Program>("Program::Model")
     ->setUniform("shadowSamples", c->graphics.shadowSamples);
 
-  mDrawable3D = { new Terrain(), new Cube(), new Spider(mAsset) };
+  mDrawable3D = { new Terrain(), new Cube()};
 
   for (auto d : mDrawable3D)
     mWorld->addObject(d);
