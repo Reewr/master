@@ -46,6 +46,8 @@ public:
   bool pickBody(const mmm::vec3& rayFromWorld, const mmm::vec3& rayToWorld);
 
 private:
+  bool movePickedBody(const mmm::vec3& rayFromWorld, const mmm::vec3& rayToWorld);
+
   void removePickingConstraint();
 
   btDbvtBroadphase*                    mPhase;

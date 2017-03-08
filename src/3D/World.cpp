@@ -172,6 +172,29 @@ bool World::pickBody(const mmm::vec3& rayFromWorld,
 
 /**
  * @brief
+ *   If the user has clicked on an object with the mouse and starts
+ *   to move the mouse, the object should be moved. This handles that movement.
+ *
+ * @param rayFromWorld
+ * @param rayToWorld
+ *
+ * @return
+ */
+bool World::movePickedBody(const mmm::vec3& rayFromWorld,
+                           const mmm::vec3& rayToWorld) {
+
+  if (!mPickedBody || !mPickedConstraint)
+    return false;
+
+  mmm::vec3 dir   = normalize(rayToWorld - rayFromWorld) * mOldPickingDistance;
+  mmm::vec3 pivot = rayFromWorld + dir;
+  mPickedConstraint->setPivotB(btVector3(pivot.x, pivot.y, pivot.z));
+
+  return true;
+}
+
+/**
+ * @brief
  *   When the mouse button is released, the constraint should be cleared and
  *   the item in question should be dropped. This function handles that
  */
