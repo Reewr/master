@@ -13,6 +13,10 @@ class btDiscreteDynamicsWorld;
 
 class Drawable3D;
 
+namespace Input {
+  class Event;
+}
+
 class World : public Logging::Log {
 public:
   World(const mmm::vec3& gravity);
@@ -29,12 +33,32 @@ public:
   // also tells all drawable elements to update their position
   void doPhysics(float deltaTime);
 
+  // By enabling mousepicks, the user can move objects by clicking
+  // on them to pick them up and dragging them around
+  void enableMousePickups();
+
+  // By disabling mousepickups, the user is not allowed to move objects
+  void disableMousePickups();
+
+  // The function that handles input events
+  void input(Input::Event& event);
+
+  bool pickBody(const mmm::vec3& rayFromWorld, const mmm::vec3& rayToWorld);
+
 private:
-  btDbvtBroadphase*                    phase;
-  btSequentialImpulseConstraintSolver* solver;
-  btDefaultCollisionConfiguration*     collision;
-  btCollisionDispatcher*               dispatcher;
-  btDiscreteDynamicsWorld*             world;
+  btDbvtBroadphase*                    mPhase;
+  btSequentialImpulseConstraintSolver* mSolver;
+  btDefaultCollisionConfiguration*     mCollision;
+  btCollisionDispatcher*               mDispatcher;
+  btDiscreteDynamicsWorld*             mWorld;
+
+  // Mouse pickup variables
+  bool mHasMousePickup;
+  btRigidBody* mPickedBody;
+  btPoint2PointConstraint* mPickedConstraint;
+  mmm::vec3 mOldPickingPos;
+  mmm::vec3 mHitPos;
+  float mOldPickingDistance;
 
   std::vector<Drawable3D*> mElements;
 };

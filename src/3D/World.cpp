@@ -1,6 +1,7 @@
 #include "World.hpp"
 
 #include "../Drawable/Drawable3D.hpp"
+#include "../Input/Event.hpp"
 #include <algorithm>
 #include <btBulletDynamicsCommon.h>
 
@@ -12,7 +13,14 @@ using mmm::vec3;
  *
  * @param gravity
  */
-World::World(const vec3& gravity) : Logging::Log("World") {
+World::World(const vec3& gravity)
+    : Logging::Log("World")
+    , mHasMousePickup(false)
+    , mPickedBody(nullptr)
+    , mPickedConstraint(nullptr)
+    , mOldPickingPos(0, 0, 0)
+    , mHitPos(0, 0, 0)
+    , mOldPickingDistance(0) {
   collision  = new btDefaultCollisionConfiguration();
   dispatcher = new btCollisionDispatcher(collision);
   phase      = new btDbvtBroadphase();
@@ -90,4 +98,72 @@ void World::doPhysics(float deltaTime) {
 
   for (auto a : mElements)
     a->updateFromPhysics();
+}
+
+/**
+ * @brief
+ *   When called, it will start to handle inputs that are sent to the
+ *   input handler and check to see if the user tries to pick up any of
+ *   the physics elements.
+ *
+ *   If a user clicks on a physics element that is not static and can be moved
+ *   the world will add a constraint between the object and the mouse and
+ *   have it follow the mouse pointer.
+ */
+void World::enableMousePickups() {
+  mHasMousePickup = true;
+}
+
+/**
+ * @brief
+ *   Disables picking up of object by mouse
+ */
+void World::disableMousePickups() {
+  mHasMousePickup = false;
+}
+
+/**
+ * @brief
+ *   Handles the input events. Currently it will only handle the event
+ *   where the user tries to pickup an object and nove it around.
+ *
+ * @param event
+ */
+void World::input(Input::Event& event) { }
+
+
+bool World::pickBody(const mmm::vec3& rayFromWorld,
+                             const mmm::vec3& rayToWorld) {
+  btVector3 rfw = btVector3(rayFromWorld.x, rayFromWorld.y, rayFromWorld.z);
+  btVector3 rtw = btVector3(rayToWorld.x, rayToWorld.y, rayToWorld.z);
+
+  btCollisionWorld::ClosestRatResultCallback rayCallback(rfw, rtw);
+
+  mWorld->rayTest(rfw, rtw, rayCallback);
+
+  if (!rayCallback.hasHit())
+    return false;
+
+  btVector3 pickPos = rayCallback.m_hitPointWorld;
+  btRigidBody* body = btRigidBody::upcast(rayCallback.m_collisionObject);
+
+  if (body && !body->isStaticObject() && !body->isKinematicObject()) {
+    mPickedBody = body;
+    mSavedState = mPickedBody->getActivationState();
+    mPickedBody->setActivationState(DISABLE_DEACTIVATION);
+
+    btVector3 localPivot = body->getCenterOfMassTransform().inverse() * pickPos;
+    mPickedConstraint    = new btPoint2PointConstraint(*body, localPivot);
+    mWorld->addConstraint(mPickedConstraint, true);
+
+    btScalar mousePickClamping = 30.0f;
+    mPickedConstraint->m_setting.m_impulseClamp = mousePickClamping;
+    mPickedConstraint->m_setting.m_tau = 0.001f;
+  }
+
+  mOldPickingPos = rayFromWorld;
+  mHitPos = mmm::vec3(pickPos.x(), pickPos.y(), pickPos.z());
+  mOldPickingDistance = (mHitPos - rayFromWorld).length();
+
+  return true;
 }
