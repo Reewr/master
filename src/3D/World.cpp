@@ -192,6 +192,8 @@ bool World::pickBody(const mmm::vec3& rayFromWorld,
     (btRigidBody*) btRigidBody::upcast(rayCallback.m_collisionObject);
 
   if (body && !body->isStaticObject() && !body->isKinematicObject()) {
+    mLog->debug("Hit a body that is not static or kinematic!");
+
     mPickedBody = body;
     mSavedState = mPickedBody->getActivationState();
     mPickedBody->setActivationState(DISABLE_DEACTIVATION);
@@ -202,12 +204,14 @@ bool World::pickBody(const mmm::vec3& rayFromWorld,
 
     btScalar mousePickClamping = 30.0f;
     mPickedConstraint->m_setting.m_impulseClamp = mousePickClamping;
-    mPickedConstraint->m_setting.m_tau = 0.001f;
+    mPickedConstraint->m_setting.m_tau = 0.01f;
+  } else if (body) {
+    mLog->debug("Hit static object");
   }
 
-  mOldPickingPos = rayFromWorld;
+  mOldPickingPos = rayToWorld;
   mHitPos = mmm::vec3(pickPos.x(), pickPos.y(), pickPos.z());
-  mOldPickingDistance = (mHitPos - rayFromWorld).length();
+  mOldPickingDistance = mmm::length(mHitPos - rayFromWorld);
 
   return true;
 }
