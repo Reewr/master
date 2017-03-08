@@ -176,11 +176,11 @@ void World::input(Camera* camera, const Input::Event& event) {
  * @return
  */
 bool World::pickBody(const mmm::vec3& rayFromWorld,
-                             const mmm::vec3& rayToWorld) {
+                     const mmm::vec3& rayToWorld) {
   btVector3 rfw = btVector3(rayFromWorld.x, rayFromWorld.y, rayFromWorld.z);
   btVector3 rtw = btVector3(rayToWorld.x, rayToWorld.y, rayToWorld.z);
 
-  btCollisionWorld::ClosestRatResultCallback rayCallback(rfw, rtw);
+  btCollisionWorld::ClosestRayResultCallback rayCallback(rfw, rtw);
 
   mWorld->rayTest(rfw, rtw, rayCallback);
 
