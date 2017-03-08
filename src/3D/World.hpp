@@ -10,6 +10,8 @@ class btDefaultCollisionConfiguration;
 class btCollisionDispatcher;
 class btSequentialImpulseConstraintSolver;
 class btDiscreteDynamicsWorld;
+class btRigidBody;
+class btPoint2PointConstraint;
 
 class Drawable3D;
 
