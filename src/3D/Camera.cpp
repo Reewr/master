@@ -206,6 +206,16 @@ const vec3& Camera::target() const {
 
 /**
  * @brief
+ *   Returns a const reference to the position vector
+ *
+ * @return
+ */
+const vec3& Camera::position() const {
+  return mPosition;
+}
+
+/**
+ * @brief
  *   This function should be called on every iteration, prior to calling
  *   update(float). This handles the input.
  *
