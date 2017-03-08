@@ -188,7 +188,8 @@ bool World::pickBody(const mmm::vec3& rayFromWorld,
     return false;
 
   btVector3 pickPos = rayCallback.m_hitPointWorld;
-  btRigidBody* body = btRigidBody::upcast(rayCallback.m_collisionObject);
+  btRigidBody* body =
+    (btRigidBody*) btRigidBody::upcast(rayCallback.m_collisionObject);
 
   if (body && !body->isStaticObject() && !body->isKinematicObject()) {
     mPickedBody = body;
