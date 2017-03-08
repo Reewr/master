@@ -73,6 +73,8 @@ public:
 
   void input(float dt);
 
+  mmm::vec3 screenPointToRay(const mmm::vec2& mousePosition);
+
 private:
   Asset* mAsset;
 

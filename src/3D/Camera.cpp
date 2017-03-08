@@ -302,3 +302,27 @@ void Camera::zoom(int sign) {
   if (mHeight < 0.1)
     mHeight = 0.1;
 }
+
+/**
+ * @brief
+ *   As the mouse pointer has a 2d coordinate, it has to projected
+ *   as a ray down into the 3D world.
+ *
+ *   This function effectively simulates that ray and checks if
+ *   the ray hits any physics objects.
+ *
+ *   Returns the position of where the mouse coordinate is projected
+ *   down to.
+ *
+ * @param mousePosition
+ *
+ * @return
+ */
+mmm::vec3 Camera::screenPointToRay(const mmm::vec2& mousePosition) {
+  return unProject(
+    vec3(mousePosition, 1.0),
+    mView,
+    mProjection,
+    vec4(0, 0, mAsset->cfg()->graphics.res)
+  );
+}
