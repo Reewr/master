@@ -21,24 +21,24 @@ World::World(const vec3& gravity)
     , mOldPickingPos(0, 0, 0)
     , mHitPos(0, 0, 0)
     , mOldPickingDistance(0) {
-  collision  = new btDefaultCollisionConfiguration();
-  dispatcher = new btCollisionDispatcher(collision);
-  phase      = new btDbvtBroadphase();
-  solver     = new btSequentialImpulseConstraintSolver;
+  mCollision  = new btDefaultCollisionConfiguration();
+  mDispatcher = new btCollisionDispatcher(mCollision);
+  mPhase      = new btDbvtBroadphase();
+  mSolver     = new btSequentialImpulseConstraintSolver;
 
-  world = new btDiscreteDynamicsWorld(dispatcher, phase, solver, collision);
-  world->setGravity(btVector3(gravity.x, gravity.y, gravity.z));
+  mWorld = new btDiscreteDynamicsWorld(mDispatcher, mPhase, mSolver, mCollision);
+  mWorld->setGravity(btVector3(gravity.x, gravity.y, gravity.z));
 }
 
 World::~World() {
   for (auto element : mElements)
-    world->removeRigidBody(element->rigidBody());
+    mWorld->removeRigidBody(element->rigidBody());
 
-  delete world;
-  delete solver;
-  delete collision;
-  delete dispatcher;
-  delete phase;
+  delete mWorld;
+  delete mSolver;
+  delete mCollision;
+  delete mDispatcher;
+  delete mPhase;
 
   mElements.clear();
 }
@@ -55,7 +55,7 @@ void World::addObject(Drawable3D* element) {
   if (!element->hasPhysics())
     return;
 
-  world->addRigidBody(element->rigidBody());
+  mWorld->addRigidBody(element->rigidBody());
   mElements.push_back(element);
 }
 
@@ -71,7 +71,7 @@ void World::removeObject(Drawable3D* element) {
   // remove them from the world first
   for (auto a : mElements) {
     if (a == element && element != nullptr)
-      world->removeRigidBody(a->rigidBody());
+      mWorld->removeRigidBody(a->rigidBody());
   }
 
   // then remove them from the list
@@ -94,7 +94,7 @@ void World::removeObject(Drawable3D* element) {
  * @param deltaTime
  */
 void World::doPhysics(float deltaTime) {
-  world->stepSimulation(deltaTime, 7);
+  mWorld->stepSimulation(deltaTime, 7);
 
   for (auto a : mElements)
     a->updateFromPhysics();
