@@ -155,6 +155,8 @@ void Master::input(const Input::Event& event) {
     mCamera->zoom(1);
   else if (event.scrollDown())
     mCamera->zoom(-1);
+
+  mWorld->input(mCamera, event);
 }
 
 void Master::update(float deltaTime) {
