@@ -162,7 +162,7 @@ bool Engine::initialize(int argc, char* argv[], int isRefresh, int initState) {
                       (int) mCFG->graphics.res.x,
                       (int) mCFG->graphics.res.y);
     glViewport(0, 0, mCFG->graphics.res.x, mCFG->graphics.res.y);
-    glfwSwapInterval((mCFG->graphics.vsync) ? 1 : 0);
+    glfwSwapInterval(mCFG->graphics.vsync ? 1 : 0);
   }
 
   mInput = new Input::Input(mWindow, mCFG);
@@ -279,7 +279,7 @@ bool Engine::initWindow() {
   glfwMakeContextCurrent(mWindow);
 
   // Set vsync if set by config
-  glfwSwapInterval((cfg->graphics.vsync) ? 1 : 0);
+  glfwSwapInterval(cfg->graphics.vsync ? 1 : 0);
 
   mLog->info("GLFW Window settings initalized successfully...");
   return true;
