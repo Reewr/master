@@ -84,7 +84,14 @@ Master::Master(Asset* a) : mAsset(a) {
     mGUIElements.push_back(console);
   }
 
-  mLog->info("Initialized successfully");
+  // mLog->info("Initialized successfully");
+
+  // auto test = a->rManager()->get<PhysicsMesh>("PhysicsMesh::Box");
+  // mLog->debug("Logging the names of PhysicsMesh::Box");
+
+  // for (auto m : test->names()) {
+  //   mLog->debug("{}", m);
+  // }
 }
 
 Master::~Master() {
