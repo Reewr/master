@@ -399,8 +399,11 @@ void Engine::deinitialize(bool isFullDeinit) {
     mResourceManager = nullptr;
   }
 
-  if (isFullDeinit)
+  if (isFullDeinit) {
+    glfwDestroyWindow(mWindow);
     glfwTerminate();
+    mWindow = nullptr;
+  }
 }
 
 /**
