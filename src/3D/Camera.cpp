@@ -261,7 +261,7 @@ void Camera::input(float dt) {
  *
  * @param dt
  */
-void Camera::update(float dt) {
+void Camera::update(float) {
   // now that input has been handled, handle the new positions and stuff
   // that may have been set
   updateViewMatrix();
