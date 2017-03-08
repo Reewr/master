@@ -1,7 +1,9 @@
 #include "World.hpp"
 
+#include "../OpenGLHeaders.hpp"
 #include "../Drawable/Drawable3D.hpp"
 #include "../Input/Event.hpp"
+#include "Camera.hpp"
 #include <algorithm>
 #include <btBulletDynamicsCommon.h>
 
@@ -131,8 +133,32 @@ void World::disableMousePickups() {
  *
  * @param event
  */
-void World::input(Input::Event& event) { }
+void World::input(Camera* camera, const Input::Event& event) {
+  if (event.buttonPressed(GLFW_MOUSE_BUTTON_1)) {
 
+    const mmm::vec3& rayFrom = camera->position();
+    const mmm::vec3& rayTo   = camera->screenPointToRay(event.position());
+
+    mLog->debug("Picked: RayFrom '{}', RayTo: '{}'", rayFrom, rayTo);
+
+    bool hit = pickBody(rayTo, rayFrom);
+
+    if (hit) {
+      event.stopPropgation();
+      mLog->debug("Hit an object: {}", mPickedBody == nullptr ? "nullptr" : "not nullptr");
+    }
+
+    return;
+  } else if (event == Input::Event::Type::MouseRelease) {
+    removePickingConstraint();
+    return;
+  }
+
+  // if (event == Input::Event::Type::MouseMovement && mPickedBody) {
+  //   movePickedBody(camera->position(),
+  //                  camera->screenPointToRay(event.position()));
+  // }
+}
 
 bool World::pickBody(const mmm::vec3& rayFromWorld,
                              const mmm::vec3& rayToWorld) {

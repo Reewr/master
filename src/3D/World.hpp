@@ -14,6 +14,7 @@ class btRigidBody;
 class btPoint2PointConstraint;
 
 class Drawable3D;
+class Camera;
 
 namespace Input {
   class Event;
@@ -43,7 +44,7 @@ public:
   void disableMousePickups();
 
   // The function that handles input events
-  void input(Input::Event& event);
+  void input(Camera* camera, const Input::Event& event);
 
 private:
   bool pickBody(const mmm::vec3& rayFromWorld, const mmm::vec3& rayToWorld);
