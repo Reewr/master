@@ -278,7 +278,7 @@ bool Engine::initWindow() {
   glfwMakeContextCurrent(mWindow);
 
   // Set vsync if set by config
-  glfwSwapInterval(cfg->graphics.vsync ? 1 : 0);
+  glfwSwapInterval(mCFG->graphics.vsync ? 1 : 0);
 
   mLog->info("GLFW Window settings initalized successfully...");
   return true;
