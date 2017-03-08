@@ -45,9 +45,9 @@ public:
   // The function that handles input events
   void input(Input::Event& event);
 
+private:
   bool pickBody(const mmm::vec3& rayFromWorld, const mmm::vec3& rayToWorld);
 
-private:
   bool movePickedBody(const mmm::vec3& rayFromWorld, const mmm::vec3& rayToWorld);
 
   void removePickingConstraint();
