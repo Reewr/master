@@ -17,6 +17,7 @@
 #include "../Lua/Lua.hpp"
 #include "../Resource/ResourceManager.hpp"
 #include "../Resource/Texture.hpp"
+#include "../Resource/PhysicsMesh.hpp"
 #include "../Shape/GL/Rectangle.hpp"
 #include "../Utils/Asset.hpp"
 #include "../Utils/CFG.hpp"
