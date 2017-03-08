@@ -328,7 +328,7 @@ void Camera::zoom(int sign) {
  *
  * @return
  */
-mmm::vec3 Camera::screenPointToRay(const mmm::vec2& mousePosition) {
+vec3 Camera::screenPointToRay(const vec2& mousePosition) {
   return unProject(
     vec3(mousePosition, 1.0),
     mView,
