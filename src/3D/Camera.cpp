@@ -31,7 +31,9 @@ Camera::Camera(Asset* asset)
     , mHeight(2)
     , mHoriRotation(0)
     , mVertRotation(45)
-    , mSpeed(4) {
+    , mSpeed(4)
+    , mMinViewDistance(0.1f)
+    , mFieldOfView(67.0f) {
 
   mProjection    = updateProjectionMatrix();
   mShadowProgram = mAsset->rManager()->get<Program>("Program::Shadow");
@@ -46,19 +48,19 @@ Camera::Camera(Asset* asset)
  *   Updates the view matrix based on the vertical and horizontal rotation as
  *   well as the target.
  *
- *   Does not store or change any values and is entirely constant, returns
- *   a new matrix
- *
  * @return
  */
-mat4 Camera::updateViewMatrix() const {
+const mat4& Camera::updateViewMatrix() {
   vec3 cameraEye =
     mTarget + vec3(mmm::rotate_y(mHoriRotation) * mmm::rotate_x(mVertRotation) *
                    vec4(0, 0, mHeight, 1));
   vec3 cameraUp = vec3(mmm::rotate_y(mHoriRotation) *
                        mmm::rotate_x(mVertRotation) * vec4(0, 1, 0, 0));
 
-  return mmm::lookAt(cameraEye, mTarget, cameraUp);
+  mPosition = cameraEye;
+  mView = mmm::lookAt(cameraEye, mTarget, cameraUp);
+
+  return mView;
 }
 
 /**
@@ -69,9 +71,9 @@ mat4 Camera::updateViewMatrix() const {
  * @return
  */
 mat4 Camera::updateProjectionMatrix() const {
-  return mmm::perspective<float>(67.0f,
+  return mmm::perspective<float>(mFieldOfView,
                                  mAsset->cfg()->graphics.aspect,
-                                 0.1f,
+                                 mMinViewDistance,
                                  mAsset->cfg()->graphics.viewDistance);
 }
 
@@ -252,7 +254,7 @@ void Camera::input(float dt) {
 void Camera::update(float dt) {
   // now that input has been handled, handle the new positions and stuff
   // that may have been set
-  mView = updateViewMatrix();
+  updateViewMatrix();
 
   // mLight.day -= mLight.speed * dt;
 
