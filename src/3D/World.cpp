@@ -31,6 +31,8 @@ World::World(const vec3& gravity)
 }
 
 World::~World() {
+  removePickingConstraint();
+
   for (auto element : mElements)
     mWorld->removeRigidBody(element->rigidBody());
 
@@ -166,4 +168,21 @@ bool World::pickBody(const mmm::vec3& rayFromWorld,
   mOldPickingDistance = (mHitPos - rayFromWorld).length();
 
   return true;
+}
+
+/**
+ * @brief
+ *   When the mouse button is released, the constraint should be cleared and
+ *   the item in question should be dropped. This function handles that
+ */
+void World::removePickingConstraint() {
+  if (!mPickedConstraint)
+    return;
+
+  mPickedBody->forceActivationState(mSavedState);
+  mPickedBody->activate();
+  mWorld->removeConstraint(mPickedConstraint);
+  delete mPickedConstraint;
+  mPickedConstraint = nullptr;
+  mPickedBody       = nullptr;
 }

@@ -46,6 +46,8 @@ public:
   bool pickBody(const mmm::vec3& rayFromWorld, const mmm::vec3& rayToWorld);
 
 private:
+  void removePickingConstraint();
+
   btDbvtBroadphase*                    mPhase;
   btSequentialImpulseConstraintSolver* mSolver;
   btDefaultCollisionConfiguration*     mCollision;
