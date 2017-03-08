@@ -65,6 +65,7 @@ private:
   mmm::vec3 mOldPickingPos;
   mmm::vec3 mHitPos;
   float mOldPickingDistance;
+  int mSavedState;
 
   std::vector<Drawable3D*> mElements;
 };
