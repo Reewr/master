@@ -160,6 +160,21 @@ void World::input(Camera* camera, const Input::Event& event) {
   // }
 }
 
+/**
+ * @brief
+ *   When the user clicks the mouse, this function is called to see whether
+ *   the mouse pointer clicks on any physics objects in the world.
+ *
+ *   If an object is hit, its set as the picked object. A constraint
+ *   between the mouse pointer and the object is added so that whenever
+ *   the user moves the mouse (as long as the mousebutton is still pressed)
+ *   the object moves along with it.
+ *
+ * @param rayFromWorld
+ * @param rayToWorld
+ *
+ * @return
+ */
 bool World::pickBody(const mmm::vec3& rayFromWorld,
                              const mmm::vec3& rayToWorld) {
   btVector3 rfw = btVector3(rayFromWorld.x, rayFromWorld.y, rayFromWorld.z);
