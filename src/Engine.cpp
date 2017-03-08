@@ -432,8 +432,8 @@ void Engine::runLoop() {
 
     mCurrent->draw(deltaTime);
 
-    glfwPollEvents();
     glfwSwapBuffers(mWindow);
+    glfwPollEvents();
 
     // Special case for when the engine has to be entirely
     // reloaded due context setting changes.
