@@ -241,8 +241,7 @@ bool Engine::initOpenGLBindings() {
  * @return
  */
 bool Engine::initWindow() {
-  CFG* cfg          = mAsset->cfg();
-  bool isFullscreen = cfg->graphics.winMode == 1;
+  bool isFullscreen = mCFG->graphics.winMode == 1;
 
   // Set version we want
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -252,7 +251,7 @@ bool Engine::initWindow() {
 
   // Set the debug context, since we are developing
   glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
-  glfwWindowHint(GLFW_SAMPLES, cfg->graphics.aliasing);
+  glfwWindowHint(GLFW_SAMPLES, mCFG->graphics.aliasing);
 
   // No resizing, because of the resolutions in settings
   glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
@@ -263,8 +262,8 @@ bool Engine::initWindow() {
 
   // get monitor, may be null, but thats okay since glfw supports it
   GLFWmonitor* monitor = getMonitor();
-  mWindow              = glfwCreateWindow(cfg->graphics.res.x,
-                             cfg->graphics.res.y,
+  mWindow              = glfwCreateWindow((int) mCFG->graphics.res.x,
+                             (int) mCFG->graphics.res.y,
                              "Wooooo",
                              monitor,
                              NULL);
