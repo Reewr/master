@@ -46,6 +46,9 @@ public:
   // Returns the name of the mesh, if it has one.
   const std::string& name() const;
 
+  // Returns a reference to the texture
+  const std::shared_ptr<Texture>& texture() const;
+
 private:
   int         mStartIndex;
   int         mSize;

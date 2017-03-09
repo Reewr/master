@@ -389,6 +389,18 @@ const std::string& SubMesh::name() const {
 
 /**
  * @brief
+ *   Returns a reference to the texture that is stored with the
+ *   mesh. This shared pointer may be null, meaning that the mesh
+ *   does not have a texture
+ *
+ * @return
+ */
+const std::shared_ptr<Texture>& SubMesh::texture() const {
+  return mTexture;
+}
+
+/**
+ * @brief
  *   Draws the submesh with the given model matrix and program
  *
  * @param modelMatrix
