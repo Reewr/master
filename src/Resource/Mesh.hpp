@@ -115,9 +115,17 @@ public:
   // Returns all the available mesh names
   std::vector<std::string> names();
 
+  // Binds the vertex array, specifying that it should get ready to draw
+  void bindVertexArray() const;
+
+  // When finished drawing, call this function to unbind the vertex array
+  void unbindVertexArray() const;
+
 private:
   GLuint mVBO;
   GLuint mVAO;
+
+  mutable bool mIsBound;
 
   std::vector<SubMesh> mSubMeshes;
   std::vector<Vertex>  mData;

@@ -241,6 +241,34 @@ std::vector<std::string> Mesh::names() {
   return names;
 }
 
+/**
+ * @brief
+ *   Binds the vertex array that is associated with the mesh if it isn't already
+ *   bound yet.
+ *
+ *   This allows you to draw the mesh
+ */
+void Mesh::bindVertexArray() const {
+  if (mIsBound)
+    return;
+
+  mIsBound = true;
+  glBindVertexArray(mVAO);
+}
+
+/**
+ * @brief
+ *   Unbinds the vertex array that us associated with the mesh if it isn't
+ *   unbound already.
+ */
+void Mesh::unbindVertexArray() const {
+  if (!mIsBound)
+    return;
+
+  mIsBound = false;
+  glBindVertexArray(0);
+}
+
 SubMesh::SubMesh() : mStartIndex(0), mSize(0), mIndex(0) {}
 
 /**
