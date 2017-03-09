@@ -2,10 +2,12 @@
 
 #include "../Resource/Mesh.hpp"
 #include "../Resource/PhysicsMesh.hpp"
+#include "../GLSL/Program.hpp"
 
 #include <btBulletDynamicsCommon.h>
 
-MeshPart::MeshPart(const SubMeshPhysics& subMesh)
+MeshPart::MeshPart(std::shared_ptr<Program>& program,
+                   const SubMeshPhysics& subMesh)
     : Logging::Log("MeshPart"), mMesh(subMesh.subMesh) {
   if (subMesh.body == nullptr)
     throw std::runtime_error("Rigid body was nullptr");

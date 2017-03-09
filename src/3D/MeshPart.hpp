@@ -5,10 +5,11 @@
 
 struct SubMeshPhysics;
 class SubMesh;
+class Program;
 
 class MeshPart : public Drawable3D, public Logging::Log {
 public:
-  MeshPart(const SubMeshPhysics& bodyMesh);
+  MeshPart(std::shared_ptr<Program>& program, const SubMeshPhysics& bodyMesh);
   ~MeshPart();
 
   // Update the element, physics etc
@@ -24,4 +25,5 @@ public:
 
 private:
   const SubMesh* mMesh;
+  std::shared_ptr<Program> mProgram;
 };
