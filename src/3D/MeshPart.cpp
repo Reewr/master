@@ -17,11 +17,24 @@ MeshPart::MeshPart(std::shared_ptr<Program>& program,
 
   mBody    = subMesh.body;
   mShape   = mBody->getCollisionShape();
-  mMotion  = mBody->getMotionState();
+
+  const mmm::mat4& t = subMesh.subMesh->transform();
+  // mmm::mat3 v = mmm::mat3(t[0].xyz, t[1].xyz, t[2].xyz);
+  btMatrix3x3 mat;
+  mat.setFromOpenGLSubMatrix(t.rawdata);
+  mmm::vec3 p = mmm::dropRows<3>(t).xyz;
+  btVector3 pos = btVector3(p.x, p.y, p.z);
+
+  mMotion = new btDefaultMotionState(btTransform(mat, pos));
+  mBody->setMotionState(mMotion);
+
   mProgram = program;
 }
 
-MeshPart::~MeshPart() {}
+MeshPart::~MeshPart() {
+  mBody->setMotionState(nullptr);
+  delete mMotion;
+}
 
 void MeshPart::update(float) {}
 void MeshPart::drawShadow(Framebuffer*, Camera*) {}
