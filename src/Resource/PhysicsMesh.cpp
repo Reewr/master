@@ -9,6 +9,15 @@ PhysicsMesh::PhysicsMesh()
     : Logging::Log("PhysicsMesh"), mFileloader(nullptr), mMesh(nullptr) {}
 PhysicsMesh::~PhysicsMesh() {}
 
+std::string PhysicsMesh::findNameByPointer(btRigidBody* body) {
+  for(auto& el : mBodies) {
+    if (el.second == body)
+      return el.first;
+  }
+
+  return "";
+}
+
 /**
  * @brief
  *   Loads the physics from a bullet file and expects there to be an

@@ -51,6 +51,8 @@ public:
   const std::shared_ptr<Mesh>& mesh() const;
 
 private:
+  std::string findNameByPointer(btRigidBody* body);
+
   btBulletWorldImporter* mFileloader;
   std::shared_ptr<Mesh>  mMesh;
   std::map<std::string, btRigidBody*> mBodies;
