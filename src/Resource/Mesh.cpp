@@ -430,6 +430,26 @@ const std::shared_ptr<Texture>& SubMesh::texture() const {
 
 /**
  * @brief
+ *   Tells the submesh to draw its vertices by using the stored index
+ *   and size. It will also bind the texture if the texture is not a nullptr
+ *   and texture location is larger than 0.
+ *
+ *   If will make sure that the parents vertex array is bound, but it does
+ *   not unbind it to allow you to optimize.
+ */
+void SubMesh::draw(int textureLocation) {
+  if (mSize == 0)
+    return;
+
+  if (mTexture != nullptr && textureLocation > 0)
+    mTexture->bind(textureLocation);
+
+  mParent->bindVertexArray();
+  glDrawArrays(GL_TRIANGLES, mStartIndex, mSize);
+}
+
+/**
+ * @brief
  *   Draws the submesh with the given model matrix and program
  *
  * @param modelMatrix

@@ -49,6 +49,9 @@ public:
   // Returns a reference to the texture
   const std::shared_ptr<Texture>& texture() const;
 
+  // Draws the submesh
+  void draw(int textureLocation = 1) const;
+
 private:
   int         mStartIndex;
   int         mSize;
