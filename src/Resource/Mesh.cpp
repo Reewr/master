@@ -64,7 +64,11 @@ bool Mesh::load(ResourceManager* manager) {
     if (m.name().size() == 0)
       mLog->warn("Mesh of {} vertices without name", m.size());
     else
-      mLog->debug("SubMesh '{}' of {} vertices loaded", m.name(), m.size());
+      mLog->debug("SubMesh '{}' of {} vertices loaded from {} to {}",
+                  m.name(),
+                  m.size(),
+                  m.startIndex(),
+                  m.startIndex() + m.size());
   }
 
   glGenBuffers(1, &mVBO);
