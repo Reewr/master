@@ -48,8 +48,10 @@ bool PhysicsMesh::load(ResourceManager* manager) {
 
     if (mBodies.count(strName))
       mLog->warn("Duplicate name '{}' for rigid body", strName);
-    else
+    else {
+      mLog->debug("Loaded rigid body: '{}'", strName);
       mBodies[strName] = body;
+    }
   }
 
   // time to load the mesh for the physics
@@ -59,6 +61,7 @@ bool PhysicsMesh::load(ResourceManager* manager) {
     mLog->error("Name does not contain '::', {}", mName);
     return false;
   }
+
   std::string meshName = mName.substr(position + 2);
 
   mLog->debug("Loading mesh :: {}", meshName);
