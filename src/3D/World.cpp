@@ -56,11 +56,10 @@ World::~World() {
  * @param element
  */
 void World::addObject(Drawable3D* element) {
-  if (!element->hasPhysics())
-    return;
-
-  mWorld->addRigidBody(element->rigidBody());
-  mElements.push_back(element);
+  if (element->hasPhysics()) {
+    mWorld->addRigidBody(element->rigidBody());
+    mElements.push_back(element);
+  }
 
   for (auto& child : element->children())
     addObject(child);
@@ -78,7 +77,9 @@ void World::removeObject(Drawable3D* element) {
   // remove them from the world first
   for (auto a : mElements) {
     if (a == element && element != nullptr) {
-      mWorld->removeRigidBody(a->rigidBody());
+
+      if (a->hasPhysics())
+        mWorld->removeRigidBody(a->rigidBody());
 
       for (auto& child : a->children())
         removeObject(child);
