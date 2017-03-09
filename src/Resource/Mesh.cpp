@@ -260,7 +260,9 @@ SubMesh::SubMesh(Mesh*            model,
                  const mmm::mat4& transform)
     : mStartIndex(model->numVertices())
     , mSize(0)
-    , mIndex(model->numSubMeshes()) {
+    , mIndex(model->numSubMeshes())
+    , mName("")
+    , mTexture(nullptr) {
   aiMatrix4x4 am = node->mTransformation;
   mTransform     = transform * mat4(am.a1,
                                 am.a2,
@@ -280,9 +282,7 @@ SubMesh::SubMesh(Mesh*            model,
                                 am.d4);
 
   // Add name if it exists
-  if (node->mName.length == 0)
-    mName = "";
-  else
+  if (node->mName.length != 0)
     mName = std::string(node->mName.C_Str());
 
   // parse the node
