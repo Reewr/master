@@ -444,7 +444,7 @@ const std::shared_ptr<Texture>& SubMesh::texture() const {
  *   If will make sure that the parents vertex array is bound, but it does
  *   not unbind it to allow you to optimize.
  */
-void SubMesh::draw(int textureLocation) {
+void SubMesh::draw(int textureLocation) const {
   if (mSize == 0)
     return;
 
