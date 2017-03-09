@@ -18,6 +18,7 @@ class btBulletWorldImporter;
 struct SubMeshPhysics {
   const SubMesh* subMesh;
   btRigidBody*   body;
+  std::string    name;
 };
 
 class PhysicsMesh : public Resource, public Logging::Log {

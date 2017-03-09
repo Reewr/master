@@ -117,7 +117,7 @@ std::vector<std::string> PhysicsMesh::names() {
  * @return
  */
 SubMeshPhysics PhysicsMesh::findByName(const std::string& name) {
-  SubMeshPhysics s = { nullptr, nullptr };
+  SubMeshPhysics s = { nullptr, nullptr, name };
 
   if (mBodies.count(name))
     s.body = mBodies[name];
