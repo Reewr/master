@@ -168,6 +168,13 @@ std::vector<std::pair<std::string, SubMeshPhysics>> PhysicsMesh::getAll() {
   }
 
   for (auto& name : meshNames) {
+    SubMeshPhysics subMesh = findByName(name);
+
+    if (subMesh.body == nullptr && subMesh.subMesh != nullptr &&
+        subMesh.subMesh->size() == 0) {
+      continue;
+    }
+
     meshes.push_back(std::make_pair(name, findByName(name)));
   }
 
