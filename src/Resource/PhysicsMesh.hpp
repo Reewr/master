@@ -47,6 +47,9 @@ public:
   // mesh
   std::vector<std::pair<std::string, SubMeshPhysics>> getAll();
 
+  // Returns the mesh
+  const std::shared_ptr<Mesh>& mesh() const;
+
 private:
   btBulletWorldImporter* mFileloader;
   std::shared_ptr<Mesh>  mMesh;

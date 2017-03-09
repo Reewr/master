@@ -173,3 +173,7 @@ std::vector<std::pair<std::string, SubMeshPhysics>> PhysicsMesh::getAll() {
 
   return meshes;
 }
+
+const std::shared_ptr<Mesh>& PhysicsMesh::mesh() const {
+  return mMesh;
+}
