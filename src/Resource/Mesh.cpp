@@ -342,7 +342,7 @@ SubMesh::SubMesh(Mesh*            model,
  *
  * @return
  */
-int SubMesh::index() {
+int SubMesh::index() const {
   return mIndex;
 }
 
@@ -351,7 +351,7 @@ int SubMesh::index() {
  *
  * @return
  */
-int SubMesh::startIndex() {
+int SubMesh::startIndex() const {
   return mStartIndex;
 }
 
@@ -360,7 +360,7 @@ int SubMesh::startIndex() {
  *
  * @return
  */
-int SubMesh::size() {
+int SubMesh::size() const {
   return mSize;
 }
 
@@ -370,7 +370,7 @@ int SubMesh::size() {
  *
  * @return
  */
-const mmm::mat4& SubMesh::transform() {
+const mmm::mat4& SubMesh::transform() const {
   return mTransform;
 }
 
@@ -383,7 +383,7 @@ const mmm::mat4& SubMesh::transform() {
  *
  * @return
  */
-const std::string& SubMesh::name() {
+const std::string& SubMesh::name() const {
   return mName;
 }
 

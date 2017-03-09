@@ -32,19 +32,19 @@ public:
           const mmm::mat4& transform = mmm::mat4::identity);
 
   // Returns the index of the SubMesh within the Mesh class
-  int index();
+  int index() const;
 
   // Returns the start index of its triangles
-  int startIndex();
+  int startIndex() const;
 
   // Returns the amount of vertices that this mesh contains
-  int size();
+  int size() const;
 
   // Returns the transformation of the mesh from its parent
-  const mmm::mat4& transform();
+  const mmm::mat4& transform() const;
 
   // Returns the name of the mesh, if it has one.
-  const std::string& name();
+  const std::string& name() const;
 
 private:
   int         mStartIndex;
