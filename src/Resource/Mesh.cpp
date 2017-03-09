@@ -274,7 +274,7 @@ SubMesh::SubMesh()
     , mSize(0)
     , mIndex(0)
     , mName("")
-    , mTransform(mmm::identity)
+    , mTransform(mmm::mat4::identity)
     , mParent(nullptr)
     , mTexture(nullptr) {}
 
