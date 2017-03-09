@@ -54,8 +54,8 @@ private:
   int         mSize;
   int         mIndex;
   std::string mName;
-
   mmm::mat4 mTransform;
+  Mesh* mParent;
 
   std::shared_ptr<Texture> mTexture;
 };

@@ -290,7 +290,8 @@ SubMesh::SubMesh(Mesh*            model,
     , mSize(0)
     , mIndex(model->numSubMeshes())
     , mName("")
-    , mTexture(nullptr) {
+    , mTexture(nullptr)
+    , mParent(model) {
   aiMatrix4x4 am = node->mTransformation;
   mTransform     = transform * mat4(am.a1,
                                 am.a2,
