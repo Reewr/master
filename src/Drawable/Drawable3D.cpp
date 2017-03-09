@@ -48,6 +48,9 @@ void Drawable3D::updateFromPhysics() {
                         0.0f,
                         0.0f,
                         1.0f);
+
+  for (auto& child : mChildren)
+    child->updateFromPhysics();
 }
 
 const mmm::vec3& Drawable3D::position() {
