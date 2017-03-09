@@ -21,33 +21,35 @@ Drawable3D::~Drawable3D() {}
 void Drawable3D::drawShadow(Framebuffer*, Camera*) {}
 
 void Drawable3D::updateFromPhysics() {
-  btTransform trans;
-  mBody->getMotionState()->getWorldTransform(trans);
+  if (hasPhysics()) {
+    btTransform trans;
+    mBody->getMotionState()->getWorldTransform(trans);
 
-  btVector3 origin      = trans.getOrigin();
-  mPosition             = vec3(origin.x(), origin.y(), origin.z());
-  btQuaternion rotation = trans.getRotation().normalized();
+    btVector3 origin      = trans.getOrigin();
+    mPosition             = vec3(origin.x(), origin.y(), origin.z());
+    btQuaternion rotation = trans.getRotation().normalized();
 
-  float qx  = rotation.getX();
-  float qy  = rotation.getY();
-  float qz  = rotation.getZ();
-  float qw  = rotation.getW();
-  mRotation = mmm::mat4(1.0f - 2.0f * qy * qy - 2.0f * qz * qz,
-                        2.0f * qx * qy - 2.0f * qz * qw,
-                        2.0f * qx * qz + 2.0f * qy * qw,
-                        0.0f,
-                        2.0f * qx * qy + 2.0f * qz * qw,
-                        1.0f - 2.0f * qx * qx - 2.0f * qz * qz,
-                        2.0f * qy * qz - 2.0f * qx * qw,
-                        0.0f,
-                        2.0f * qx * qz - 2.0f * qy * qw,
-                        2.0f * qy * qz + 2.0f * qx * qw,
-                        1.0f - 2.0f * qx * qx - 2.0f * qy * qy,
-                        0.0f,
-                        0.0f,
-                        0.0f,
-                        0.0f,
-                        1.0f);
+    float qx  = rotation.getX();
+    float qy  = rotation.getY();
+    float qz  = rotation.getZ();
+    float qw  = rotation.getW();
+    mRotation = mmm::mat4(1.0f - 2.0f * qy * qy - 2.0f * qz * qz,
+                          2.0f * qx * qy - 2.0f * qz * qw,
+                          2.0f * qx * qz + 2.0f * qy * qw,
+                          0.0f,
+                          2.0f * qx * qy + 2.0f * qz * qw,
+                          1.0f - 2.0f * qx * qx - 2.0f * qz * qz,
+                          2.0f * qy * qz - 2.0f * qx * qw,
+                          0.0f,
+                          2.0f * qx * qz - 2.0f * qy * qw,
+                          2.0f * qy * qz + 2.0f * qx * qw,
+                          1.0f - 2.0f * qx * qx - 2.0f * qy * qy,
+                          0.0f,
+                          0.0f,
+                          0.0f,
+                          0.0f,
+                          1.0f);
+  }
 
   for (auto& child : mChildren)
     child->updateFromPhysics();
