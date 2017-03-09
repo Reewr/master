@@ -269,7 +269,14 @@ void Mesh::unbindVertexArray() const {
   glBindVertexArray(0);
 }
 
-SubMesh::SubMesh() : mStartIndex(0), mSize(0), mIndex(0) {}
+SubMesh::SubMesh()
+    : mStartIndex(0)
+    , mSize(0)
+    , mIndex(0)
+    , mName("")
+    , mTransform(mmm::identity)
+    , mParent(nullptr)
+    , mTexture(nullptr) {}
 
 /**
  * @brief
@@ -290,8 +297,8 @@ SubMesh::SubMesh(Mesh*            model,
     , mSize(0)
     , mIndex(model->numSubMeshes())
     , mName("")
-    , mTexture(nullptr)
-    , mParent(model) {
+    , mParent(model)
+    , mTexture(nullptr) {
   aiMatrix4x4 am = node->mTransformation;
   mTransform     = transform * mat4(am.a1,
                                 am.a2,
