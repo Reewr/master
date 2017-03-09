@@ -36,7 +36,7 @@ World::~World() {
   removePickingConstraint();
 
   for (auto element : mElements)
-    mWorld->removeRigidBody(element->rigidBody());
+    removeObject(element);
 
   delete mWorld;
   delete mSolver;
@@ -61,6 +61,9 @@ void World::addObject(Drawable3D* element) {
 
   mWorld->addRigidBody(element->rigidBody());
   mElements.push_back(element);
+
+  for (auto& child : element->children())
+    addObject(child);
 }
 
 /**
@@ -74,8 +77,12 @@ void World::addObject(Drawable3D* element) {
 void World::removeObject(Drawable3D* element) {
   // remove them from the world first
   for (auto a : mElements) {
-    if (a == element && element != nullptr)
+    if (a == element && element != nullptr) {
       mWorld->removeRigidBody(a->rigidBody());
+
+      for (auto& child : a->children())
+        removeObject(child);
+    }
   }
 
   // then remove them from the list
