@@ -175,10 +175,10 @@ void World::input(Camera* camera, const Input::Event& event) {
     return;
   }
 
-  // if (event == Input::Event::Type::MouseMovement && mPickedBody) {
-  //   movePickedBody(camera->position(),
-  //                  camera->screenPointToRay(event.position()));
-  // }
+  if (event == Input::Event::Type::MouseMovement && mPickedBody) {
+    movePickedBody(camera->position(),
+                   camera->screenPointToRay(event.position()));
+  }
 }
 
 /**
