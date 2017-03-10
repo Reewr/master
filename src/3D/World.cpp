@@ -59,6 +59,12 @@ void World::addObject(Drawable3D* element) {
   if (element->hasPhysics()) {
     mWorld->addRigidBody(element->rigidBody());
     mElements.push_back(element);
+
+    for (auto& c : element->constraints()) {
+      if (&c->getRigidBodyA() == element->rigidBody()) {
+        mWorld->addConstraint(c);
+      }
+    }
   }
 
   for (auto& child : element->children())
@@ -78,8 +84,15 @@ void World::removeObject(Drawable3D* element) {
   for (auto a : mElements) {
     if (a == element && element != nullptr) {
 
-      if (a->hasPhysics())
+      if (a->hasPhysics()) {
         mWorld->removeRigidBody(a->rigidBody());
+
+        for(auto& c : a->constraints()) {
+          if (&c->getRigidBodyA() == a->rigidBody()) {
+            mWorld->removeConstraint(c);
+          }
+        }
+      }
 
       for (auto& child : a->children())
         removeObject(child);
