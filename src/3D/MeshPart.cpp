@@ -25,7 +25,8 @@ MeshPart::MeshPart(std::shared_ptr<Program>& program,
   mmm::vec3 p = mmm::dropRows<3>(t).xyz;
   btVector3 pos = btVector3(p.x, p.y, p.z);
 
-  mMotion = new btDefaultMotionState(btTransform(mat, pos));
+  mConstraints = subMesh.constraints;
+  mMotion      = new btDefaultMotionState(btTransform(mat, pos));
   mBody->setMotionState(mMotion);
 
   mProgram = program;
