@@ -63,6 +63,20 @@ bool PhysicsMesh::load(ResourceManager* manager) {
     }
   }
 
+  for (int i = 0; i < mFileloader->getNumConstraints(); ++i) {
+    btTypedConstraint* c = mFileloader->getConstraintByIndex(i);
+    const std::string& fromConstraint = findNameByPointer(&c->getRigidBodyA());
+    const std::string& toConstraint   = findNameByPointer(&c->getRigidBodyB());
+
+    mConstraints[toConstraint].push_back(c);
+    mConstraints[fromConstraint].push_back(c);
+
+    mLog->debug("Constraint: {}, fromObject: {}, toObject: {}",
+                i,
+                fromConstraint,
+                toConstraint);
+  }
+
   // time to load the mesh for the physics
   size_t      position = mName.find("::");
 
@@ -126,10 +140,13 @@ std::vector<std::string> PhysicsMesh::names() {
  * @return
  */
 SubMeshPhysics PhysicsMesh::findByName(const std::string& name) {
-  SubMeshPhysics s = { nullptr, nullptr, name };
+  SubMeshPhysics s = { nullptr, nullptr, name, {} };
 
   if (mBodies.count(name))
     s.body = mBodies[name];
+
+  if (mConstraints.count(name))
+    s.constraints = mConstraints[name];
 
   size_t index = mMesh->findMeshByName(name);
 

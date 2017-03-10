@@ -14,11 +14,17 @@ class Mesh;
 
 class btRigidBody;
 class btBulletWorldImporter;
+class btTypedConstraint;
 
+/**
+ * @brief
+ *   A SubMesh Physics
+ */
 struct SubMeshPhysics {
-  const SubMesh* subMesh;
-  btRigidBody*   body;
-  std::string    name;
+  const SubMesh*     subMesh;
+  const btRigidBody* body;
+  std::string name;
+  std::vector<const btTypedConstraint*> constraints;
 };
 
 class PhysicsMesh : public Resource, public Logging::Log {
@@ -55,5 +61,7 @@ private:
 
   btBulletWorldImporter* mFileloader;
   std::shared_ptr<Mesh>  mMesh;
+
+  std::map<std::string, std::vector<btTypedConstraint*>> mConstraints;
   std::map<std::string, btRigidBody*> mBodies;
 };
