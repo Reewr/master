@@ -22,9 +22,9 @@ class btTypedConstraint;
  */
 struct SubMeshPhysics {
   const SubMesh*     subMesh;
-  const btRigidBody* body;
+  btRigidBody* body;
   std::string name;
-  std::vector<const btTypedConstraint*> constraints;
+  std::vector<btTypedConstraint*> constraints;
 };
 
 class PhysicsMesh : public Resource, public Logging::Log {
