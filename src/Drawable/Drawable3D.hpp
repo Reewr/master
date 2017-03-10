@@ -3,6 +3,7 @@
 class btRigidBody;
 class btCollisionShape;
 class btMotionState;
+class btTypedConstraint;
 
 class Asset;
 class Camera;
@@ -42,6 +43,10 @@ public:
 
   const std::vector<Drawable3D*>& children();
 
+  void addConstraint(btTypedConstraint* constraint);
+
+  const std::vector<btTypedConstraint*> constraints();
+
 protected:
   Drawable3D();
 
@@ -51,5 +56,6 @@ protected:
   btCollisionShape*        mShape;
   btMotionState*           mMotion;
   btRigidBody*             mBody;
+  std::vector<btTypedConstraint*> mConstraints;
   std::vector<Drawable3D*> mChildren;
 };

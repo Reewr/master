@@ -70,3 +70,11 @@ btRigidBody* Drawable3D::rigidBody() {
 const std::vector<Drawable3D*>& Drawable3D::children() {
   return mChildren;
 }
+
+void Drawable3D::addConstraint(btTypedConstraint* constraint) {
+  mConstraints.push_back(constraint);
+}
+
+const std::vector<btTypedConstraint*> Drawable3D::constraints() {
+  return mConstraints;
+}
