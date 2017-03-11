@@ -58,7 +58,7 @@ const mat4& Camera::updateViewMatrix() {
                        mmm::rotate_x(mVertRotation) * vec4(0, 1, 0, 0));
 
   mPosition = cameraEye;
-  mView = mmm::lookAt(cameraEye, mTarget, cameraUp);
+  mView = mmm::lookAt_r(cameraEye, mTarget, cameraUp);
 
   return mView;
 }
@@ -71,7 +71,7 @@ const mat4& Camera::updateViewMatrix() {
  * @return
  */
 mat4 Camera::updateProjectionMatrix() const {
-  return mmm::perspective<float>(mFieldOfView,
+  return mmm::perspective_r<float>(mFieldOfView,
                                  mAsset->cfg()->graphics.aspect,
                                  mMinViewDistance,
                                  mAsset->cfg()->graphics.viewDistance);
