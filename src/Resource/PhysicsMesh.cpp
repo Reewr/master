@@ -95,6 +95,7 @@ bool PhysicsMesh::load(ResourceManager* manager) {
   std::string fullName = "Mesh::" + meshName;
   mMesh                = manager->get<Mesh>(fullName);
 
+  setLoaded(true);
   return true;
 }
 
@@ -113,6 +114,7 @@ void PhysicsMesh::unload() {
 
   mFileloader->deleteAllData();
   mBodies.clear();
+  setLoaded(false);
 }
 
 /**
