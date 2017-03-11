@@ -62,7 +62,7 @@ std::string toString(SpiderPart p) {
 Spider::Spider(Asset* asset) : Logging::Log("Spider") {
   ResourceManager* r = asset->rManager();
   mProgram           = r->get<Program>("Program::Model");
-  mMesh              = r->get<PhysicsMesh>("PhysicsMesh::Box");
+  mMesh              = r->get<PhysicsMesh>("PhysicsMesh::Spider");
   mElements          = mMesh->createCopyAll();
 
   for (auto& mesh : mElements->meshes) {
