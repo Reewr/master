@@ -22,16 +22,16 @@ class btMotionState;
  *   A SubMesh Physics
  */
 struct SubMeshPhysics {
-  const SubMesh* subMesh;
-  btRigidBody*   body;
-  std::string    name;
+  const SubMesh*                  subMesh;
+  btRigidBody*                    body;
+  std::string                     name;
   std::vector<btTypedConstraint*> constraints;
 };
 
 struct PhysicsElements {
-  std::map<std::string, const SubMesh*> meshes;
-  std::map<std::string, btRigidBody*> bodies;
-  std::map<std::string, btMotionState*> motions;
+  std::map<std::string, const SubMesh*>                  meshes;
+  std::map<std::string, btRigidBody*>                    bodies;
+  std::map<std::string, btMotionState*>                  motions;
   std::map<std::string, std::vector<btTypedConstraint*>> constraints;
 };
 
@@ -85,8 +85,8 @@ private:
   std::shared_ptr<Mesh>  mMesh;
 
   std::map<std::string, std::vector<btTypedConstraint*>> mConstraints;
-  std::map<std::string, btRigidBody*> mBodies;
-  std::map<btRigidBody*, std::string> mNames;
+  std::map<std::string, btRigidBody*>                    mBodies;
+  std::map<btRigidBody*, std::string>                    mNames;
 
   std::vector<PhysicsElements> mCopies;
 };

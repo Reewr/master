@@ -39,8 +39,7 @@ Mesh::~Mesh() {
 bool Mesh::load(ResourceManager* manager) {
   Assimp::Importer importer;
   const aiScene*   scene =
-    importer.ReadFile(filename().c_str(),
-                      aiProcess_Triangulate
+    importer.ReadFile(filename().c_str(), aiProcess_Triangulate
                       // aiProcess_OptimizeGraph |
                       //   aiProcess_OptimizeMeshes
                       // aiProcess_CalcTangentSpace |

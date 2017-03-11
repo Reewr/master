@@ -1,8 +1,8 @@
 #include "World.hpp"
 
-#include "../OpenGLHeaders.hpp"
 #include "../Drawable/Drawable3D.hpp"
 #include "../Input/Event.hpp"
+#include "../OpenGLHeaders.hpp"
 #include "Camera.hpp"
 #include <algorithm>
 #include <btBulletDynamicsCommon.h>
@@ -28,7 +28,8 @@ World::World(const vec3& gravity)
   mPhase      = new btDbvtBroadphase();
   mSolver     = new btSequentialImpulseConstraintSolver;
 
-  mWorld = new btDiscreteDynamicsWorld(mDispatcher, mPhase, mSolver, mCollision);
+  mWorld =
+    new btDiscreteDynamicsWorld(mDispatcher, mPhase, mSolver, mCollision);
   mWorld->setGravity(btVector3(gravity.x, gravity.y, gravity.z));
 }
 
@@ -90,7 +91,7 @@ void World::removeObject(Drawable3D* element) {
       if (a->hasPhysics()) {
         mWorld->removeRigidBody(a->rigidBody());
 
-        for(auto& c : a->constraints()) {
+        for (auto& c : a->constraints()) {
           if (&c->getRigidBodyA() == a->rigidBody()) {
             mWorld->removeConstraint(c);
           }
@@ -169,7 +170,8 @@ void World::input(Camera* camera, const Input::Event& event) {
 
     if (hit) {
       event.stopPropgation();
-      mLog->debug("Hit an object: {}", mPickedBody == nullptr ? "nullptr" : "not nullptr");
+      mLog->debug("Hit an object: {}",
+                  mPickedBody == nullptr ? "nullptr" : "not nullptr");
     }
 
     return;
@@ -211,7 +213,7 @@ bool World::pickBody(const mmm::vec3& rayFromWorld,
   if (!rayCallback.hasHit())
     return false;
 
-  btVector3 pickPos = rayCallback.m_hitPointWorld;
+  btVector3    pickPos = rayCallback.m_hitPointWorld;
   btRigidBody* body =
     (btRigidBody*) btRigidBody::upcast(rayCallback.m_collisionObject);
 
@@ -226,15 +228,15 @@ bool World::pickBody(const mmm::vec3& rayFromWorld,
     mPickedConstraint    = new btPoint2PointConstraint(*body, localPivot);
     mWorld->addConstraint(mPickedConstraint, true);
 
-    btScalar mousePickClamping = 30.0f;
+    btScalar mousePickClamping                  = 30.0f;
     mPickedConstraint->m_setting.m_impulseClamp = mousePickClamping;
-    mPickedConstraint->m_setting.m_tau = 0.01f;
+    mPickedConstraint->m_setting.m_tau          = 0.01f;
   } else if (body) {
     mLog->debug("Hit static object");
   }
 
-  mOldPickingPos = rayToWorld;
-  mHitPos = mmm::vec3(pickPos.x(), pickPos.y(), pickPos.z());
+  mOldPickingPos      = rayToWorld;
+  mHitPos             = mmm::vec3(pickPos.x(), pickPos.y(), pickPos.z());
   mOldPickingDistance = mmm::length(mHitPos - rayFromWorld);
 
   return true;

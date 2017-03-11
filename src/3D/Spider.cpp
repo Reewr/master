@@ -4,8 +4,8 @@
 
 #include "../3D/Camera.hpp"
 #include "../GLSL/Program.hpp"
-#include "../Resource/PhysicsMesh.hpp"
 #include "../Resource/Mesh.hpp"
+#include "../Resource/PhysicsMesh.hpp"
 #include "../Resource/ResourceManager.hpp"
 #include "../Utils/Asset.hpp"
 #include "MeshPart.hpp"
@@ -59,21 +59,20 @@ std::string toString(SpiderPart p) {
   }
 }
 
-Spider::Spider(Asset* asset)
-  : Logging::Log("Spider") {
+Spider::Spider(Asset* asset) : Logging::Log("Spider") {
   ResourceManager* r = asset->rManager();
-  mProgram = r->get<Program>("Program::Model");
-  mMesh = r->get<PhysicsMesh>("PhysicsMesh::Box");
-  mElements = mMesh->createCopyAll();
+  mProgram           = r->get<Program>("Program::Model");
+  mMesh              = r->get<PhysicsMesh>("PhysicsMesh::Box");
+  mElements          = mMesh->createCopyAll();
 
-  for(auto& mesh : mElements->meshes) {
+  for (auto& mesh : mElements->meshes) {
     mLog->debug("Adding MeshPart: {}", mesh.first);
     mChildren.push_back(new MeshPart(mProgram,
                                      mesh.second,
                                      mElements->bodies[mesh.first],
                                      mElements->motions[mesh.first]));
 
-    for(auto& c : mElements->constraints[mesh.first]) {
+    for (auto& c : mElements->constraints[mesh.first]) {
       mChildren.back()->addConstraint(c);
     }
   }
@@ -85,7 +84,7 @@ Spider::Spider(Asset* asset)
 }
 
 Spider::~Spider() {
-  for(auto& c : mChildren)
+  for (auto& c : mChildren)
     delete c;
 
   mMesh->deleteCopy(mElements);
@@ -106,7 +105,7 @@ void Spider::draw(Camera* c) {
   c->setLightVPUniforms(mProgram, "light");
 
   mMesh->mesh()->bindVertexArray();
-  for(auto& child : mChildren)
+  for (auto& child : mChildren)
     child->draw(c);
   mMesh->mesh()->unbindVertexArray();
 }

@@ -32,7 +32,7 @@ public:
   Camera(Asset* a);
 
   const mmm::mat4& updateViewMatrix();
-  mmm::mat4 updateProjectionMatrix() const;
+  mmm::mat4        updateProjectionMatrix() const;
 
   void setLightVPUniforms(std::shared_ptr<Program> program,
                           const std::string&       name = "light");

@@ -67,7 +67,7 @@ bool PhysicsMesh::load(ResourceManager* manager) {
   }
 
   for (int i = 0; i < mFileloader->getNumConstraints(); ++i) {
-    btTypedConstraint* c = mFileloader->getConstraintByIndex(i);
+    btTypedConstraint* c              = mFileloader->getConstraintByIndex(i);
     const std::string& fromConstraint = findNameByPointer(&c->getRigidBodyA());
     const std::string& toConstraint   = findNameByPointer(&c->getRigidBodyB());
 
@@ -114,8 +114,8 @@ void PhysicsMesh::unload() {
 
   for (auto& storedCopy : mCopies) {
     // Delete constraints first
-    for(auto& el : storedCopy.constraints) {
-      for(auto& innerEl : el.second) {
+    for (auto& el : storedCopy.constraints) {
+      for (auto& innerEl : el.second) {
         if (storedCopy.bodies[el.first] == &innerEl->getRigidBodyA()) {
           delete innerEl;
           innerEl = nullptr;
@@ -126,10 +126,10 @@ void PhysicsMesh::unload() {
     }
 
     // Followed by all rigidBodies
-    for(auto& el : storedCopy.bodies)
+    for (auto& el : storedCopy.bodies)
       delete el.second;
 
-    for(auto& el : storedCopy.motions)
+    for (auto& el : storedCopy.motions)
       delete el.second;
 
 
@@ -140,7 +140,7 @@ void PhysicsMesh::unload() {
     storedCopy.constraints.clear();
   }
 
-  for(auto& a : mConstraints)
+  for (auto& a : mConstraints)
     a.second.clear();
 
   mCopies.clear();
@@ -208,12 +208,12 @@ SubMeshPhysics PhysicsMesh::findByName(const std::string& name) {
  * @return
  */
 PhysicsElements* PhysicsMesh::createCopyAll() {
-  auto meshes = getAll();
+  auto            meshes = getAll();
   PhysicsElements elements;
 
   // First create copies of the rigid bodies together with new
   // motion state based on the internal variables of the rigid bodies
-  for(auto& mesh : meshes) {
+  for (auto& mesh : meshes) {
     btRigidBody*      mainBody = mesh.second.body;
     btCollisionShape* shape    = mainBody->getCollisionShape();
 
@@ -240,7 +240,7 @@ PhysicsElements* PhysicsMesh::createCopyAll() {
   // Since different constraints may contain different variables, they have to
   // be handled seperately
   for (int i = 0; i < mFileloader->getNumConstraints(); ++i) {
-    btTypedConstraint* c = mFileloader->getConstraintByIndex(i);
+    btTypedConstraint* c              = mFileloader->getConstraintByIndex(i);
     const std::string& fromConstraint = findNameByPointer(&c->getRigidBodyA());
     const std::string& toConstraint   = findNameByPointer(&c->getRigidBodyB());
 
@@ -255,9 +255,9 @@ PhysicsElements* PhysicsMesh::createCopyAll() {
 
     btTypedConstraint* constraintCopy = nullptr;
 
-    switch(c->getConstraintType()) {
+    switch (c->getConstraintType()) {
       case btTypedConstraintType::HINGE_CONSTRAINT_TYPE: {
-        btHingeConstraint* h = dynamic_cast<btHingeConstraint*>(c);
+        btHingeConstraint* h      = dynamic_cast<btHingeConstraint*>(c);
         const btTransform& aFrame = h->getAFrame();
         const btTransform& bFrame = h->getBFrame();
         btHingeConstraint* n = new btHingeConstraint(*a, *b, aFrame, bFrame);
@@ -297,8 +297,8 @@ void PhysicsMesh::deleteCopy(PhysicsElements* copy) {
     if (&storedCopy == copy) {
 
       // Delete constraints first
-      for(auto& el : storedCopy.constraints) {
-        for(auto& innerEl : el.second) {
+      for (auto& el : storedCopy.constraints) {
+        for (auto& innerEl : el.second) {
           if (storedCopy.bodies[el.first] == &innerEl->getRigidBodyA()) {
             delete innerEl;
             innerEl = nullptr;
@@ -309,10 +309,10 @@ void PhysicsMesh::deleteCopy(PhysicsElements* copy) {
       }
 
       // Followed by all rigidBodies
-      for(auto& el : storedCopy.bodies)
+      for (auto& el : storedCopy.bodies)
         delete el.second;
 
-      for(auto& el : storedCopy.motions)
+      for (auto& el : storedCopy.motions)
         delete el.second;
 
 

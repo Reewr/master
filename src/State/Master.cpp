@@ -15,9 +15,9 @@
 #include "../Input/Event.hpp"
 #include "../Input/Input.hpp"
 #include "../Lua/Lua.hpp"
+#include "../Resource/PhysicsMesh.hpp"
 #include "../Resource/ResourceManager.hpp"
 #include "../Resource/Texture.hpp"
-#include "../Resource/PhysicsMesh.hpp"
 #include "../Shape/GL/Rectangle.hpp"
 #include "../Utils/Asset.hpp"
 #include "../Utils/CFG.hpp"
@@ -46,7 +46,7 @@ Master::Master(Asset* a) : mAsset(a) {
     ->get<Program>("Program::Model")
     ->setUniform("shadowSamples", c->graphics.shadowSamples);
 
-  mDrawable3D = { new Terrain(), new Cube(), new Spider(mAsset)};
+  mDrawable3D = { new Terrain(), new Cube(), new Spider(mAsset) };
 
   for (auto d : mDrawable3D)
     mWorld->addObject(d);

@@ -49,7 +49,8 @@ public:
 private:
   bool pickBody(const mmm::vec3& rayFromWorld, const mmm::vec3& rayToWorld);
 
-  bool movePickedBody(const mmm::vec3& rayFromWorld, const mmm::vec3& rayToWorld);
+  bool movePickedBody(const mmm::vec3& rayFromWorld,
+                      const mmm::vec3& rayToWorld);
 
   void removePickingConstraint();
 
@@ -60,13 +61,13 @@ private:
   btDiscreteDynamicsWorld*             mWorld;
 
   // Mouse pickup variables
-  bool mHasMousePickup;
-  btRigidBody* mPickedBody;
+  bool                     mHasMousePickup;
+  btRigidBody*             mPickedBody;
   btPoint2PointConstraint* mPickedConstraint;
-  mmm::vec3 mOldPickingPos;
-  mmm::vec3 mHitPos;
-  float mOldPickingDistance;
-  int mSavedState;
+  mmm::vec3                mOldPickingPos;
+  mmm::vec3                mHitPos;
+  float                    mOldPickingDistance;
+  int                      mSavedState;
 
   std::vector<Drawable3D*> mElements;
 };

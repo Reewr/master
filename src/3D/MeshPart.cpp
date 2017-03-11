@@ -1,8 +1,8 @@
 #include "MeshPart.hpp"
 
+#include "../GLSL/Program.hpp"
 #include "../Resource/Mesh.hpp"
 #include "../Resource/PhysicsMesh.hpp"
-#include "../GLSL/Program.hpp"
 
 #include <btBulletDynamicsCommon.h>
 
@@ -11,23 +11,22 @@ mmm::vec3 tovec(const btVector3& m) {
 }
 
 MeshPart::MeshPart(std::shared_ptr<Program>& program,
-                   const SubMesh* subMesh,
-                   btRigidBody* body,
-                   btMotionState* motion)
-    : Logging::Log("MeshPart")
-    , mMesh(subMesh)
-    , mProgram(program) {
+                   const SubMesh*            subMesh,
+                   btRigidBody*              body,
+                   btMotionState*            motion)
+    : Logging::Log("MeshPart"), mMesh(subMesh), mProgram(program) {
   mMotion = motion;
   mBody   = body;
   mShape  = mBody->getCollisionShape();
 
-  mLog->debug("{}: Gravity: {}, Mass: {}, Shape: {}, LocalInertia: {}, Constraints: {}",
-              subMesh->name(),
-              tovec(mBody->getGravity()),
-              mBody->getInvMass(),
-              mShape->getName(),
-              tovec(mBody->getLocalInertia()),
-              mBody->getNumConstraintRefs());
+  mLog->debug(
+    "{}: Gravity: {}, Mass: {}, Shape: {}, LocalInertia: {}, Constraints: {}",
+    subMesh->name(),
+    tovec(mBody->getGravity()),
+    mBody->getInvMass(),
+    mShape->getName(),
+    tovec(mBody->getLocalInertia()),
+    mBody->getNumConstraintRefs());
 }
 
 MeshPart::~MeshPart() {}

@@ -10,9 +10,9 @@ class Program;
 class MeshPart : public Drawable3D, public Logging::Log {
 public:
   MeshPart(std::shared_ptr<Program>& program,
-           const SubMesh* subMesh,
-           btRigidBody* body,
-           btMotionState* motion);
+           const SubMesh*            subMesh,
+           btRigidBody*              body,
+           btMotionState*            motion);
   ~MeshPart();
 
   // Update the element, physics etc
@@ -27,6 +27,6 @@ public:
   void input(const Input::Event& event);
 
 private:
-  const SubMesh* mMesh;
+  const SubMesh*           mMesh;
   std::shared_ptr<Program> mProgram;
 };
