@@ -367,7 +367,7 @@ SubMesh::SubMesh(Mesh*            model,
 
   mSize = model->numVertices() - mStartIndex;
 
-  // recursively parse childe nodes
+  // recursively parse child nodes
   for (unsigned int i = 0; i < node->mNumChildren; ++i) {
     model->addSubMesh(
       SubMesh(model, manager, scene, node->mChildren[i], mTransform));
