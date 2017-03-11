@@ -55,7 +55,7 @@ bool Mesh::load(ResourceManager* manager) {
     return false;
   }
 
-  addSubMesh(SubMesh(this, manager, scene, scene->mRootNode));
+  addSubMesh(SubMesh(this, manager, scene, scene->mRootNode, mmm::mat4::identity));
 
   mLog->debug("Loaded '{}': {} vertices", filename(), numVertices());
 
@@ -295,11 +295,12 @@ SubMesh::SubMesh(Mesh*            model,
                  ResourceManager* manager,
                  const aiScene*   scene,
                  const aiNode*    node,
-                 const mmm::mat4& transform)
+                 mmm::mat4        transform)
     : mStartIndex(model->numVertices())
     , mSize(0)
     , mIndex(model->numSubMeshes())
     , mName("")
+    , mTransform(mmm::mat4::identity)
     , mParent(model)
     , mTexture(nullptr) {
   aiMatrix4x4 am = node->mTransformation;

@@ -29,7 +29,7 @@ public:
           ResourceManager* r,
           const aiScene*   scene,
           const aiNode*    node,
-          const mmm::mat4& transform = mmm::mat4::identity);
+          mmm::mat4        transform);
 
   // Returns the index of the SubMesh within the Mesh class
   int index() const;
