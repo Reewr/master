@@ -46,7 +46,7 @@ Master::Master(Asset* a) : mAsset(a) {
     ->get<Program>("Program::Model")
     ->setUniform("shadowSamples", c->graphics.shadowSamples);
 
-  mDrawable3D = { new Terrain(), new Cube()};
+  mDrawable3D = { new Terrain(), new Cube(), new Spider(mAsset)};
 
   for (auto d : mDrawable3D)
     mWorld->addObject(d);
@@ -63,6 +63,11 @@ Master::Master(Asset* a) : mAsset(a) {
       mDrawable3D.push_back(new Cube(size));
       mWorld->addObject(mDrawable3D.back());
     }
+  });
+
+  mLua->engine.set_function("addSpider", [&]() {
+    mDrawable3D.push_back(new Spider(mAsset));
+    mWorld->addObject(mDrawable3D.back());
   });
 
   mLua->engine.set_function("clearCubes", [&]() {
