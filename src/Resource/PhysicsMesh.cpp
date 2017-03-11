@@ -9,7 +9,10 @@ using RigidBodyInfo = btRigidBody::btRigidBodyConstructionInfo;
 
 PhysicsMesh::PhysicsMesh()
     : Logging::Log("PhysicsMesh"), mFileloader(nullptr), mMesh(nullptr) {}
-PhysicsMesh::~PhysicsMesh() {}
+
+PhysicsMesh::~PhysicsMesh() {
+  unload();
+}
 
 std::string PhysicsMesh::findNameByPointer(btRigidBody* body) {
   if (mNames.count(body))
