@@ -116,7 +116,7 @@ void PhysicsMesh::unload() {
     // Delete constraints first
     for(auto& el : storedCopy.constraints) {
       for(auto& innerEl : el.second) {
-        if (innerEl != nullptr) {
+        if (storedCopy.bodies[el.first] == &innerEl->getRigidBodyA()) {
           delete innerEl;
           innerEl = nullptr;
         }
@@ -299,7 +299,7 @@ void PhysicsMesh::deleteCopy(PhysicsElements* copy) {
       // Delete constraints first
       for(auto& el : storedCopy.constraints) {
         for(auto& innerEl : el.second) {
-          if (innerEl != nullptr) {
+          if (storedCopy.bodies[el.first] == &innerEl->getRigidBodyA()) {
             delete innerEl;
             innerEl = nullptr;
           }
