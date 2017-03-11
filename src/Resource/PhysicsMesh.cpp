@@ -76,7 +76,7 @@ bool PhysicsMesh::load(ResourceManager* manager) {
   }
 
   // time to load the mesh for the physics
-  size_t      position = mName.find("::");
+  size_t position = mName.find("::");
 
   if (position == std::string::npos) {
     mLog->error("Name does not contain '::', {}", mName);
