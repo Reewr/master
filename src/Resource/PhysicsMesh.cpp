@@ -257,6 +257,9 @@ PhysicsElements* PhysicsMesh::createCopyAll() {
     btTypedConstraint* constraintCopy = nullptr;
 
     switch (c->getConstraintType()) {
+      case btTypedConstraintType::POINT2POINT_CONSTRAINT_TYPE:
+        mLog->error("No duplication handler for Point2Point constraint");
+        break;
       case btTypedConstraintType::HINGE_CONSTRAINT_TYPE: {
         btHingeConstraint* h      = dynamic_cast<btHingeConstraint*>(c);
         const btTransform& aFrame = h->getAFrame();
@@ -264,9 +267,34 @@ PhysicsElements* PhysicsMesh::createCopyAll() {
         btHingeConstraint* n = new btHingeConstraint(*a, *b, aFrame, bFrame);
 
         constraintCopy = n;
+        break;
       }
-      default:
-        mLog->error("Cannot duplicate constraint: {}", c->getConstraintType());
+      case btTypedConstraintType::CONETWIST_CONSTRAINT_TYPE:
+        mLog->error("No duplication handler for ConeTwist constraint");
+        break;
+      case btTypedConstraintType::D6_CONSTRAINT_TYPE:
+        mLog->error("No duplication handler for D6 constraint");
+        break;
+      case btTypedConstraintType::SLIDER_CONSTRAINT_TYPE:
+        mLog->error("No duplication handler for Slider constraint");
+        break;
+      case btTypedConstraintType::CONTACT_CONSTRAINT_TYPE:
+        mLog->error("No duplication handler for Contact constraint");
+        break;
+      case btTypedConstraintType::D6_SPRING_CONSTRAINT_TYPE:
+        mLog->error("No duplication handler for D6Spring constraint");
+        break;
+      case btTypedConstraintType::GEAR_CONSTRAINT_TYPE:
+        mLog->error("No duplication handler for Gear constraint");
+        break;
+      case btTypedConstraintType::FIXED_CONSTRAINT_TYPE:
+        mLog->error("No duplication handler for Gear constraint");
+        break;
+      case btTypedConstraintType::D6_SPRING_2_CONSTRAINT_TYPE:
+        mLog->error("No duplication handler for D6Spring2 constraint");
+        break;
+      case btTypedConstraintType::MAX_CONSTRAINT_TYPE:
+        mLog->error("No duplication handler for Max constraint");
         break;
     }
 
