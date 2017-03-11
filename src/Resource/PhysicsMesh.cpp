@@ -112,8 +112,43 @@ void PhysicsMesh::unload() {
   if (!loaded())
     return;
 
-  mFileloader->deleteAllData();
+  for (auto& storedCopy : mCopies) {
+    // Delete constraints first
+    for(auto& el : storedCopy.constraints) {
+      for(auto& innerEl : el.second) {
+        if (innerEl != nullptr) {
+          delete innerEl;
+          innerEl = nullptr;
+        }
+      }
+
+      el.second.clear();
+    }
+
+    // Followed by all rigidBodies
+    for(auto& el : storedCopy.bodies)
+      delete el.second;
+
+    for(auto& el : storedCopy.motions)
+      delete el.second;
+
+
+    // Now that all copies have been deleted, clear the maps
+    // of strings.
+    storedCopy.bodies.clear();
+    storedCopy.motions.clear();
+    storedCopy.constraints.clear();
+  }
+
+  for(auto& a : mConstraints)
+    a.second.clear();
+
+  mCopies.clear();
+  mConstraints.clear();
   mBodies.clear();
+  mNames.clear();
+  mFileloader->deleteAllData();
+
   setLoaded(false);
 }
 
