@@ -85,6 +85,9 @@ Spider::Spider(Asset* asset)
 }
 
 Spider::~Spider() {
+  for(auto& c : mChildren)
+    delete c;
+
   mMesh->deleteCopy(mElements);
 }
 
