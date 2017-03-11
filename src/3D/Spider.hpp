@@ -11,32 +11,32 @@ class PhysicsMesh;
 struct PhysicsElements;
 class Program;
 
-enum SpiderPart {
-  Abdomen,
-  AbdomenInner,
-  Coxa,
-  Femur,
-  FemurTibiaInner,
-  Head,
-  HeadDisk,
-  HeadInner,
-  Hip,
-  Joint,
-  JointRot,
-  Metatarsus,
-  Neck,
-  Patella,
-  PatellaInner,
-  SternumBack,
-  SternumFront,
-  TarsusBot,
-  TarsusTop,
-  Thorax,
-  Tibia,
-  Trochanter
-};
+// enum SpiderPart {
+//   Abdomen,
+//   AbdomenInner,
+//   Coxa,
+//   Femur,
+//   FemurTibiaInner,
+//   Head,
+//   HeadDisk,
+//   HeadInner,
+//   Hip,
+//   Joint,
+//   JointRot,
+//   Metatarsus,
+//   Neck,
+//   Patella,
+//   PatellaInner,
+//   SternumBack,
+//   SternumFront,
+//   TarsusBot,
+//   TarsusTop,
+//   Thorax,
+//   Tibia,
+//   Trochanter
+// };
 
-std::string toString(SpiderPart);
+// std::string toString(SpiderPart);
 
 class Spider : public Drawable3D, public Logging::Log {
 public:
