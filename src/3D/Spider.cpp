@@ -5,8 +5,10 @@
 #include "../3D/Camera.hpp"
 #include "../GLSL/Program.hpp"
 #include "../Resource/PhysicsMesh.hpp"
+#include "../Resource/Mesh.hpp"
 #include "../Resource/ResourceManager.hpp"
 #include "../Utils/Asset.hpp"
+#include "MeshPart.hpp"
 
 std::string toString(SpiderPart p) {
   switch (p) {
@@ -57,44 +59,53 @@ std::string toString(SpiderPart p) {
   }
 }
 
-Spider::Spider(Asset* asset) : Logging::Log("Spider") {
+Spider::Spider(Asset* asset)
+  : Logging::Log("Spider") {
   ResourceManager* r = asset->rManager();
-
-  mMotion = new btDefaultMotionState(
-    btTransform(btQuaternion(0, 0, 0, 1), btVector3(0.f, 0.f, 0.f)));
-
-  btScalar mass = 1000;
-
-  btVector3 fallInertia(0, 0, 0);
-  mShape->calculateLocalInertia(mass, fallInertia);
-  btRigidBody::btRigidBodyConstructionInfo consInfo(mass,
-                                                    mMotion,
-                                                    mShape,
-                                                    fallInertia);
-  mBody    = new btRigidBody(consInfo);
   mProgram = r->get<Program>("Program::Model");
+  mMesh = r->get<PhysicsMesh>("PhysicsMesh::Box");
+  mElements = mMesh->createCopyAll();
+
+  for(auto& mesh : mElements->meshes) {
+    mLog->debug("Adding MeshPart: {}", mesh.first);
+    mChildren.push_back(new MeshPart(mProgram,
+                                     mesh.second,
+                                     mElements->bodies[mesh.first],
+                                     mElements->motions[mesh.first]));
+
+    for(auto& c : mElements->constraints[mesh.first]) {
+      mChildren.back()->addConstraint(c);
+    }
+  }
+
+  // for (auto subMesh : allSubmeshes) {
+  //   mLog->debug("Adding MeshPart: {}", subMesh.first);
+  //   mChildren.push_back(new MeshPart(mProgram, subMesh.second));
+  // }
 }
 
 Spider::~Spider() {
-  delete mBody;
-  delete mShape;
-  delete mMotion;
+  mMesh->deleteCopy(mElements);
 }
 
 void Spider::update(float) {}
 
 void Spider::drawShadow(Framebuffer*, Camera*) {}
-void Spider::draw(Camera*) {
-  // mProgram->bind();
+void Spider::draw(Camera* c) {
+  mProgram->bind();
 
   // mmm::mat4 model = mmm::translate(mPosition) * mRotation * mScale;
 
-  // mProgram->setUniform("model", model);
-  // mProgram->setUniform("view", c->view());
-  // mProgram->setUniform("proj", c->projection());
+  mProgram->setUniform("view", c->view());
+  mProgram->setUniform("proj", c->projection());
 
-  // mProgram->setUniform("dir", c->light().direction);
-  // c->setLightVPUniforms(mProgram, "light");
+  mProgram->setUniform("dir", c->light().direction);
+  c->setLightVPUniforms(mProgram, "light");
+
+  mMesh->mesh()->bindVertexArray();
+  for(auto& child : mChildren)
+    child->draw(c);
+  mMesh->mesh()->unbindVertexArray();
 }
 
 void Spider::input(const Input::Event&) {}

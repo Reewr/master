@@ -8,6 +8,7 @@
 
 class Asset;
 class PhysicsMesh;
+class PhysicsElements;
 class Program;
 
 enum SpiderPart {
@@ -52,5 +53,6 @@ public:
 
 private:
   std::shared_ptr<PhysicsMesh> mMesh;
+  PhysicsElements*             mElements;
   std::shared_ptr<Program>     mProgram;
 };
