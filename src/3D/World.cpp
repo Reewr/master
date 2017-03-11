@@ -59,10 +59,15 @@ World::~World() {
 void World::addObject(Drawable3D* element) {
   mLog->debug("Adding element with {} children", element->children().size());
   if (element->hasPhysics()) {
-    mWorld->addRigidBody(element->rigidBody());
+    btRigidBody* body = element->rigidBody();
+
+    if (body->getInvMass() == 0)
+      mWorld->addRigidBody(body, 1, -1);
+    else
+      mWorld->addRigidBody(body, element->collisionGroup(), element->collisionMask());
 
     for (auto& c : element->constraints()) {
-      if (&c->getRigidBodyA() == element->rigidBody()) {
+      if (&c->getRigidBodyA() == body) {
         mWorld->addConstraint(c);
       }
     }
