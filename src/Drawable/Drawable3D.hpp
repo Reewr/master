@@ -47,6 +47,11 @@ public:
 
   const std::vector<btTypedConstraint*> constraints();
 
+  int collisionGroup() const;
+  int collisionMask() const;
+  void setCollisionGroup(int);
+  void setCollisionMask(int);
+
 protected:
   Drawable3D();
 
@@ -58,4 +63,7 @@ protected:
   btRigidBody*                    mBody;
   std::vector<btTypedConstraint*> mConstraints;
   std::vector<Drawable3D*>        mChildren;
+
+  int mCollisionGroup;
+  int mCollisionMask;
 };

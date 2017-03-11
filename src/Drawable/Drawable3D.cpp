@@ -14,7 +14,9 @@ Drawable3D::Drawable3D()
     , mShape(nullptr)
     , mMotion(nullptr)
     , mBody(nullptr)
-    , mChildren({}) {}
+    , mChildren({})
+    , mCollisionGroup(btBroadphaseProxy::StaticFilter)
+    , mCollisionMask(btBroadphaseProxy::AllFilter^btBroadphaseProxy::StaticFilter) {}
 
 Drawable3D::~Drawable3D() {}
 
@@ -77,4 +79,18 @@ void Drawable3D::addConstraint(btTypedConstraint* constraint) {
 
 const std::vector<btTypedConstraint*> Drawable3D::constraints() {
   return mConstraints;
+}
+
+int Drawable3D::collisionGroup() const {
+  return mCollisionGroup;
+}
+int Drawable3D::collisionMask() const {
+  return mCollisionMask;
+}
+
+void Drawable3D::setCollisionGroup(int x) {
+  mCollisionGroup = x;
+}
+void Drawable3D::setCollisionMask(int x) {
+  mCollisionMask = x;
 }
