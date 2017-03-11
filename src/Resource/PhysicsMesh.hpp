@@ -15,16 +15,24 @@ class Mesh;
 class btRigidBody;
 class btBulletWorldImporter;
 class btTypedConstraint;
+class btMotionState;
 
 /**
  * @brief
  *   A SubMesh Physics
  */
 struct SubMeshPhysics {
-  const SubMesh*     subMesh;
-  btRigidBody* body;
-  std::string name;
+  const SubMesh* subMesh;
+  btRigidBody*   body;
+  std::string    name;
   std::vector<btTypedConstraint*> constraints;
+};
+
+struct PhysicsElements {
+  std::map<std::string, const SubMesh*> meshes;
+  std::map<std::string, btRigidBody*> bodies;
+  std::map<std::string, btMotionState*> motions;
+  std::map<std::string, std::vector<btTypedConstraint*>> constraints;
 };
 
 class PhysicsMesh : public Resource, public Logging::Log {
@@ -46,6 +54,20 @@ public:
   // Both pointers in this structure may be null
   SubMeshPhysics findByName(const std::string& name);
 
+  // Creates a copy of all the physics elements stored
+  // and returns those to you.
+  //
+  // The reason for this function is because you cannot add two of the same
+  // rigidbodies to a world. This copies each rigidBody, sets a motion state
+  // based on the transforms in the Mesh and setup the constraints.
+  PhysicsElements* createCopyAll();
+
+  // Releases the resources allocated for a copy of the elements.
+  //
+  // When this function is called, it is expected that it is detached from
+  // the world.
+  void deleteCopy(PhysicsElements* copy);
+
   // Returns all the submeshes and rigid bodies merged together
   // for one mesh together with the name of the given mesh/rigid body.
   //
@@ -65,4 +87,6 @@ private:
   std::map<std::string, std::vector<btTypedConstraint*>> mConstraints;
   std::map<std::string, btRigidBody*> mBodies;
   std::map<btRigidBody*, std::string> mNames;
+
+  std::vector<PhysicsElements> mCopies;
 };

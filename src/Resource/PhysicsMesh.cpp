@@ -5,6 +5,8 @@
 #include <btBulletDynamicsCommon.h>
 #include <btBulletWorldImporter.h>
 
+using RigidBodyInfo = btRigidBody::btRigidBodyConstructionInfo;
+
 PhysicsMesh::PhysicsMesh()
     : Logging::Log("PhysicsMesh"), mFileloader(nullptr), mMesh(nullptr) {}
 PhysicsMesh::~PhysicsMesh() {}
@@ -154,6 +156,139 @@ SubMeshPhysics PhysicsMesh::findByName(const std::string& name) {
   s.subMesh = &mMesh->getMeshByIndex(index);
 
   return s;
+}
+
+/**
+ * @brief
+ *   Creates a copy of all the physics elements stored and returns those to you.
+ *   The reason for this function is because you cannot add two of the same
+ *   rigidbodies to a world. This copies each rigidBody, sets a motion state
+ *   based on the transforms in the Mesh and setup the constraints.
+ *
+ * @return
+ */
+PhysicsElements* PhysicsMesh::createCopyAll() {
+  auto meshes = getAll();
+  PhysicsElements elements;
+
+  // First create copies of the rigid bodies together with new
+  // motion state based on the internal variables of the rigid bodies
+  for(auto& mesh : meshes) {
+    btRigidBody*      mainBody = mesh.second.body;
+    btCollisionShape* shape    = mainBody->getCollisionShape();
+
+    btMatrix3x3      mat;
+    const mmm::mat4& t       = mesh.second.subMesh->transform();
+    const mmm::vec3& matPos  = mmm::dropRows<3>(t).xyz;
+    const btVector3  pos     = btVector3(matPos.x, matPos.y, matPos.z);
+    const btVector3& inertia = mainBody->getLocalInertia();
+    const btScalar   mass    = mainBody->getInvMass();
+
+    mat.setFromOpenGLSubMatrix(t.rawdata);
+
+    btMotionState* motion = new btDefaultMotionState(btTransform(mat, pos));
+    btRigidBody*   body   = new btRigidBody(mass, motion, shape, inertia);
+
+    elements.bodies[mesh.first]  = body;
+    elements.motions[mesh.first] = motion;
+    elements.meshes[mesh.first]  = mesh.second.subMesh;
+  }
+
+  // Now that all bodies and motions have been created, the constraints can be
+  // duplicated.
+  //
+  // Since different constraints may contain different variables, they have to
+  // be handled seperately
+  for (int i = 0; i < mFileloader->getNumConstraints(); ++i) {
+    btTypedConstraint* c = mFileloader->getConstraintByIndex(i);
+    const std::string& fromConstraint = findNameByPointer(&c->getRigidBodyA());
+    const std::string& toConstraint   = findNameByPointer(&c->getRigidBodyB());
+
+    btRigidBody* a = nullptr;
+    btRigidBody* b = nullptr;
+
+    if (fromConstraint != "")
+      a = elements.bodies[fromConstraint];
+
+    if (toConstraint != "")
+      b = elements.bodies[toConstraint];
+
+    btTypedConstraint* constraintCopy = nullptr;
+
+    switch(c->getConstraintType()) {
+      case btTypedConstraintType::HINGE_CONSTRAINT_TYPE: {
+        btHingeConstraint* h = dynamic_cast<btHingeConstraint*>(c);
+        const btTransform& aFrame = h->getAFrame();
+        const btTransform& bFrame = h->getBFrame();
+        btHingeConstraint* n = new btHingeConstraint(*a, *b, aFrame, bFrame);
+
+        constraintCopy = n;
+      }
+      default:
+        mLog->error("Cannot duplicate constraint: {}", c->getConstraintType());
+        break;
+    }
+
+    if (constraintCopy != nullptr) {
+      elements.constraints[fromConstraint].push_back(constraintCopy);
+      elements.constraints[toConstraint].push_back(constraintCopy);
+    }
+  }
+
+  mCopies.push_back(elements);
+
+  return &mCopies.back();
+}
+
+/**
+ * @brief
+ *   Clears all the resources that have been allocated to a PhysicsElement
+ *   before removing it from the list of stored copies all together.
+ *
+ *   This will invalidate all other references to the PhysicsElement
+ *
+ * @param copy
+ */
+void PhysicsMesh::deleteCopy(PhysicsElements* copy) {
+  unsigned int i = 0;
+  for (auto& storedCopy : mCopies) {
+
+    // when we have found our match, go through and delete it all
+    if (&storedCopy == copy) {
+
+      // Delete constraints first
+      for(auto& el : storedCopy.constraints) {
+        for(auto& innerEl : el.second) {
+          if (innerEl != nullptr) {
+            delete innerEl;
+            innerEl = nullptr;
+          }
+        }
+
+        el.second.clear();
+      }
+
+      // Followed by all rigidBodies
+      for(auto& el : storedCopy.bodies)
+        delete el.second;
+
+      for(auto& el : storedCopy.motions)
+        delete el.second;
+
+
+      // Now that all copies have been deleted, clear the maps
+      // of strings.
+      storedCopy.bodies.clear();
+      storedCopy.motions.clear();
+      storedCopy.constraints.clear();
+
+      // Remove the element from the list and break the loop
+      mCopies.erase(mCopies.begin() + i);
+      break;
+    }
+
+    ++i;
+  }
 }
 
 /**
