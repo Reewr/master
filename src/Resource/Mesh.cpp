@@ -119,27 +119,27 @@ void Mesh::unload() {
 }
 
 /**
-* @brief
-*   Adds a vertex entry to the data list in the mesh, increasing
-*   its number of vertices by 1
-*
-* @param v
-*/
+ * @brief
+ *   Adds a vertex entry to the data list in the mesh, increasing
+ *   its number of vertices by 1
+ *
+ * @param v
+ */
 void Mesh::addVertex(const Mesh::Vertex& v) {
   mData.push_back(v);
 }
 
 /**
-* @brief
-*   Draws the mesh and its submeshes. Requires a model matrix
-*   to set the position of the submeshes correctly.
-*
-*   It also requires a program that has the `model` variable
-*   so it can set that properly for each mesh element
-*
-* @param modelMatrix
-* @param program
-*/
+ * @brief
+ *   Draws the mesh and its submeshes. Requires a model matrix
+ *   to set the position of the submeshes correctly.
+ *
+ *   It also requires a program that has the `model` variable
+ *   so it can set that properly for each mesh element
+ *
+ * @param modelMatrix
+ * @param program
+ */
 // void Mesh::draw(const mmm::mat4&         modelMatrix,
 //                 std::shared_ptr<Program> program) {
 //   glBindVertexArray(mVAO);
@@ -148,8 +148,8 @@ void Mesh::addVertex(const Mesh::Vertex& v) {
 // }
 
 /**
-* @brief
-*   Adds the submesh to the submesh array
+ * @brief
+ *   Adds the submesh to the submesh array
  *
  * @param mesh
  */
