@@ -73,10 +73,16 @@ addResource("Program::Shadow", "shaders/Shadow.fs,shaders/Shadow.vs",
 addResource("Program::Model", "shaders/Model.fs,shaders/Model.vs",
             ResourceType.Program, ResourceScope.Master)
 
-addResource("Mesh::Box", "media/models/test.dae",
+-- addResource("Mesh::Box", "media/models/test.dae",
+--             ResourceType.Mesh, ResourceScope.Master)
+
+-- addResource("PhysicsMesh::Box", "media/models/test.bullet",
+--             ResourceType.PhysicsMesh, ResourceScope.Master)
+
+addResource("Mesh::Spider", "media/models/spider.dae",
             ResourceType.Mesh, ResourceScope.Master)
 
-addResource("PhysicsMesh::Box", "media/models/test.bullet",
+addResource("PhysicsMesh::Spider", "media/models/spider.bullet",
             ResourceType.PhysicsMesh, ResourceScope.Master)
 
 -- addResource("Mesh::Abdomen", "media/models/spider/abdomin.dae",
