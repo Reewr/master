@@ -10,11 +10,8 @@ PhysicsMesh::PhysicsMesh()
 PhysicsMesh::~PhysicsMesh() {}
 
 std::string PhysicsMesh::findNameByPointer(btRigidBody* body) {
-  for(auto& el : mBodies) {
-    if (el.second == body)
-      return el.first;
-  }
-
+  if (mNames.count(body))
+    return mNames[body];
   return "";
 }
 
@@ -60,6 +57,7 @@ bool PhysicsMesh::load(ResourceManager* manager) {
     else {
       mLog->debug("Loaded rigid body: '{}'", strName);
       mBodies[strName] = body;
+      mNames[body]     = strName;
     }
   }
 

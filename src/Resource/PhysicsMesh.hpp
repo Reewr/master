@@ -64,4 +64,5 @@ private:
 
   std::map<std::string, std::vector<btTypedConstraint*>> mConstraints;
   std::map<std::string, btRigidBody*> mBodies;
+  std::map<btRigidBody*, std::string> mNames;
 };
