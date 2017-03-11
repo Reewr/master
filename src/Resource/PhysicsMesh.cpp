@@ -226,7 +226,8 @@ PhysicsElements* PhysicsMesh::createCopyAll() {
 
     mat.setFromOpenGLSubMatrix(t.rawdata);
 
-    btMotionState* motion = new btDefaultMotionState(btTransform(mat, pos));
+    // btMotionState* motion = new btDefaultMotionState(btTransform(mat, pos));
+    btMotionState* motion = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0)));
     btRigidBody*   body   = new btRigidBody(mass, motion, shape, inertia);
 
     elements.bodies[mesh.first]  = body;
