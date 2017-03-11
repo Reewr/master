@@ -43,7 +43,7 @@ void MeshPart::drawShadow(Framebuffer*, Camera*) {}
  *
  * @param c
  */
-void MeshPart::draw(Camera* c) {
+void MeshPart::draw(Camera*) {
   if (mMesh->size() == 0)
     return;
 

@@ -122,8 +122,8 @@ private:
   void checkFramebuffer();
 
   bool mIsDepth;
-  bool mIsOwnProgram;
-  bool mNeedsDrawing;
+  // bool mIsOwnProgram;
+  // bool mNeedsDrawing;
   bool mIsBound;
 
   mmm::vec2 mFrameSize;

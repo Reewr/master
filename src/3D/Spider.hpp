@@ -8,7 +8,7 @@
 
 class Asset;
 class PhysicsMesh;
-class PhysicsElements;
+struct PhysicsElements;
 class Program;
 
 enum SpiderPart {
