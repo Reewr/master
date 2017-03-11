@@ -6,36 +6,31 @@
 
 #include <btBulletDynamicsCommon.h>
 
+mmm::vec3 tovec(const btVector3& m) {
+  return mmm::vec3(m.x(), m.y(), m.z());
+}
+
 MeshPart::MeshPart(std::shared_ptr<Program>& program,
-                   const SubMeshPhysics& subMesh)
-    : Logging::Log("MeshPart"), mMesh(subMesh.subMesh) {
-  if (subMesh.body == nullptr)
-    throw std::runtime_error("Rigid body was nullptr");
+                   const SubMesh* subMesh,
+                   btRigidBody* body,
+                   btMotionState* motion)
+    : Logging::Log("MeshPart")
+    , mMesh(subMesh)
+    , mProgram(program) {
+  mMotion = motion;
+  mBody   = body;
+  mShape  = mBody->getCollisionShape();
 
-  if (subMesh.subMesh == nullptr)
-    throw std::runtime_error("Submesh was nullptr");
-
-  mBody    = subMesh.body;
-  mShape   = mBody->getCollisionShape();
-
-  const mmm::mat4& t = subMesh.subMesh->transform();
-  // mmm::mat3 v = mmm::mat3(t[0].xyz, t[1].xyz, t[2].xyz);
-  btMatrix3x3 mat;
-  mat.setFromOpenGLSubMatrix(t.rawdata);
-  mmm::vec3 p = mmm::dropRows<3>(t).xyz;
-  btVector3 pos = btVector3(p.x, p.y, p.z);
-
-  mConstraints = subMesh.constraints;
-  mMotion      = new btDefaultMotionState(btTransform(mat, pos));
-  mBody->setMotionState(mMotion);
-
-  mProgram = program;
+  mLog->debug("{}: Gravity: {}, Mass: {}, Shape: {}, LocalInertia: {}, Constraints: {}",
+              subMesh->name(),
+              tovec(mBody->getGravity()),
+              mBody->getInvMass(),
+              mShape->getName(),
+              tovec(mBody->getLocalInertia()),
+              mBody->getNumConstraintRefs());
 }
 
-MeshPart::~MeshPart() {
-  mBody->setMotionState(nullptr);
-  delete mMotion;
-}
+MeshPart::~MeshPart() {}
 
 void MeshPart::update(float) {}
 void MeshPart::drawShadow(Framebuffer*, Camera*) {}
