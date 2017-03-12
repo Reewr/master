@@ -61,6 +61,24 @@ const mmm::vec3& Drawable3D::position() {
   return mPosition;
 }
 
+void Drawable3D::moveTo(const mmm::vec3& position) {
+  const btVector3 pos = btVector3(position.x, position.y, position.z);
+
+  if (hasPhysics()) {
+    btTransform trans = mBody->getCenterOfMassTransform();
+    trans.setOrigin(pos);
+
+    mBody->setCenterOfMassTransform(trans);
+    mBody->clearForces();
+  }
+
+  mPosition = position;
+
+  for (auto& c : mChildren) {
+    c->moveTo(position - c->position());
+  }
+}
+
 bool Drawable3D::hasPhysics() {
   return mShape != nullptr && mMotion != nullptr && mBody != nullptr;
 }

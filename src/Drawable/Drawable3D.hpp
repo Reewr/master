@@ -39,6 +39,8 @@ public:
 
   const mmm::vec3& position();
 
+  void moveTo(const mmm::vec3& position);
+
   btRigidBody* rigidBody();
 
   const std::vector<Drawable3D*>& children();
