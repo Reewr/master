@@ -38,7 +38,7 @@ Master::Master(Asset* a) : mAsset(a) {
 
   mLua       = a->lua();
   mCamera    = new Camera(a);
-  mWorld     = new World(vec3(0, -9.807, 0));
+  mWorld     = new World(vec3(0, -9.81, 0));
   mShadowmap = new Framebuffer(a->rManager()->get<Program>("Program::Shadow"),
                                shadowRes,
                                true);
@@ -50,6 +50,9 @@ Master::Master(Asset* a) : mAsset(a) {
 
   for (auto d : mDrawable3D)
     mWorld->addObject(d);
+
+  // mDrawable3D[1]->rotate({0, 0, 1}, 90);
+  mDrawable3D[1]->moveTo({0, 1, 0});
 
   mLua->engine.set_function("addCubes", [&](int i) {
     std::random_device               rd;
