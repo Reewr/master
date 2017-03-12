@@ -27,6 +27,7 @@ MeshPart::MeshPart(std::shared_ptr<Program>& program,
   //   mShape->getName(),
   //   tovec(mBody->getLocalInertia()),
   //   mBody->getNumConstraintRefs());
+  updateFromPhysics();
 }
 
 MeshPart::~MeshPart() {}
