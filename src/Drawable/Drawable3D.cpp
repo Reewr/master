@@ -25,7 +25,7 @@ void Drawable3D::drawShadow(Framebuffer*, Camera*) {}
 void Drawable3D::updateFromPhysics() {
   if (hasPhysics()) {
     btTransform trans;
-    mBody->getMotionState()->getWorldTransform(trans);
+    mMotion->getWorldTransform(trans);
 
     btVector3 origin      = trans.getOrigin();
     mPosition             = vec3(origin.x(), origin.y(), origin.z());
