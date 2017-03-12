@@ -219,10 +219,10 @@ PhysicsElements* PhysicsMesh::createCopyAll() {
 
     btMatrix3x3      mat;
     const mmm::mat4& t       = mesh.second.subMesh->transform();
-    const mmm::vec3& matPos  = mmm::dropRows<3>(t).xyz;
+    const mmm::vec3& matPos  = mmm::dropColumns<3>(t).xyz;
 
     // TODO fix static +2 up translation
-    const btVector3  pos     = btVector3(matPos.x, matPos.y+2, matPos.z);
+    const btVector3  pos     = btVector3(matPos.x, matPos.y+1, matPos.z);
     const btVector3& inertia = mainBody->getLocalInertia();
     const btScalar   mass    = mainBody->getInvMass();
 
