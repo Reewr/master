@@ -57,7 +57,6 @@ World::~World() {
  * @param element
  */
 void World::addObject(Drawable3D* element) {
-  mLog->debug("Adding element with {} children", element->children().size());
   if (element->hasPhysics()) {
     btRigidBody* body = element->rigidBody();
 
@@ -88,7 +87,6 @@ void World::addObject(Drawable3D* element) {
  * @param element the drawable element to remove
  */
 void World::removeObject(Drawable3D* element) {
-  mLog->debug("Removing element with {} children", element->children().size());
   // remove them from the world first
   for (auto a : mElements) {
     if (a == element && element != nullptr) {
