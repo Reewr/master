@@ -220,14 +220,16 @@ PhysicsElements* PhysicsMesh::createCopyAll() {
     btMatrix3x3      mat;
     const mmm::mat4& t       = mesh.second.subMesh->transform();
     const mmm::vec3& matPos  = mmm::dropRows<3>(t).xyz;
-    const btVector3  pos     = btVector3(matPos.x, matPos.y, matPos.z);
+
+    // TODO fix static +2 up translation
+    const btVector3  pos     = btVector3(matPos.x, matPos.y+2, matPos.z);
     const btVector3& inertia = mainBody->getLocalInertia();
     const btScalar   mass    = mainBody->getInvMass();
 
-    mat.setFromOpenGLSubMatrix(t.rawdata);
+    mat.setFromOpenGLSubMatrix(mmm::transpose(t).rawdata);
 
-    // btMotionState* motion = new btDefaultMotionState(btTransform(mat, pos));
-    btMotionState* motion = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0)));
+    btMotionState* motion = new btDefaultMotionState(btTransform(mat, pos));
+    // btMotionState* motion = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0)));
     btRigidBody*   body   = new btRigidBody(mass, motion, shape, inertia);
 
     elements.bodies[mesh.first]  = body;
@@ -397,6 +399,10 @@ std::vector<std::pair<std::string, SubMeshPhysics>> PhysicsMesh::getAll() {
 
   for (auto& name : meshNames) {
     SubMeshPhysics subMesh = findByName(name);
+
+    if (subMesh.subMesh == nullptr) {
+      continue;
+    }
 
     if (subMesh.body == nullptr && subMesh.subMesh != nullptr &&
         subMesh.subMesh->size() == 0) {
