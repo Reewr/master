@@ -5,12 +5,237 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.78.0 commit date:2017-02-24, commit time:14:33, hash:e92f235283</authoring_tool>
     </contributor>
-    <created>2017-03-11T20:41:13</created>
-    <modified>2017-03-11T20:41:13</modified>
+    <created>2017-03-12T22:25:23</created>
+    <modified>2017-03-12T22:25:23</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
+  <library_cameras>
+    <camera id="Camera-camera" name="Camera">
+      <optics>
+        <technique_common>
+          <perspective>
+            <xfov sid="xfov">49.13434</xfov>
+            <aspect_ratio>1.777778</aspect_ratio>
+            <znear sid="znear">0.1</znear>
+            <zfar sid="zfar">100</zfar>
+          </perspective>
+        </technique_common>
+      </optics>
+      <extra>
+        <technique profile="blender">
+          <YF_dofdist>0</YF_dofdist>
+          <shiftx>0</shiftx>
+          <shifty>0</shifty>
+        </technique>
+      </extra>
+    </camera>
+  </library_cameras>
   <library_lights>
+    <light id="Lamps_001-light" name="Lamp.003">
+      <technique_common>
+        <point>
+          <color sid="color">1 1 1</color>
+          <constant_attenuation>1</constant_attenuation>
+          <linear_attenuation>0</linear_attenuation>
+          <quadratic_attenuation>0.00111109</quadratic_attenuation>
+        </point>
+      </technique_common>
+      <extra>
+        <technique profile="blender">
+          <adapt_thresh>0.000999987</adapt_thresh>
+          <area_shape>1</area_shape>
+          <area_size>0.1</area_size>
+          <area_sizey>0.1</area_sizey>
+          <area_sizez>1</area_sizez>
+          <atm_distance_factor>1</atm_distance_factor>
+          <atm_extinction_factor>1</atm_extinction_factor>
+          <atm_turbidity>2</atm_turbidity>
+          <att1>0</att1>
+          <att2>1</att2>
+          <backscattered_light>1</backscattered_light>
+          <bias>1</bias>
+          <blue>1</blue>
+          <buffers>1</buffers>
+          <bufflag>0</bufflag>
+          <bufsize>2880</bufsize>
+          <buftype>2</buftype>
+          <clipend>30.002</clipend>
+          <clipsta>1.000799</clipsta>
+          <compressthresh>0.04999995</compressthresh>
+          <dist sid="blender_dist">29.99998</dist>
+          <energy sid="blender_energy">1</energy>
+          <falloff_type>2</falloff_type>
+          <filtertype>0</filtertype>
+          <flag>0</flag>
+          <gamma sid="blender_gamma">1</gamma>
+          <green>1</green>
+          <halo_intensity sid="blnder_halo_intensity">1</halo_intensity>
+          <horizon_brightness>1</horizon_brightness>
+          <mode>8192</mode>
+          <ray_samp>1</ray_samp>
+          <ray_samp_method>1</ray_samp_method>
+          <ray_samp_type>0</ray_samp_type>
+          <ray_sampy>1</ray_sampy>
+          <ray_sampz>1</ray_sampz>
+          <red>1</red>
+          <samp>3</samp>
+          <shadhalostep>0</shadhalostep>
+          <shadow_b sid="blender_shadow_b">0</shadow_b>
+          <shadow_g sid="blender_shadow_g">0</shadow_g>
+          <shadow_r sid="blender_shadow_r">0</shadow_r>
+          <sky_colorspace>0</sky_colorspace>
+          <sky_exposure>1</sky_exposure>
+          <skyblendfac>1</skyblendfac>
+          <skyblendtype>1</skyblendtype>
+          <soft>3</soft>
+          <spotblend>0.15</spotblend>
+          <spotsize>75</spotsize>
+          <spread>1</spread>
+          <sun_brightness>1</sun_brightness>
+          <sun_effect_type>0</sun_effect_type>
+          <sun_intensity>1</sun_intensity>
+          <sun_size>1</sun_size>
+          <type>0</type>
+        </technique>
+      </extra>
+    </light>
+    <light id="Lamps_002-light" name="Lamp.004">
+      <technique_common>
+        <point>
+          <color sid="color">1 1 1</color>
+          <constant_attenuation>1</constant_attenuation>
+          <linear_attenuation>0</linear_attenuation>
+          <quadratic_attenuation>0.00111109</quadratic_attenuation>
+        </point>
+      </technique_common>
+      <extra>
+        <technique profile="blender">
+          <adapt_thresh>0.000999987</adapt_thresh>
+          <area_shape>1</area_shape>
+          <area_size>0.1</area_size>
+          <area_sizey>0.1</area_sizey>
+          <area_sizez>1</area_sizez>
+          <atm_distance_factor>1</atm_distance_factor>
+          <atm_extinction_factor>1</atm_extinction_factor>
+          <atm_turbidity>2</atm_turbidity>
+          <att1>0</att1>
+          <att2>1</att2>
+          <backscattered_light>1</backscattered_light>
+          <bias>1</bias>
+          <blue>1</blue>
+          <buffers>1</buffers>
+          <bufflag>0</bufflag>
+          <bufsize>2880</bufsize>
+          <buftype>2</buftype>
+          <clipend>30.002</clipend>
+          <clipsta>1.000799</clipsta>
+          <compressthresh>0.04999995</compressthresh>
+          <dist sid="blender_dist">29.99998</dist>
+          <energy sid="blender_energy">1</energy>
+          <falloff_type>2</falloff_type>
+          <filtertype>0</filtertype>
+          <flag>0</flag>
+          <gamma sid="blender_gamma">1</gamma>
+          <green>1</green>
+          <halo_intensity sid="blnder_halo_intensity">1</halo_intensity>
+          <horizon_brightness>1</horizon_brightness>
+          <mode>8192</mode>
+          <ray_samp>1</ray_samp>
+          <ray_samp_method>1</ray_samp_method>
+          <ray_samp_type>0</ray_samp_type>
+          <ray_sampy>1</ray_sampy>
+          <ray_sampz>1</ray_sampz>
+          <red>1</red>
+          <samp>3</samp>
+          <shadhalostep>0</shadhalostep>
+          <shadow_b sid="blender_shadow_b">0</shadow_b>
+          <shadow_g sid="blender_shadow_g">0</shadow_g>
+          <shadow_r sid="blender_shadow_r">0</shadow_r>
+          <sky_colorspace>0</sky_colorspace>
+          <sky_exposure>1</sky_exposure>
+          <skyblendfac>1</skyblendfac>
+          <skyblendtype>1</skyblendtype>
+          <soft>3</soft>
+          <spotblend>0.15</spotblend>
+          <spotsize>75</spotsize>
+          <spread>1</spread>
+          <sun_brightness>1</sun_brightness>
+          <sun_effect_type>0</sun_effect_type>
+          <sun_intensity>1</sun_intensity>
+          <sun_size>1</sun_size>
+          <type>0</type>
+        </technique>
+      </extra>
+    </light>
+    <light id="Lamps_003-light" name="Lamp.005">
+      <technique_common>
+        <point>
+          <color sid="color">1 1 1</color>
+          <constant_attenuation>1</constant_attenuation>
+          <linear_attenuation>0</linear_attenuation>
+          <quadratic_attenuation>0.00111109</quadratic_attenuation>
+        </point>
+      </technique_common>
+      <extra>
+        <technique profile="blender">
+          <adapt_thresh>0.000999987</adapt_thresh>
+          <area_shape>1</area_shape>
+          <area_size>0.1</area_size>
+          <area_sizey>0.1</area_sizey>
+          <area_sizez>1</area_sizez>
+          <atm_distance_factor>1</atm_distance_factor>
+          <atm_extinction_factor>1</atm_extinction_factor>
+          <atm_turbidity>2</atm_turbidity>
+          <att1>0</att1>
+          <att2>1</att2>
+          <backscattered_light>1</backscattered_light>
+          <bias>1</bias>
+          <blue>1</blue>
+          <buffers>1</buffers>
+          <bufflag>0</bufflag>
+          <bufsize>2880</bufsize>
+          <buftype>2</buftype>
+          <clipend>30.002</clipend>
+          <clipsta>1.000799</clipsta>
+          <compressthresh>0.04999995</compressthresh>
+          <dist sid="blender_dist">29.99998</dist>
+          <energy sid="blender_energy">1</energy>
+          <falloff_type>2</falloff_type>
+          <filtertype>0</filtertype>
+          <flag>0</flag>
+          <gamma sid="blender_gamma">1</gamma>
+          <green>1</green>
+          <halo_intensity sid="blnder_halo_intensity">1</halo_intensity>
+          <horizon_brightness>1</horizon_brightness>
+          <mode>8192</mode>
+          <ray_samp>1</ray_samp>
+          <ray_samp_method>1</ray_samp_method>
+          <ray_samp_type>0</ray_samp_type>
+          <ray_sampy>1</ray_sampy>
+          <ray_sampz>1</ray_sampz>
+          <red>1</red>
+          <samp>3</samp>
+          <shadhalostep>0</shadhalostep>
+          <shadow_b sid="blender_shadow_b">0</shadow_b>
+          <shadow_g sid="blender_shadow_g">0</shadow_g>
+          <shadow_r sid="blender_shadow_r">0</shadow_r>
+          <sky_colorspace>0</sky_colorspace>
+          <sky_exposure>1</sky_exposure>
+          <skyblendfac>1</skyblendfac>
+          <skyblendtype>1</skyblendtype>
+          <soft>3</soft>
+          <spotblend>0.15</spotblend>
+          <spotsize>75</spotsize>
+          <spread>1</spread>
+          <sun_brightness>1</sun_brightness>
+          <sun_effect_type>0</sun_effect_type>
+          <sun_intensity>1</sun_intensity>
+          <sun_size>1</sun_size>
+          <type>0</type>
+        </technique>
+      </extra>
+    </light>
     <light id="Point-light" name="Point">
       <technique_common>
         <point>
@@ -79,31 +304,79 @@
         </technique>
       </extra>
     </light>
+    <light id="Lamps-light" name="Lamp.002">
+      <technique_common>
+        <point>
+          <color sid="color">1 1 1</color>
+          <constant_attenuation>1</constant_attenuation>
+          <linear_attenuation>0</linear_attenuation>
+          <quadratic_attenuation>0.00111109</quadratic_attenuation>
+        </point>
+      </technique_common>
+      <extra>
+        <technique profile="blender">
+          <adapt_thresh>0.000999987</adapt_thresh>
+          <area_shape>1</area_shape>
+          <area_size>0.1</area_size>
+          <area_sizey>0.1</area_sizey>
+          <area_sizez>1</area_sizez>
+          <atm_distance_factor>1</atm_distance_factor>
+          <atm_extinction_factor>1</atm_extinction_factor>
+          <atm_turbidity>2</atm_turbidity>
+          <att1>0</att1>
+          <att2>1</att2>
+          <backscattered_light>1</backscattered_light>
+          <bias>1</bias>
+          <blue>1</blue>
+          <buffers>1</buffers>
+          <bufflag>0</bufflag>
+          <bufsize>2880</bufsize>
+          <buftype>2</buftype>
+          <clipend>30.002</clipend>
+          <clipsta>1.000799</clipsta>
+          <compressthresh>0.04999995</compressthresh>
+          <dist sid="blender_dist">29.99998</dist>
+          <energy sid="blender_energy">1</energy>
+          <falloff_type>2</falloff_type>
+          <filtertype>0</filtertype>
+          <flag>0</flag>
+          <gamma sid="blender_gamma">1</gamma>
+          <green>1</green>
+          <halo_intensity sid="blnder_halo_intensity">1</halo_intensity>
+          <horizon_brightness>1</horizon_brightness>
+          <mode>8192</mode>
+          <ray_samp>1</ray_samp>
+          <ray_samp_method>1</ray_samp_method>
+          <ray_samp_type>0</ray_samp_type>
+          <ray_sampy>1</ray_sampy>
+          <ray_sampz>1</ray_sampz>
+          <red>1</red>
+          <samp>3</samp>
+          <shadhalostep>0</shadhalostep>
+          <shadow_b sid="blender_shadow_b">0</shadow_b>
+          <shadow_g sid="blender_shadow_g">0</shadow_g>
+          <shadow_r sid="blender_shadow_r">0</shadow_r>
+          <sky_colorspace>0</sky_colorspace>
+          <sky_exposure>1</sky_exposure>
+          <skyblendfac>1</skyblendfac>
+          <skyblendtype>1</skyblendtype>
+          <soft>3</soft>
+          <spotblend>0.15</spotblend>
+          <spotsize>75</spotsize>
+          <spread>1</spread>
+          <sun_brightness>1</sun_brightness>
+          <sun_effect_type>0</sun_effect_type>
+          <sun_intensity>1</sun_intensity>
+          <sun_size>1</sun_size>
+          <type>0</type>
+        </technique>
+      </extra>
+    </light>
   </library_lights>
-  <library_images>
-    <image id="m2_test_png" name="m2_test_png">
-      <init_from>m2_test.png</init_from>
-    </image>
-    <image id="m1_test_png" name="m1_test_png">
-      <init_from>m1_test.png</init_from>
-    </image>
-    <image id="m3_test_png" name="m3_test_png">
-      <init_from>m3_test.png</init_from>
-    </image>
-  </library_images>
+  <library_images/>
   <library_effects>
     <effect id="Brass-effect">
       <profile_COMMON>
-        <newparam sid="m2_test_png-surface">
-          <surface type="2D">
-            <init_from>m2_test_png</init_from>
-          </surface>
-        </newparam>
-        <newparam sid="m2_test_png-sampler">
-          <sampler2D>
-            <source>m2_test_png-surface</source>
-          </sampler2D>
-        </newparam>
         <technique sid="common">
           <phong>
             <emission>
@@ -113,7 +386,7 @@
               <color sid="ambient">0 0 0 1</color>
             </ambient>
             <diffuse>
-              <texture texture="m2_test_png-sampler" texcoord="UVMap"/>
+              <color sid="diffuse">0.64 0.64 0.64 1</color>
             </diffuse>
             <specular>
               <color sid="specular">0.5 0.5 0.5 1</color>
@@ -126,26 +399,10 @@
             </index_of_refraction>
           </phong>
         </technique>
-        <extra>
-          <technique profile="GOOGLEEARTH">
-            <double_sided>1</double_sided>
-          </technique>
-        </extra>
       </profile_COMMON>
-      <extra><technique profile="MAX3D"><double_sided>1</double_sided></technique></extra>
     </effect>
     <effect id="Carbon-effect">
       <profile_COMMON>
-        <newparam sid="m1_test_png-surface">
-          <surface type="2D">
-            <init_from>m1_test_png</init_from>
-          </surface>
-        </newparam>
-        <newparam sid="m1_test_png-sampler">
-          <sampler2D>
-            <source>m1_test_png-surface</source>
-          </sampler2D>
-        </newparam>
         <technique sid="common">
           <phong>
             <emission>
@@ -155,7 +412,7 @@
               <color sid="ambient">0 0 0 1</color>
             </ambient>
             <diffuse>
-              <texture texture="m1_test_png-sampler" texcoord="UVMap"/>
+              <color sid="diffuse">0.512 0.512 0.512 1</color>
             </diffuse>
             <specular>
               <color sid="specular">0.25 0.25 0.25 1</color>
@@ -178,16 +435,6 @@
     </effect>
     <effect id="Lightning-effect">
       <profile_COMMON>
-        <newparam sid="m3_test_png-surface">
-          <surface type="2D">
-            <init_from>m3_test_png</init_from>
-          </surface>
-        </newparam>
-        <newparam sid="m3_test_png-sampler">
-          <sampler2D>
-            <source>m3_test_png-surface</source>
-          </sampler2D>
-        </newparam>
         <technique sid="common">
           <phong>
             <emission>
@@ -197,7 +444,7 @@
               <color sid="ambient">0 0 0 1</color>
             </ambient>
             <diffuse>
-              <texture texture="m3_test_png-sampler" texcoord="UVMap"/>
+              <color sid="diffuse">0.64 0.64 0.64 1</color>
             </diffuse>
             <specular>
               <color sid="specular">0.5 0.5 0.5 1</color>
@@ -231,6 +478,39 @@
     </material>
   </library_materials>
   <library_geometries>
+    <geometry id="Plane-mesh" name="Plane">
+      <mesh>
+        <source id="Plane-mesh-positions">
+          <float_array id="Plane-mesh-positions-array" count="12">-10 -10 0 10 -10 0 -10 10 0 10 10 0</float_array>
+          <technique_common>
+            <accessor source="#Plane-mesh-positions-array" count="4" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Plane-mesh-normals">
+          <float_array id="Plane-mesh-normals-array" count="3">0 0 1</float_array>
+          <technique_common>
+            <accessor source="#Plane-mesh-normals-array" count="1" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Plane-mesh-vertices">
+          <input semantic="POSITION" source="#Plane-mesh-positions"/>
+        </vertices>
+        <polylist material="Brass-material" count="2">
+          <input semantic="VERTEX" source="#Plane-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Plane-mesh-normals" offset="1"/>
+          <vcount>3 3 </vcount>
+          <p>1 0 2 0 0 0 1 0 3 0 2 0</p>
+        </polylist>
+      </mesh>
+    </geometry>
     <geometry id="Tarsus-mesh" name="Tarsus">
       <mesh>
         <source id="Tarsus-mesh-positions">
@@ -938,21 +1218,47 @@
   <library_controllers/>
   <library_visual_scenes>
     <visual_scene id="Scene" name="Scene">
-      <node id="Point" name="Point" type="NODE">
-        <matrix sid="transform">-0.2908595 0.9551728 -0.05518918 7.676616 -0.7711021 -0.1998793 0.6045249 2.693776 0.5663945 0.2183881 0.7946725 -8.814009 0 0 0 1</matrix>
-        <instance_light url="#Point-light"/>
+      <node id="Lamps" name="Lamps" type="NODE">
+        <matrix sid="transform">-0.2908594 -0.771102 0.5663944 5.076245 0.9551727 -0.1998791 0.2183881 -3.994546 -0.05518906 0.6045247 0.7946723 5.903862 0 0 0 1</matrix>
+        <instance_light url="#Lamps-light"/>
+        <node id="Lamps_001" name="Lamps_001" type="NODE">
+          <matrix sid="transform">1 3.35276e-8 4.47035e-8 2.96199 -8.9407e-8 1 2.98023e-8 -2.460768 6.70552e-8 -5.96046e-8 0.9999999 0.8192863 0 0 0 1</matrix>
+          <instance_light url="#Lamps_001-light"/>
+        </node>
+        <node id="Lamps_002" name="Lamps_002" type="NODE">
+          <matrix sid="transform">1 3.35276e-8 4.47035e-8 6.395332 -8.9407e-8 1 2.98023e-8 -2.170284 6.70552e-8 -5.96046e-8 0.9999999 2.095131 0 0 0 1</matrix>
+          <instance_light url="#Lamps_002-light"/>
+        </node>
+        <node id="Lamps_003" name="Lamps_003" type="NODE">
+          <matrix sid="transform">1 3.35276e-8 4.47035e-8 2.945846 -8.9407e-8 1 2.98023e-8 -11.00255 6.70552e-8 -5.96046e-8 0.9999999 -4.638529 0 0 0 1</matrix>
+          <instance_light url="#Lamps_003-light"/>
+        </node>
+        <node id="Point" name="Point" type="NODE">
+          <matrix sid="transform">-0.2908595 0.9551728 -0.05518918 7.676616 -0.7711021 -0.1998793 0.6045249 2.693776 0.5663945 0.2183881 0.7946725 -8.814009 0 0 0 1</matrix>
+          <instance_light url="#Point-light"/>
+        </node>
+      </node>
+      <node id="Camera" name="Camera" type="NODE">
+        <matrix sid="transform">0.6858805 -0.3173701 0.6548619 7.481132 0.7276338 0.3124686 -0.6106656 -6.50764 -0.01081678 0.8953432 0.4452454 5.343665 0 0 0 1</matrix>
+        <instance_camera url="#Camera-camera"/>
+      </node>
+      <node id="Plane" name="Plane" type="NODE">
+        <matrix sid="transform">1 0 0 0 0 1 0 0 0 0 1 -1 0 0 0 1</matrix>
+        <instance_geometry url="#Plane-mesh" name="Plane">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
       </node>
       <node id="TarsusR2" name="TarsusR2" type="NODE">
         <matrix sid="transform">1 0 0 -4.039034 0 1 0 -0.2 0 0 1 0.01999999 0 0 0 1</matrix>
         <instance_geometry url="#Tarsus-mesh" name="TarsusR2">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -977,12 +1283,8 @@
         <instance_geometry url="#Metatarsus-mesh" name="MetatarsusR2">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -1007,12 +1309,8 @@
         <instance_geometry url="#Tibia-mesh" name="TibiaR2">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -1037,12 +1335,8 @@
         <instance_geometry url="#Patella-mesh" name="PatellaR2">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -1067,12 +1361,8 @@
         <instance_geometry url="#Femur-mesh" name="FemurR2">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -1097,12 +1387,8 @@
         <instance_geometry url="#Trochanter-mesh" name="TrochanterR2">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -1127,12 +1413,8 @@
         <instance_geometry url="#Tarsus-mesh" name="TarsusL2">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -1157,12 +1439,8 @@
         <instance_geometry url="#Metatarsus-mesh" name="MetatarsusL2">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -1187,12 +1465,8 @@
         <instance_geometry url="#Tibia-mesh" name="TibiaL2">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -1217,12 +1491,8 @@
         <instance_geometry url="#Patella-mesh" name="PatellaL2">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -1247,12 +1517,8 @@
         <instance_geometry url="#Femur-mesh" name="FemurL2">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -1277,12 +1543,8 @@
         <instance_geometry url="#Trochanter-mesh" name="TrochanterL2">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -1307,12 +1569,8 @@
         <instance_geometry url="#Tarsus-mesh" name="TarsusR1">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -1337,12 +1595,8 @@
         <instance_geometry url="#Metatarsus-mesh" name="MetatarsusR1">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -1367,12 +1621,8 @@
         <instance_geometry url="#Tibia-mesh" name="TibiaR1">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -1397,12 +1647,8 @@
         <instance_geometry url="#Patella-mesh" name="PatellaR1">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -1427,12 +1673,8 @@
         <instance_geometry url="#Femur-mesh" name="FemurR1">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -1457,12 +1699,8 @@
         <instance_geometry url="#Trochanter-mesh" name="TrochanterR1">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -1487,12 +1725,8 @@
         <instance_geometry url="#Tarsus-mesh" name="TarsusL1">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -1517,12 +1751,8 @@
         <instance_geometry url="#Metatarsus-mesh" name="MetatarsusL1">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -1547,12 +1777,8 @@
         <instance_geometry url="#Tibia-mesh" name="TibiaL1">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -1577,12 +1803,8 @@
         <instance_geometry url="#Patella-mesh" name="PatellaL1">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -1607,12 +1829,8 @@
         <instance_geometry url="#Femur-mesh" name="FemurL1">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -1637,12 +1855,8 @@
         <instance_geometry url="#Trochanter-mesh" name="TrochanterL1">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -1667,15 +1881,9 @@
         <instance_geometry url="#Eye-mesh" name="Eye">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Lightning-material" target="#Lightning-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Lightning-material" target="#Lightning-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -1700,9 +1908,7 @@
         <instance_geometry url="#Neck-mesh" name="Neck">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -1727,9 +1933,7 @@
         <instance_geometry url="#Coxa-mesh" name="Coxa1">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -1754,9 +1958,7 @@
         <instance_geometry url="#Thorax-mesh" name="ThoraxFront">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -1781,9 +1983,7 @@
         <instance_geometry url="#Coxa-mesh" name="Coxa2">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -1808,12 +2008,8 @@
         <instance_geometry url="#Tarsus-mesh" name="TarsusR4">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -1838,12 +2034,8 @@
         <instance_geometry url="#Metatarsus-mesh" name="MetatarsusR4">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -1868,12 +2060,8 @@
         <instance_geometry url="#Tibia-mesh" name="TibiaR4">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -1898,12 +2086,8 @@
         <instance_geometry url="#Patella-mesh" name="PatellaR4">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -1928,12 +2112,8 @@
         <instance_geometry url="#Femur-mesh" name="FemurR4">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -1958,12 +2138,8 @@
         <instance_geometry url="#Trochanter-mesh" name="TrochanterR4">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -1988,12 +2164,8 @@
         <instance_geometry url="#Tarsus-mesh" name="TarsusL4">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -2018,12 +2190,8 @@
         <instance_geometry url="#Metatarsus-mesh" name="MetatarsusL4">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -2048,12 +2216,8 @@
         <instance_geometry url="#Tibia-mesh" name="TibiaL4">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -2078,12 +2242,8 @@
         <instance_geometry url="#Patella-mesh" name="PatellaL4">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -2108,12 +2268,8 @@
         <instance_geometry url="#Femur-mesh" name="FemurL4">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -2138,12 +2294,8 @@
         <instance_geometry url="#Trochanter-mesh" name="TrochanterL4">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -2168,12 +2320,8 @@
         <instance_geometry url="#Abdomin-mesh" name="Abdomin">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Lightning-material" target="#Lightning-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Lightning-material" target="#Lightning-material"/>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -2198,9 +2346,7 @@
         <instance_geometry url="#Hip-mesh" name="Hip">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -2225,9 +2371,7 @@
         <instance_geometry url="#Coxa-mesh" name="Coxa4">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -2252,9 +2396,7 @@
         <instance_geometry url="#Thorax-mesh" name="ThoraxBack">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -2279,12 +2421,8 @@
         <instance_geometry url="#Tarsus-mesh" name="TarsusR3">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -2309,12 +2447,8 @@
         <instance_geometry url="#Metatarsus-mesh" name="MetatarsusR3">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -2339,12 +2473,8 @@
         <instance_geometry url="#Tibia-mesh" name="TibiaR3">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -2369,12 +2499,8 @@
         <instance_geometry url="#Patella-mesh" name="PatellaR3">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -2399,12 +2525,8 @@
         <instance_geometry url="#Femur-mesh" name="FemurR3">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -2429,12 +2551,8 @@
         <instance_geometry url="#Trochanter-mesh" name="TrochanterR3">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -2459,12 +2577,8 @@
         <instance_geometry url="#Tarsus-mesh" name="TarsusL3">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -2489,12 +2603,8 @@
         <instance_geometry url="#Metatarsus-mesh" name="MetatarsusL3">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -2519,12 +2629,8 @@
         <instance_geometry url="#Tibia-mesh" name="TibiaL3">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -2549,12 +2655,8 @@
         <instance_geometry url="#Patella-mesh" name="PatellaL3">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -2579,12 +2681,8 @@
         <instance_geometry url="#Femur-mesh" name="FemurL3">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -2609,12 +2707,8 @@
         <instance_geometry url="#Trochanter-mesh" name="TrochanterL3">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -2639,9 +2733,7 @@
         <instance_geometry url="#Coxa-mesh" name="Coxa3">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Carbon-material" target="#Carbon-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Carbon-material" target="#Carbon-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -2666,9 +2758,7 @@
         <instance_geometry url="#SternumBack-mesh" name="SternumBack">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
@@ -2693,9 +2783,7 @@
         <instance_geometry url="#SternumFront-mesh" name="SternumFront">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Brass-material" target="#Brass-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Brass-material" target="#Brass-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>
