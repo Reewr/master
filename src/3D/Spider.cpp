@@ -10,7 +10,86 @@
 #include "../Utils/Asset.hpp"
 #include "MeshPart.hpp"
 
-static std::map<std::string, std::pair<short, short>> CollisionFlags = {
+Spider::Part::Part()
+    : collisionGroup(1)
+    , collisionMask(-1)
+    , joint(nullptr)
+    , torque(0) {}
+
+Spider::Part::Part(unsigned short group, unsigned short mask)
+    : collisionGroup(group)
+    , collisionMask(mask)
+    , joint(nullptr)
+    , torque(0) {}
+
+Spider::Part::Part(unsigned short group,
+                   unsigned short mask,
+                   float          torque)
+    : collisionGroup(group)
+    , collisionMask(mask)
+    , joint(nullptr)
+    , torque(torque) {}
+
+Spider::Spider(Asset* asset) : Logging::Log("Spider") {
+  ResourceManager* r = asset->rManager();
+  mProgram           = r->get<Program>("Program::Model");
+  mMesh              = r->get<PhysicsMesh>("PhysicsMesh::Spider");
+  mElements          = mMesh->createCopyAll();
+  mParts             = SPIDER_PARTS;
+
+  for (auto& mesh : mElements->meshes) {
+    mLog->debug("Adding MeshPart: {}", mesh.first);
+    Drawable3D* child = new MeshPart(mProgram,
+                                     mesh.second,
+                                     mElements->bodies[mesh.first],
+                                     mElements->motions[mesh.first]);
+
+    child->setCollisionGroup(mParts[mesh.first].collisionGroup);
+    child->setCollisionMask(mParts[mesh.first].collisionMask);
+
+    for (auto& c : mElements->constraints[mesh.first]) {
+      child->addConstraint(c);
+    }
+
+    mChildren.push_back(child);
+  }
+
+  // for (auto subMesh : allSubmeshes) {
+  //   mLog->debug("Adding MeshPart: {}", subMesh.first);
+  //   mChildren.push_back(new MeshPart(mProgram, subMesh.second));
+  // }
+}
+
+Spider::~Spider() {
+  for (auto& c : mChildren)
+    delete c;
+
+  mMesh->deleteCopy(mElements);
+}
+
+void Spider::update(float) {}
+
+void Spider::drawShadow(Framebuffer*, Camera*) {}
+void Spider::draw(Camera* c) {
+  mProgram->bind();
+
+  // mmm::mat4 model = mmm::translate(mPosition) * mRotation * mScale;
+
+  mProgram->setUniform("view", c->view());
+  mProgram->setUniform("proj", c->projection());
+
+  mProgram->setUniform("dir", c->light().direction);
+  c->setLightVPUniforms(mProgram, "light");
+
+  mMesh->mesh()->bindVertexArray();
+  for (auto& child : mChildren)
+    child->draw(c);
+  mMesh->mesh()->unbindVertexArray();
+}
+
+void Spider::input(const Input::Event&) {}
+
+std::map<std::string, Spider::Part> Spider::SPIDER_PARTS = {
   {"Eye",           { 0b1000000000000000, 0b1011111111111111 }},
   {"Neck",          { 0b0100000000000000, 0b0011111111111111 }},
   {"Coxa1",         { 0b0100100000000000, 0b1000011111111111 }},
@@ -80,59 +159,3 @@ static std::map<std::string, std::pair<short, short>> CollisionFlags = {
   {"MetatarsusR4",  { 0b0001000100000000, 0b1110111011111111 }},
   {"TarsusR4",      { 0b0001000100000000, 0b1110111011111111 }}
 };
-
-Spider::Spider(Asset* asset) : Logging::Log("Spider") {
-  ResourceManager* r = asset->rManager();
-  mProgram           = r->get<Program>("Program::Model");
-  mMesh              = r->get<PhysicsMesh>("PhysicsMesh::Spider");
-  mElements          = mMesh->createCopyAll();
-
-  for (auto& mesh : mElements->meshes) {
-    mLog->debug("Adding MeshPart: {}", mesh.first);
-    mChildren.push_back(new MeshPart(mProgram,
-                                     mesh.second,
-                                     mElements->bodies[mesh.first],
-                                     mElements->motions[mesh.first]));
-
-    mChildren.back()->setCollisionGroup(CollisionFlags[mesh.first].first);
-    mChildren.back()->setCollisionMask(CollisionFlags[mesh.first].second);
-
-    for (auto& c : mElements->constraints[mesh.first]) {
-      mChildren.back()->addConstraint(c);
-    }
-  }
-
-  // for (auto subMesh : allSubmeshes) {
-  //   mLog->debug("Adding MeshPart: {}", subMesh.first);
-  //   mChildren.push_back(new MeshPart(mProgram, subMesh.second));
-  // }
-}
-
-Spider::~Spider() {
-  for (auto& c : mChildren)
-    delete c;
-
-  mMesh->deleteCopy(mElements);
-}
-
-void Spider::update(float) {}
-
-void Spider::drawShadow(Framebuffer*, Camera*) {}
-void Spider::draw(Camera* c) {
-  mProgram->bind();
-
-  // mmm::mat4 model = mmm::translate(mPosition) * mRotation * mScale;
-
-  mProgram->setUniform("view", c->view());
-  mProgram->setUniform("proj", c->projection());
-
-  mProgram->setUniform("dir", c->light().direction);
-  c->setLightVPUniforms(mProgram, "light");
-
-  mMesh->mesh()->bindVertexArray();
-  for (auto& child : mChildren)
-    child->draw(c);
-  mMesh->mesh()->unbindVertexArray();
-}
-
-void Spider::input(const Input::Event&) {}
