@@ -79,6 +79,22 @@ void Drawable3D::moveTo(const mmm::vec3& position) {
   }
 }
 
+void Drawable3D::rotate(const mmm::vec3& axis, float angle) {
+  const btVector3 axisBt = btVector3(axis.x, axis.y, axis.z);
+
+  if (hasPhysics()) {
+    btTransform trans = mBody->getCenterOfMassTransform();
+    trans.setRotation(btQuaternion(axisBt, mmm::radians(angle)));
+
+    mBody->setCenterOfMassTransform(trans);
+    mBody->clearForces();
+  }
+
+  for (auto& c : mChildren) {
+    c->rotate(axis, angle);
+  }
+}
+
 bool Drawable3D::hasPhysics() {
   return mShape != nullptr && mMotion != nullptr && mBody != nullptr;
 }

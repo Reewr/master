@@ -41,6 +41,8 @@ public:
 
   void moveTo(const mmm::vec3& position);
 
+  void rotate(const mmm::vec3& axis, float angle);
+
   btRigidBody* rigidBody();
 
   const std::vector<Drawable3D*>& children();
