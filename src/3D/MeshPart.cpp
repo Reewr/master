@@ -19,14 +19,14 @@ MeshPart::MeshPart(std::shared_ptr<Program>& program,
   mBody   = body;
   mShape  = mBody->getCollisionShape();
 
-  mLog->debug(
-    "{}: Gravity: {}, Mass: {}, Shape: {}, LocalInertia: {}, Constraints: {}",
-    subMesh->name(),
-    tovec(mBody->getGravity()),
-    mBody->getInvMass(),
-    mShape->getName(),
-    tovec(mBody->getLocalInertia()),
-    mBody->getNumConstraintRefs());
+  // mLog->debug(
+  //   "{}: Gravity: {}, Mass: {}, Shape: {}, LocalInertia: {}, Constraints: {}",
+  //   subMesh->name(),
+  //   tovec(mBody->getGravity()),
+  //   mBody->getInvMass(),
+  //   mShape->getName(),
+  //   tovec(mBody->getLocalInertia()),
+  //   mBody->getNumConstraintRefs());
 }
 
 MeshPart::~MeshPart() {}
