@@ -268,6 +268,10 @@ PhysicsElements* PhysicsMesh::createCopyAll() {
         const btTransform& bFrame = h->getBFrame();
         btHingeConstraint* n = new btHingeConstraint(*a, *b, aFrame, bFrame);
 
+        if (h->hasLimit()) {
+          n->setLimit(h->getLowerLimit(), h->getUpperLimit());
+        }
+
         constraintCopy = n;
         break;
       }
