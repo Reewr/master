@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.78.0 commit date:2017-02-24, commit time:14:33, hash:e92f235283</authoring_tool>
     </contributor>
-    <created>2017-03-12T22:25:23</created>
-    <modified>2017-03-12T22:25:23</modified>
+    <created>2017-03-12T22:31:24</created>
+    <modified>2017-03-12T22:31:24</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -373,10 +373,30 @@
       </extra>
     </light>
   </library_lights>
-  <library_images/>
+  <library_images>
+    <image id="m2_test_png" name="m2_test_png">
+      <init_from>m2_test.png</init_from>
+    </image>
+    <image id="m1_test_png" name="m1_test_png">
+      <init_from>m1_test.png</init_from>
+    </image>
+    <image id="m3_test_png" name="m3_test_png">
+      <init_from>m3_test.png</init_from>
+    </image>
+  </library_images>
   <library_effects>
     <effect id="Brass-effect">
       <profile_COMMON>
+        <newparam sid="m2_test_png-surface">
+          <surface type="2D">
+            <init_from>m2_test_png</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="m2_test_png-sampler">
+          <sampler2D>
+            <source>m2_test_png-surface</source>
+          </sampler2D>
+        </newparam>
         <technique sid="common">
           <phong>
             <emission>
@@ -386,7 +406,7 @@
               <color sid="ambient">0 0 0 1</color>
             </ambient>
             <diffuse>
-              <color sid="diffuse">0.64 0.64 0.64 1</color>
+              <texture texture="m2_test_png-sampler"/>
             </diffuse>
             <specular>
               <color sid="specular">0.5 0.5 0.5 1</color>
@@ -403,6 +423,16 @@
     </effect>
     <effect id="Carbon-effect">
       <profile_COMMON>
+        <newparam sid="m1_test_png-surface">
+          <surface type="2D">
+            <init_from>m1_test_png</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="m1_test_png-sampler">
+          <sampler2D>
+            <source>m1_test_png-surface</source>
+          </sampler2D>
+        </newparam>
         <technique sid="common">
           <phong>
             <emission>
@@ -412,7 +442,7 @@
               <color sid="ambient">0 0 0 1</color>
             </ambient>
             <diffuse>
-              <color sid="diffuse">0.512 0.512 0.512 1</color>
+              <texture texture="m1_test_png-sampler"/>
             </diffuse>
             <specular>
               <color sid="specular">0.25 0.25 0.25 1</color>
@@ -435,6 +465,16 @@
     </effect>
     <effect id="Lightning-effect">
       <profile_COMMON>
+        <newparam sid="m3_test_png-surface">
+          <surface type="2D">
+            <init_from>m3_test_png</init_from>
+          </surface>
+        </newparam>
+        <newparam sid="m3_test_png-sampler">
+          <sampler2D>
+            <source>m3_test_png-surface</source>
+          </sampler2D>
+        </newparam>
         <technique sid="common">
           <phong>
             <emission>
@@ -444,7 +484,7 @@
               <color sid="ambient">0 0 0 1</color>
             </ambient>
             <diffuse>
-              <color sid="diffuse">0.64 0.64 0.64 1</color>
+              <texture texture="m3_test_png-sampler"/>
             </diffuse>
             <specular>
               <color sid="specular">0.5 0.5 0.5 1</color>
