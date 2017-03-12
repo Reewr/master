@@ -272,11 +272,10 @@ PhysicsElements* PhysicsMesh::createCopyAll() {
           n->setLimit(h->getLowerLimit(), h->getUpperLimit());
         }
 
-        mLog->debug("Constraint between A: '{}' -> B: {}", fromConstraint, toConstraint);
+        // mLog->debug("Constraint between A: '{}' -> B: {}", fromConstraint, toConstraint);
 
-        if (h->hasLimit())
-          mLog->debug("  hasLimit, lower: {}, upper: {}", h->getLowerLimit(), h->getUpperLimit());
-
+        // if (h->hasLimit())
+        //   mLog->debug("  hasLimit, lower: {}, upper: {}", h->getLowerLimit(), h->getUpperLimit());
 
         constraintCopy = n;
         break;
