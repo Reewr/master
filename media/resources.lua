@@ -33,19 +33,19 @@ addResource("Texture::Slider", "media/Textures/sliderbg.png",
 addResource("Texture::SliderButton", "media/Textures/sliderbutton.png",
             ResourceType.Texture, ResourceScope.All)
 
-addResource("Texture::m1_test.dds", "media/Textures/m1_test.png",
+addResource("Texture::m1_test.png", "media/Textures/m1_test.png",
             ResourceType.Texture,
             ResourceScope.Master)
 
-addResource("Texture::m2_test.dds", "media/Textures/m2_test.png",
+addResource("Texture::m2_test.png", "media/Textures/m2_test.png",
             ResourceType.Texture,
             ResourceScope.Master)
 
-addResource("Texture::m3_test.dds", "media/Textures/m3_test.png",
+addResource("Texture::m3_test.png", "media/Textures/m3_test.png",
             ResourceType.Texture,
             ResourceScope.Master)
 
-addResource("Texture::m4_test.dds", "media/Textures/m4_test.png",
+addResource("Texture::m4_test.png", "media/Textures/m4_test.png",
             ResourceType.Texture,
             ResourceScope.Master)
 
