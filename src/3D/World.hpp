@@ -43,6 +43,10 @@ public:
   // By disabling mousepickups, the user is not allowed to move objects
   void disableMousePickups();
 
+  void disablePhysics();
+
+  void enablePhysics();
+
   // The function that handles input events
   void input(Camera* camera, const Input::Event& event);
 

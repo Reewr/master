@@ -245,6 +245,19 @@ bool World::pickBody(const mmm::vec3& rayFromWorld,
   return true;
 }
 
+void World::disablePhysics() {
+  for (auto& e : mElements) {
+    if (e->hasPhysics())
+      e->rigidBody()->forceActivationState(WANTS_DEACTIVATION);
+  }
+}
+void World::enablePhysics() {
+  for (auto& e : mElements) {
+    if (e->hasPhysics())
+      e->rigidBody()->forceActivationState(DISABLE_DEACTIVATION);
+  }
+}
+
 /**
  * @brief
  *   If the user has clicked on an object with the mouse and starts
