@@ -327,8 +327,41 @@ SubMesh::SubMesh(Mesh*            model,
     mName = std::string(node->mName.C_Str());
 
   // parse the node
+  std::vector<std::string> textureNames;
+
+  // Add the texture if it doesnt already exist in the list
+  auto addIfNew = [&textureNames](const std::string& tex) {
+    for(auto& t : textureNames) {
+      if (t == tex)
+        return;
+    }
+
+    textureNames.push_back(tex);
+  };
+
+  // Return the index of the texture if it is found.
+  auto findTex = [&textureNames](const std::string& tex) -> int {
+    for(unsigned int i = 0; i < textureNames.size(); ++i)
+      if (textureNames[i] == tex)
+        return i;
+    return -1;
+  };
+
   for (unsigned int i = 0; i < node->mNumMeshes; i += 1) {
     const aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+    const aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+
+    // load the textures for the particular mesh
+    unsigned int size = material->GetTextureCount(aiTextureType_DIFFUSE);
+
+    for (unsigned int i = 0; i < size; ++i) {
+      aiString texPath;
+      aiReturn ret = material->GetTexture(aiTextureType_DIFFUSE, i, &texPath);
+
+      if (ret == AI_SUCCESS) {
+        addIfNew(std::string("Texture::") + texPath.C_Str());
+      }
+    }
 
     if (!mesh->HasPositions() || !mesh->HasTextureCoords(0) ||
         !mesh->HasNormals())
@@ -354,21 +387,10 @@ SubMesh::SubMesh(Mesh*            model,
         model->addVertex({ vertex, texCoord, normal });
       }
     }
-
-    // load the textures for the particular mesh
-    aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-    unsigned int size    = material->GetTextureCount(aiTextureType_DIFFUSE);
-
-    for(unsigned int i = 0; i < size; ++i) {
-      aiString texPath;
-      aiReturn ret = material->GetTexture(aiTextureType_DIFFUSE, i, &texPath);
-
-      if (ret == AI_SUCCESS) {
-        std::string texName = texPath.C_Str();
-        mTextures.push_back(manager->get<Texture>("Texture::" + texName));
-      }
-    }
   }
+
+  for (auto& t : textureNames)
+    mTextures.push_back(manager->get<Texture>(t));
 
   mSize = model->numVertices() - mStartIndex;
 
