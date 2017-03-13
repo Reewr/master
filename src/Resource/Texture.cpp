@@ -46,11 +46,11 @@ const vec2& Texture::getSize() const {
   return mSize;
 }
 
-bool Texture::isActive(unsigned int textureUnit) const {
-  if (activeTextures[textureUnit] == 0)
+bool Texture::isActive(unsigned int texUnit) const {
+  if (activeTextures.count(texUnit) == 0 || activeTextures[texUnit] == 0)
     return false;
 
-  return activeTextures[textureUnit] == mTextureId;
+  return activeTextures[texUnit] == mTextureId;
 }
 
 void Texture::bind(unsigned int textureUnit) {
