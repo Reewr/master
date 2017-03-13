@@ -9,3 +9,6 @@ Woooo
 bin
 compile_commands.json
 *.gch
+
+# Temporary blender files
+*.blend1
