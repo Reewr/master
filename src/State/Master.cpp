@@ -130,15 +130,14 @@ Master::~Master() {
 
 void Master::draw3D() {
   glEnable(GL_DEPTH_TEST);
+  glCullFace(GL_BACK);
 
-  glCullFace(GL_FRONT);
   mShadowmap->bind(true);
   for (auto d : mDrawable3D)
     d->drawShadow(mShadowmap, mCamera);
   mShadowmap->finalize();
   mShadowmap->texture()->bind(0);
 
-  glCullFace(GL_BACK);
   for (auto d : mDrawable3D)
     d->draw(mCamera);
 }
