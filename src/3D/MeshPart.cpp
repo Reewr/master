@@ -1,6 +1,7 @@
 #include "MeshPart.hpp"
 
 #include "../GLSL/Program.hpp"
+#include "../Graphical/Framebuffer.hpp"
 #include "../Resource/Mesh.hpp"
 #include "../Resource/PhysicsMesh.hpp"
 
@@ -33,7 +34,16 @@ MeshPart::MeshPart(std::shared_ptr<Program>& program,
 MeshPart::~MeshPart() {}
 
 void MeshPart::update(float) {}
-void MeshPart::drawShadow(Framebuffer*, Camera*) {}
+void MeshPart::drawShadow(Framebuffer* shadowMap, Camera*) {
+  if (mMesh->size() == 0)
+    return;
+
+  auto program = shadowMap->program();
+  program->bind();
+  program->setUniform("model", mmm::translate(mPosition) * mRotation * mScale);
+
+  mMesh->draw(-1);
+}
 
 /**
  * @brief

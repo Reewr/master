@@ -4,6 +4,7 @@
 
 #include "../3D/Camera.hpp"
 #include "../GLSL/Program.hpp"
+#include "../Graphical/Framebuffer.hpp"
 #include "../Resource/Mesh.hpp"
 #include "../Resource/PhysicsMesh.hpp"
 #include "../Resource/ResourceManager.hpp"
@@ -65,7 +66,17 @@ Spider::~Spider() {
 
 void Spider::update(float) {}
 
-void Spider::drawShadow(Framebuffer*, Camera*) {}
+void Spider::drawShadow(Framebuffer* shadowMap, Camera* camera) {
+  auto program = shadowMap->program();
+
+  program->bind();
+  camera->setLightVPUniforms(program, "light");
+
+  mMesh->mesh()->bindVertexArray();
+  for (auto& child : mChildren)
+    child->drawShadow(shadowMap, camera);
+  mMesh->mesh()->unbindVertexArray();
+}
 void Spider::draw(Camera* c) {
   mProgram->bind();
 
