@@ -355,15 +355,18 @@ SubMesh::SubMesh(Mesh*            model,
       }
     }
 
-    // load the texture for the particular mesh
-    aiString texpath;
-    aiReturn hasTexture =
-      scene->mMaterials[mesh->mMaterialIndex]->GetTexture(aiTextureType_DIFFUSE,
-                                                          0,
-                                                          &texpath);
-    if (hasTexture == AI_SUCCESS) {
-      std::string texName = texpath.C_Str();
-      mTexture            = manager->get<Texture>("Texture::" + texName);
+    // load the textures for the particular mesh
+    aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+    unsigned int size    = material->GetTextureCount(aiTextureType_DIFFUSE);
+
+    for(unsigned int i = 0; i < size; ++i) {
+      aiString texPath;
+      aiReturn ret = material->GetTexture(aiTextureType_DIFFUSE, i, &texPath);
+
+      if (ret == AI_SUCCESS) {
+        std::string texName = texPath.C_Str();
+        mTextures.push_back(manager->get<Texture>("Texture::" + texName));
+      }
     }
   }
 
