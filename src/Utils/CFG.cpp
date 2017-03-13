@@ -352,6 +352,17 @@ std::ostream& operator<<(std::ostream& os, const CFG& cfg) {
       os << std::endl << std::endl;
     }
 
+    // Find the maximum length of the keys
+    unsigned int maxKeySize = 0;
+
+    for(const auto& key : section.second) {
+      if (key.first.size() > maxKeySize)
+        maxKeySize = key.first.size();
+    }
+
+    // add one for whitespace
+    maxKeySize++;
+
     for (const auto& key : section.second) {
       if (section.first != "Bindings") {
         os << std::endl << "  # possible values are:";
@@ -360,7 +371,7 @@ std::ostream& operator<<(std::ostream& os, const CFG& cfg) {
       }
 
       std::string s = key.first;
-      s.resize(22, ' ');
+      s.resize(maxKeySize, ' ');
       os << "  " << s << key.second << std::endl;
     }
     os << std::endl;
