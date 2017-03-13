@@ -280,7 +280,7 @@ SubMesh::SubMesh()
     , mName("")
     , mTransform(mmm::mat4::identity)
     , mParent(nullptr)
-    , mTexture(nullptr) {}
+    , mTextures({}) {}
 
 /**
  * @brief
@@ -303,7 +303,7 @@ SubMesh::SubMesh(Mesh*            model,
     , mName("")
     , mTransform(mmm::mat4::identity)
     , mParent(model)
-    , mTexture(nullptr) {
+    , mTextures({}) {
   aiMatrix4x4 am = node->mTransformation;
   mTransform     = transform * mat4(am.a1,
                                 am.a2,
@@ -458,7 +458,7 @@ const std::shared_ptr<Texture>& SubMesh::texture(unsigned int index) const {
  *
  * @return
  */
-const std::vector<std::shared_ptr<Texture>> textures() const {
+const std::vector<std::shared_ptr<Texture>> SubMesh::textures() const {
   return mTextures;
 }
 
@@ -476,8 +476,9 @@ void SubMesh::draw(int textureLocation) const {
     return;
 
   if (mTextures.size() != 0 && textureLocation > 0) {
-    for(int i = 0; i < mTextures.size(); ++i)
-      mTextures[textureLocation]->bind(textureLocation + i);
+    for(unsigned int i = 0; i < mTextures.size(); ++i) {
+      mTextures[i]->bind(textureLocation + i);
+    }
   }
 
   mParent->bindVertexArray();
