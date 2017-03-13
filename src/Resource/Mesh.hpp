@@ -46,8 +46,13 @@ public:
   // Returns the name of the mesh, if it has one.
   const std::string& name() const;
 
-  // Returns a reference to the texture
-  const std::shared_ptr<Texture>& texture() const;
+  // Returns the number of textures
+  unsigned int numTextures() const;
+
+  // Returns a reference to the texture indicated by the index
+  const std::shared_ptr<Texture>& texture(unsigned int i) const;
+
+  const std::vector<std::shared_ptr<Texture>> textures() const;
 
   // Draws the submesh
   void draw(int textureLocation = 1) const;
@@ -60,7 +65,7 @@ private:
   mmm::mat4   mTransform;
   Mesh*       mParent;
 
-  std::shared_ptr<Texture> mTexture;
+  std::vector<std::shared_ptr<Texture>> mTextures;
 };
 
 /**

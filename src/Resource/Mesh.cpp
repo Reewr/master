@@ -430,14 +430,36 @@ const std::string& SubMesh::name() const {
 
 /**
  * @brief
+ *   Returns the number of textures that the SubMesh has.
+ *
+ * @return
+ */
+unsigned int SubMesh::numTextures() const {
+  return mTextures.size();
+}
+
+/**
+ * @brief
  *   Returns a reference to the texture that is stored with the
  *   mesh. This shared pointer may be null, meaning that the mesh
  *   does not have a texture
  *
  * @return
  */
-const std::shared_ptr<Texture>& SubMesh::texture() const {
-  return mTexture;
+const std::shared_ptr<Texture>& SubMesh::texture(unsigned int index) const {
+  if (index >= mTextures.size())
+    throw std::runtime_error("Index out of bounds");
+  return mTextures[index];
+}
+
+/**
+ * @brief
+ *   Returns a reference to all the textures that the submesh has stored
+ *
+ * @return
+ */
+const std::vector<std::shared_ptr<Texture>> textures() const {
+  return mTextures;
 }
 
 /**
@@ -453,8 +475,10 @@ void SubMesh::draw(int textureLocation) const {
   if (mSize == 0)
     return;
 
-  if (mTexture != nullptr && textureLocation > 0)
-    mTexture->bind(textureLocation);
+  if (mTextures.size() != 0 && textureLocation > 0) {
+    for(int i = 0; i < mTextures.size(); ++i)
+      mTextures[textureLocation]->bind(textureLocation + i);
+  }
 
   mParent->bindVertexArray();
   glDrawArrays(GL_TRIANGLES, mStartIndex, mSize);
