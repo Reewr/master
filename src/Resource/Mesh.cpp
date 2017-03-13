@@ -376,7 +376,6 @@ SubMesh::SubMesh(Mesh*            model,
   for (unsigned int i = 0; i < node->mNumChildren; ++i) {
     model->addSubMesh(
       SubMesh(model, manager, scene, node->mChildren[i], mTransform));
-    // mChildren.push_back(SubMesh(model, manager, scene, node->mChildren[i]));
   }
 }
 
