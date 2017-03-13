@@ -222,6 +222,8 @@ const vec3& Camera::position() const {
  * @param dt
  */
 void Camera::input(float dt) {
+  static vec2 previousMouse;
+
   // handle input first so that you get smooth movement
   vec4          dir     = vec4(0, 0, -1, 0) * mSpeed * dt;
   vec3          forward = vec3(mmm::rotate_y(mHoriRotation) * dir);
@@ -242,15 +244,25 @@ void Camera::input(float dt) {
     else if (a == Input::Action::MoveLeft)
       mTarget += strafe;
     else if (a == Input::Action::Rotate) {
-      int  key   = input->getKey(Input::Action::Rotate).key1;
-      vec2 press = input->getPressedCoord(key);
-      vec2 diff  = input->getMouseCoords() - press;
+
+      if (previousMouse.x == 0 && previousMouse.y == 0) {
+        int key = input->getKey(Input::Action::Rotate).key1;
+        previousMouse = input->getPressedCoord(key);
+      }
+
+      vec2 mouse = input->getMouseCoords();
+      vec2 diff  = mouse - previousMouse;
 
       float rsh     = cfg->camera.rotSpeed * (cfg->camera.rotInvH ? -1 : 1);
       float rsv     = cfg->camera.rotSpeed * (cfg->camera.rotInvV ? -1 : 1);
       mHoriRotation = mHoriRotation + diff.x / cfg->graphics.res.x * rsh;
       mVertRotation = mVertRotation + diff.y / cfg->graphics.res.y * rsv;
+      previousMouse = mouse;
     }
+  }
+
+  if (!input->isActionPressed(Input::Action::Rotate)) {
+    previousMouse = vec2();
   }
 }
 
