@@ -486,24 +486,3 @@ void SubMesh::draw(int textureLocation) const {
   mParent->bindVertexArray();
   glDrawArrays(GL_TRIANGLES, mStartIndex, mSize);
 }
-
-/**
- * @brief
- *   Draws the submesh with the given model matrix and program
- *
- * @param modelMatrix
- * @param program
- */
-// void Mesh::SubMesh::draw(const mmm::mat4&         modelMatrix,
-//                    std::shared_ptr<Program> program) {
-//   mat4 m = modelMatrix * mTransform;
-
-//   if (mSize != 0) {
-//     mTexture->bind(1);
-//     program->setUniform("model", m);
-//     glDrawArrays(GL_TRIANGLES, mStartIndex, mSize);
-//   }
-
-//   for (auto& childMesh : mChildren)
-//     childMesh.draw(m, program);
-// }
