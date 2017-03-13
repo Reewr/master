@@ -38,7 +38,6 @@ Spider::Spider(Asset* asset) : Logging::Log("Spider") {
   mParts             = SPIDER_PARTS;
 
   for (auto& mesh : mElements->meshes) {
-    mLog->debug("Adding MeshPart: {}", mesh.first);
     Drawable3D* child = new MeshPart(mProgram,
                                      mesh.second,
                                      mElements->bodies[mesh.first],
