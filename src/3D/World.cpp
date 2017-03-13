@@ -169,7 +169,7 @@ void World::input(Camera* camera, const Input::Event& event) {
 
     mLog->debug("Picked: RayFrom '{}', RayTo: '{}'", rayFrom, rayTo);
 
-    bool hit = pickBody(rayTo, rayFrom);
+    bool hit = pickBody(rayFrom, rayTo);
 
     if (hit) {
       event.stopPropgation();
@@ -217,6 +217,8 @@ bool World::pickBody(const mmm::vec3& rayFromWorld,
     return false;
 
   btVector3    pickPos = rayCallback.m_hitPointWorld;
+  mLog->debug("PickedPos: '{}'", mmm::vec3(pickPos.x(), pickPos.y(), pickPos.z()));
+
   btRigidBody* body =
     (btRigidBody*) btRigidBody::upcast(rayCallback.m_collisionObject);
 
