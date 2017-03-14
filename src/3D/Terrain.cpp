@@ -13,6 +13,7 @@
 
 using mmm::vec2;
 using mmm::vec3;
+using mmm::mat4;
 
 Terrain::Terrain() : Logging::Log("Terrain") {
   mGrid   = new GLGrid3D(vec2(128, 128));
@@ -43,16 +44,19 @@ void Terrain::update(float) {}
 
 void Terrain::drawShadow(Framebuffer* shadowMap, Camera* camera) {
   auto program = shadowMap->program();
+  mat4 model   = mmm::translate(mPosition + vec3(0, 1, 0)) * mRotation * mScale;
 
   program->bind();
-  program->setUniform("model", mmm::translate(mPosition) * mRotation * mScale);
+  program->setUniform("model", model);
   camera->setLightVPUniforms(program, "light");
   mGrid->draw();
 }
 
 void Terrain::draw(Camera* c) {
+  mat4 model = mmm::translate(mPosition + vec3(0, 1, 0)) * mRotation * mScale;
+
   mProgram->bind();
-  mProgram->setUniform("model", mmm::translate(mPosition) * mRotation * mScale);
+  mProgram->setUniform("model", model);
   mProgram->setUniform("view", c->view());
   mProgram->setUniform("proj", c->projection());
 
