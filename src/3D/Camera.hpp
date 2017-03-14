@@ -31,8 +31,8 @@ public:
 
   Camera(Asset* a);
 
-  const mmm::mat4& updateViewMatrix();
-  mmm::mat4        updateProjectionMatrix() const;
+  mmm::mat4 updateViewMatrix() const;
+  mmm::mat4 updateProjectionMatrix() const;
 
   void setLightVPUniforms(std::shared_ptr<Program> program,
                           const std::string&       name = "light");
@@ -83,13 +83,11 @@ private:
 
   mmm::vec3 mPosition;
   mmm::vec3 mTarget;
+  mmm::vec3 mUp;
   mmm::mat4 mModel;
   mmm::mat4 mView;
   mmm::mat4 mProjection;
 
-  float mHeight;
-  float mHoriRotation;
-  float mVertRotation;
   float mSpeed;
   float mMinViewDistance;
   float mFieldOfView;

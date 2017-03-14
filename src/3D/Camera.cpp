@@ -24,18 +24,22 @@ Camera::Light::Light()
 Camera::Camera(Asset* asset)
     : Logging::Log("Camera")
     , mAsset(asset)
-    , mTarget(0, 1.183, 1)
+    , mTarget(0, 1, 2)
+    , mPosition(0, 1, 3)
+    , mUp(0, 1, 0)
     , mModel(mat4::identity)
     , mView(mat4::identity)
     , mProjection(mat4::identity)
-    , mHeight(2)
-    , mHoriRotation(0)
-    , mVertRotation(45)
     , mSpeed(4)
-    , mMinViewDistance(0.1f)
+    , mMinViewDistance(1.f)
     , mFieldOfView(67.0f) {
 
-  mProjection    = updateProjectionMatrix();
+  mView       = updateViewMatrix();
+  mProjection = updateProjectionMatrix();
+
+  float d  = mAsset->cfg()->graphics.viewDistance / 2.f;
+  mLight.projection = mmm::ortho_r(-d, d, -d, d, -d, d);
+
   mShadowProgram = mAsset->rManager()->get<Program>("Program::Shadow");
   mModelProgram  = mAsset->rManager()->get<Program>("Program::Model");
   update(0);
@@ -45,22 +49,12 @@ Camera::Camera(Asset* asset)
 
 /**
  * @brief
- *   Updates the view matrix based on the vertical and horizontal rotation as
- *   well as the target.
+ *   Retrieves a view matrix based on current camera position and view angle.
  *
  * @return
  */
-const mat4& Camera::updateViewMatrix() {
-  vec3 cameraEye =
-    mTarget + vec3(mmm::rotate_y(mHoriRotation) * mmm::rotate_x(mVertRotation) *
-                   vec4(0, 0, mHeight, 1));
-  vec3 cameraUp = vec3(mmm::rotate_y(mHoriRotation) *
-                       mmm::rotate_x(mVertRotation) * vec4(0, 1, 0, 0));
-
-  mPosition = cameraEye;
-  mView     = mmm::lookAt_r(cameraEye, mTarget, cameraUp);
-
-  return mView;
+mat4 Camera::updateViewMatrix() const {
+  return mmm::lookAt_r(mPosition, mTarget, mUp);
 }
 
 /**
@@ -224,26 +218,29 @@ const vec3& Camera::position() const {
 void Camera::input(float dt) {
   static vec2 previousMouse;
 
-  // handle input first so that you get smooth movement
-  vec4          dir     = vec4(0, 0, -1, 0) * mSpeed * dt;
-  vec3          forward = vec3(mmm::rotate_y(mHoriRotation) * dir);
-  vec3          strafe  = vec3(mmm::rotate_y(mHoriRotation + 90) * dir);
-  CFG*          cfg     = mAsset->cfg();
-  Input::Input* input   = mAsset->input();
+  vec3  forward = mmm::normalize(mTarget - mPosition) * mSpeed * dt;
+  vec3  left    = vec3(mmm::rotate_y(90.f) * vec4(forward.x, 0, forward.z, 1));
+  CFG*  cfg     = mAsset->cfg();
+  auto* input   = mAsset->input();
 
   std::vector<int> actions = input->getPressedActions();
 
   // handle all the inputs that have been pressed
   for (auto a : actions) {
-    if (a == Input::Action::MoveUp)
+
+    if (a == Input::Action::MoveUp) {
       mTarget += forward;
-    else if (a == Input::Action::MoveDown)
+      mPosition += forward;
+    } else if (a == Input::Action::MoveDown) {
       mTarget -= forward;
-    else if (a == Input::Action::MoveRight)
-      mTarget -= strafe;
-    else if (a == Input::Action::MoveLeft)
-      mTarget += strafe;
-    else if (a == Input::Action::Rotate) {
+      mPosition -= forward;
+    } else if (a == Input::Action::MoveRight) {
+      mTarget -= left;
+      mPosition -= left;
+    } else if (a == Input::Action::MoveLeft) {
+      mTarget += left;
+      mPosition += left;
+    } else if (a == Input::Action::Rotate) {
 
       if (previousMouse.x == 0 && previousMouse.y == 0) {
         int key = input->getKey(Input::Action::Rotate).key1;
@@ -253,10 +250,14 @@ void Camera::input(float dt) {
       vec2 mouse = input->getMouseCoords();
       vec2 diff  = mouse - previousMouse;
 
-      float rsh     = cfg->camera.rotSpeed * (cfg->camera.rotInvH ? -1 : 1);
-      float rsv     = cfg->camera.rotSpeed * (cfg->camera.rotInvV ? -1 : 1);
-      mHoriRotation = mHoriRotation + diff.x / cfg->graphics.res.x * rsh;
-      mVertRotation = mVertRotation + diff.y / cfg->graphics.res.y * rsv;
+      vec2 rs = vec2(cfg->camera.rotSpeed);
+      rs.x *= cfg->camera.rotInvH ? -1 : 1;
+      rs.y *= cfg->camera.rotInvV ? -1 : 1;
+      vec2 rot = diff / cfg->graphics.res * rs;
+
+      forward = vec3(mmm::rotate(-rot.y, left) * vec4(forward, 1));
+      mTarget = mPosition + vec3(mmm::rotate(rot.x, mUp) * vec4(forward, 1));
+
       previousMouse = mouse;
     }
   }
@@ -273,33 +274,24 @@ void Camera::input(float dt) {
  *
  * @param dt
  */
-void Camera::update(float) {
+void Camera::update(float dt) {
+
   // now that input has been handled, handle the new positions and stuff
   // that may have been set
-  updateViewMatrix();
+  mView = updateViewMatrix();
 
   // mLight.day -= mLight.speed * dt;
 
-  mat4 lt       = mmm::rotate_z(mLight.day) * mmm::rotate_y(mHoriRotation);
-  vec3 lightEye = mTarget + vec3(lt * vec4(0, mHeight, 0, 1));
-  vec3 lightUp  = vec3(lt * vec4(0, 0, -1, 0));
+  mat4  lt = mmm::rotate_z(mLight.day);
+  float d  = mAsset->cfg()->graphics.viewDistance / 2.f;
 
-  mLight.view       = mmm::lookAt(lightEye, mTarget, lightUp);
-  float h           = 5 * mHeight;
-  mLight.projection = mmm::ortho(-h, h, -h, h, -h, h);
-  // mLight.projection = mmm::ortho(-7.f, 7.f, -7.f, 7.f, -7.f, 7.f);
-  mLight.direction = mmm::normalize(lightUp - mTarget);
+  vec3 up     = vec3(0, 0, -1);
+  vec3 target = mPosition + mmm::normalize(mTarget - mPosition) * d;
+  vec3 eye    = target + vec3(lt * vec4(mUp, 1));
 
+  mLight.view      = mmm::lookAt_r(eye, target, up);
+  mLight.direction = -mmm::normalize(up - mTarget);
 
-  /*
-  mat4 inv_view = transpose(view);
-  mat3 inv_rot = {
-    inv_view[0], inv_view[1], inv_view[2],
-    inv_view[4], inv_view[5], inv_view[6],
-    inv_view[8], inv_view[9], inv_view[10],
-  };
-  water->setUniform("inverse_rot", inv_rot);
-  */
   // terrain->setUniform ("sunLight.color", light.color);
   // terrain->setUniform ("sunLight.direction", -ld);
   // terrain->setUniform ("sunLight.ambient", light.ambient);
@@ -314,15 +306,11 @@ void Camera::update(float) {
  */
 void Camera::zoom(int sign) {
   CFG* cfg = mAsset->cfg();
+  float s = cfg->camera.zoomSpeed * (cfg->camera.zoomInv ^ (sign > 0) ? -1 : 1);
+  mFieldOfView = mmm::clamp(mFieldOfView + s, 32.f, 128.f);
 
-  sign = cfg->camera.zoomInv ^ (sign > 0) ? -1 : 1;
-  mHeight += cfg->camera.zoomSpeed * sign;
-
-  if (mHeight > 60)
-    mHeight = 60;
-
-  if (mHeight < 0.1)
-    mHeight = 0.1;
+  mLog->debug("fov: {}", mFieldOfView);
+  mProjection = updateProjectionMatrix();
 }
 
 /**
@@ -341,8 +329,8 @@ void Camera::zoom(int sign) {
  * @return
  */
 vec3 Camera::screenPointToRay(const vec2& mousePosition) {
-  return unProject(vec3(mousePosition, 1.0),
-                   mView,
-                   mProjection,
-                   vec4(0, 0, mAsset->cfg()->graphics.res));
+  vec4 viewport = vec4(0, 0, mAsset->cfg()->graphics.res);
+  vec3 d = unProject(vec3(mousePosition, 1.f), mView, mProjection, viewport);
+  d.y = -d.y;
+  return d;
 }
