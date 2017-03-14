@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "../../Utils/Utils.hpp"
+#include "../../GlobalLog.hpp"
 
 using mmm::vec2;
 using mmm::vec3;
@@ -59,43 +60,70 @@ void GLGrid3D::generateVertices(dVector<vec3>& v, dVector<vec2>& t) {
   }
 }
 
+/**
+ * @brief
+ *   Generate the normals for the terrain
+ *
+ *   @TODO FIX NORMALS
+ *
+ * @param v
+ * @param n
+ */
 void GLGrid3D::generateNormals(const dVector<vec3>& v, dVector<vec3>& n) {
   dVector<vec3> normals1(mSize.y - 1, vector<vec3>(mSize.x - 1));
   dVector<vec3> normals2(mSize.y - 1, vector<vec3>(mSize.x - 1));
 
+  auto height = [&v](unsigned int y, unsigned int x) -> float {
+    if (y >= v.size())
+      return 0.0f;
+
+    if (x >= v[y].size())
+      return 0.0f;
+
+    return v[y][x].y;
+  };
+
   for (int y = 0; y < mSize.y - 1; y++) {
     for (int x = 0; x < mSize.x - 1; x++) {
-      vec3 triangleNorm0 =
-        cross(v[y][x] - v[y + 1][x], v[y + 1][x] - v[y + 1][x + 1]);
-      vec3 triangleNorm1 =
-        cross(v[y + 1][x + 1] - v[y][x + 1], v[y][x + 1] - v[y][x]);
-      normals1[y][x] = normalize(triangleNorm0);
-      normals2[y][x] = normalize(triangleNorm1);
+      float hL = height(y - 1, x - 1);
+      float hR = height(y + 1, x + 1);
+      float hD = height(y - 1, x - 1);
+      float hU = height(y + 1, x + 1);
+
+      vec3 normal = normalize(vec3(hL - hR, 2.0, hD - hU));
+      n[y][x] = normal;
+      // vec3 triangleNorm0 =
+      //   cross(v[y][x] - v[y + 1][x], v[y + 1][x] - v[y + 1][x + 1]);
+      // vec3 triangleNorm1 =
+      //   cross(v[y + 1][x + 1] - v[y][x + 1], v[y][x + 1] - v[y][x]);
+      // normals1[y][x] = normalize(triangleNorm0);
+      // normals2[y][x] = normalize(triangleNorm1);
     }
   }
-  for (int i = 0; i < mSize.y; i++) {
-    for (int j = 0; j < mSize.x; j++) {
-      vec3 finNormal = vec3(0, 0, 0);
 
-      if (j != 0 && i != 0) {
-        finNormal += normals1[i - 1][j - 1];
-        finNormal += normals2[i - 1][j - 1];
-      }
+  // for (int i = 0; i < mSize.y; i++) {
+  //   for (int j = 0; j < mSize.x; j++) {
+  //     vec3 finNormal = vec3(0, 0, 0);
 
-      if (i != 0 && j != mSize.x - 1)
-        finNormal += normals1[i - 1][j];
+  //     if (j != 0 && i != 0) {
+  //       finNormal += normals1[i - 1][j - 1];
+  //       finNormal += normals2[i - 1][j - 1];
+  //     }
 
-      if (i != mSize.y - 1 && j != mSize.x - 1) {
-        finNormal += normals1[i][j];
-        finNormal += normals2[i][j];
-      }
+  //     if (i != 0 && j != mSize.x - 1)
+  //       finNormal += normals1[i - 1][j];
 
-      if (i != mSize.y - 1 && j != 0)
-        finNormal += normals2[i][j - 1];
+  //     if (i != mSize.y - 1 && j != mSize.x - 1) {
+  //       finNormal += normals1[i][j];
+  //       finNormal += normals2[i][j];
+  //     }
 
-      n[i][j] = normalize(finNormal);
-    }
-  }
+  //     if (i != mSize.y - 1 && j != 0)
+  //       finNormal += normals2[i][j - 1];
+
+  //     n[i][j] = normalize(finNormal);
+  //   }
+  // }
 }
 
 void GLGrid3D::setupOpenGLArrays(const vector<Vertex>& v,
