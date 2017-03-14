@@ -29,7 +29,7 @@ Terrain::Terrain() : Logging::Log("Terrain") {
   mTexture = mAsset->rManager()->get<Texture>("Texture::Terrain");
   mTexture->generateMipmaps();
   mTexture->linearMipmap();
-  mScale = mmm::scale(50.0f, 0.0f, 50.0f);
+  mScale = mmm::scale(150.0f, 0.0f, 150.0f);
 }
 
 Terrain::~Terrain() {
