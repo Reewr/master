@@ -53,10 +53,7 @@ Spider::Spider(Asset* asset) : Logging::Log("Spider") {
     mChildren.push_back(child);
   }
 
-  // for (auto subMesh : allSubmeshes) {
-  //   mLog->debug("Adding MeshPart: {}", subMesh.first);
-  //   mChildren.push_back(new MeshPart(mProgram, subMesh.second));
-  // }
+  mLog->debug("Spider loaded with weight of: {}", weight());
 }
 
 Spider::~Spider() {
