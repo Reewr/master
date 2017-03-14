@@ -132,24 +132,6 @@ void Mesh::addVertex(const Mesh::Vertex& v) {
 
 /**
  * @brief
- *   Draws the mesh and its submeshes. Requires a model matrix
- *   to set the position of the submeshes correctly.
- *
- *   It also requires a program that has the `model` variable
- *   so it can set that properly for each mesh element
- *
- * @param modelMatrix
- * @param program
- */
-// void Mesh::draw(const mmm::mat4&         modelMatrix,
-//                 std::shared_ptr<Program> program) {
-//   glBindVertexArray(mVAO);
-//   mMesh->draw(modelMatrix, program);
-//   glBindVertexArray(0);
-// }
-
-/**
- * @brief
  *   Adds the submesh to the submesh array
  *
  * @param mesh
@@ -274,13 +256,13 @@ void Mesh::unbindVertexArray() const {
 }
 
 SubMesh::SubMesh()
-    : mStartIndex(0)
+    : Logging::Log("SubMesh")
+    , mStartIndex(0)
     , mSize(0)
     , mIndex(0)
     , mName("")
     , mTransform(mmm::mat4::identity)
-    , mParent(nullptr)
-    , mTextures({}) {}
+    , mParent(nullptr) {}
 
 /**
  * @brief
@@ -297,13 +279,13 @@ SubMesh::SubMesh(Mesh*            model,
                  const aiScene*   scene,
                  const aiNode*    node,
                  mmm::mat4        transform)
-    : mStartIndex(model->numVertices())
+    : Logging::Log("SubMesh")
+    , mStartIndex(model->numVertices())
     , mSize(0)
     , mIndex(model->numSubMeshes())
     , mName("")
     , mTransform(mmm::mat4::identity)
-    , mParent(model)
-    , mTextures({}) {
+    , mParent(model) {
   aiMatrix4x4 am = node->mTransformation;
   mTransform     = transform * mat4(am.a1,
                                 am.a2,
@@ -329,38 +311,29 @@ SubMesh::SubMesh(Mesh*            model,
   // parse the node
   std::vector<std::string> textureNames;
 
-  // Add the texture if it doesnt already exist in the list
-  auto addIfNew = [&textureNames](const std::string& tex) {
-    for(auto& t : textureNames) {
-      if (t == tex)
-        return;
-    }
-
-    textureNames.push_back(tex);
-  };
-
-  // Return the index of the texture if it is found.
-  auto findTex = [&textureNames](const std::string& tex) -> int {
-    for(unsigned int i = 0; i < textureNames.size(); ++i)
-      if (textureNames[i] == tex)
-        return i;
-    return -1;
-  };
-
+  // When a mesh is exported and has multiple materials for that mesh, assimp
+  // splits it into multiple smaller meshes where each mesh has one material
+  // assigned to it.
+  //
+  // This goes through all meshes and loads them together with
+  // their material
   for (unsigned int i = 0; i < node->mNumMeshes; i += 1) {
-    const aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-    const aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+    const aiMesh*     mesh       = scene->mMeshes[node->mMeshes[i]];
+    const aiMaterial* material   = scene->mMaterials[mesh->mMaterialIndex];
+
+    int startIndex  = model->numVertices();
+    int numTextures = material->GetTextureCount(aiTextureType_DIFFUSE);
+
+    if (numTextures < 1)
+      mLog->warn("Multiple texture per material is not supported");
 
     // load the textures for the particular mesh
-    unsigned int size = material->GetTextureCount(aiTextureType_DIFFUSE);
+    aiString texPath;
+    aiReturn ret = material->GetTexture(aiTextureType_DIFFUSE, 0, &texPath);
+    std::shared_ptr<Texture> texture = nullptr;
 
-    for (unsigned int i = 0; i < size; ++i) {
-      aiString texPath;
-      aiReturn ret = material->GetTexture(aiTextureType_DIFFUSE, i, &texPath);
-
-      if (ret == AI_SUCCESS) {
-        addIfNew(std::string("Texture::") + texPath.C_Str());
-      }
+    if (ret == AI_SUCCESS) {
+      texture = manager->get<Texture>(std::string("Texture::") + texPath.C_Str());
     }
 
     if (!mesh->HasPositions() || !mesh->HasTextureCoords(0) ||
@@ -387,10 +360,11 @@ SubMesh::SubMesh(Mesh*            model,
         model->addVertex({ vertex, texCoord, normal });
       }
     }
-  }
 
-  for (auto& t : textureNames)
-    mTextures.push_back(manager->get<Texture>(t));
+    int materialSize = model->numVertices() - startIndex;
+
+    mMaterials.push_back({startIndex, materialSize, texture});
+  }
 
   mSize = model->numVertices() - mStartIndex;
 
@@ -459,7 +433,7 @@ const std::string& SubMesh::name() const {
  * @return
  */
 unsigned int SubMesh::numTextures() const {
-  return mTextures.size();
+  return mMaterials.size();
 }
 
 /**
@@ -471,9 +445,9 @@ unsigned int SubMesh::numTextures() const {
  * @return
  */
 const std::shared_ptr<Texture>& SubMesh::texture(unsigned int index) const {
-  if (index >= mTextures.size())
+  if (index >= mMaterials.size())
     throw std::runtime_error("Index out of bounds");
-  return mTextures[index];
+  return mMaterials[index].texture;
 }
 
 /**
@@ -482,8 +456,15 @@ const std::shared_ptr<Texture>& SubMesh::texture(unsigned int index) const {
  *
  * @return
  */
-const std::vector<std::shared_ptr<Texture>> SubMesh::textures() const {
-  return mTextures;
+std::vector<std::shared_ptr<Texture>> SubMesh::textures() const {
+  std::vector<std::shared_ptr<Texture>> textures;
+
+  for (auto& m : mMaterials) {
+    if (m.texture != nullptr)
+      textures.push_back(m.texture);
+  }
+
+  return textures;
 }
 
 /**
@@ -499,12 +480,14 @@ void SubMesh::draw(int textureLocation) const {
   if (mSize == 0)
     return;
 
-  if (mTextures.size() != 0 && textureLocation > 0) {
-    for(unsigned int i = 0; i < mTextures.size(); ++i) {
-      mTextures[i]->bind(textureLocation + i);
-    }
-  }
-
   mParent->bindVertexArray();
-  glDrawArrays(GL_TRIANGLES, mStartIndex, mSize);
+  if (mMaterials.size() > 0 && textureLocation >= 0) {
+    for (auto& material : mMaterials) {
+      if (material.texture != nullptr)
+        material.texture->bind(textureLocation);
+      glDrawArrays(GL_TRIANGLES, material.startIndex, material.size);
+    }
+  } else {
+    glDrawArrays(GL_TRIANGLES, mStartIndex, mSize);
+  }
 }

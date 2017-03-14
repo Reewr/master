@@ -21,7 +21,7 @@ class Program;
 //! Structure to help loading and sorting meshes
 //! These are generally used to make sure the mesh tranformation
 //! and textures are applied correctly when drawing the element.
-class SubMesh {
+class SubMesh : public Logging::Log {
 public:
   SubMesh();
 
@@ -52,7 +52,7 @@ public:
   // Returns a reference to the texture indicated by the index
   const std::shared_ptr<Texture>& texture(unsigned int i) const;
 
-  const std::vector<std::shared_ptr<Texture>> textures() const;
+  std::vector<std::shared_ptr<Texture>> textures() const;
 
   // Draws the submesh
   void draw(int textureLocation = 1) const;
@@ -65,7 +65,18 @@ private:
   mmm::mat4   mTransform;
   Mesh*       mParent;
 
-  std::vector<std::shared_ptr<Texture>> mTextures;
+  // A mesh can have multiple materials and is therefore split
+  // into several draw calls to texture it correctly.
+  //
+  // If no textures are needed, the submeshes startIndex and size
+  // is used to draw the mesh
+  struct Material {
+    int startIndex;
+    int size;
+    std::shared_ptr<Texture> texture;
+  };
+
+  std::vector<Material> mMaterials;
 };
 
 /**
