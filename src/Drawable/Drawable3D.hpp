@@ -45,6 +45,8 @@ public:
 
   btRigidBody* rigidBody();
 
+  float weight();
+
   const std::vector<Drawable3D*>& children();
 
   void addConstraint(btTypedConstraint* constraint);

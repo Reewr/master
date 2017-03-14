@@ -103,6 +103,19 @@ btRigidBody* Drawable3D::rigidBody() {
   return mBody;
 }
 
+float Drawable3D::weight() {
+  float w = 0;
+
+  if (hasPhysics())
+    w += mBody->getInvMass();
+
+  for (auto& child : mChildren) {
+    w += child->weight();
+  }
+
+  return w;
+}
+
 const std::vector<Drawable3D*>& Drawable3D::children() {
   return mChildren;
 }
