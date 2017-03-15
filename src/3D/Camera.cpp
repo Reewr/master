@@ -24,8 +24,8 @@ Camera::Light::Light()
 Camera::Camera(Asset* asset)
     : Logging::Log("Camera")
     , mAsset(asset)
-    , mTarget(0, 1, 2)
     , mPosition(0, 1, 3)
+    , mTarget(0, 1, 2)
     , mUp(0, 1, 0)
     , mModel(mat4::identity)
     , mView(mat4::identity)
@@ -274,7 +274,7 @@ void Camera::input(float dt) {
  *
  * @param dt
  */
-void Camera::update(float dt) {
+void Camera::update(float) {
 
   // now that input has been handled, handle the new positions and stuff
   // that may have been set
