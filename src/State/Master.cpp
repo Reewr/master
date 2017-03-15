@@ -51,6 +51,12 @@ Master::Master(Asset* a) : mAsset(a) {
   for (auto d : mDrawable3D)
     mWorld->addObject(d);
 
+  mLua->engine.set_function("drawables", [&](unsigned int i) -> Drawable3D* {
+    if (i > mDrawable3D.size())
+      return nullptr;
+    return mDrawable3D[i];
+  });
+
   mLua->engine.set_function("addCubes", [&](int i) {
     std::random_device               rd;
     std::mt19937                     gen(rd());

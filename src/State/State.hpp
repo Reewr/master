@@ -38,6 +38,12 @@ public:
   virtual void input(const Input::Event& event) = 0;
   virtual void draw(float deltaTime)            = 0;
 
+  Drawable3D* drawable(unsigned int index);
+  unsigned int numDrawables();
+
+  GUI* gui(unsigned int index);
+  unsigned int numGUIs();
+
 protected:
   State();
 
