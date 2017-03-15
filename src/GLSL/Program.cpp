@@ -10,14 +10,31 @@
 GLuint Program::activeProgram = 0;
 
 Program::Program()
-    : Logging::Log("Program"), program(0), isLinked(false), isUsable(false) {}
-
-Program::~Program() {}
+    : Logging::Log("Program")
+    , program(0)
+    , mFS(nullptr)
+    , mVS(nullptr)
+    , isLinked(false)
+    , isUsable(false) {}
 
 Program::Program(const std::string& fsvs, bool link)
-    : Logging::Log("Program"), program(0), isLinked(false), isUsable(false) {
+    : Logging::Log("Program")
+    , program(0)
+    , mFS(nullptr)
+    , mVS(nullptr)
+    , isLinked(false)
+    , isUsable(false) {
   createProgram(fsvs, link);
 }
+
+Program::~Program() {
+  if (mFS != nullptr)
+    delete mFS;
+
+  if (mVS != nullptr)
+    delete mVS;
+}
+
 
 bool Program::createProgram(const std::string& fsvs, bool link) {
   if (fsvs.find(",") == std::string::npos) {
@@ -27,25 +44,31 @@ bool Program::createProgram(const std::string& fsvs, bool link) {
 
   std::map<std::string, std::string> srcs = loadDualShaderFilename(fsvs);
 
-  Shader fs(srcs["FRAGMENT"]);
-  Shader vs(srcs["VERTEX"]);
+  if (mFS != nullptr)
+    delete mFS;
+
+  if (mVS != nullptr)
+    delete mVS;
+
+  mFS = new Shader(srcs["FRAGMENT"]);
+  mVS = new Shader(srcs["VERTEX"]);
 
   if (program != 0)
     glDeleteProgram(program);
 
   program = 0;
-  filenames.push_back(fs.filename());
-  filenames.push_back(vs.filename());
+  filenames.push_back(mFS->filename());
+  filenames.push_back(mVS->filename());
 
   program = glCreateProgram();
 
-  if (program == 0 || fs.id() == 0 || vs.id() == 0)
+  if (program == 0 || mFS->id() == 0 || mVS->id() == 0)
     throw std::runtime_error("Failed to create program");
 
-  if (!addShader(fs))
+  if (!addShader(*mFS))
     throw std::runtime_error("Failed to create program due to fragment shader");
 
-  if (!addShader(vs))
+  if (!addShader(*mVS))
     throw std::runtime_error("Failed to create program due to vertex shader");
 
   if (!link)
@@ -61,6 +84,7 @@ bool Program::load(ResourceManager*) {
 
 void Program::unload() {
   mLog->debug("Unloading: {}", mFilename);
+
   if (program != 0) {
     if (activeProgram == program)
       activeProgram = 0;

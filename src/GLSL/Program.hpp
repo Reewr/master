@@ -100,6 +100,9 @@ private:
 
   GLuint program = 0;
 
+  Shader* mFS;
+  Shader* mVS;
+
   bool isLinked = false;
   bool isUsable = false;
 };
