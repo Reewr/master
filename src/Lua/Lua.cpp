@@ -319,6 +319,18 @@ namespace Lua {
                      false);
     }
 
+    if (hasFlag(Lib::Engine::Drawable, enginelib)) {
+      mLog->debug("Loading Engine :: Drawable");
+      engine.require("Drawable.3D",
+                     sol::c_call<decltype(&LuaLib::Drawable::openDrawable3D),
+                                 &LuaLib::Drawable::openDrawable3D>,
+                     false);
+      engine.require("Drawable.3D.Spider",
+                     sol::c_call<decltype(&LuaLib::Drawable::openSpider),
+                                 &LuaLib::Drawable::openSpider>,
+                     false);
+    }
+
     if (hasFlag(Lib::Engine::State, enginelib)) {
       mLog->debug("Loading Engine :: State");
       engine.require("State",
