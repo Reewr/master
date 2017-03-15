@@ -904,8 +904,6 @@ sol::table LuaLib::Math::openVec3(sol::this_state state) {
   sol::constructors<sol::types<>,
                     sol::types<int>,
                     sol::types<float>,
-                    sol::types<int, int>,
-                    sol::types<float, float>,
                     sol::types<float, float, float>,
                     sol::types<int, int, int>,
                     sol::types<mmm::vec2, float>,
