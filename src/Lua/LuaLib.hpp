@@ -105,6 +105,9 @@ namespace LuaLib {
     // Exposes the States enums
     sol::table openStateTypes(sol::this_state state);
 
+    // Exposes the state base class
+    sol::table openStateClass(sol::this_state state);
+
     // Exposes all the State functions above
     sol::table openState(sol::this_state state);
   }

@@ -1055,6 +1055,23 @@ sol::table LuaLib::State::openStateTypes(sol::this_state state) {
   return module;
 }
 
+sol::table LuaLib::State::openStateClass(sol::this_state state) {
+  sol::state_view lua(state);
+  sol::table      module = lua.create_table();
+
+  sol::constructors<> ctor;
+
+  sol::usertype<class State> type(ctor,
+    "drawable", &::State::drawable,
+    "gui", &::State::gui,
+    "numDrawables", &::State::numDrawables,
+    "numGUIs", &::State::numGUIs);
+
+  module.set_usertype("State", type);
+
+  return module["State"];
+}
+
 /**
  * @brief
  *  Loads the entire State library
