@@ -221,6 +221,10 @@ Shader::~Shader() {
   mId = 0;
 }
 
+const Shader::Details& Shader::details() const {
+  return mDetail;
+}
+
 std::string Shader::filename() const {
   return mFilename;
 }

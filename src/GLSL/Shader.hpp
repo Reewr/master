@@ -32,6 +32,7 @@ public:
   //! Chooses shaderType based on file extension(.fs || ! .vs);
   GLuint loadShader(const std::string& filename);
 
+  const Details& details() const;
   std::string filename() const;
   std::string type() const;
   GLuint      id() const;
