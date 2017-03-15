@@ -15,6 +15,8 @@
 #include "../Input/Input.hpp"
 #include "../State/State.hpp"
 #include "../Utils/CFG.hpp"
+#include "../Drawable/Drawable3D.hpp"
+#include "../3D/Spider.hpp"
 
 /**
  * @brief
@@ -955,6 +957,45 @@ sol::table LuaLib::Shape::openShape(sol::this_state state) {
   module["Rectangle"] = openRectangle(state);
 
   return module;
+}
+
+sol::table LuaLib::Drawable::openDrawable3D(sol::this_state state) {
+  sol::state_view lua(state);
+  sol::table      module = lua.create_table();
+
+  // clang-format off
+  sol::constructors<> ctor;
+
+  sol::usertype<Drawable3D> type(ctor,
+    "updateFromPhysics", &Drawable3D::updateFromPhysics,
+    "hasPhysics", &Drawable3D::hasPhysics,
+    "position", &Drawable3D::position,
+    "moveTo", &Drawable3D::moveTo,
+    "rotate", &Drawable3D::rotate,
+    "weight", &Drawable3D::weight,
+    "collisionGroup", &Drawable3D::collisionGroup,
+    "collisionMask", &Drawable3D::collisionMask,
+    "setCollisionGroup", &Drawable3D::setCollisionGroup,
+    "setCollisionMask", &Drawable3D::setCollisionMask);
+
+  module.set_usertype("Drawable3D", type);
+
+  return module["Drawable3D"];
+}
+
+sol::table LuaLib::Drawable::openSpider(sol::this_state state) {
+  sol::state_view lua(state);
+  sol::table      module = lua.create_table();
+
+  // clang-format off
+  sol::constructors<> ctor;
+
+  sol::usertype<Spider> type(ctor,
+      sol::base_classes, sol::bases<Drawable3D, class Drawable>());
+
+  module.set_usertype("Spider", type);
+
+  return module["Spider"];
 }
 
 /**

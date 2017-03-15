@@ -93,6 +93,11 @@ namespace LuaLib {
     sol::table openShape(sol::this_state state);
   }
 
+  namespace Drawable {
+    sol::table openDrawable3D(sol::this_state state);
+    sol::table openSpider(sol::this_state state);
+  }
+
   namespace State {
     // Exposes the States enums
     sol::table openStateTypes(sol::this_state state);
