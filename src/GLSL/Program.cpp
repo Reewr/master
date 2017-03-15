@@ -116,6 +116,26 @@ bool Program::link() {
   isLinked = true;
   isUsable = checkProgram(program);
   checkErrors("link()", filenames);
+
+  const Shader::Details& fsDetails = mFS->details();
+  const Shader::Details& vsDetails = mVS->details();
+
+  for(auto& binding : fsDetails.layoutBindings) {
+    mLog->debug("Binding layouts for: {}, {} to {}",
+                mFS->filename(),
+                binding.name,
+                binding.location);
+    setUniform(binding.name, binding.location);
+  }
+
+  for(auto& binding : vsDetails.layoutBindings) {
+    mLog->debug("Binding layouts for: {}, {} to {}",
+                mVS->filename(),
+                binding.name,
+                binding.location);
+    setUniform(binding.name, binding.location);
+  }
+
   return isUsable;
 }
 
