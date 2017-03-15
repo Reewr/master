@@ -81,6 +81,9 @@ namespace LuaLib {
     // exposes the vec2 class
     sol::table openVec2(sol::this_state state);
 
+    // exposes the vec3 class
+    sol::table openVec3(sol::this_state state);
+
     // exposes all the objects defined above
     sol::table openMath(sol::this_state state);
   }

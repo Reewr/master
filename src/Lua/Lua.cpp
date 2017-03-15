@@ -218,6 +218,10 @@ namespace Lua {
                      sol::c_call<decltype(&LuaLib::Math::openVec2),
                                  &LuaLib::Math::openVec2>,
                      false);
+      engine.require("Math.vec3",
+                     sol::c_call<decltype(&LuaLib::Math::openVec3),
+                                 &LuaLib::Math::openVec3>,
+                     false);
     }
 
     if (hasFlag(Lib::Engine::Shape, enginelib)) {

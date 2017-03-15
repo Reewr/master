@@ -897,6 +897,30 @@ sol::table LuaLib::Math::openVec2(sol::this_state state) {
   return module["vec2"];
 }
 
+sol::table LuaLib::Math::openVec3(sol::this_state state) {
+  sol::state_view lua(state);
+  sol::table      module = lua.create_table();
+
+  sol::constructors<sol::types<>,
+                    sol::types<int>,
+                    sol::types<float>,
+                    sol::types<int, int>,
+                    sol::types<float, float>,
+                    sol::types<float, float, float>,
+                    sol::types<int, int, int>,
+                    sol::types<mmm::vec2, float>,
+                    sol::types<mmm::vec2, int>>
+                           ctor;
+  sol::usertype<mmm::vec3> type(ctor,
+      "x", &mmm::vec3::x,
+      "y", &mmm::vec3::y,
+      "z", &mmm::vec3::z);
+
+  module.set_usertype("vec3", type);
+
+  return module["vec3"];
+}
+
 /**
  * @brief
  *   Loads the entire Math library
@@ -910,6 +934,7 @@ sol::table LuaLib::Math::openMath(sol::this_state state) {
   sol::table      module = lua.create_table();
 
   module["vec2"] = openVec2(state);
+  module["vec3"] = openVec3(state);
 
   return module;
 }
