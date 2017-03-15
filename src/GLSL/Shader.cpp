@@ -4,6 +4,7 @@
 
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
+#include "../Utils/str.hpp"
 
 CFG* Shader::mCFG = nullptr;
 
@@ -67,6 +68,64 @@ void replaceCFGExpression(std::string& line) {
 
     pos = line.find("_CFG_");
   }
+}
+
+/**
+ * @brief
+ *   Replaces a line that contains a layout binding to code that is supported
+ *   by lower GLSL versions.
+ *
+ *   This is primarily to support the Ultrabooks that we use, as these does not
+ *   yet support OpenGL 4.5+
+ *
+ *   The lines that are replaced are lines such as:
+ *
+ *   `layout(binding=0) uniform sampler2D shadowmap;`
+ *
+ *   which are turned into:
+ *
+ *   `uniform sampler2D shadowmap;`
+ *
+ *   The location and name of the uniform is stored so that the
+ *   program can set these correctly when initalizing the program.
+ *
+ * @param line
+ *
+ * @return
+ */
+Shader::LayoutBinding replaceLayoutBinding(std::string& line) {
+  size_t pos = line.find("layout(binding=");
+  size_t semicolon = line.find(";");
+
+  if (semicolon == std::string::npos)
+    throw std::runtime_error("Layout binding without ending semicolon");
+
+  size_t startVarName = line.rfind(" ", semicolon);
+  size_t endLayoutNum = line.find(")");
+
+  if (endLayoutNum <= pos)
+    throw std::runtime_error("Layout binding with bracket before 'layout'");
+
+  Shader::LayoutBinding layout;
+
+  std::string num  = line.substr(pos + 15, endLayoutNum);
+  std::string name = line.substr(startVarName, semicolon - startVarName);
+  std::string rest = line.substr(endLayoutNum + 1);
+
+  try {
+    layout.location = std::stoi(num);
+  } catch (const std::invalid_argument& a) {
+    throw std::runtime_error(a.what());
+  }
+
+  layout.name = name;
+
+  str::trim(layout.name);
+  str::trim(rest);
+
+  line = rest;
+
+  return layout;
 }
 
 /**

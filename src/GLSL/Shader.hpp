@@ -10,6 +10,15 @@ class CFG;
 //! Contains and loads the GLSL-Shaders
 class Shader : public Logging::Log {
 public:
+  struct LayoutBinding {
+    int location;
+    std::string name;
+  };
+
+  struct Details {
+    std::vector<LayoutBinding> layoutBindings;
+    std::string source;
+  };
   //! Default Constructor
   Shader();
 
