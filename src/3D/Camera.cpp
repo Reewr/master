@@ -290,7 +290,8 @@ void Camera::update(float) {
   vec3 eye    = target + vec3(lt * vec4(mUp, 1));
 
   mLight.view      = mmm::lookAt_r(eye, target, up);
-  mLight.direction = -mmm::normalize(up - mTarget);
+  // mLight.direction = -mmm::normalize(up - mTarget);
+  mLight.direction = vec3(lt * vec4(0, 1, 0, 1));
 
   // terrain->setUniform ("sunLight.color", light.color);
   // terrain->setUniform ("sunLight.direction", -ld);
