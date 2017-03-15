@@ -993,8 +993,12 @@ sol::table LuaLib::Drawable::openDrawable3D(sol::this_state state) {
     "updateFromPhysics", &Drawable3D::updateFromPhysics,
     "hasPhysics", &Drawable3D::hasPhysics,
     "position", &Drawable3D::position,
-    "moveTo", &Drawable3D::moveTo,
-    "rotate", &Drawable3D::rotate,
+    "moveTo", sol::overload(
+        (void(Drawable3D::*)(float, float, float)) &Drawable3D::moveTo,
+        (void(Drawable3D::*)(const mmm::vec3&)) &Drawable3D::moveTo),
+    "rotate", sol::overload(
+        (void(Drawable3D::*)(float, float, float, float)) &Drawable3D::rotate,
+        (void(Drawable3D::*)(const mmm::vec3&, float)) &Drawable3D::rotate),
     "weight", &Drawable3D::weight,
     "collisionGroup", &Drawable3D::collisionGroup,
     "collisionMask", &Drawable3D::collisionMask,
