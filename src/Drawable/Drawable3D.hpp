@@ -39,8 +39,10 @@ public:
 
   const mmm::vec3& position();
 
+  void moveTo(float x, float y, float z);
   void moveTo(const mmm::vec3& position);
 
+  void rotate(float axisX, float axisY, float axisZ, float angle);
   void rotate(const mmm::vec3& axis, float angle);
 
   btRigidBody* rigidBody();

@@ -61,8 +61,8 @@ const mmm::vec3& Drawable3D::position() {
   return mPosition;
 }
 
-void Drawable3D::moveTo(const mmm::vec3& position) {
-  const btVector3 pos = btVector3(position.x, position.y, position.z);
+void Drawable3D::moveTo(float x, float y, float z) {
+  const btVector3 pos = btVector3(x, y, z);
 
   if (hasPhysics()) {
     btTransform trans = mBody->getCenterOfMassTransform();
@@ -70,17 +70,23 @@ void Drawable3D::moveTo(const mmm::vec3& position) {
 
     mBody->setCenterOfMassTransform(trans);
     mBody->clearForces();
+    mBody->activate();
   }
 
-  mPosition = position;
+  mPosition = mmm::vec3(x, y, z);
 
   for (auto& c : mChildren) {
-    c->moveTo(position - c->position());
+    const mmm::vec3& pos = c->position();
+    c->moveTo(x - pos.x, y - pos.y, z - pos.z);
   }
 }
 
-void Drawable3D::rotate(const mmm::vec3& axis, float angle) {
-  const btVector3 axisBt = btVector3(axis.x, axis.y, axis.z);
+void Drawable3D::moveTo(const mmm::vec3& position) {
+  moveTo(position.x, position.y, position.z);
+}
+
+void Drawable3D::rotate(float axisX, float axisY, float axisZ, float angle) {
+  const btVector3 axisBt = btVector3(axisX, axisY, axisZ);
 
   if (hasPhysics()) {
     btTransform trans = mBody->getCenterOfMassTransform();
@@ -88,11 +94,16 @@ void Drawable3D::rotate(const mmm::vec3& axis, float angle) {
 
     mBody->setCenterOfMassTransform(trans);
     mBody->clearForces();
+    mBody->activate();
   }
 
   for (auto& c : mChildren) {
-    c->rotate(axis, angle);
+    c->rotate(axisX, axisY, axisZ, angle);
   }
+}
+
+void Drawable3D::rotate(const mmm::vec3& axis, float angle) {
+  rotate(axis.x, axis.y, axis.z, angle);
 }
 
 bool Drawable3D::hasPhysics() {
