@@ -29,6 +29,14 @@ These two functions allow you to add items to a list of items that should be dra
 
 In order to utilize the libraries that the engine exposes, you'll need to `require` them. In addition to being able to require specific files, you may also use any of the paths described below. All the paths follow a namespace to limit the amount of names it'll use. They all use capitalized letters and you can import any part of the namespace.
 
+### Drawable
+
+- Drawable
+- Drawable.3D
+- Drawable.3D.Spider
+
+*More details to come*
+
 ### GUI
 
 - GUI
@@ -45,10 +53,10 @@ In order to utilize the libraries that the engine exposes, you'll need to `requi
 
 If you require `GUI`, you will get all the elements, but you can specify specifically what elements you want to load. There are some special elements in that list, which are :
 
-- 'GUI.Menu.Settings'
-- 'GUI.Menu.Orientation'
-- 'GUI.Text.Color'
-- 'GUI.Text.Style'
+- GUI.Menu.Settings
+- GUI.Menu.Orientation
+- GUI.Text.Color
+- GUI.Text.Style
 
 These elements are not real types. Orientation, Color and Style are enum types that can be imported and used. Settings is a type that helps to create the Menus.
 
@@ -58,6 +66,7 @@ There is only one type which is exported from the math library for now:
 
 - Math
 - Math.vec2
+- Math.vec3
 
 ### Shape
 
