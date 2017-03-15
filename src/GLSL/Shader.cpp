@@ -153,9 +153,9 @@ Shader::LayoutBinding replaceLayoutBinding(std::string& line) {
  *
  * @return
  */
-std::string loadTextfile(const std::string& filename) {
+Shader::Details loadTextfile(const std::string& filename) {
+  Shader::Details detail;
   std::ifstream fs(filename);
-  std::string   content;
   std::string   line;
 
   if (!fs.is_open()) {
@@ -166,21 +166,29 @@ std::string loadTextfile(const std::string& filename) {
     std::getline(fs, line);
     bool hasInclude       = line.find("#include") != std::string::npos;
     bool hasCFGExpression = line.find("_CFG_") != std::string::npos;
+    bool hasLayoutBinding = line.find("layout(binding=") != std::string::npos;
 
     if (hasInclude) {
-      int first  = line.find("<");
-      int length = line.find(">") - first - 1;
-      content += loadTextfile(line.substr(first, length));
+      unsigned int    first       = line.find("<");
+      unsigned int    length      = line.find(">") - first - 1;
+      std::string     includeFile = line.substr(first, length);
+      Shader::Details included    = loadTextfile(includeFile);
+      detail.layoutBindings.insert(detail.layoutBindings.end(),
+                                   included.layoutBindings.begin(),
+                                   included.layoutBindings.end());
+      detail.source += included.source;
     } else {
       if (hasCFGExpression)
         replaceCFGExpression(line);
-      content += line + '\n';
+      if (hasLayoutBinding)
+        detail.layoutBindings.push_back(replaceLayoutBinding(line));
+      detail.source += line + '\n';
     }
   }
 
   fs.close();
 
-  return content;
+  return detail;
 }
 
 /**
@@ -231,10 +239,10 @@ GLuint Shader::loadShader(const std::string& filename) {
   if (filename.find(".fs") != std::string::npos)
     shaderType = GL_FRAGMENT_SHADER;
 
-  mId = glCreateShader(shaderType);
+  mId     = glCreateShader(shaderType);
+  mDetail = loadTextfile(filename);
 
-  std::string shaderCodeStr = loadTextfile(filename);
-  const char* source        = shaderCodeStr.c_str();
+  const char* source = mDetail.source.c_str();
 
   glShaderSource(mId, 1, &source, 0);
   glCompileShader(mId);

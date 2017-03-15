@@ -46,4 +46,6 @@ private:
   GLuint      mId;
   std::string mFilename;
   std::string mType;
+
+  Details mDetail;
 };
