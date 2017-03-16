@@ -34,7 +34,7 @@ public:
 
   void drawShadow(Framebuffer* shadowMap, Camera* camera);
 
-  void draw(Camera* camera);
+  void draw(std::shared_ptr<Program>& program, bool bindTexture = false);
 
   void input(const Input::Event& event);
 

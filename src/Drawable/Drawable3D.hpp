@@ -1,5 +1,11 @@
 #pragma once
 
+#include "Drawable.hpp"
+
+#include <mmm.hpp>
+#include <vector>
+#include <memory>
+
 class btRigidBody;
 class btCollisionShape;
 class btMotionState;
@@ -8,11 +14,7 @@ class btTypedConstraint;
 class Asset;
 class Camera;
 class Framebuffer;
-
-#include "Drawable.hpp"
-
-#include <mmm.hpp>
-#include <vector>
+class Program;
 
 namespace Input {
   class Event;
@@ -29,7 +31,8 @@ public:
   virtual void drawShadow(Framebuffer* shadowMap, Camera* camera) = 0;
 
   // Draw it. Keep it separate from update
-  virtual void draw(Camera* camera) = 0;
+  virtual void draw(std::shared_ptr<Program>& program,
+                    bool bindTexture = false) = 0;
 
   // Handles input for the drawable object
   virtual void input(const Input::Event& event) = 0;

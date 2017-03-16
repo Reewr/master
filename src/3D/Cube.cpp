@@ -75,16 +75,12 @@ void Cube::drawShadow(Framebuffer* shadowMap, Camera* camera) {
  *
  * @param c
  */
-void Cube::draw(Camera* c) {
-  mProgram->bind();
-  mProgram->setUniform("model", mmm::translate(mPosition) * mRotation * mScale);
-  mProgram->setUniform("view", c->view());
-  mProgram->setUniform("proj", c->projection());
+void Cube::draw(std::shared_ptr<Program>& program, bool bindTexture) {
+  program->bind();
+  program->setUniform("model", mmm::translate(mPosition) * mRotation * mScale);
 
-  mProgram->setUniform("dir", c->light().direction);
-  c->setLightVPUniforms(mProgram, "light");
-
-  mTexture->bind(1);
+  if (bindTexture)
+    mTexture->bind(1);
   mCube->draw();
 }
 

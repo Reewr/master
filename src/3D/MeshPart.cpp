@@ -53,14 +53,14 @@ void MeshPart::drawShadow(Framebuffer* shadowMap, Camera*) {
  *
  * @param c
  */
-void MeshPart::draw(Camera*) {
+void MeshPart::draw(std::shared_ptr<Program>& program, bool bindTexture) {
   if (mMesh->size() == 0)
     return;
 
-  mProgram->bind();
-  mProgram->setUniform("model", mmm::translate(mPosition) * mRotation * mScale);
+  program->bind();
+  program->setUniform("model", mmm::translate(mPosition) * mRotation * mScale);
 
-  mMesh->draw();
+  mMesh->draw(bindTexture ? 1 : -1);
 }
 
 void MeshPart::input(const Input::Event&) {}

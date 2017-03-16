@@ -52,18 +52,14 @@ void Terrain::drawShadow(Framebuffer* shadowMap, Camera* camera) {
   mGrid->draw();
 }
 
-void Terrain::draw(Camera* c) {
+void Terrain::draw(std::shared_ptr<Program>& program, bool bindTexture) {
   mat4 model = mmm::translate(mPosition + vec3(0, 1, 0)) * mRotation * mScale;
 
-  mProgram->bind();
-  mProgram->setUniform("model", model);
-  mProgram->setUniform("view", c->view());
-  mProgram->setUniform("proj", c->projection());
+  program->bind();
+  program->setUniform("model", model);
 
-  mProgram->setUniform("dir", c->light().direction);
-  c->setLightVPUniforms(mProgram, "light");
-
-  mTexture->bind(1);
+  if (bindTexture)
+    mTexture->bind(1);
   mGrid->draw();
 }
 

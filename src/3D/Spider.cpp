@@ -69,20 +69,13 @@ void Spider::drawShadow(Framebuffer* shadowMap, Camera* camera) {
     child->drawShadow(shadowMap, camera);
   mMesh->mesh()->unbindVertexArray();
 }
-void Spider::draw(Camera* c) {
-  mProgram->bind();
 
-  // mmm::mat4 model = mmm::translate(mPosition) * mRotation * mScale;
-
-  mProgram->setUniform("view", c->view());
-  mProgram->setUniform("proj", c->projection());
-
-  mProgram->setUniform("dir", c->light().direction);
-  c->setLightVPUniforms(mProgram, "light");
+void Spider::draw(std::shared_ptr<Program>& program, bool bindTexture) {
+  program->bind();
 
   mMesh->mesh()->bindVertexArray();
   for (auto& child : mChildren)
-    child->draw(c);
+    child->draw(program, bindTexture);
   mMesh->mesh()->unbindVertexArray();
 }
 

@@ -136,8 +136,16 @@ void Master::draw3D() {
   mShadowmap->finalize();
   mShadowmap->texture()->bind(0);
 
+  std::shared_ptr<Program> modelProgram = mAsset->rManager()->get<Program>("Program::Model");
+
+  modelProgram->setUniform("view", mCamera->view());
+  modelProgram->setUniform("proj", mCamera->projection());
+  modelProgram->setUniform("dir", mCamera->light().direction);
+
+  mCamera->setLightVPUniforms(modelProgram, "light");
+
   for (auto d : mDrawable3D)
-    d->draw(mCamera);
+    d->draw(modelProgram, true);
 }
 
 void Master::drawGUI() {

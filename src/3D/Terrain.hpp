@@ -20,7 +20,7 @@ public:
   void drawShadow(Framebuffer* shadowMap, Camera* camera);
 
   // Draw it. Keep it separate from update
-  void draw(Camera* camera);
+  void draw(std::shared_ptr<Program>& program, bool bindTexture = false);
 
   // Input handler
   void input(const Input::Event& event);
