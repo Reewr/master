@@ -59,6 +59,9 @@ public:
   // Returns the objects weight in total, including its children
   float weight() const;
 
+  mmm::vec3 torque() const;
+  void setTorque(const mmm::vec3&);
+
   // Returns a reference to all children
   const std::vector<Drawable3D*>& children() const;
 

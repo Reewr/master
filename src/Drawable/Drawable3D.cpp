@@ -125,6 +125,21 @@ float Drawable3D::weight() const {
   return w;
 }
 
+mmm::vec3 Drawable3D::torque() const {
+  if (!hasPhysics())
+    return mmm::vec3(0);
+
+  const btVector3& torque = mBody->getTotalTorque();
+  return mmm::vec3(torque.x(), torque.y(), torque.z());
+}
+
+void Drawable3D::setTorque(const mmm::vec3& torque) {
+  if (!hasPhysics())
+    return;
+
+  mBody->applyTorque(btVector3(torque.x, torque.y, torque.z));
+}
+
 const std::vector<Drawable3D*>& Drawable3D::children() const {
   return mChildren;
 }
