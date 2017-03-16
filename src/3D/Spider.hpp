@@ -19,11 +19,12 @@ public:
     Part();
     Part(unsigned short group, unsigned short mask);
     Part(unsigned short group, unsigned short mask, float torque);
+
     unsigned short collisionGroup;
     unsigned short collisionMask;
 
     btHingeConstraint* joint;
-    float              torque;
+    mmm::vec3& torque;
   };
 
   Spider(Asset*);
