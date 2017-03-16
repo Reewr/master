@@ -42,9 +42,6 @@ Master::Master(Asset* a) : mAsset(a) {
   mShadowmap = new Framebuffer(a->rManager()->get<Program>("Program::Shadow"),
                                shadowRes,
                                true);
-  mAsset->rManager()
-    ->get<Program>("Program::Model")
-    ->setUniform("shadowSamples", c->graphics.shadowSamples);
 
   mDrawable3D = { new Terrain(), new Spider(mAsset) };
 
