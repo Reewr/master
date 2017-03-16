@@ -250,6 +250,47 @@ void Drawable3D::setTorque(float x, float y, float z) {
 
 /**
  * @brief
+ *   Returns the angular velocity of the object
+ *
+ * @return
+ */
+mmm::vec3 Drawable3D::angularVelocity() const {
+  if (!hasPhysics())
+    return mmm::vec3(0);
+
+  const btVector3& velo = mBody->getAngularVelocity();
+  return mmm::vec3(velo.x(), velo.y(), velo.z());
+}
+
+/**
+ * @brief
+ *   Sets the angular velocity of the element. Does not apply this to child
+ *   elements,
+ *
+ * @param x
+ * @param y
+ * @param z
+ */
+void Drawable3D::setAngularVelocity(float x, float y, float z) {
+  if (!hasPhysics())
+    return;
+
+  mBody->setAngularVelocity(btVector3(x, y, z));
+}
+
+/**
+ * @brief
+ *   Sets the angular velocity of the element. Does not apply this to child
+ *   elements,
+ *
+ * @param velocity
+ */
+void Drawable3D::setAngularVelocity(const mmm::vec3& velocity) {
+  setAngularVelocity(velocity.x, velocity.y, velocity.z);
+}
+
+/**
+ * @brief
  *   Returns a reference to all the children of the object
  *
  * @return

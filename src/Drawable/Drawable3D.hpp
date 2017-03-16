@@ -66,6 +66,13 @@ public:
   void setTorque(const mmm::vec3&);
   void setTorque(float x, float y, float z);
 
+  // Retrieves the angular velocity from bullet
+  mmm::vec3 angularVelocity() const;
+
+  // Sets the angular velocity of an object
+  void setAngularVelocity(const mmm::vec3&);
+  void setAngularVelocity(float x, float y, float z);
+
   // Returns a reference to all children
   const std::vector<Drawable3D*>& children() const;
 
