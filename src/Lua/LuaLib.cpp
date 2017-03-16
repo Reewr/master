@@ -3,7 +3,9 @@
 #include <mmm.hpp>
 #include <sol.hpp>
 
+#include "../3D/Spider.hpp"
 #include "../Console/Console.hpp"
+#include "../Drawable/Drawable3D.hpp"
 #include "../GUI/Checkbox.hpp"
 #include "../GUI/Dropdown.hpp"
 #include "../GUI/Inputbox.hpp"
@@ -15,8 +17,6 @@
 #include "../Input/Input.hpp"
 #include "../State/State.hpp"
 #include "../Utils/CFG.hpp"
-#include "../Drawable/Drawable3D.hpp"
-#include "../3D/Spider.hpp"
 
 /**
  * @brief
@@ -908,11 +908,9 @@ sol::table LuaLib::Math::openVec3(sol::this_state state) {
                     sol::types<int, int, int>,
                     sol::types<mmm::vec2, float>,
                     sol::types<mmm::vec2, int>>
-                           ctor;
-  sol::usertype<mmm::vec3> type(ctor,
-      "x", &mmm::vec3::x,
-      "y", &mmm::vec3::y,
-      "z", &mmm::vec3::z);
+    ctor;
+  sol::usertype<mmm::vec3>
+    type(ctor, "x", &mmm::vec3::x, "y", &mmm::vec3::y, "z", &mmm::vec3::z);
 
   module.set_usertype("vec3", type);
 

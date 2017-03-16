@@ -2,8 +2,8 @@
 
 #include <vector>
 
-#include "../../Utils/Utils.hpp"
 #include "../../GlobalLog.hpp"
+#include "../../Utils/Utils.hpp"
 
 using mmm::vec2;
 using mmm::vec3;
@@ -90,8 +90,8 @@ void GLGrid3D::generateNormals(const dVector<vec3>& v, dVector<vec3>& n) {
       float hD = height(y - 1, x - 1);
       float hU = height(y + 1, x + 1);
 
-      vec3 normal = normalize(vec3(hL - hR, 2.0, hD - hU));
-      n[y][x] = normal;
+      vec3 normal = normalize(vec3(hL - hR, hD - hU, 2.0));
+      n[y][x]     = normal;
       // vec3 triangleNorm0 =
       //   cross(v[y][x] - v[y + 1][x], v[y + 1][x] - v[y + 1][x + 1]);
       // vec3 triangleNorm1 =

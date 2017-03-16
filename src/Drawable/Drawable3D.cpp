@@ -16,7 +16,8 @@ Drawable3D::Drawable3D()
     , mBody(nullptr)
     , mChildren({})
     , mCollisionGroup(btBroadphaseProxy::StaticFilter)
-    , mCollisionMask(btBroadphaseProxy::AllFilter^btBroadphaseProxy::StaticFilter) {}
+    , mCollisionMask(btBroadphaseProxy::AllFilter ^
+                     btBroadphaseProxy::StaticFilter) {}
 
 Drawable3D::~Drawable3D() {}
 

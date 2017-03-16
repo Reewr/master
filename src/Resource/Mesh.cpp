@@ -56,7 +56,8 @@ bool Mesh::load(ResourceManager* manager) {
     return false;
   }
 
-  addSubMesh(SubMesh(this, manager, scene, scene->mRootNode, mmm::mat4::identity));
+  addSubMesh(
+    SubMesh(this, manager, scene, scene->mRootNode, mmm::mat4::identity));
 
   mLog->debug("Loaded '{}': {} vertices", filename(), numVertices());
 
@@ -318,8 +319,8 @@ SubMesh::SubMesh(Mesh*            model,
   // This goes through all meshes and loads them together with
   // their material
   for (unsigned int i = 0; i < node->mNumMeshes; i += 1) {
-    const aiMesh*     mesh       = scene->mMeshes[node->mMeshes[i]];
-    const aiMaterial* material   = scene->mMaterials[mesh->mMaterialIndex];
+    const aiMesh*     mesh     = scene->mMeshes[node->mMeshes[i]];
+    const aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
     int startIndex  = model->numVertices();
     int numTextures = material->GetTextureCount(aiTextureType_DIFFUSE);
@@ -333,7 +334,8 @@ SubMesh::SubMesh(Mesh*            model,
     std::shared_ptr<Texture> texture = nullptr;
 
     if (ret == AI_SUCCESS) {
-      texture = manager->get<Texture>(std::string("Texture::") + texPath.C_Str());
+      texture =
+        manager->get<Texture>(std::string("Texture::") + texPath.C_Str());
     }
 
     if (!mesh->HasPositions() || !mesh->HasTextureCoords(0) ||
@@ -363,7 +365,7 @@ SubMesh::SubMesh(Mesh*            model,
 
     int materialSize = model->numVertices() - startIndex;
 
-    mMaterials.push_back({startIndex, materialSize, texture});
+    mMaterials.push_back({ startIndex, materialSize, texture });
   }
 
   mSize = model->numVertices() - mStartIndex;

@@ -76,8 +76,8 @@ public:
   const std::vector<btTypedConstraint*> constraints() const;
 
   // Sets and gets different collision information
-  int collisionGroup() const;
-  int collisionMask() const;
+  int  collisionGroup() const;
+  int  collisionMask() const;
   void setCollisionGroup(int);
   void setCollisionMask(int);
 

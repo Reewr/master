@@ -355,7 +355,7 @@ std::ostream& operator<<(std::ostream& os, const CFG& cfg) {
     // Find the maximum length of the keys
     unsigned int maxKeySize = 0;
 
-    for(const auto& key : section.second) {
+    for (const auto& key : section.second) {
       if (key.first.size() > maxKeySize)
         maxKeySize = key.first.size();
     }

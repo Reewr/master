@@ -63,7 +63,9 @@ void World::addObject(Drawable3D* element) {
     if (body->getInvMass() == 0)
       mWorld->addRigidBody(body, 1, -1);
     else
-      mWorld->addRigidBody(body, element->collisionGroup(), element->collisionMask());
+      mWorld->addRigidBody(body,
+                           element->collisionGroup(),
+                           element->collisionMask());
 
     for (auto& c : element->constraints()) {
       if (&c->getRigidBodyA() == body) {
@@ -216,8 +218,9 @@ bool World::pickBody(const mmm::vec3& rayFromWorld,
   if (!rayCallback.hasHit())
     return false;
 
-  btVector3    pickPos = rayCallback.m_hitPointWorld;
-  mLog->debug("PickedPos: '{}'", mmm::vec3(pickPos.x(), pickPos.y(), pickPos.z()));
+  btVector3 pickPos = rayCallback.m_hitPointWorld;
+  mLog->debug("PickedPos: '{}'",
+              mmm::vec3(pickPos.x(), pickPos.y(), pickPos.z()));
 
   btRigidBody* body =
     (btRigidBody*) btRigidBody::upcast(rayCallback.m_collisionObject);

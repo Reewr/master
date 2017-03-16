@@ -37,7 +37,7 @@ Camera::Camera(Asset* asset)
   mView       = updateViewMatrix();
   mProjection = updateProjectionMatrix();
 
-  float d  = mAsset->cfg()->graphics.viewDistance / 2.f;
+  float d           = mAsset->cfg()->graphics.viewDistance / 2.f;
   mLight.projection = mmm::ortho_r(-d, d, -d, d, -d, d);
 
   mShadowProgram = mAsset->rManager()->get<Program>("Program::Shadow");
@@ -243,7 +243,7 @@ void Camera::input(float dt) {
     } else if (a == Input::Action::Rotate) {
 
       if (previousMouse.x == 0 && previousMouse.y == 0) {
-        int key = input->getKey(Input::Action::Rotate).key1;
+        int key       = input->getKey(Input::Action::Rotate).key1;
         previousMouse = input->getPressedCoord(key);
       }
 
@@ -289,7 +289,7 @@ void Camera::update(float) {
   vec3 target = mPosition + mmm::normalize(mTarget - mPosition) * d;
   vec3 eye    = target + vec3(lt * vec4(mUp, 1));
 
-  mLight.view      = mmm::lookAt_r(eye, target, up);
+  mLight.view = mmm::lookAt_r(eye, target, up);
   // mLight.direction = -mmm::normalize(up - mTarget);
   mLight.direction = vec3(lt * vec4(0, 1, 0, 1));
 
@@ -306,7 +306,7 @@ void Camera::update(float) {
  * @param sign
  */
 void Camera::zoom(int sign) {
-  CFG* cfg = mAsset->cfg();
+  CFG*  cfg = mAsset->cfg();
   float s = cfg->camera.zoomSpeed * (cfg->camera.zoomInv ^ (sign > 0) ? -1 : 1);
   mFieldOfView = mmm::clamp(mFieldOfView + s, 32.f, 128.f);
 
@@ -331,7 +331,7 @@ void Camera::zoom(int sign) {
  */
 vec3 Camera::screenPointToRay(const vec2& mp) {
   vec4 viewport = vec4(0, 0, mAsset->cfg()->graphics.res);
-  vec3 win = vec3(mp.x, viewport.w - mp.y, 1.f);
-  vec3 d = unProject(win, mView, mProjection, viewport);
+  vec3 win      = vec3(mp.x, viewport.w - mp.y, 1.f);
+  vec3 d        = unProject(win, mView, mProjection, viewport);
   return d;
 }

@@ -71,8 +71,8 @@ private:
   // If no textures are needed, the submeshes startIndex and size
   // is used to draw the mesh
   struct Material {
-    int startIndex;
-    int size;
+    int                      startIndex;
+    int                      size;
     std::shared_ptr<Texture> texture;
   };
 

@@ -11,13 +11,13 @@ class CFG;
 class Shader : public Logging::Log {
 public:
   struct LayoutBinding {
-    int location;
+    int         location;
     std::string name;
   };
 
   struct Details {
     std::vector<LayoutBinding> layoutBindings;
-    std::string source;
+    std::string                source;
   };
   //! Default Constructor
   Shader();
@@ -33,9 +33,9 @@ public:
   GLuint loadShader(const std::string& filename);
 
   const Details& details() const;
-  std::string filename() const;
-  std::string type() const;
-  GLuint      id() const;
+  std::string    filename() const;
+  std::string    type() const;
+  GLuint         id() const;
 
   static CFG* mCFG;
 

@@ -88,13 +88,11 @@ Master::Master(Asset* a) : mAsset(a) {
       mDrawable3D.pop_back();
   });
 
-  mLua->engine.set_function("disablePhysics", [&]() {
-    mWorld->disablePhysics();
-  });
+  mLua->engine.set_function("disablePhysics",
+                            [&]() { mWorld->disablePhysics(); });
 
-  mLua->engine.set_function("enablePhysics", [&]() {
-    mWorld->enablePhysics();
-  });
+  mLua->engine.set_function("enablePhysics",
+                            [&]() { mWorld->enablePhysics(); });
 
   // add CFG is enabled
   if (a->cfg()->console.enabled) {

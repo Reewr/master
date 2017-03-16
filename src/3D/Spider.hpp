@@ -15,7 +15,6 @@ class btHingeConstraint;
 
 class Spider : public Drawable3D, public Logging::Log {
 public:
-
   struct Part {
     Part();
     Part(unsigned short group, unsigned short mask);
@@ -24,7 +23,7 @@ public:
     unsigned short collisionMask;
 
     btHingeConstraint* joint;
-    float torque;
+    float              torque;
   };
 
   Spider(Asset*);
@@ -44,5 +43,5 @@ private:
   std::shared_ptr<PhysicsMesh> mMesh;
   PhysicsElements*             mElements;
   std::shared_ptr<Program>     mProgram;
-  std::map<std::string, Part>  mParts;
+  std::map<std::string, Part> mParts;
 };

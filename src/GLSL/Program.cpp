@@ -120,7 +120,7 @@ bool Program::link() {
   const Shader::Details& fsDetails = mFS->details();
   const Shader::Details& vsDetails = mVS->details();
 
-  for(auto& binding : fsDetails.layoutBindings) {
+  for (auto& binding : fsDetails.layoutBindings) {
     mLog->debug("Binding layouts for: {}, {} to {}",
                 mFS->filename(),
                 binding.name,
@@ -128,7 +128,7 @@ bool Program::link() {
     setUniform(binding.name, binding.location);
   }
 
-  for(auto& binding : vsDetails.layoutBindings) {
+  for (auto& binding : vsDetails.layoutBindings) {
     mLog->debug("Binding layouts for: {}, {} to {}",
                 mVS->filename(),
                 binding.name,

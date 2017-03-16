@@ -94,7 +94,7 @@ void replaceCFGExpression(std::string& line) {
  * @return
  */
 Shader::LayoutBinding replaceLayoutBinding(std::string& line) {
-  size_t pos = line.find("layout(binding=");
+  size_t pos       = line.find("layout(binding=");
   size_t semicolon = line.find(";");
 
   if (semicolon == std::string::npos)
@@ -155,8 +155,8 @@ Shader::LayoutBinding replaceLayoutBinding(std::string& line) {
  */
 Shader::Details loadTextfile(const std::string& filename) {
   Shader::Details detail;
-  std::ifstream fs(filename);
-  std::string   line;
+  std::ifstream   fs(filename);
+  std::string     line;
 
   if (!fs.is_open()) {
     throw std::runtime_error("Unable to open file: " + filename);

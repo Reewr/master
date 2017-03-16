@@ -218,19 +218,21 @@ PhysicsElements* PhysicsMesh::createCopyAll() {
     btCollisionShape* shape    = mainBody->getCollisionShape();
 
     btMatrix3x3      mat;
-    const mmm::mat4& t       = mesh.second.subMesh->transform();
-    const mmm::vec3& matPos  = mmm::dropColumns<3>(t).xyz;
+    const mmm::mat4& t      = mesh.second.subMesh->transform();
+    const mmm::vec3& matPos = mmm::dropColumns<3>(t).xyz;
 
     // TODO fix static +2 up translation
-    const btVector3  pos     = btVector3(matPos.x, matPos.y+1, matPos.z);
+    const btVector3  pos     = btVector3(matPos.x, matPos.y + 1, matPos.z);
     const btVector3& inertia = mainBody->getLocalInertia();
     const btScalar   mass    = mainBody->getInvMass();
 
     mat.setFromOpenGLSubMatrix(mmm::transpose(t).rawdata);
 
     btMotionState* motion = new btDefaultMotionState(btTransform(mat, pos));
-    // btMotionState* motion = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0)));
-    btRigidBody*   body   = new btRigidBody(mass, motion, shape, inertia);
+    // btMotionState* motion = new
+    // btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0,
+    // 0, 0)));
+    btRigidBody* body = new btRigidBody(mass, motion, shape, inertia);
 
     elements.bodies[mesh.first]  = body;
     elements.motions[mesh.first] = motion;
@@ -272,10 +274,12 @@ PhysicsElements* PhysicsMesh::createCopyAll() {
           n->setLimit(h->getLowerLimit(), h->getUpperLimit());
         }
 
-        // mLog->debug("Constraint between A: '{}' -> B: {}", fromConstraint, toConstraint);
+        // mLog->debug("Constraint between A: '{}' -> B: {}", fromConstraint,
+        // toConstraint);
 
         // if (h->hasLimit())
-        //   mLog->debug("  hasLimit, lower: {}, upper: {}", h->getLowerLimit(), h->getUpperLimit());
+        //   mLog->debug("  hasLimit, lower: {}, upper: {}", h->getLowerLimit(),
+        //   h->getUpperLimit());
 
         constraintCopy = n;
         break;
