@@ -1,6 +1,6 @@
 #include "Drawable3D.hpp"
 
-#include "3D/Camera.hpp"
+#include "../Camera/Camera.hpp"
 #include "Graphical/Framebuffer.hpp"
 
 #include <btBulletDynamicsCommon.h>

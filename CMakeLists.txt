@@ -178,12 +178,14 @@ set(SOURCE_FILES
   ${SRC_DIR}/Log.cpp
 
   # src/3D
-  ${SRC_DIR}/3D/Camera.cpp
   ${SRC_DIR}/3D/Cube.cpp
   ${SRC_DIR}/3D/Spider.cpp
   ${SRC_DIR}/3D/MeshPart.cpp
   ${SRC_DIR}/3D/Terrain.cpp
   ${SRC_DIR}/3D/World.cpp
+
+  # src/Camera
+  ${SRC_DIR}/Camera/Camera.cpp
 
   # src/Console
   ${SRC_DIR}/Console/Console.cpp
@@ -263,12 +265,14 @@ set(HEADER_FILES
   ${SRC_DIR}/GlobalLog.hpp
 
   # src/3D
-  ${SRC_DIR}/3D/Camera.hpp
   ${SRC_DIR}/3D/Cube.hpp
   ${SRC_DIR}/3D/MeshPart.cpp
   ${SRC_DIR}/3D/Spider.hpp
   ${SRC_DIR}/3D/Terrain.hpp
   ${SRC_DIR}/3D/World.hpp
+
+  # src/Camera
+  ${SRC_DIR}/Camera/Camera.hpp
 
   # src/Console
   ${SRC_DIR}/Console/Console.hpp

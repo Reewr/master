@@ -3,7 +3,7 @@
 #include <btBulletDynamicsCommon.h>
 #include <mmm.hpp>
 
-#include "Camera.hpp"
+#include "../Camera/Camera.hpp"
 #include "GLSL/Program.hpp"
 #include "Graphical/Framebuffer.hpp"
 #include "Resource/ResourceManager.hpp"

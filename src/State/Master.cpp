@@ -2,7 +2,7 @@
 
 #include "../OpenGLHeaders.hpp"
 
-#include "../3D/Camera.hpp"
+#include "../Camera/Camera.hpp"
 #include "../3D/Cube.hpp"
 #include "../3D/Spider.hpp"
 #include "../3D/Terrain.hpp"

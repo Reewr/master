@@ -3,7 +3,7 @@
 #include "../Drawable/Drawable3D.hpp"
 #include "../Input/Event.hpp"
 #include "../OpenGLHeaders.hpp"
-#include "Camera.hpp"
+#include "../Camera/Camera.hpp"
 #include <algorithm>
 #include <btBulletDynamicsCommon.h>
 
