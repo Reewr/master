@@ -20,8 +20,6 @@ Drawable3D::Drawable3D()
 
 Drawable3D::~Drawable3D() {}
 
-void Drawable3D::drawShadow(Framebuffer*, Camera*) {}
-
 void Drawable3D::updateFromPhysics() {
   if (hasPhysics()) {
     btTransform trans;
