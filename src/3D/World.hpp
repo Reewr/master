@@ -12,6 +12,7 @@ class btSequentialImpulseConstraintSolver;
 class btDiscreteDynamicsWorld;
 class btRigidBody;
 class btPoint2PointConstraint;
+class btOverlapFilterCallback;
 
 class Drawable3D;
 class Camera;
@@ -39,6 +40,10 @@ public:
   // By enabling mousepicks, the user can move objects by clicking
   // on them to pick them up and dragging them around
   void enableMousePickups();
+
+  // Sets a filter for collision detection allowing you to have
+  // better control over what the world checks collisions on.
+  void setCollisionFilter(btOverlapFilterCallback* callback);
 
   // By disabling mousepickups, the user is not allowed to move objects
   void disableMousePickups();

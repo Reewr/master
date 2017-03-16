@@ -158,6 +158,20 @@ void World::disableMousePickups() {
 
 /**
  * @brief
+ *   Sets the collision filter for the world. When this is called it overrides
+ *   whatever was set before it and the default if there's none set.
+ *
+ *   This allows you to better control the collisions detections that are
+ *   performed in the world.
+ *
+ * @param callback
+ */
+void World::setCollisionFilter(btOverlapFilterCallback* callback) {
+  mWorld->getPairCache()->setOverlapFilterCallback(callback);
+}
+
+/**
+ * @brief
  *   Handles the input events. Currently it will only handle the event
  *   where the user tries to pickup an object and nove it around.
  *
