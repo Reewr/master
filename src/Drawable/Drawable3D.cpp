@@ -229,10 +229,22 @@ mmm::vec3 Drawable3D::torque() const {
  * @param torque
  */
 void Drawable3D::setTorque(const mmm::vec3& torque) {
+  setTorque(torque.x, torque.y, torque.z);
+}
+
+/**
+ * @brief
+ *   Sets the torque of an object. Does not apply torque to child elements.
+ *
+ * @param x
+ * @param y
+ * @param z
+ */
+void Drawable3D::setTorque(float x, float y, float z) {
   if (!hasPhysics())
     return;
 
-  mBody->applyTorque(btVector3(torque.x, torque.y, torque.z));
+  mBody->applyTorque(btVector3(x, y, z));
 }
 
 /**

@@ -64,6 +64,7 @@ public:
 
   // Applies the torque to an object
   void setTorque(const mmm::vec3&);
+  void setTorque(float x, float y, float z);
 
   // Returns a reference to all children
   const std::vector<Drawable3D*>& children() const;
