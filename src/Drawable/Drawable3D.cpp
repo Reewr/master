@@ -102,8 +102,8 @@ void Drawable3D::moveTo(float x, float y, float z) {
   mPosition = mmm::vec3(x, y, z);
 
   for (auto& c : mChildren) {
-    const mmm::vec3& pos = c->position();
-    c->moveTo(x - pos.x, y - pos.y, z - pos.z);
+    const mmm::vec3& childPos = c->position();
+    c->moveTo(x - childPos.x, y - childPos.y, z - childPos.z);
   }
 }
 
