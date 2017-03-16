@@ -12,7 +12,7 @@ class btSequentialImpulseConstraintSolver;
 class btDiscreteDynamicsWorld;
 class btRigidBody;
 class btPoint2PointConstraint;
-class btOverlapFilterCallback;
+struct btOverlapFilterCallback;
 
 class Drawable3D;
 class Camera;
