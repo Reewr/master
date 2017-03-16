@@ -59,7 +59,10 @@ public:
   // Returns the objects weight in total, including its children
   float weight() const;
 
+  // Retrieves the torque from bullet
   mmm::vec3 torque() const;
+
+  // Applies the torque to an object
   void setTorque(const mmm::vec3&);
 
   // Returns a reference to all children
