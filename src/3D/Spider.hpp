@@ -41,8 +41,8 @@ public:
 private:
   static std::map<std::string, Part> SPIDER_PARTS;
 
-  std::shared_ptr<PhysicsMesh> mMesh;
   PhysicsElements*             mElements;
   std::shared_ptr<Program>     mProgram;
-  std::map<std::string, Part> mParts;
+  std::shared_ptr<PhysicsMesh> mMesh;
+  std::map<std::string, Part>  mParts;
 };
