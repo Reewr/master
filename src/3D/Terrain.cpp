@@ -26,7 +26,6 @@ Terrain::Terrain() : Logging::Log("Terrain") {
                                                     mShape,
                                                     btVector3(0, 0, 0));
   mBody    = new btRigidBody(consInfo);
-  mProgram = mAsset->rManager()->get<Program>("Program::Model");
   mTexture = mAsset->rManager()->get<Texture>("Texture::Terrain");
   mTexture->generateMipmaps();
   mTexture->linearMipmap();

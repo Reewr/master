@@ -38,7 +38,6 @@ Cube::Cube(const mmm::vec3& size, int weight, const mmm::vec3& position)
                                                     fallInertia);
   mBody    = new btRigidBody(consInfo);
   mTexture = mAsset->rManager()->get<Texture>("Texture::Cube");
-  mProgram = mAsset->rManager()->get<Program>("Program::Model");
   mScale   = mmm::scale(size);
 }
 

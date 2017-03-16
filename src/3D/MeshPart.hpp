@@ -9,8 +9,7 @@ class Program;
 
 class MeshPart : public Drawable3D, public Logging::Log {
 public:
-  MeshPart(std::shared_ptr<Program>& program,
-           const SubMesh*            subMesh,
+  MeshPart(const SubMesh*            subMesh,
            btRigidBody*              body,
            btMotionState*            motion);
   ~MeshPart();
@@ -28,5 +27,4 @@ public:
 
 private:
   const SubMesh*           mMesh;
-  std::shared_ptr<Program> mProgram;
 };

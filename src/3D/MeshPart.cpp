@@ -11,11 +11,10 @@ mmm::vec3 tovec(const btVector3& m) {
   return mmm::vec3(m.x(), m.y(), m.z());
 }
 
-MeshPart::MeshPart(std::shared_ptr<Program>& program,
-                   const SubMesh*            subMesh,
-                   btRigidBody*              body,
-                   btMotionState*            motion)
-    : Logging::Log("MeshPart"), mMesh(subMesh), mProgram(program) {
+MeshPart::MeshPart(const SubMesh* subMesh,
+                   btRigidBody*   body,
+                   btMotionState* motion)
+    : Logging::Log("MeshPart"), mMesh(subMesh) {
   mMotion = motion;
   mBody   = body;
   mShape  = mBody->getCollisionShape();

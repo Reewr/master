@@ -39,7 +39,6 @@ private:
   static std::map<std::string, Part> SPIDER_PARTS;
 
   PhysicsElements*             mElements;
-  std::shared_ptr<Program>     mProgram;
   std::shared_ptr<PhysicsMesh> mMesh;
   std::map<std::string, Part>  mParts;
 };

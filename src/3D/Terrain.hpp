@@ -26,5 +26,4 @@ public:
 private:
   GLGrid3D*                mGrid;
   std::shared_ptr<Texture> mTexture;
-  std::shared_ptr<Program> mProgram;
 };

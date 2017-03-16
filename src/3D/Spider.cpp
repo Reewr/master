@@ -19,14 +19,12 @@ Spider::Part::Part(unsigned short group, unsigned short mask)
 
 Spider::Spider(Asset* asset) : Logging::Log("Spider") {
   ResourceManager* r = asset->rManager();
-  mProgram           = r->get<Program>("Program::Model");
   mMesh              = r->get<PhysicsMesh>("PhysicsMesh::Spider");
   mElements          = mMesh->createCopyAll();
   mParts             = SPIDER_PARTS;
 
   for (auto& mesh : mElements->meshes) {
-    Drawable3D* child = new MeshPart(mProgram,
-                                     mesh.second,
+    Drawable3D* child = new MeshPart(mesh.second,
                                      mElements->bodies[mesh.first],
                                      mElements->motions[mesh.first]);
 

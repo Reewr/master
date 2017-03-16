@@ -45,6 +45,5 @@ public:
 
 private:
   GLCube*                  mCube;
-  std::shared_ptr<Program> mProgram;
   std::shared_ptr<Texture> mTexture;
 };
