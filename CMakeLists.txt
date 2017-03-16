@@ -198,6 +198,9 @@ set(SOURCE_FILES
   ${SRC_DIR}/Input/Input.cpp
   ${SRC_DIR}/Input/Event.cpp
 
+  # src/Learning
+  ${SRC_DIR}/Learning/SpiderSwarm.cpp
+
   # src/Lua
   ${SRC_DIR}/Lua/LuaLib.cpp
   ${SRC_DIR}/Lua/Lua.cpp
@@ -284,6 +287,9 @@ set(HEADER_FILES
   # src/Input
   ${SRC_DIR}/Input/Input.hpp
   ${SRC_DIR}/Input/Event.hpp
+
+  # src/Learning
+  ${SRC_DIR}/Learning/SpiderSwarm.hpp
 
   # src/Lua
   ${SRC_DIR}/Lua/LuaLib.hpp
