@@ -43,7 +43,7 @@ Master::Master(Asset* a) : mAsset(a) {
                                shadowRes,
                                true);
 
-  mDrawable3D = { new Terrain(), new Spider(mAsset) };
+  mDrawable3D = { new Terrain(), new Spider() };
 
   for (auto d : mDrawable3D)
     mWorld->addObject(d);
@@ -69,7 +69,7 @@ Master::Master(Asset* a) : mAsset(a) {
   });
 
   mLua->engine.set_function("addSpider", [&]() {
-    mDrawable3D.push_back(new Spider(mAsset));
+    mDrawable3D.push_back(new Spider());
     mWorld->addObject(mDrawable3D.back());
   });
 
