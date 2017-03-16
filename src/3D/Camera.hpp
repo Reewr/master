@@ -68,11 +68,17 @@ public:
   // returns the target vector
   const mmm::vec3& target() const;
 
+  // Updates the camera to set a new view matrix
   void update(float dt);
+
+  // adjust the camera by zooming in or out
   void zoom(int sign);
 
+  // Handles the input. Should be used in update loop instead
+  // of event based so it feels more fluid.
   void input(float dt);
 
+  // Returns the end position of a ray from camera position to far plane.
   mmm::vec3 screenPointToRay(const mmm::vec2& mousePosition);
 
 private:
