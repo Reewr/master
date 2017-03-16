@@ -40,10 +40,10 @@ public:
 
   // If the element has shape, rigidbody and motion it is considered
   // to have physics
-  bool hasPhysics();
+  bool hasPhysics() const;
 
   // Returns the position of the object
-  const mmm::vec3& position();
+  const mmm::vec3& position() const;
 
   // Moves the object to a coordinate position
   void moveTo(float x, float y, float z);
@@ -57,16 +57,16 @@ public:
   btRigidBody* rigidBody();
 
   // Returns the objects weight in total, including its children
-  float weight();
+  float weight() const;
 
   // Returns a reference to all children
-  const std::vector<Drawable3D*>& children();
+  const std::vector<Drawable3D*>& children() const;
 
   // Adds a constraint to the object
   void addConstraint(btTypedConstraint* constraint);
 
   // Returns a reference to all constraints
-  const std::vector<btTypedConstraint*> constraints();
+  const std::vector<btTypedConstraint*> constraints() const;
 
   // Sets and gets different collision information
   int collisionGroup() const;

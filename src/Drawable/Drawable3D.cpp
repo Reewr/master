@@ -55,7 +55,7 @@ void Drawable3D::updateFromPhysics() {
     child->updateFromPhysics();
 }
 
-const mmm::vec3& Drawable3D::position() {
+const mmm::vec3& Drawable3D::position() const {
   return mPosition;
 }
 
@@ -104,7 +104,7 @@ void Drawable3D::rotate(const mmm::vec3& axis, float angle) {
   rotate(axis.x, axis.y, axis.z, angle);
 }
 
-bool Drawable3D::hasPhysics() {
+bool Drawable3D::hasPhysics() const {
   return mShape != nullptr && mMotion != nullptr && mBody != nullptr;
 }
 
@@ -112,7 +112,7 @@ btRigidBody* Drawable3D::rigidBody() {
   return mBody;
 }
 
-float Drawable3D::weight() {
+float Drawable3D::weight() const {
   float w = 0;
 
   if (hasPhysics())
@@ -125,7 +125,7 @@ float Drawable3D::weight() {
   return w;
 }
 
-const std::vector<Drawable3D*>& Drawable3D::children() {
+const std::vector<Drawable3D*>& Drawable3D::children() const {
   return mChildren;
 }
 
@@ -133,7 +133,7 @@ void Drawable3D::addConstraint(btTypedConstraint* constraint) {
   mConstraints.push_back(constraint);
 }
 
-const std::vector<btTypedConstraint*> Drawable3D::constraints() {
+const std::vector<btTypedConstraint*> Drawable3D::constraints() const {
   return mConstraints;
 }
 
