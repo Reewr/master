@@ -20,7 +20,8 @@ MeshPart::MeshPart(const SubMesh* subMesh,
   mShape  = mBody->getCollisionShape();
 
   // mLog->debug(
-  //   "{}: Gravity: {}, Mass: {}, Shape: {}, LocalInertia: {}, Constraints: {}",
+  //   "{}: Gravity: {}, Mass: {}, Shape: {}, LocalInertia: {}, Constraints:
+  //   {}",
   //   subMesh->name(),
   //   tovec(mBody->getGravity()),
   //   mBody->getInvMass(),

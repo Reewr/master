@@ -2,11 +2,11 @@
 
 #include "../OpenGLHeaders.hpp"
 
-#include "../Camera/Camera.hpp"
 #include "../3D/Cube.hpp"
 #include "../3D/Spider.hpp"
 #include "../3D/Terrain.hpp"
 #include "../3D/World.hpp"
+#include "../Camera/Camera.hpp"
 #include "../Console/Console.hpp"
 #include "../Console/Console.hpp"
 #include "../Drawable/Drawable3D.hpp"
@@ -136,7 +136,8 @@ void Master::draw3D() {
   mShadowmap->finalize();
   mShadowmap->texture()->bind(0);
 
-  std::shared_ptr<Program> modelProgram = mAsset->rManager()->get<Program>("Program::Model");
+  std::shared_ptr<Program> modelProgram =
+    mAsset->rManager()->get<Program>("Program::Model");
 
   modelProgram->setUniform("view", mCamera->view());
   modelProgram->setUniform("proj", mCamera->projection());

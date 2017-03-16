@@ -2,9 +2,9 @@
 
 #include "Drawable.hpp"
 
+#include <memory>
 #include <mmm.hpp>
 #include <vector>
-#include <memory>
 
 class btRigidBody;
 class btCollisionShape;
@@ -29,7 +29,7 @@ public:
 
   // Draw it. Keep it separate from update
   virtual void draw(std::shared_ptr<Program>& program,
-                    bool bindTexture = false) = 0;
+                    bool                      bindTexture = false) = 0;
 
   // Handles input for the drawable object
   virtual void input(const Input::Event& event) = 0;

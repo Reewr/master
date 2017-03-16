@@ -9,9 +9,7 @@ class Program;
 
 class MeshPart : public Drawable3D, public Logging::Log {
 public:
-  MeshPart(const SubMesh*            subMesh,
-           btRigidBody*              body,
-           btMotionState*            motion);
+  MeshPart(const SubMesh* subMesh, btRigidBody* body, btMotionState* motion);
   ~MeshPart();
 
   // Update the element, physics etc
@@ -26,5 +24,5 @@ public:
   void input(const Input::Event& event);
 
 private:
-  const SubMesh*           mMesh;
+  const SubMesh* mMesh;
 };

@@ -23,7 +23,7 @@ public:
     unsigned short collisionMask;
 
     btHingeConstraint* joint;
-    mmm::vec3 torque;
+    mmm::vec3          torque;
   };
 
   Spider(Asset*);
@@ -40,5 +40,5 @@ private:
 
   PhysicsElements*             mElements;
   std::shared_ptr<PhysicsMesh> mMesh;
-  std::map<std::string, Part>  mParts;
+  std::map<std::string, Part> mParts;
 };
