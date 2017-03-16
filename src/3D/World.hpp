@@ -5,13 +5,13 @@
 #include <mmm.hpp>
 #include <vector>
 
-struct btDbvtBroadphase;
-class btDefaultCollisionConfiguration;
 class btCollisionDispatcher;
-class btSequentialImpulseConstraintSolver;
+class btDefaultCollisionConfiguration;
 class btDiscreteDynamicsWorld;
-class btRigidBody;
 class btPoint2PointConstraint;
+class btRigidBody;
+class btSequentialImpulseConstraintSolver;
+struct btDbvtBroadphase;
 struct btOverlapFilterCallback;
 
 class Drawable3D;
