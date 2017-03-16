@@ -64,6 +64,13 @@ void Spider::draw(std::shared_ptr<Program>& program, bool bindTexture) {
 
 void Spider::input(const Input::Event&) {}
 
+Spider* Spider::upcast(Drawable3D* drawable) {
+  if (drawable == nullptr)
+    return nullptr;
+
+  return dynamic_cast<Spider*>(drawable);
+}
+
 std::map<std::string, Spider::Part> Spider::SPIDER_PARTS =
   { { "Eye", { 0b1000000000000000, 0b1011111111111111 } },
     { "Neck", { 0b0100000000000000, 0b0011111111111111 } },
