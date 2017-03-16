@@ -97,7 +97,10 @@ namespace LuaLib {
   }
 
   namespace Drawable {
+    // Exposes the Drawable3D class to Lua
     sol::table openDrawable3D(sol::this_state state);
+
+    // Exposes the spider class to Lua
     sol::table openSpider(sol::this_state state);
   }
 

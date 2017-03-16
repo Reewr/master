@@ -897,6 +897,22 @@ sol::table LuaLib::Math::openVec2(sol::this_state state) {
   return module["vec2"];
 }
 
+/**
+ * @brief
+ *   Exposes the mmm::vec3 class to Lua, with 6 constructors,
+ *
+ *   - no variables
+ *   - 1 int
+ *   - 1 float
+ *   - 3 float
+ *   - 3 int
+ *   - vec2, float
+ *   - vec2, int
+ *
+ * @param state
+ *
+ * @return
+ */
 sol::table LuaLib::Math::openVec3(sol::this_state state) {
   sol::state_view lua(state);
   sol::table      module = lua.create_table();
@@ -935,6 +951,18 @@ sol::table LuaLib::Math::openMath(sol::this_state state) {
   return module;
 }
 
+/**
+ * @brief
+ *   Exposes the Rectangle class to Lua. This class contains two vec2's,
+ *   one with the location of the top left corner and one with the size.
+ *
+ *   It also exposes several functions to retrieve the size, topleft or
+ *   bottomleft.
+ *
+ * @param state
+ *
+ * @return
+ */
 sol::table LuaLib::Shape::openRectangle(sol::this_state state) {
   sol::state_view lua(state);
   sol::table      module = lua.create_table();
@@ -980,6 +1008,14 @@ sol::table LuaLib::Shape::openShape(sol::this_state state) {
   return module;
 }
 
+/**
+ * @brief
+ *   Exposes the base Drawable3D class with most of its functions
+ *
+ * @param state
+ *
+ * @return
+ */
 sol::table LuaLib::Drawable::openDrawable3D(sol::this_state state) {
   sol::state_view lua(state);
   sol::table      module = lua.create_table();
@@ -1008,6 +1044,15 @@ sol::table LuaLib::Drawable::openDrawable3D(sol::this_state state) {
   return module["Drawable3D"];
 }
 
+/**
+ * @brief
+ *   Exposes the Spider class, which currently has no additional functions
+ *   besides the ones that are located on Drawable3D
+ *
+ * @param state
+ *
+ * @return
+ */
 sol::table LuaLib::Drawable::openSpider(sol::this_state state) {
   sol::state_view lua(state);
   sol::table      module = lua.create_table();
@@ -1053,6 +1098,15 @@ sol::table LuaLib::State::openStateTypes(sol::this_state state) {
   return module;
 }
 
+/**
+ * @brief
+ *   Exposes the State base class, which cannot be constructed, but exposes
+ *   some functions to retrieve the currently drawn/stored objects
+ *
+ * @param state
+ *
+ * @return
+ */
 sol::table LuaLib::State::openStateClass(sol::this_state state) {
   sol::state_view lua(state);
   sol::table      module = lua.create_table();
