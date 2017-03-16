@@ -58,16 +58,6 @@ Cube::~Cube() {
  */
 void Cube::update(float) {}
 
-void Cube::drawShadow(Framebuffer* shadowMap, Camera* camera) {
-  auto program = shadowMap->program();
-
-  program->bind();
-  program->setUniform("model", mmm::translate(mPosition) * mRotation * mScale);
-  camera->setLightVPUniforms(program, "light");
-
-  mCube->draw();
-}
-
 /**
  * @brief
  *   Draw the cube by binding the program and setting the required

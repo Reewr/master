@@ -27,9 +27,6 @@ public:
   // Update the element, physics etc
   virtual void update(float deltaTime) = 0;
 
-  // First pass draw from light's point of view
-  virtual void drawShadow(Framebuffer* shadowMap, Camera* camera) = 0;
-
   // Draw it. Keep it separate from update
   virtual void draw(std::shared_ptr<Program>& program,
                     bool bindTexture = false) = 0;

@@ -130,9 +130,12 @@ void Master::draw3D() {
   glEnable(GL_DEPTH_TEST);
   glCullFace(GL_BACK);
 
+  std::shared_ptr<Program> shadowProgram = mShadowmap->program();
+  mCamera->setLightVPUniforms(shadowProgram, "light");
+
   mShadowmap->bind(true);
   for (auto d : mDrawable3D)
-    d->drawShadow(mShadowmap, mCamera);
+    d->draw(shadowProgram, false);
   mShadowmap->finalize();
   mShadowmap->texture()->bind(0);
 

@@ -42,16 +42,6 @@ Terrain::~Terrain() {
 
 void Terrain::update(float) {}
 
-void Terrain::drawShadow(Framebuffer* shadowMap, Camera* camera) {
-  auto program = shadowMap->program();
-  mat4 model   = mmm::translate(mPosition + vec3(0, 1, 0)) * mRotation * mScale;
-
-  program->bind();
-  program->setUniform("model", model);
-  camera->setLightVPUniforms(program, "light");
-  mGrid->draw();
-}
-
 void Terrain::draw(std::shared_ptr<Program>& program, bool bindTexture) {
   mat4 model = mmm::translate(mPosition + vec3(0, 1, 0)) * mRotation * mScale;
 

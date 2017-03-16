@@ -52,18 +52,6 @@ Spider::~Spider() {
 
 void Spider::update(float) {}
 
-void Spider::drawShadow(Framebuffer* shadowMap, Camera* camera) {
-  auto program = shadowMap->program();
-
-  program->bind();
-  camera->setLightVPUniforms(program, "light");
-
-  mMesh->mesh()->bindVertexArray();
-  for (auto& child : mChildren)
-    child->drawShadow(shadowMap, camera);
-  mMesh->mesh()->unbindVertexArray();
-}
-
 void Spider::draw(std::shared_ptr<Program>& program, bool bindTexture) {
   program->bind();
 

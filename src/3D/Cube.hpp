@@ -37,8 +37,6 @@ public:
   // Update the element, physics etc
   void update(float deltaTime);
 
-  void drawShadow(Framebuffer* shadowMap, Camera* camera);
-
   // Draw it. Keep it separate from update
   void draw(std::shared_ptr<Program>& program, bool bindTexture = false);
 
