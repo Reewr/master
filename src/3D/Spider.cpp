@@ -12,16 +12,10 @@
 #include "MeshPart.hpp"
 
 Spider::Part::Part()
-    : collisionGroup(1), collisionMask(-1), joint(nullptr), torque(0) {}
+    : collisionGroup(1), collisionMask(-1), joint(nullptr), torque(0, 0, 0) {}
 
 Spider::Part::Part(unsigned short group, unsigned short mask)
-    : collisionGroup(group), collisionMask(mask), joint(nullptr), torque(0) {}
-
-Spider::Part::Part(unsigned short group, unsigned short mask, float torque)
-    : collisionGroup(group)
-    , collisionMask(mask)
-    , joint(nullptr)
-    , torque(torque) {}
+    : collisionGroup(group), collisionMask(mask), joint(nullptr), torque(0, 0, 0) {}
 
 Spider::Spider(Asset* asset) : Logging::Log("Spider") {
   ResourceManager* r = asset->rManager();

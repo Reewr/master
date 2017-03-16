@@ -18,13 +18,12 @@ public:
   struct Part {
     Part();
     Part(unsigned short group, unsigned short mask);
-    Part(unsigned short group, unsigned short mask, float torque);
 
     unsigned short collisionGroup;
     unsigned short collisionMask;
 
     btHingeConstraint* joint;
-    mmm::vec3& torque;
+    mmm::vec3 torque;
   };
 
   Spider(Asset*);
