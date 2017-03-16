@@ -20,8 +20,8 @@ Spider::Part::Part(unsigned short group, unsigned short mask)
     , joint(nullptr)
     , torque(0, 0, 0) {}
 
-Spider::Spider(Asset* asset) : Logging::Log("Spider") {
-  ResourceManager* r = asset->rManager();
+Spider::Spider() : Logging::Log("Spider") {
+  ResourceManager* r = mAsset->rManager();
   mMesh              = r->get<PhysicsMesh>("PhysicsMesh::Spider");
   mElements          = mMesh->createCopyAll();
   mParts             = SPIDER_PARTS;

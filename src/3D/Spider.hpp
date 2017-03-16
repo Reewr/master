@@ -6,7 +6,6 @@
 #include "../Drawable/Drawable3D.hpp"
 #include "../Log.hpp"
 
-class Asset;
 class PhysicsMesh;
 struct PhysicsElements;
 class Program;
@@ -26,7 +25,7 @@ public:
     mmm::vec3          torque;
   };
 
-  Spider(Asset*);
+  Spider();
   ~Spider();
 
   void update(float deltaTime);
