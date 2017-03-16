@@ -31,30 +31,44 @@ public:
   // Draw it. Keep it separate from update
   virtual void draw(Camera* camera) = 0;
 
+  // Handles input for the drawable object
   virtual void input(const Input::Event& event) = 0;
 
+  // Whenever the world increments the physics, this method is called
+  // to update the position and rotation of the object
   void updateFromPhysics();
 
+  // If the element has shape, rigidbody and motion it is considered
+  // to have physics
   bool hasPhysics();
 
+  // Returns the position of the object
   const mmm::vec3& position();
 
+  // Moves the object to a coordinate position
   void moveTo(float x, float y, float z);
   void moveTo(const mmm::vec3& position);
 
+  // Rotates the object
   void rotate(float axisX, float axisY, float axisZ, float angle);
   void rotate(const mmm::vec3& axis, float angle);
 
+  // Returns the rigidBody associated with the object
   btRigidBody* rigidBody();
 
+  // Returns the objects weight in total, including its children
   float weight();
 
+  // Returns a reference to all children
   const std::vector<Drawable3D*>& children();
 
+  // Adds a constraint to the object
   void addConstraint(btTypedConstraint* constraint);
 
+  // Returns a reference to all constraints
   const std::vector<btTypedConstraint*> constraints();
 
+  // Sets and gets different collision information
   int collisionGroup() const;
   int collisionMask() const;
   void setCollisionGroup(int);
