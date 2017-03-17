@@ -29,25 +29,30 @@
 bool SpiderSwarm::NonSpiderCollisionFilter::needBroadphaseCollision (
     btBroadphaseProxy* a,
     btBroadphaseProxy* b) const {
+  bool collides = (a->m_collisionFilterGroup & b->m_collisionFilterMask) != 0 &&
+                  (b->m_collisionFilterGroup & a->m_collisionFilterMask);
+
+  // If collides is false, dont check anything else
+  if (!collides)
+    return false;
+
   btCollisionObject* aObj = (btCollisionObject*) a->m_clientObject;
   btCollisionObject* bObj = (btCollisionObject*) b->m_clientObject;
 
-  bool collides = (a->m_collisionFilterGroup & b->m_collisionFilterMask) != 0;
-  collides = collides && (a->m_collisionFilterGroup & b->m_collisionFilterMask);
-
   if (!aObj || !bObj) {
-    return collides;
+    return true;
   }
 
-  Spider* aSpider = (Spider*) aObj->getUserPointer();
-  Spider* bSpider = (Spider*) bObj->getUserPointer();
+  int aId = aObj->getUserIndex();
+  int bId = bObj->getUserIndex();
 
-  if (!aSpider || !bSpider) {
-    return collides;
+  if (aId == -1 || bId == -1) {
+    return true;
   }
 
-  if (aSpider == bSpider)
-    return collides;
+  if (aId == bId) {
+    return true;
+  }
 
   return false;
 }
