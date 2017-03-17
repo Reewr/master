@@ -7,6 +7,7 @@ set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
 find_package(Boost COMPONENTS date_time system filesystem serialization)
+
 if(Boost_FOUND)
   include_directories(${Boost_INCLUDE_DIRS})
 endif()
@@ -37,4 +38,4 @@ set(SOURCE_FILES
   MultiNEAT/src/Utils.cpp
   MultiNEAT/src/Utils.h)
 
-add_library(MultiNEAT ${SOURCE_FILES})
+add_library(MultiNEAT SHARED ${SOURCE_FILES})
