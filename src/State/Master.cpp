@@ -23,6 +23,8 @@
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
 
+#include "../Learning/SpiderSwarm.hpp"
+
 #include <random>
 
 using mmm::vec2;
@@ -43,7 +45,8 @@ Master::Master(Asset* a) : mAsset(a) {
                                shadowRes,
                                true);
 
-  mDrawable3D = { new Terrain(), new Spider() };
+  mDrawable3D = { new Terrain() };
+  mSwarm      = new SpiderSwarm(mWorld);
 
   for (auto d : mDrawable3D)
     mWorld->addObject(d);
@@ -68,9 +71,11 @@ Master::Master(Asset* a) : mAsset(a) {
     }
   });
 
-  mLua->engine.set_function("addSpider", [&]() {
-    mDrawable3D.push_back(new Spider());
-    mWorld->addObject(mDrawable3D.back());
+  mLua->engine.set_function("addSpider", [&](int numSpiders = 0) {
+    for(int i = 0; i < numSpiders; ++i) {
+      mSwarm->addSpider();
+    }
+    mLog->debug("Currently {} spiders", mSwarm->spiders().size());
   });
 
   mLua->engine.set_function("clearCubes", [&]() {
@@ -112,6 +117,7 @@ Master::~Master() {
   delete mCamera;
   delete mShadowmap;
   delete mWorld;
+  delete mSwarm;
 
   for (auto d : mDrawable3D)
     delete d;
@@ -127,12 +133,15 @@ void Master::draw3D() {
   glEnable(GL_DEPTH_TEST);
   glCullFace(GL_BACK);
 
+  auto spiders = mSwarm->spiders();
   std::shared_ptr<Program> shadowProgram = mShadowmap->program();
   mCamera->setLightVPUniforms(shadowProgram, "light");
 
   mShadowmap->bind(true);
   for (auto d : mDrawable3D)
     d->draw(shadowProgram, false);
+  for (auto s : spiders)
+    s.second.spider->draw(shadowProgram, false);
   mShadowmap->finalize();
   mShadowmap->texture()->bind(0);
 
@@ -147,6 +156,8 @@ void Master::draw3D() {
 
   for (auto d : mDrawable3D)
     d->draw(modelProgram, true);
+  for (auto s : spiders)
+    s.second.spider->draw(modelProgram, true);
 }
 
 void Master::drawGUI() {
@@ -187,6 +198,10 @@ void Master::input(const Input::Event& event) {
 void Master::update(float deltaTime) {
   mDeltaTime = deltaTime;
   mWorld->doPhysics(deltaTime);
+
+  for (auto& s : mSwarm->spiders()) {
+    s.second.world->doPhysics(deltaTime);
+  }
 
   if (mGUIElements.size() == 0 || !mGUIElements.back()->isVisible())
     mCamera->input(deltaTime);

@@ -16,6 +16,7 @@ class Asset;
 class Camera;
 class Framebuffer;
 class World;
+class SpiderSwarm;
 
 class Master : public State {
 public:
@@ -37,6 +38,7 @@ private:
   Framebuffer* mShadowmap;
   World*       mWorld;
   Lua::Lua*    mLua;
+  SpiderSwarm* mSwarm;
   // Input::Input* mInput;
   Asset* mAsset;
 };
