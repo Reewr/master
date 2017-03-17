@@ -102,7 +102,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/sol2)
 
 # Include MultiNEAT
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/deps/MultiNEAT)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/MultiNEAT)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/deps/MultiNEAT/MultiNEAT/src)
 
 # Include spdlog
 SET_OPTION(SPDLOG_BUILD_TESTING OFF)
