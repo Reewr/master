@@ -46,7 +46,7 @@ Master::Master(Asset* a) : mAsset(a) {
                                true);
 
   mDrawable3D = { new Terrain() };
-  mSwarm      = new SpiderSwarm(mWorld);
+  mSwarm      = new SpiderSwarm();
 
   for (auto d : mDrawable3D)
     mWorld->addObject(d);
