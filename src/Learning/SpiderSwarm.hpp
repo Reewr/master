@@ -7,6 +7,10 @@ class World;
 class Spider;
 class Terrain;
 
+namespace NEAT {
+  class NeuralNetwork;
+}
+
 class SpiderSwarm {
 public:
 
@@ -32,6 +36,7 @@ public:
 
 private:
   std::map<int, SpiderWorld> mSpiders;
+  NEAT::NeuralNetwork* mNetwork;
 
   static int mBodyIds;
 };

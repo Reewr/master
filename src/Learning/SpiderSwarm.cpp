@@ -4,6 +4,7 @@
 #include "../3D/Spider.hpp"
 
 #include <btBulletDynamicsCommon.h>
+#include <NeuralNetwork.h>
 
 /**
  * @brief
@@ -59,7 +60,9 @@ bool SpiderSwarm::NonSpiderCollisionFilter::needBroadphaseCollision (
 
 int SpiderSwarm::mBodyIds = 0;
 
-SpiderSwarm::SpiderSwarm() {}
+SpiderSwarm::SpiderSwarm() {
+  mNetwork = new NEAT::NeuralNetwork();
+}
 
 /**
  * @brief
@@ -71,6 +74,7 @@ SpiderSwarm::~SpiderSwarm() {
   }
 
   mSpiders.clear();
+  delete mNetwork;
 }
 
 /**
