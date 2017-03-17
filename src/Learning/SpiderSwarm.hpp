@@ -5,6 +5,7 @@
 
 class World;
 class Spider;
+class Terrain;
 
 class SpiderSwarm {
 public:
@@ -14,22 +15,23 @@ public:
                                  btBroadphaseProxy* b) const;
   };
 
-  SpiderSwarm(World* world);
+  struct SpiderWorld {
+    World* world;
+    Spider* spider;
+  };
+
+  SpiderSwarm();
   ~SpiderSwarm();
 
   Spider* addSpider();
-  bool removeSpider(Spider* spider);
   bool removeSpider(int id);
 
   Spider* spider(int id);
 
-  const std::map<int, Spider*>& spiders();
-  const std::map<Spider*, int>& ids();
+  const std::map<int, SpiderWorld>& spiders();
 
 private:
-  std::map<int, Spider*> mSpiders;
-  std::map<Spider*, int> mSpiderIds;
-  World* mWorld;
+  std::map<int, SpiderWorld> mSpiders;
 
   static int mBodyIds;
 };

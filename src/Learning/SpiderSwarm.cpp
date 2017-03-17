@@ -59,11 +59,7 @@ bool SpiderSwarm::NonSpiderCollisionFilter::needBroadphaseCollision (
 
 int SpiderSwarm::mBodyIds = 0;
 
-SpiderSwarm::SpiderSwarm(World* world) : mWorld(world) {
-  btOverlapFilterCallback* filter = new NonSpiderCollisionFilter();
-
-  mWorld->setCollisionFilter(filter);
-}
+SpiderSwarm::SpiderSwarm() {}
 
 /**
  * @brief
@@ -71,12 +67,10 @@ SpiderSwarm::SpiderSwarm(World* world) : mWorld(world) {
  */
 SpiderSwarm::~SpiderSwarm() {
   for (auto& c : mSpiders) {
-    mWorld->removeObject(c.second);
-    delete c.second;
+    removeSpider(c.first);
   }
 
   mSpiders.clear();
-  mSpiderIds.clear();
 }
 
 /**
@@ -88,45 +82,19 @@ SpiderSwarm::~SpiderSwarm() {
  * @return
  */
 Spider* SpiderSwarm::addSpider() {
-  int     id     = ++mBodyIds;
-  Spider* spider = new Spider();
+  int     id      = ++mBodyIds;
+  Spider* spider  = new Spider();
+  World*  world   = new World(mmm::vec3(0, -9.81, 0));
 
-  mSpiders[id] = spider;
-  mSpiderIds[spider] = id;
+  mSpiders[id] = {world, spider};
 
   for (auto& child : spider->children()) {
     child->rigidBody()->setUserIndex(id);
-    child->rigidBody()->setUserPointer(spider);
   }
 
-  mWorld->addObject(spider);
+  world->addObject(spider);
 
   return spider;
-}
-
-/**
- * @brief
- *   Removes a spider indicated by a pointer to the object, removing it
- *   from storage, the world and deleting the allocated object
- *
- * @param spider
- *
- * @return
- */
-bool SpiderSwarm::removeSpider(Spider* spider) {
-  if (!mSpiderIds.count(spider))
-    return false;
-
-  int id = mSpiderIds[spider];
-
-  mSpiderIds.erase(spider);
-  mSpiders.erase(id);
-
-  mWorld->removeObject(spider);
-
-  delete spider;
-
-  return true;
 }
 
 /**
@@ -142,7 +110,12 @@ bool SpiderSwarm::removeSpider(int id) {
   if (id < 0 || mSpiders.count(id))
     return false;
 
-  return removeSpider(mSpiders[id]);
+  mSpiders[id].world->removeObject(mSpiders[id].spider);
+
+  delete mSpiders[id].spider;
+  delete mSpiders[id].world;
+
+  return true;
 }
 
 /**
@@ -157,7 +130,7 @@ bool SpiderSwarm::removeSpider(int id) {
 Spider* SpiderSwarm::spider(int id) {
   if (!mSpiders.count(id))
     return nullptr;
-  return mSpiders[id];
+  return mSpiders[id].spider;
 }
 
 /**
@@ -166,16 +139,6 @@ Spider* SpiderSwarm::spider(int id) {
  *
  * @return
  */
-const std::map<int, Spider*>& SpiderSwarm::spiders() {
+const std::map<int, SpiderSwarm::SpiderWorld>& SpiderSwarm::spiders() {
   return mSpiders;
-}
-
-/**
- * @brief
- *   Returns a const reference to all the ids
- *
- * @return
- */
-const std::map<Spider*, int>& SpiderSwarm::ids() {
-  return mSpiderIds;
 }
