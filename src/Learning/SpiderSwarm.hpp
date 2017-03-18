@@ -34,6 +34,8 @@ public:
 
   const std::map<int, SpiderWorld>& spiders();
 
+  void update(float deltaTime);
+
 private:
   std::map<int, SpiderWorld> mSpiders;
   NEAT::NeuralNetwork* mNetwork;

@@ -146,3 +146,13 @@ Spider* SpiderSwarm::spider(int id) {
 const std::map<int, SpiderSwarm::SpiderWorld>& SpiderSwarm::spiders() {
   return mSpiders;
 }
+
+/**
+ * @brief
+ *   Goes through all the stored spiders and worlds and updates them
+ */
+void SpiderSwarm::update(float deltaTime) {
+  for(auto& spiderWorld : mSpiders) {
+    spiderWorld.second.world->doPhysics(deltaTime);
+  }
+}
