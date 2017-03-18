@@ -198,10 +198,7 @@ void Master::input(const Input::Event& event) {
 void Master::update(float deltaTime) {
   mDeltaTime = deltaTime;
   mWorld->doPhysics(deltaTime);
-
-  for (auto& s : mSwarm->spiders()) {
-    s.second.world->doPhysics(deltaTime);
-  }
+  mSwarm->update(deltaTime);
 
   if (mGUIElements.size() == 0 || !mGUIElements.back()->isVisible())
     mCamera->input(deltaTime);
