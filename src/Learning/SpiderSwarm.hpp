@@ -1,9 +1,11 @@
 #pragma once
 
-#include <map>
-#include <btBulletDynamicsCommon.h>
+#include <vector>
 
+#include <btBulletDynamicsCommon.h>
 #include <mmm.hpp>
+
+#include "../Log.hpp"
 
 class World;
 class Spider;
@@ -16,7 +18,7 @@ namespace NEAT {
   class Substrate;
 }
 
-class SpiderSwarm {
+class SpiderSwarm : Logging::Log {
 public:
 
   struct NonSpiderCollisionFilter : public btOverlapFilterCallback {
@@ -29,6 +31,9 @@ public:
     Spider*              spider;
     NEAT::NeuralNetwork* network;
     mmm::vec<8>          fitness;
+
+    Phenotype();
+    ~Phenotype();
   };
 
   SpiderSwarm();
@@ -36,20 +41,26 @@ public:
   // SpiderSwarm(NEAT::Parameters*, NEAT::Substrate*);
   ~SpiderSwarm();
 
-  Spider* addSpider();
-  bool removeSpider(int id);
-
-  Spider* spider(int id);
-
-  const std::map<int, Phenotype>& spiders();
-
   void update(float deltaTime);
 
 private:
-  std::map<int, Phenotype> mSpiders;
 
-  static int mBodyIds;
+  std::vector<Phenotype> mPhenotypes;
 
+  size_t mCurrentBatch;
+  size_t mBatchStart;
+  size_t mBatchEnd;
+  size_t mBatchSize;
+
+  float  mCurrentDuration;
+  float  mIterationDuration;
+
+  void updateNormal(float deltaTime);
+  void updateBatch();
+  void updateEpoch();
+  void recreatePhenotypes();
+
+  // NEAT stuff
   NEAT::Parameters* mParameters;
   NEAT::Substrate*  mSubstrate;
   NEAT::Population* mPopulation;

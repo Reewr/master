@@ -63,16 +63,39 @@ bool SpiderSwarm::NonSpiderCollisionFilter::needBroadphaseCollision (
   return false;
 }
 
-int SpiderSwarm::mBodyIds = 0;
+SpiderSwarm::Phenotype::Phenotype()
+  : world(nullptr)
+  , spider(nullptr)
+  , network(nullptr)
+  , fitness(0) {}
+
+SpiderSwarm::Phenotype::~Phenotype() {
+  if (world != nullptr)
+    delete world;
+  if (spider != nullptr)
+    delete spider;
+  if (network != nullptr)
+    delete network;
+}
+
 
 SpiderSwarm::SpiderSwarm()
-    : mParameters(nullptr)
+    : Logging::Log("SpiderSwarm")
+    , mCurrentBatch(0)
+    , mBatchStart(0)
+    , mBatchEnd(10)
+    , mBatchSize(10)
+    , mCurrentDuration(0)
+    , mIterationDuration(10)
+    , mParameters(nullptr)
     , mSubstrate(nullptr)
     , mPopulation(nullptr) {
 
-  setDefualtParameters();
+  setDefaultParameters();
   setDefaultSubstrate();
   setDefaultPopulation();
+
+  recreatePhenotypes();
 }
 
 // SpiderSwarm::SpiderSwarm(NEAT::Parameters* p, NEAT::Substrate* s, )
@@ -84,86 +107,10 @@ SpiderSwarm::SpiderSwarm()
  *   Deletes all the spiders after detaching them from the world.
  */
 SpiderSwarm::~SpiderSwarm() {
-  for (auto& c : mSpiders) {
-    removeSpider(c.first);
-  }
-
-  mSpiders.clear();
+  mPhenotypes.clear();
   delete mParameters;
   delete mSubstrate;
-}
-
-/**
- * @brief
- *   Adds a new spider to the list of spiders as well as to the world. Each
- *   added spider gets a unique Id that is added to each of the rigid bodies.
- *   In addition, each child of spider gets a pointer to the spider object.
- *
- * @return
- */
-Spider* SpiderSwarm::addSpider() {
-  int     id      = ++mBodyIds;
-  Spider* spider  = new Spider();
-  World*  world   = new World(mmm::vec3(0, -9.81, 0));
-
-  NEAT::NeuralNetwork* network = new NEAT::NeuralNetwork();
-
-  mSpiders[id] = {world, spider, network, mmm::vec<8>(0) };
-
-  for (auto& child : spider->children()) {
-    child->rigidBody()->setUserIndex(id);
-  }
-
-  world->addObject(spider);
-
-  return spider;
-}
-
-/**
- * @brief
- *   Removes a spider indicated by an id, removing it
- *   from storage, the world and deleting the allocated object
- *
- * @param id
- *
- * @return
- */
-bool SpiderSwarm::removeSpider(int id) {
-  if (id < 0 || mSpiders.count(id))
-    return false;
-
-  mSpiders[id].world->removeObject(mSpiders[id].spider);
-
-  delete mSpiders[id].spider;
-  delete mSpiders[id].world;
-  delete mSpiders[id].network;
-
-  return true;
-}
-
-/**
- * @brief
- *   Retrieves a spider by id, returning a nullptr if it does not exist
- *   otherwise returning a pointer to the spider
- *
- * @param id
- *
- * @return
- */
-Spider* SpiderSwarm::spider(int id) {
-  if (!mSpiders.count(id))
-    return nullptr;
-  return mSpiders[id].spider;
-}
-
-/**
- * @brief
- *   Returns a const reference to all the spiders
- *
- * @return
- */
-const std::map<int, SpiderSwarm::Phenotype>& SpiderSwarm::spiders() {
-  return mSpiders;
+  delete mPopulation;
 }
 
 /**
@@ -171,9 +118,84 @@ const std::map<int, SpiderSwarm::Phenotype>& SpiderSwarm::spiders() {
  *   Goes through all the stored spiders and worlds and updates them
  */
 void SpiderSwarm::update(float deltaTime) {
-  for(auto& spiderWorld : mSpiders) {
-    spiderWorld.second.world->doPhysics(deltaTime);
+  if (mCurrentDuration == 0)
+    mLog->debug("Processing {} individuals", mBatchEnd - mBatchStart);
+
+  if (mCurrentDuration < mIterationDuration) {
+    updateNormal(deltaTime);
+  } else if (mBatchEnd < mPhenotypes.size()) {
+    updateBatch();
+  } else {
+    updateEpoch();
   }
+}
+
+void SpiderSwarm::updateNormal(float deltaTime) {
+  for (size_t i = mBatchStart; i < mBatchEnd; ++i) {
+
+    // activate network for each spider given current motion state
+
+    mPhenotypes[i].world->doPhysics(deltaTime);
+
+    // update fitness if we can detect some state that we can judge fitness on
+
+  }
+
+  mCurrentDuration += deltaTime;
+}
+void SpiderSwarm::updateBatch() {
+  mLog->debug("Complete batch {}", mCurrentBatch);
+
+  mCurrentDuration = 0;
+  mCurrentBatch += 1;
+
+  mBatchStart = mCurrentBatch * mBatchSize;
+  mBatchEnd   = mmm::min((mCurrentBatch + 1) * mBatchSize, mPhenotypes.size());
+}
+void SpiderSwarm::updateEpoch() {
+  mLog->debug("Complete epoch");
+
+  mCurrentDuration = 0;
+  mCurrentBatch    = 0;
+  mBatchStart      = 0;
+  mBatchEnd        = mmm::min(mBatchSize, mPhenotypes.size());
+
+  for (size_t i = 0; i < mPopulation->m_Species.size(); i++) {
+    for (size_t j = 0; j < mPopulation->m_Species[i].m_Individuals.size(); j++) {
+
+      // calculate total fitness for each individual
+
+      mPopulation->m_Species[i].m_Individuals[j].SetFitness(0.0);
+      mPopulation->m_Species[i].m_Individuals[j].SetEvaluated();
+    }
+  }
+
+  mPopulation->Epoch();
+  recreatePhenotypes();
+}
+
+void SpiderSwarm::recreatePhenotypes() {
+  mLog->debug("Recreating {} phenotypes...", mParameters->PopulationSize);
+
+  mPhenotypes.clear();
+  mPhenotypes.resize(mParameters->PopulationSize);
+
+  size_t index = 0;
+  for (size_t i = 0; i < mPopulation->m_Species.size(); ++i) {
+    for (size_t j = 0; j < mPopulation->m_Species[i].m_Individuals.size(); ++j) {
+      mPhenotypes[index].spider  = new Spider();
+      mPhenotypes[index].world   = new World(mmm::vec3(0, -9.81, 0));
+      mPhenotypes[index].network = new NEAT::NeuralNetwork();
+
+      mPopulation->m_Species[i].m_Individuals[j].BuildESHyperNEATPhenotype(
+        *mPhenotypes[index].network, *mSubstrate, *mParameters);
+
+      mPhenotypes[index].world->addObject(mPhenotypes[index].spider);
+      index += 1;
+    }
+  }
+
+  mLog->debug("Created {} spiders", index);
 }
 
 void SpiderSwarm::setDefaultParameters() {
@@ -289,7 +311,7 @@ void SpiderSwarm::setDefaultPopulation() {
   NEAT::Genome genome(0,
                       mSubstrate->GetMinCPPNInputs(),
                       0,
-                      mSubstrate->GetOutputs(),
+                      mSubstrate->GetMinCPPNOutputs(),
                       false,
                       NEAT::ActivationFunction::TANH,
                       NEAT::ActivationFunction::TANH,
