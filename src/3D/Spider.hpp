@@ -32,8 +32,10 @@ public:
 
   void input(const Input::Event& event);
 
-  Drawable3D* child(std::string& name);
+  // Returns the child of spider if found by name
+  Drawable3D* child(const std::string& name);
 
+  // Upcasts a Drawable3D objet to a Spider object, if possible.
   static Spider* upcast(Drawable3D* drawable);
 
 private:

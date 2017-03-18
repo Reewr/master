@@ -51,6 +51,17 @@ Spider::~Spider() {
   mMesh->deleteCopy(mElements);
 }
 
+/**
+ * @brief
+ *   Looks up into the children and checks for a child with the specific name.
+ *   If one is found, a pointer to that one is returned.
+ *
+ *   If no child is found, a nullptr is returned
+ *
+ * @param name
+ *
+ * @return
+ */
 Drawable3D* Spider::child(const std::string& name) {
   if (mParts.count(name) == 0)
     return nullptr;
@@ -59,6 +70,13 @@ Drawable3D* Spider::child(const std::string& name) {
 
 void Spider::update(float) {}
 
+/**
+ * @brief
+ *   Draws the spider by drawing each of the children
+ *
+ * @param program
+ * @param bindTexture
+ */
 void Spider::draw(std::shared_ptr<Program>& program, bool bindTexture) {
   program->bind();
 
@@ -70,6 +88,15 @@ void Spider::draw(std::shared_ptr<Program>& program, bool bindTexture) {
 
 void Spider::input(const Input::Event&) {}
 
+/**
+ * @brief
+ *   Tries to upcast a Drawable3D object to a spider, returning a
+ *   casted pointer if it works, otherwise nullptr
+ *
+ * @param drawable
+ *
+ * @return
+ */
 Spider* Spider::upcast(Drawable3D* drawable) {
   if (drawable == nullptr)
     return nullptr;
