@@ -87,6 +87,7 @@ SpiderSwarm::SpiderSwarm()
     , mBatchSize(10)
     , mCurrentDuration(0)
     , mIterationDuration(10)
+    , mDrawLimit(1)
     , mParameters(nullptr)
     , mSubstrate(nullptr)
     , mPopulation(nullptr) {
@@ -127,6 +128,13 @@ void SpiderSwarm::update(float deltaTime) {
     updateBatch();
   } else {
     updateEpoch();
+  }
+}
+
+void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
+  size_t draw = mmm::min(mBatchEnd - mBatchStart, mDrawLimit) + mBatchStart;
+  for (size_t i = mBatchStart; i < draw; ++i) {
+    mPhenotypes[i].spider->draw(prog, bindTexture);
   }
 }
 

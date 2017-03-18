@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 
 #include <btBulletDynamicsCommon.h>
@@ -7,9 +8,10 @@
 
 #include "../Log.hpp"
 
-class World;
+class Program;
 class Spider;
 class Terrain;
+class World;
 
 namespace NEAT {
   class NeuralNetwork;
@@ -42,6 +44,7 @@ public:
   ~SpiderSwarm();
 
   void update(float deltaTime);
+  void draw(std::shared_ptr<Program>& prog, bool bindTexture);
 
 private:
 
@@ -54,6 +57,7 @@ private:
 
   float  mCurrentDuration;
   float  mIterationDuration;
+  size_t mDrawLimit;
 
   void updateNormal(float deltaTime);
   void updateBatch();

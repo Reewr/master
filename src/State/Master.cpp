@@ -132,6 +132,7 @@ void Master::draw3D() {
   mShadowmap->bind(true);
   for (auto d : mDrawable3D)
     d->draw(shadowProgram, false);
+  mSwarm->draw(shadowProgram, false);
   mShadowmap->finalize();
   mShadowmap->texture()->bind(0);
 
@@ -146,6 +147,7 @@ void Master::draw3D() {
 
   for (auto d : mDrawable3D)
     d->draw(modelProgram, true);
+  mSwarm->draw(modelProgram, true);
 }
 
 void Master::drawGUI() {
