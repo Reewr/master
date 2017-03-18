@@ -12,12 +12,11 @@
 #include "MeshPart.hpp"
 
 Spider::Part::Part()
-    : collisionGroup(1), collisionMask(-1), joint(nullptr), part(nullptr) {}
+    : collisionGroup(1), collisionMask(-1), part(nullptr) {}
 
 Spider::Part::Part(unsigned short group, unsigned short mask)
     : collisionGroup(group)
     , collisionMask(mask)
-    , joint(nullptr)
     , part(nullptr) {}
 
 Spider::Spider() : Logging::Log("Spider") {
