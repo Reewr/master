@@ -176,7 +176,7 @@ void SpiderSwarm::update(float deltaTime) {
   }
 }
 
-void SpiderSwarm::setDefualtParameters() {
+void SpiderSwarm::setDefaultParameters() {
   mParameters = new NEAT::Parameters();
 
   mParameters->PopulationSize = 50;

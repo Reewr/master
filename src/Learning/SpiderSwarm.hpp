@@ -54,7 +54,7 @@ private:
   NEAT::Substrate*  mSubstrate;
   NEAT::Population* mPopulation;
 
-  void setDefualtParameters();
+  void setDefaultParameters();
   void setDefaultSubstrate();
   void setDefaultPopulation();
 };
