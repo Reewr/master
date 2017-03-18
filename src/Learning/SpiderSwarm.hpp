@@ -12,6 +12,7 @@ class Terrain;
 namespace NEAT {
   class NeuralNetwork;
   class Parameters;
+  class Population;
   class Substrate;
 }
 
@@ -31,7 +32,8 @@ public:
   };
 
   SpiderSwarm();
-  SpiderSwarm(NEAT::Parameters*, NEAT::Substrate*);
+  // for loading a population from file(s)
+  // SpiderSwarm(NEAT::Parameters*, NEAT::Substrate*);
   ~SpiderSwarm();
 
   Spider* addSpider();
@@ -50,7 +52,9 @@ private:
 
   NEAT::Parameters* mParameters;
   NEAT::Substrate*  mSubstrate;
+  NEAT::Population* mPopulation;
 
   void setDefualtParameters();
   void setDefaultSubstrate();
+  void setDefaultPopulation();
 };

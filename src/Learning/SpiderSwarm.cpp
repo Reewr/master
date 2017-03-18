@@ -65,14 +65,19 @@ bool SpiderSwarm::NonSpiderCollisionFilter::needBroadphaseCollision (
 
 int SpiderSwarm::mBodyIds = 0;
 
-SpiderSwarm::SpiderSwarm() {
+SpiderSwarm::SpiderSwarm()
+    : mParameters(nullptr)
+    , mSubstrate(nullptr)
+    , mPopulation(nullptr) {
+
   setDefualtParameters();
   setDefaultSubstrate();
+  setDefaultPopulation();
 }
 
-SpiderSwarm::SpiderSwarm(NEAT::Parameters* p, NEAT::Substrate* s)
-    : mParameters(p)
-    , mSubstrate(s) {}
+// SpiderSwarm::SpiderSwarm(NEAT::Parameters* p, NEAT::Substrate* s, )
+//     : mParameters(p)
+//     , mSubstrate(s) {}
 
 /**
  * @brief
@@ -270,4 +275,26 @@ void SpiderSwarm::setDefaultSubstrate() {
   mSubstrate->m_with_distance = false;
 
   mSubstrate->m_max_weight_and_bias = 8.0;
+}
+void SpiderSwarm::setDefaultPopulation() {
+
+  // sanity checking
+  if (mParameters == nullptr)
+    throw std::runtime_error("Parameters is not set");
+  if (mSubstrate == nullptr)
+    throw std::runtime_error("Substrate is not set");
+  if (mPopulation != nullptr)
+    delete mPopulation;
+
+  NEAT::Genome genome(0,
+                      mSubstrate->GetMinCPPNInputs(),
+                      0,
+                      mSubstrate->GetOutputs(),
+                      false,
+                      NEAT::ActivationFunction::TANH,
+                      NEAT::ActivationFunction::TANH,
+                      0,
+                      *mParameters);
+
+  mPopulation = new NEAT::Population(genome, *mParameters, true, 1.0, time(0));
 }
