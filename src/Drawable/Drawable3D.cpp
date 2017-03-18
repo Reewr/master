@@ -78,6 +78,17 @@ const mmm::vec3& Drawable3D::position() const {
 
 /**
  * @brief
+ *   Returns the stored rotation that is often updated by
+ *   bullet.
+ *
+ * @return
+ */
+const mmm::mat4& Drawable3D::rotation() const {
+  return mRotation;
+}
+
+/**
+ * @brief
  *   Sets the new position of the object. The position is based on
  *   the mass center of the object.
  *

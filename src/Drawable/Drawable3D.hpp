@@ -45,6 +45,9 @@ public:
   // Returns the position of the object
   const mmm::vec3& position() const;
 
+  // Returns the rotation of the object
+  const mmm::mat4& rotation() const;
+
   // Moves the object to a coordinate position
   void moveTo(float x, float y, float z);
   void moveTo(const mmm::vec3& position);
