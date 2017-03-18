@@ -20,9 +20,7 @@ public:
 
     unsigned short collisionGroup;
     unsigned short collisionMask;
-
-    btHingeConstraint* joint;
-    mmm::vec3          torque;
+    Drawable3D*    part;
   };
 
   Spider();

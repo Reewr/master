@@ -12,13 +12,13 @@
 #include "MeshPart.hpp"
 
 Spider::Part::Part()
-    : collisionGroup(1), collisionMask(-1), joint(nullptr), torque(0, 0, 0) {}
+    : collisionGroup(1), collisionMask(-1), joint(nullptr), part(nullptr) {}
 
 Spider::Part::Part(unsigned short group, unsigned short mask)
     : collisionGroup(group)
     , collisionMask(mask)
     , joint(nullptr)
-    , torque(0, 0, 0) {}
+    , part(nullptr) {}
 
 Spider::Spider() : Logging::Log("Spider") {
   ResourceManager* r = mAsset->rManager();
@@ -38,6 +38,7 @@ Spider::Spider() : Logging::Log("Spider") {
       child->addConstraint(c);
     }
 
+    mParts[mesh.first].part = child;
     mChildren.push_back(child);
   }
 
