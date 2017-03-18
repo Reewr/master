@@ -4,7 +4,12 @@
 #include "../3D/Spider.hpp"
 
 #include <btBulletDynamicsCommon.h>
+
+#include <Genome.h>
 #include <NeuralNetwork.h>
+#include <Parameters.h>
+#include <Population.h>
+#include <Substrate.h>
 
 /**
  * @brief
@@ -61,8 +66,13 @@ bool SpiderSwarm::NonSpiderCollisionFilter::needBroadphaseCollision (
 int SpiderSwarm::mBodyIds = 0;
 
 SpiderSwarm::SpiderSwarm() {
-  mNetwork = new NEAT::NeuralNetwork();
+  setDefualtParameters();
+  setDefaultSubstrate();
 }
+
+SpiderSwarm::SpiderSwarm(NEAT::Parameters* p, NEAT::Substrate* s)
+    : mParameters(p)
+    , mSubstrate(s) {}
 
 /**
  * @brief
@@ -74,7 +84,8 @@ SpiderSwarm::~SpiderSwarm() {
   }
 
   mSpiders.clear();
-  delete mNetwork;
+  delete mParameters;
+  delete mSubstrate;
 }
 
 /**
@@ -90,7 +101,9 @@ Spider* SpiderSwarm::addSpider() {
   Spider* spider  = new Spider();
   World*  world   = new World(mmm::vec3(0, -9.81, 0));
 
-  mSpiders[id] = {world, spider};
+  NEAT::NeuralNetwork* network = new NEAT::NeuralNetwork();
+
+  mSpiders[id] = {world, spider, network, mmm::vec<8>(0) };
 
   for (auto& child : spider->children()) {
     child->rigidBody()->setUserIndex(id);
@@ -118,6 +131,7 @@ bool SpiderSwarm::removeSpider(int id) {
 
   delete mSpiders[id].spider;
   delete mSpiders[id].world;
+  delete mSpiders[id].network;
 
   return true;
 }
@@ -143,7 +157,7 @@ Spider* SpiderSwarm::spider(int id) {
  *
  * @return
  */
-const std::map<int, SpiderSwarm::SpiderWorld>& SpiderSwarm::spiders() {
+const std::map<int, SpiderSwarm::Phenotype>& SpiderSwarm::spiders() {
   return mSpiders;
 }
 
@@ -155,4 +169,105 @@ void SpiderSwarm::update(float deltaTime) {
   for(auto& spiderWorld : mSpiders) {
     spiderWorld.second.world->doPhysics(deltaTime);
   }
+}
+
+void SpiderSwarm::setDefualtParameters() {
+  mParameters = new NEAT::Parameters();
+
+  mParameters->PopulationSize = 50;
+
+  mParameters->DynamicCompatibility = true;
+  mParameters->CompatTreshold = 2.0;
+  mParameters->YoungAgeTreshold = 15;
+  mParameters->SpeciesMaxStagnation = 100;
+  mParameters->OldAgeTreshold = 35;
+  mParameters->MinSpecies = 5;
+  mParameters->MaxSpecies = 10;
+  mParameters->RouletteWheelSelection = false;
+
+  mParameters->MutateRemLinkProb = 0.02;
+  mParameters->RecurrentProb = 0;
+  mParameters->OverallMutationRate = 0.15;
+  mParameters->MutateAddLinkProb = 0.08;
+  mParameters->MutateAddNeuronProb = 0.01;
+  mParameters->MutateWeightsProb = 0.90;
+  mParameters->MaxWeight = 8.0;
+  mParameters->WeightMutationMaxPower = 0.2;
+  mParameters->WeightReplacementMaxPower = 1.0;
+
+  mParameters->MutateActivationAProb = 0.0;
+  mParameters->ActivationAMutationMaxPower = 0.5;
+  mParameters->MinActivationA = 0.05;
+  mParameters->MaxActivationA = 6.0;
+
+  mParameters->MutateNeuronActivationTypeProb = 0.03;
+
+  mParameters->ActivationFunction_SignedSigmoid_Prob = 0.0;
+  mParameters->ActivationFunction_UnsignedSigmoid_Prob = 0.0;
+  mParameters->ActivationFunction_Tanh_Prob = 1.0;
+  mParameters->ActivationFunction_TanhCubic_Prob = 0.0;
+  mParameters->ActivationFunction_SignedStep_Prob = 1.0;
+  mParameters->ActivationFunction_UnsignedStep_Prob = 0.0;
+  mParameters->ActivationFunction_SignedGauss_Prob = 1.0;
+  mParameters->ActivationFunction_UnsignedGauss_Prob = 0.0;
+  mParameters->ActivationFunction_Abs_Prob = 0.0;
+  mParameters->ActivationFunction_SignedSine_Prob = 1.0;
+  mParameters->ActivationFunction_UnsignedSine_Prob = 0.0;
+  mParameters->ActivationFunction_Linear_Prob = 1.0;
+
+  mParameters->DivisionThreshold = 0.5;
+  mParameters->VarianceThreshold = 0.03;
+  mParameters->BandThreshold = 0.3;
+  mParameters->InitialDepth = 2;
+  mParameters->MaxDepth = 3;
+  mParameters->IterationLevel = 1;
+  mParameters->Leo = false;
+  mParameters->GeometrySeed = false;
+  mParameters->LeoSeed = false;
+  mParameters->LeoThreshold = 0.3;
+  mParameters->CPPN_Bias = -1.0;
+  mParameters->Qtree_X = 0.0;
+  mParameters->Qtree_Y = 0.0;
+  mParameters->Width = 1.0;
+  mParameters->Height = 1.0;
+  mParameters->EliteFraction = 0.1;
+}
+void SpiderSwarm::setDefaultSubstrate() {
+
+  std::vector<std::vector<double>> inputs{
+    { -1.0, -1.0, 0.0 },
+    { 1.0, -1.0, 0.0 },
+    { 0.0, -1.0, 0.0 }
+  };
+
+  std::vector<std::vector<double>> hidden{};
+
+  std::vector<std::vector<double>> outputs{
+    {0.0, 1.0, 0.0}
+  };
+
+  mSubstrate = new NEAT::Substrate(inputs, hidden, outputs);
+
+  mSubstrate->m_allow_input_hidden_links = false;
+  mSubstrate->m_allow_input_output_links = false;
+  mSubstrate->m_allow_hidden_hidden_links = false;
+  mSubstrate->m_allow_hidden_output_links = false;
+  mSubstrate->m_allow_output_hidden_links = false;
+  mSubstrate->m_allow_output_output_links = false;
+  mSubstrate->m_allow_looped_hidden_links = false;
+  mSubstrate->m_allow_looped_output_links = false;
+
+  mSubstrate->m_allow_input_hidden_links = true;
+  mSubstrate->m_allow_input_output_links = false;
+  mSubstrate->m_allow_hidden_output_links = true;
+  mSubstrate->m_allow_hidden_hidden_links = false;
+
+  mSubstrate->m_hidden_nodes_activation =
+    NEAT::ActivationFunction::SIGNED_SIGMOID;
+  mSubstrate->m_output_nodes_activation =
+    NEAT::ActivationFunction::UNSIGNED_SIGMOID;
+
+  mSubstrate->m_with_distance = false;
+
+  mSubstrate->m_max_weight_and_bias = 8.0;
 }

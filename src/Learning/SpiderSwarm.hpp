@@ -3,12 +3,16 @@
 #include <map>
 #include <btBulletDynamicsCommon.h>
 
+#include <mmm.hpp>
+
 class World;
 class Spider;
 class Terrain;
 
 namespace NEAT {
   class NeuralNetwork;
+  class Parameters;
+  class Substrate;
 }
 
 class SpiderSwarm {
@@ -19,12 +23,15 @@ public:
                                  btBroadphaseProxy* b) const;
   };
 
-  struct SpiderWorld {
-    World* world;
-    Spider* spider;
+  struct Phenotype {
+    World*               world;
+    Spider*              spider;
+    NEAT::NeuralNetwork* network;
+    mmm::vec<8>          fitness;
   };
 
   SpiderSwarm();
+  SpiderSwarm(NEAT::Parameters*, NEAT::Substrate*);
   ~SpiderSwarm();
 
   Spider* addSpider();
@@ -32,13 +39,18 @@ public:
 
   Spider* spider(int id);
 
-  const std::map<int, SpiderWorld>& spiders();
+  const std::map<int, Phenotype>& spiders();
 
   void update(float deltaTime);
 
 private:
-  std::map<int, SpiderWorld> mSpiders;
-  NEAT::NeuralNetwork* mNetwork;
+  std::map<int, Phenotype> mSpiders;
 
   static int mBodyIds;
+
+  NEAT::Parameters* mParameters;
+  NEAT::Substrate*  mSubstrate;
+
+  void setDefualtParameters();
+  void setDefaultSubstrate();
 };
