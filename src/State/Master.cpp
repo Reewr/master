@@ -71,13 +71,6 @@ Master::Master(Asset* a) : mAsset(a) {
     }
   });
 
-  mLua->engine.set_function("addSpider", [&](int numSpiders = 0) {
-    for(int i = 0; i < numSpiders; ++i) {
-      mSwarm->addSpider();
-    }
-    mLog->debug("Currently {} spiders", mSwarm->spiders().size());
-  });
-
   mLua->engine.set_function("clearCubes", [&]() {
     for (unsigned int i = 0; i < mDrawable3D.size(); ++i) {
       if (i != 0) {
@@ -133,15 +126,12 @@ void Master::draw3D() {
   glEnable(GL_DEPTH_TEST);
   glCullFace(GL_BACK);
 
-  auto spiders = mSwarm->spiders();
   std::shared_ptr<Program> shadowProgram = mShadowmap->program();
   mCamera->setLightVPUniforms(shadowProgram, "light");
 
   mShadowmap->bind(true);
   for (auto d : mDrawable3D)
     d->draw(shadowProgram, false);
-  for (auto s : spiders)
-    s.second.spider->draw(shadowProgram, false);
   mShadowmap->finalize();
   mShadowmap->texture()->bind(0);
 
@@ -156,8 +146,6 @@ void Master::draw3D() {
 
   for (auto d : mDrawable3D)
     d->draw(modelProgram, true);
-  for (auto s : spiders)
-    s.second.spider->draw(modelProgram, true);
 }
 
 void Master::drawGUI() {
