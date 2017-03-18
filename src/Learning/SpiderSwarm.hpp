@@ -47,6 +47,8 @@ public:
 
     Phenotype();
     ~Phenotype();
+
+    void update(float deltaTime);
   };
 
   SpiderSwarm();

@@ -26,6 +26,12 @@ SpiderSwarm::Phenotype::~Phenotype() {
     delete network;
 }
 
+void SpiderSwarm::Phenotype::update(float deltaTime) {
+  // activate network for each spider given current motion state
+  world->doPhysics(deltaTime);
+  // update fitness if we can detect some state that we can judge fitness on
+}
+
 
 SpiderSwarm::SpiderSwarm()
     : Logging::Log("SpiderSwarm")
@@ -103,15 +109,8 @@ void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
  */
 void SpiderSwarm::updateNormal(float deltaTime) {
   for (size_t i = mBatchStart; i < mBatchEnd; ++i) {
-
-    // activate network for each spider given current motion state
-
-    mPhenotypes[i].world->doPhysics(deltaTime);
-
-    // update fitness if we can detect some state that we can judge fitness on
-
+    mPhenotypes[i].update(deltaTime);
   }
-
   mCurrentDuration += deltaTime;
 }
 
