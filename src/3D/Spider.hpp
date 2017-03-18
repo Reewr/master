@@ -32,6 +32,8 @@ public:
 
   void input(const Input::Event& event);
 
+  Drawable3D* child(std::string& name);
+
   static Spider* upcast(Drawable3D* drawable);
 
 private:

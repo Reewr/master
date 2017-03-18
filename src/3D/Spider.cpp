@@ -52,6 +52,12 @@ Spider::~Spider() {
   mMesh->deleteCopy(mElements);
 }
 
+Drawable3D* Spider::child(const std::string& name) {
+  if (mParts.count(name) == 0)
+    return nullptr;
+  return mParts[name].part;
+}
+
 void Spider::update(float) {}
 
 void Spider::draw(std::shared_ptr<Program>& program, bool bindTexture) {
