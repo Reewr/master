@@ -15,7 +15,7 @@
  *   use this function to ignore any collision between spiders.
  *
  *   By default, only filter group and mask is taken into consideration
- *   when evaulation whether or not to perform collision detection on an object.
+ *   when evaluating whether or not to perform collision detection on an object.
  *
  *   In addition to the default behaviour, the function also checks to see if
  *   the rigid bodies have the same parent. If this is the case, normal
@@ -66,7 +66,7 @@ SpiderSwarm::SpiderSwarm() {
 
 /**
  * @brief
- *   Deletes all the spiders after deattaching them from the world.
+ *   Deletes all the spiders after detaching them from the world.
  */
 SpiderSwarm::~SpiderSwarm() {
   for (auto& c : mSpiders) {
