@@ -49,7 +49,8 @@ SpiderSwarm::SpiderSwarm()
 
 /**
  * @brief
- *   Deletes all the spiders after detaching them from the world.
+ *   Deletes all the data associated with the SpiderSwarm. If you want to save
+ *   some information, it has to be done before you delete things
  */
 SpiderSwarm::~SpiderSwarm() {
   mPhenotypes.clear();
@@ -60,7 +61,7 @@ SpiderSwarm::~SpiderSwarm() {
 
 /**
  * @brief
- *   Goes through all the stored spiders and worlds and updates them
+ *
  */
 void SpiderSwarm::update(float deltaTime) {
   if (mCurrentDuration == 0)
@@ -69,12 +70,20 @@ void SpiderSwarm::update(float deltaTime) {
   if (mCurrentDuration < mIterationDuration) {
     updateNormal(deltaTime);
   } else if (mBatchEnd < mPhenotypes.size()) {
-    updateBatch();
+    setNextBatch();
   } else {
     updateEpoch();
   }
 }
 
+/**
+ * @brief
+ *   Draws a set number of spiders from the current batch being processed. This
+ *   is set by the DrawLimit.
+ *
+ * @param prog
+ * @param bindTexture
+ */
 void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
   size_t draw = mmm::min(mBatchEnd - mBatchStart, mDrawLimit) + mBatchStart;
   for (size_t i = mBatchStart; i < draw; ++i) {
@@ -82,6 +91,16 @@ void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
   }
 }
 
+/**
+ * @brief
+ *   Goes through the current patch and performs the following on it:
+ *
+ *   1. Activate each network and use output to set information on the spider
+ *   2. Perform physics to see the changes of the given output
+ *   3. Update fitness based on how well it did.
+ *
+ * @param deltaTime
+ */
 void SpiderSwarm::updateNormal(float deltaTime) {
   for (size_t i = mBatchStart; i < mBatchEnd; ++i) {
 
@@ -95,6 +114,12 @@ void SpiderSwarm::updateNormal(float deltaTime) {
 
   mCurrentDuration += deltaTime;
 }
+
+/**
+ * @brief
+ *   Called when the current batch has been processed, setting the current
+ *   batch to the next in line.
+ */
 void SpiderSwarm::setNextBatch() {
   mLog->debug("Complete batch {}", mCurrentBatch);
 
@@ -104,6 +129,15 @@ void SpiderSwarm::setNextBatch() {
   mBatchStart = mCurrentBatch * mBatchSize;
   mBatchEnd   = mmm::min((mCurrentBatch + 1) * mBatchSize, mPhenotypes.size());
 }
+
+/**
+ * @brief
+ *   When all batches are completed, new spiders and networks has to be
+ *   initialied.
+ *
+ *   This goes through all of the popluation, reseting the spider,
+ *   world, network and fitness
+ */
 void SpiderSwarm::updateEpoch() {
   mLog->debug("Complete epoch");
 
