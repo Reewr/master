@@ -23,11 +23,6 @@ namespace NEAT {
 class SpiderSwarm : Logging::Log {
 public:
 
-  struct NonSpiderCollisionFilter : public btOverlapFilterCallback {
-    bool needBroadphaseCollision(btBroadphaseProxy* a,
-                                 btBroadphaseProxy* b) const;
-  };
-
   struct Phenotype {
     World*               world;
     Spider*              spider;

@@ -11,58 +11,6 @@
 #include <Population.h>
 #include <Substrate.h>
 
-/**
- * @brief
- *   For simulation purposes, the spiders should not collide with each other
- *   as they are technically suppose to live in their own world.
- *
- *   In order to save memory, we add all the spiders to the same world, but
- *   use this function to ignore any collision between spiders.
- *
- *   By default, only filter group and mask is taken into consideration
- *   when evaluating whether or not to perform collision detection on an object.
- *
- *   In addition to the default behaviour, the function also checks to see if
- *   the rigid bodies have the same parent. If this is the case, normal
- *   collision detection is performed. If they do not have the same parent,
- *   they should never be able to collide
- *
- * @param a
- * @param b
- *
- * @return
- */
-bool SpiderSwarm::NonSpiderCollisionFilter::needBroadphaseCollision (
-    btBroadphaseProxy* a,
-    btBroadphaseProxy* b) const {
-  bool collides = (a->m_collisionFilterGroup & b->m_collisionFilterMask) != 0 &&
-                  (b->m_collisionFilterGroup & a->m_collisionFilterMask);
-
-  // If collides is false, dont check anything else
-  if (!collides)
-    return false;
-
-  btCollisionObject* aObj = (btCollisionObject*) a->m_clientObject;
-  btCollisionObject* bObj = (btCollisionObject*) b->m_clientObject;
-
-  if (!aObj || !bObj) {
-    return true;
-  }
-
-  int aId = aObj->getUserIndex();
-  int bId = bObj->getUserIndex();
-
-  if (aId == -1 || bId == -1) {
-    return true;
-  }
-
-  if (aId == bId) {
-    return true;
-  }
-
-  return false;
-}
-
 SpiderSwarm::Phenotype::Phenotype()
   : world(nullptr)
   , spider(nullptr)
