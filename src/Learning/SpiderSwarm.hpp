@@ -34,8 +34,6 @@ public:
   };
 
   SpiderSwarm();
-  // for loading a population from file(s)
-  // SpiderSwarm(NEAT::Parameters*, NEAT::Substrate*);
   ~SpiderSwarm();
 
   void update(float deltaTime);

@@ -47,10 +47,6 @@ SpiderSwarm::SpiderSwarm()
   recreatePhenotypes();
 }
 
-// SpiderSwarm::SpiderSwarm(NEAT::Parameters* p, NEAT::Substrate* s, )
-//     : mParameters(p)
-//     , mSubstrate(s) {}
-
 /**
  * @brief
  *   Deletes all the spiders after detaching them from the world.
