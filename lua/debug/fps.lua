@@ -38,7 +38,7 @@ function FPS.show(x, y, textSize, printInfo)
     FPS:hide()
   end
 
-  local _x         = type(x) == "number" and x or cfg.graphics.res.x - 50
+  local _x         = type(x) == "number" and x or cfg.graphics.res.x - 75
   local _y         = type(y) == "number" and y or 25
   local _textSize  = type(textSize) == "number" and textSize or 16
   local _printInfo = false
