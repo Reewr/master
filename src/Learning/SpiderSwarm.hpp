@@ -73,7 +73,7 @@ private:
   size_t mDrawLimit;
 
   void updateNormal(float deltaTime);
-  void updateBatch();
+  void setNextBatch();
   void updateEpoch();
   void recreatePhenotypes();
 

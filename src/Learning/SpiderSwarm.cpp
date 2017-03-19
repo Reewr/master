@@ -95,7 +95,7 @@ void SpiderSwarm::updateNormal(float deltaTime) {
 
   mCurrentDuration += deltaTime;
 }
-void SpiderSwarm::updateBatch() {
+void SpiderSwarm::setNextBatch() {
   mLog->debug("Complete batch {}", mCurrentBatch);
 
   mCurrentDuration = 0;
