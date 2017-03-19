@@ -233,6 +233,21 @@ mmm::vec3 Drawable3D::torque() const {
   const btVector3& torque = mBody->getTotalTorque();
   return mmm::vec3(torque.x(), torque.y(), torque.z());
 }
+/**
+ * @brief
+ *   Returns the torque saved in bullet for the specific object in the objects
+ *   local space.
+ *
+ * @return
+ */
+mmm::vec3 Drawable3D::localTorque() const {
+  if (!hasPhysics())
+    return mmm::vec3(0);
+
+  const btVector3& torque = mBody->getWorldTransform().getBasis() *
+                            mBody->getTotalTorque();
+  return mmm::vec3(torque.x(), torque.y(), torque.z());
+}
 
 /**
  * @brief
@@ -243,7 +258,6 @@ mmm::vec3 Drawable3D::torque() const {
 void Drawable3D::setTorque(const mmm::vec3& torque) {
   setTorque(torque.x, torque.y, torque.z);
 }
-
 /**
  * @brief
  *   Sets the torque of an object. Does not apply torque to child elements.
@@ -257,6 +271,82 @@ void Drawable3D::setTorque(float x, float y, float z) {
     return;
 
   mBody->applyTorque(btVector3(x, y, z));
+}
+/**
+ * @brief
+ *   Applies an instantaneous torque impulse to an object. Does not apply torque
+ *   to child elements.
+ *
+ * @param torque
+ */
+void Drawable3D::setTorqueImpulse(const mmm::vec3& torque) {
+  setTorqueImpulse(torque.x, torque.y, torque.z);
+}
+/**
+ * @brief
+ *   Applies an instantaneous torque impulse to an object. Does not apply torque
+ *   to child elements.
+ *
+ * @param x
+ * @param y
+ * @param z
+ */
+void Drawable3D::setTorqueImpulse(float x, float y, float z) {
+  if (!hasPhysics())
+    return;
+
+  mBody->applyTorqueImpulse(btVector3(x, y, z));
+}
+
+/**
+ * @brief
+ *   Sets the torque of an object relative to the objects orientation.
+ *
+ * @param torque
+ */
+void Drawable3D::setLocalTorque(const mmm::vec3& torque) {
+  setLocalTorque(torque.x, torque.y, torque.z);
+}
+/**
+ * @brief
+ *   Sets the torque of an object relative to the objects orientation.
+ *
+ * @param x
+ * @param y
+ * @param z
+ */
+void Drawable3D::setLocalTorque(float x, float y, float z) {
+  if (!hasPhysics())
+    return;
+
+  mBody->applyTorque(mBody->getWorldTransform().getBasis() *
+                     btVector3(x, y, z));
+}
+/**
+ * @brief
+ *   Applies an instantaneous torque impulse to an object relative to the
+ *   objects orientation.
+ *
+ * @param torque
+ */
+void Drawable3D::setLocalTorqueImpulse(const mmm::vec3& torque) {
+  setLocalTorqueImpulse(torque.x, torque.y, torque.z);
+}
+/**
+ * @brief
+ *   Applies an instantaneous torque impulse to an object relative to the
+ *   objects orientation.
+ *
+ * @param x
+ * @param y
+ * @param z
+ */
+void Drawable3D::setLocalTorqueImpulse(float x, float y, float z) {
+  if (!hasPhysics())
+    return;
+
+  mBody->applyTorqueImpulse(mBody->getWorldTransform().getBasis() *
+                            btVector3(x, y, z));
 }
 
 /**

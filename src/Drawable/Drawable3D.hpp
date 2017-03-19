@@ -64,10 +64,19 @@ public:
 
   // Retrieves the torque from bullet
   mmm::vec3 torque() const;
+  mmm::vec3 localTorque() const;
 
-  // Applies the torque to an object
+  // Applies torque to an object
   void setTorque(const mmm::vec3&);
   void setTorque(float x, float y, float z);
+  void setTorqueImpulse(const mmm::vec3&);
+  void setTorqueImpulse(float x, float y, float z);
+
+  // Applies torque to an object relative to the objects orientation
+  void setLocalTorque(const mmm::vec3&);
+  void setLocalTorque(float x, float y, float z);
+  void setLocalTorqueImpulse(const mmm::vec3&);
+  void setLocalTorqueImpulse(float x, float y, float z);
 
   // Retrieves the angular velocity from bullet
   mmm::vec3 angularVelocity() const;
