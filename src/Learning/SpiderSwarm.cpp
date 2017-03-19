@@ -151,6 +151,9 @@ void SpiderSwarm::recreatePhenotypes() {
 }
 
 void SpiderSwarm::setDefaultParameters() {
+  if (mParameters != nullptr)
+    delete mParameters;
+
   mParameters = new NEAT::Parameters();
 
   mParameters->PopulationSize = 50;
@@ -212,6 +215,8 @@ void SpiderSwarm::setDefaultParameters() {
   mParameters->EliteFraction = 0.1;
 }
 void SpiderSwarm::setDefaultSubstrate() {
+  if (mSubstrate != nullptr)
+    delete mSubstrate;
 
   std::vector<std::vector<double>> inputs{
     { -1.0, -1.0, 0.0 },
