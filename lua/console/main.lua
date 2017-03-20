@@ -82,3 +82,5 @@ end
 function quit()
   exit()
 end
+
+hud.fps.show()
