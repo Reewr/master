@@ -169,7 +169,8 @@ bool Engine::initialize(int argc, char* argv[], int isRefresh, int initState) {
 
   mLua = new Lua::Lua(mCFG,
                       Lua::Lib::Native::Package | Lua::Lib::Native::Base |
-                        Lua::Lib::Native::Table | Lua::Lib::Native::Math,
+                        Lua::Lib::Native::Table | Lua::Lib::Native::Math |
+                        Lua::Lib::Native::String,
                       Lua::Lib::Engine::All);
   mAsset->setInput(mInput);
   mAsset->setLua(mLua);
