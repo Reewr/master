@@ -165,7 +165,7 @@ void Master::drawGUI() {
   try {
     mLua->engine["draw"]();
   } catch (const sol::error& e) {
-    mLog->error("Failed to draw: ", e.what());
+    mLog->error("Failed to draw: {}", e.what());
   }
 }
 
@@ -198,7 +198,7 @@ void Master::update(float deltaTime) {
   try {
     mLua->engine["update"](deltaTime);
   } catch (const sol::error& e) {
-    mLog->error("Failed to update: ", e.what());
+    mLog->error("Failed to update: {}", e.what());
   }
 }
 
