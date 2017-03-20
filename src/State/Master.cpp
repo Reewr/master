@@ -92,9 +92,7 @@ Master::Master(Asset* a) : mAsset(a) {
 
   // add CFG is enabled
   if (a->cfg()->console.enabled) {
-    Console* console = new Console(a);
-    mLua->add(console);
-    mGUIElements.push_back(console);
+    mGUIElements.push_back(new Console(a));
   }
 
   // mLog->info("Initialized successfully");

@@ -74,9 +74,7 @@ MainMenu::MainMenu(Asset* asset) {
 
   // add CFG is enabled
   if (cfg->console.enabled) {
-    Console* console = new Console(mAsset);
-    mLua->add(console);
-    mGUIElements.push_back(console);
+    mGUIElements.push_back(new Console(mAsset));
   }
 
   menu->setInputHandler(handler);
