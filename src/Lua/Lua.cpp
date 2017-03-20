@@ -375,9 +375,6 @@ namespace Lua {
     engine["package"]["path"] = path + sep + "./lua/?.lua";
     engine["cfg"]             = mCFG;
 
-    if (mConsole != nullptr)
-      add(mConsole);
-
     loadFile("lua/main.lua");
 
     emit("reInitialize");
@@ -398,7 +395,6 @@ namespace Lua {
       return;
 
     engine["console"] = console;
-    mConsole          = console;
   }
 
   /**
