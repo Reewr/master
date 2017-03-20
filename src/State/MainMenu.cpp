@@ -18,6 +18,7 @@ MainMenu::MainMenu(Asset* asset) {
   setLoggerName("MainMenu");
   mAsset = asset;
   mLua   = mAsset->lua();
+  mLua->reInitialize();
   mAsset->rManager()->unloadUnnecessary(ResourceScope::MainMenu);
   mAsset->rManager()->loadRequired(ResourceScope::MainMenu);
 

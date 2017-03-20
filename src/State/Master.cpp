@@ -51,6 +51,7 @@ Master::Master(Asset* a) : mAsset(a) {
   for (auto d : mDrawable3D)
     mWorld->addObject(d);
 
+  mLua->reInitialize();
   mLua->engine.set_function("drawables", [&](unsigned int i) -> Drawable3D* {
     if (i > mDrawable3D.size())
       return nullptr;
