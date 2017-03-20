@@ -47,6 +47,8 @@ Console::Console(Asset* asset)
   // is just drawn in black with alpha
   mProgram = mAsset->rManager()->get<Program>("Program::ColorRect");
   mProgram->setUniform("guiColor", vec4(0, 0, 0, 0.9));
+
+  mAsset->lua()->add(this);
   mAsset->lua()->loadFile("lua/console/main.lua");
 }
 
