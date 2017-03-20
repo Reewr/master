@@ -52,6 +52,8 @@ public:
 
   void enablePhysics();
 
+  void reset();
+
   // The function that handles input events
   void input(Camera* camera, const Input::Event& event);
 

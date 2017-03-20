@@ -82,6 +82,22 @@ void World::addObject(Drawable3D* element) {
 
 /**
  * @brief
+ *   Resets all the information of the world
+ */
+void World::reset() {
+  btOverlappingPairCache* pairCache = mPhase->getOverlappingPairCache();
+  btBroadphasePairArray&  pairArray = pairCache->getOverlappingPairArray();
+
+  for(int i = 0; i < pairArray.size(); ++i)
+    pairCache->cleanOverlappingPair(pairArray[i], mWorld->getDispatcher());
+
+  mSolver->reset();
+  mWorld->clearForces();
+  mPhase->resetPool(mDispatcher);
+}
+
+/**
+ * @brief
  *   Removes the element(s) that are equal to element. If
  *   element is a nullptr (which it is by default) it will
  *   remove all elements that are nullptrs
