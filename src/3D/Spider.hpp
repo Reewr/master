@@ -11,6 +11,7 @@ struct PhysicsElements;
 class Program;
 
 class btHingeConstraint;
+class btTransform;
 
 class Spider : public Drawable3D, public Logging::Log {
 public:
@@ -26,6 +27,9 @@ public:
   Spider();
   ~Spider();
 
+  // Resets the positions, rotations and such for the whole spider
+  void reset();
+
   void update(float deltaTime);
 
   void draw(std::shared_ptr<Program>& program, bool bindTexture = false);
@@ -40,6 +44,7 @@ public:
 
 private:
   static std::map<std::string, Part> SPIDER_PARTS;
+  static std::map<std::string, btTransform> SPIDER_POSITIONS;
 
   PhysicsElements*             mElements;
   std::shared_ptr<PhysicsMesh> mMesh;

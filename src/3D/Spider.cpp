@@ -39,9 +39,19 @@ Spider::Spider() : Logging::Log("Spider") {
 
     mParts[mesh.first].part = child;
     mChildren.push_back(child);
+    child->updateFromPhysics();
+  }
+
+
+  if (!SPIDER_POSITIONS.size()) {
+    for (auto& mesh : mElements->meshes) {
+      SPIDER_POSITIONS[mesh.first] = mParts[mesh.first].part->rigidBody()->getWorldTransform();
+    }
   }
 
   mLog->debug("Spider loaded with weight of: {}", weight());
+
+  reset();
 }
 
 Spider::~Spider() {
@@ -49,6 +59,22 @@ Spider::~Spider() {
     delete c;
 
   mMesh->deleteCopy(mElements);
+}
+
+/**
+ * @brief
+ *   Resets the spiders position to the start state
+ */
+void Spider::reset() {
+  btVector3 zero(0, 0, 0);
+  for(auto& part : mParts) {
+    btRigidBody* r = part.second.part->rigidBody();
+    r->clearForces();
+    r->setAngularVelocity(zero);
+    r->setLinearVelocity(zero);
+    r->setWorldTransform(SPIDER_POSITIONS[part.first]);
+    r->activate(true);
+  }
 }
 
 /**
@@ -104,6 +130,7 @@ Spider* Spider::upcast(Drawable3D* drawable) {
   return dynamic_cast<Spider*>(drawable);
 }
 
+std::map<std::string, btTransform> Spider::SPIDER_POSITIONS = {};
 std::map<std::string, Spider::Part> Spider::SPIDER_PARTS =
   { { "Eye", { 0b1000000000000000, 0b1011111111111111 } },
     { "Neck", { 0b0100000000000000, 0b0011111111111111 } },
