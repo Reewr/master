@@ -162,20 +162,37 @@ void SpiderSwarm::updateEpoch() {
 void SpiderSwarm::recreatePhenotypes() {
   mLog->debug("Recreating {} phenotypes...", mParameters->PopulationSize);
 
-  mPhenotypes.clear();
   mPhenotypes.resize(mParameters->PopulationSize);
 
   size_t index = 0;
   for (size_t i = 0; i < mPopulation->m_Species.size(); ++i) {
-    for (size_t j = 0; j < mPopulation->m_Species[i].m_Individuals.size(); ++j) {
-      mPhenotypes[index].spider  = new Spider();
-      mPhenotypes[index].world   = new World(mmm::vec3(0, -9.81, 0));
-      mPhenotypes[index].network = new NEAT::NeuralNetwork();
+    auto& species = mPopulation->m_Species[i];
 
-      mPopulation->m_Species[i].m_Individuals[j].BuildESHyperNEATPhenotype(
-        *mPhenotypes[index].network, *mSubstrate, *mParameters);
+    for (size_t j = 0; j < species.m_Individuals.size(); ++j) {
+      auto&      individual = species.m_Individuals[j];
+      Phenotype& p          = mPhenotypes[index];
 
-      mPhenotypes[index].world->addObject(mPhenotypes[index].spider);
+      if (p.world != nullptr)
+        p.world->reset();
+      else
+        p.world = new World(mmm::vec3(0, -9.81, 0));
+
+      if (p.spider == nullptr) {
+        p.spider = new Spider();
+        p.world->addObject(p.spider);
+      } else {
+        p.spider->reset();
+      }
+
+
+      if (p.network == nullptr)
+        p.network = new NEAT::NeuralNetwork();
+      else
+        p.network->Clear();
+
+      individual.BuildESHyperNEATPhenotype(*p.network,
+                                           *mSubstrate,
+                                           *mParameters);
       index += 1;
     }
   }
