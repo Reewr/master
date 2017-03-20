@@ -26,7 +26,3 @@ function update(deltaTime)
     v:update(deltaTime)
   end
 end
-
-if cfg.console.enabled then
-  require 'console/main'
-end
