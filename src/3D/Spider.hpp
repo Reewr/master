@@ -17,11 +17,24 @@ class Spider : public Drawable3D, public Logging::Log {
 public:
   struct Part {
     Part();
-    Part(unsigned short group, unsigned short mask);
+    Part(unsigned short   group,
+         unsigned short   mask,
+         const mmm::vec3& inputAngX,
+         const mmm::vec3& inputAngY,
+         const mmm::vec3& inputAngZ,
+         const mmm::vec3& inputRot,
+         const mmm::vec3& output);
 
     unsigned short collisionGroup;
     unsigned short collisionMask;
-    Drawable3D*    part;
+
+    mmm::vec3 inputAngX;
+    mmm::vec3 inputAngY;
+    mmm::vec3 inputAngZ;
+    mmm::vec3 inputRot;
+    mmm::vec3 output;
+
+    Drawable3D* part;
   };
 
   Spider();
