@@ -116,7 +116,7 @@ def showPart(part):
     showVector(output)
     ]
 
-  return '{ "%s", {%s } }' % (part, ''.join([ '\n      %s,' % x for x in xs ]))
+  return '{ "%s", {%s } }' % (part, ','.join([ '\n      ' + x for x in xs ]))
 
 
 r = ',\n    '.join([ showPart(x) for x in PARTS if bpy.data.objects.get(x) ])
