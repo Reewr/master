@@ -43,7 +43,7 @@ public:
   static Spider* upcast(Drawable3D* drawable);
 
 private:
-  static std::map<std::string, Part> SPIDER_PARTS;
+  static std::map<std::string, Part>        SPIDER_PARTS;
   static std::map<std::string, btTransform> SPIDER_POSITIONS;
 
   PhysicsElements*             mElements;

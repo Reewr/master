@@ -1,7 +1,7 @@
 #include "SpiderSwarm.hpp"
 
-#include "../3D/World.hpp"
 #include "../3D/Spider.hpp"
+#include "../3D/World.hpp"
 
 #include <btBulletDynamicsCommon.h>
 
@@ -124,7 +124,8 @@ void SpiderSwarm::updateEpoch() {
   mBatchEnd        = mmm::min(mBatchSize, mPhenotypes.size());
 
   for (size_t i = 0; i < mPopulation->m_Species.size(); i++) {
-    for (size_t j = 0; j < mPopulation->m_Species[i].m_Individuals.size(); j++) {
+    for (size_t j = 0; j < mPopulation->m_Species[i].m_Individuals.size();
+         j++) {
 
       // calculate total fitness for each individual
 
@@ -168,82 +169,78 @@ void SpiderSwarm::setDefaultParameters() {
 
   mParameters->PopulationSize = 50;
 
-  mParameters->DynamicCompatibility = true;
-  mParameters->CompatTreshold = 2.0;
-  mParameters->YoungAgeTreshold = 15;
-  mParameters->SpeciesMaxStagnation = 100;
-  mParameters->OldAgeTreshold = 35;
-  mParameters->MinSpecies = 5;
-  mParameters->MaxSpecies = 10;
+  mParameters->DynamicCompatibility   = true;
+  mParameters->CompatTreshold         = 2.0;
+  mParameters->YoungAgeTreshold       = 15;
+  mParameters->SpeciesMaxStagnation   = 100;
+  mParameters->OldAgeTreshold         = 35;
+  mParameters->MinSpecies             = 5;
+  mParameters->MaxSpecies             = 10;
   mParameters->RouletteWheelSelection = false;
 
-  mParameters->MutateRemLinkProb = 0.02;
-  mParameters->RecurrentProb = 0;
-  mParameters->OverallMutationRate = 0.15;
-  mParameters->MutateAddLinkProb = 0.08;
-  mParameters->MutateAddNeuronProb = 0.01;
-  mParameters->MutateWeightsProb = 0.90;
-  mParameters->MaxWeight = 8.0;
-  mParameters->WeightMutationMaxPower = 0.2;
+  mParameters->MutateRemLinkProb         = 0.02;
+  mParameters->RecurrentProb             = 0;
+  mParameters->OverallMutationRate       = 0.15;
+  mParameters->MutateAddLinkProb         = 0.08;
+  mParameters->MutateAddNeuronProb       = 0.01;
+  mParameters->MutateWeightsProb         = 0.90;
+  mParameters->MaxWeight                 = 8.0;
+  mParameters->WeightMutationMaxPower    = 0.2;
   mParameters->WeightReplacementMaxPower = 1.0;
 
-  mParameters->MutateActivationAProb = 0.0;
+  mParameters->MutateActivationAProb       = 0.0;
   mParameters->ActivationAMutationMaxPower = 0.5;
-  mParameters->MinActivationA = 0.05;
-  mParameters->MaxActivationA = 6.0;
+  mParameters->MinActivationA              = 0.05;
+  mParameters->MaxActivationA              = 6.0;
 
   mParameters->MutateNeuronActivationTypeProb = 0.03;
 
-  mParameters->ActivationFunction_SignedSigmoid_Prob = 0.0;
+  mParameters->ActivationFunction_SignedSigmoid_Prob   = 0.0;
   mParameters->ActivationFunction_UnsignedSigmoid_Prob = 0.0;
-  mParameters->ActivationFunction_Tanh_Prob = 1.0;
-  mParameters->ActivationFunction_TanhCubic_Prob = 0.0;
-  mParameters->ActivationFunction_SignedStep_Prob = 1.0;
-  mParameters->ActivationFunction_UnsignedStep_Prob = 0.0;
-  mParameters->ActivationFunction_SignedGauss_Prob = 1.0;
-  mParameters->ActivationFunction_UnsignedGauss_Prob = 0.0;
-  mParameters->ActivationFunction_Abs_Prob = 0.0;
-  mParameters->ActivationFunction_SignedSine_Prob = 1.0;
-  mParameters->ActivationFunction_UnsignedSine_Prob = 0.0;
-  mParameters->ActivationFunction_Linear_Prob = 1.0;
+  mParameters->ActivationFunction_Tanh_Prob            = 1.0;
+  mParameters->ActivationFunction_TanhCubic_Prob       = 0.0;
+  mParameters->ActivationFunction_SignedStep_Prob      = 1.0;
+  mParameters->ActivationFunction_UnsignedStep_Prob    = 0.0;
+  mParameters->ActivationFunction_SignedGauss_Prob     = 1.0;
+  mParameters->ActivationFunction_UnsignedGauss_Prob   = 0.0;
+  mParameters->ActivationFunction_Abs_Prob             = 0.0;
+  mParameters->ActivationFunction_SignedSine_Prob      = 1.0;
+  mParameters->ActivationFunction_UnsignedSine_Prob    = 0.0;
+  mParameters->ActivationFunction_Linear_Prob          = 1.0;
 
   mParameters->DivisionThreshold = 0.5;
   mParameters->VarianceThreshold = 0.03;
-  mParameters->BandThreshold = 0.3;
-  mParameters->InitialDepth = 2;
-  mParameters->MaxDepth = 3;
-  mParameters->IterationLevel = 1;
-  mParameters->Leo = false;
-  mParameters->GeometrySeed = false;
-  mParameters->LeoSeed = false;
-  mParameters->LeoThreshold = 0.3;
-  mParameters->CPPN_Bias = -1.0;
-  mParameters->Qtree_X = 0.0;
-  mParameters->Qtree_Y = 0.0;
-  mParameters->Width = 1.0;
-  mParameters->Height = 1.0;
-  mParameters->EliteFraction = 0.1;
+  mParameters->BandThreshold     = 0.3;
+  mParameters->InitialDepth      = 2;
+  mParameters->MaxDepth          = 3;
+  mParameters->IterationLevel    = 1;
+  mParameters->Leo               = false;
+  mParameters->GeometrySeed      = false;
+  mParameters->LeoSeed           = false;
+  mParameters->LeoThreshold      = 0.3;
+  mParameters->CPPN_Bias         = -1.0;
+  mParameters->Qtree_X           = 0.0;
+  mParameters->Qtree_Y           = 0.0;
+  mParameters->Width             = 1.0;
+  mParameters->Height            = 1.0;
+  mParameters->EliteFraction     = 0.1;
 }
 void SpiderSwarm::setDefaultSubstrate() {
   if (mSubstrate != nullptr)
     delete mSubstrate;
 
-  std::vector<std::vector<double>> inputs{
-    { -1.0, -1.0, 0.0 },
-    { 1.0, -1.0, 0.0 },
-    { 0.0, -1.0, 0.0 }
-  };
+  std::vector<std::vector<double>> inputs{ { -1.0, -1.0, 0.0 },
+                                           { 1.0, -1.0, 0.0 },
+                                           { 0.0, -1.0, 0.0 } };
 
   std::vector<std::vector<double>> hidden{};
 
-  std::vector<std::vector<double>> outputs{
-    {0.0, 1.0, 0.0}
-  };
+  std::vector<std::vector<double>> outputs{ { 0.0, 1.0, 0.0 } };
 
   mSubstrate = new NEAT::Substrate(inputs, hidden, outputs);
 
-  mSubstrate->m_allow_input_hidden_links = false;
-  mSubstrate->m_allow_input_output_links = false;
+  mSubstrate->m_allow_input_hidden_links  = false;
+  mSubstrate->m_allow_input_output_links  = false;
   mSubstrate->m_allow_hidden_hidden_links = false;
   mSubstrate->m_allow_hidden_output_links = false;
   mSubstrate->m_allow_output_hidden_links = false;
@@ -251,8 +248,8 @@ void SpiderSwarm::setDefaultSubstrate() {
   mSubstrate->m_allow_looped_hidden_links = false;
   mSubstrate->m_allow_looped_output_links = false;
 
-  mSubstrate->m_allow_input_hidden_links = true;
-  mSubstrate->m_allow_input_output_links = false;
+  mSubstrate->m_allow_input_hidden_links  = true;
+  mSubstrate->m_allow_input_output_links  = false;
   mSubstrate->m_allow_hidden_output_links = true;
   mSubstrate->m_allow_hidden_hidden_links = false;
 

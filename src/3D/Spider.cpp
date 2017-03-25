@@ -11,13 +11,10 @@
 #include "../Utils/Asset.hpp"
 #include "MeshPart.hpp"
 
-Spider::Part::Part()
-    : collisionGroup(1), collisionMask(-1), part(nullptr) {}
+Spider::Part::Part() : collisionGroup(1), collisionMask(-1), part(nullptr) {}
 
 Spider::Part::Part(unsigned short group, unsigned short mask)
-    : collisionGroup(group)
-    , collisionMask(mask)
-    , part(nullptr) {}
+    : collisionGroup(group), collisionMask(mask), part(nullptr) {}
 
 Spider::Spider() : Logging::Log("Spider") {
   ResourceManager* r = mAsset->rManager();
@@ -45,7 +42,8 @@ Spider::Spider() : Logging::Log("Spider") {
 
   if (!SPIDER_POSITIONS.size()) {
     for (auto& mesh : mElements->meshes) {
-      SPIDER_POSITIONS[mesh.first] = mParts[mesh.first].part->rigidBody()->getWorldTransform();
+      SPIDER_POSITIONS[mesh.first] =
+        mParts[mesh.first].part->rigidBody()->getWorldTransform();
     }
   }
 
@@ -67,7 +65,7 @@ Spider::~Spider() {
  */
 void Spider::reset() {
   btVector3 zero(0, 0, 0);
-  for(auto& part : mParts) {
+  for (auto& part : mParts) {
     btRigidBody* r = part.second.part->rigidBody();
     r->clearForces();
     r->setAngularVelocity(zero);
@@ -130,7 +128,7 @@ Spider* Spider::upcast(Drawable3D* drawable) {
   return dynamic_cast<Spider*>(drawable);
 }
 
-std::map<std::string, btTransform> Spider::SPIDER_POSITIONS = {};
+std::map<std::string, btTransform>  Spider::SPIDER_POSITIONS = {};
 std::map<std::string, Spider::Part> Spider::SPIDER_PARTS =
   { { "Eye", { 0b1000000000000000, 0b1011111111111111 } },
     { "Neck", { 0b0100000000000000, 0b0011111111111111 } },

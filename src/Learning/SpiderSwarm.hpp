@@ -28,7 +28,6 @@ namespace NEAT {
  */
 class SpiderSwarm : Logging::Log {
 public:
-
   SpiderSwarm();
   ~SpiderSwarm();
 
@@ -40,7 +39,6 @@ public:
   void draw(std::shared_ptr<Program>& prog, bool bindTexture);
 
 private:
-
   std::vector<Phenotype> mPhenotypes;
 
   size_t mCurrentBatch;

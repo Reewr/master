@@ -88,7 +88,7 @@ void World::reset() {
   btOverlappingPairCache* pairCache = mPhase->getOverlappingPairCache();
   btBroadphasePairArray&  pairArray = pairCache->getOverlappingPairArray();
 
-  for(int i = 0; i < pairArray.size(); ++i)
+  for (int i = 0; i < pairArray.size(); ++i)
     pairCache->cleanOverlappingPair(pairArray[i], mWorld->getDispatcher());
 
   mSolver->reset();

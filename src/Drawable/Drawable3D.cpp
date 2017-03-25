@@ -244,8 +244,8 @@ mmm::vec3 Drawable3D::localTorque() const {
   if (!hasPhysics())
     return mmm::vec3(0);
 
-  const btVector3& torque = mBody->getWorldTransform().getBasis() *
-                            mBody->getTotalTorque();
+  const btVector3& torque =
+    mBody->getWorldTransform().getBasis() * mBody->getTotalTorque();
   return mmm::vec3(torque.x(), torque.y(), torque.z());
 }
 

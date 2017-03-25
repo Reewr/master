@@ -3,14 +3,11 @@
 #include <Genome.h>
 #include <NeuralNetwork.h>
 
-#include "../3D/World.hpp"
 #include "../3D/Spider.hpp"
+#include "../3D/World.hpp"
 
 Phenotype::Phenotype()
-  : world(nullptr)
-  , spider(nullptr)
-  , network(nullptr)
-  , fitness(0) {}
+    : world(nullptr), spider(nullptr), network(nullptr), fitness(0) {}
 
 Phenotype::~Phenotype() {
   delete world;
