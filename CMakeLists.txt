@@ -200,6 +200,7 @@ set(SOURCE_FILES
 
   # src/Learning
   ${SRC_DIR}/Learning/SpiderSwarm.cpp
+  ${SRC_DIR}/Learning/Phenotype.cpp
 
   # src/Lua
   ${SRC_DIR}/Lua/LuaLib.cpp
@@ -290,6 +291,7 @@ set(HEADER_FILES
 
   # src/Learning
   ${SRC_DIR}/Learning/SpiderSwarm.hpp
+  ${SRC_DIR}/Learning/Phenotype.hpp
 
   # src/Lua
   ${SRC_DIR}/Lua/LuaLib.hpp

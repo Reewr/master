@@ -11,28 +11,6 @@
 #include <Population.h>
 #include <Substrate.h>
 
-SpiderSwarm::Phenotype::Phenotype()
-  : world(nullptr)
-  , spider(nullptr)
-  , network(nullptr)
-  , fitness(0) {}
-
-SpiderSwarm::Phenotype::~Phenotype() {
-  if (world != nullptr)
-    delete world;
-  if (spider != nullptr)
-    delete spider;
-  if (network != nullptr)
-    delete network;
-}
-
-void SpiderSwarm::Phenotype::update(float deltaTime) {
-  // activate network for each spider given current motion state
-  world->doPhysics(deltaTime);
-  // update fitness if we can detect some state that we can judge fitness on
-}
-
-
 SpiderSwarm::SpiderSwarm()
     : Logging::Log("SpiderSwarm")
     , mCurrentBatch(0)
@@ -169,28 +147,10 @@ void SpiderSwarm::recreatePhenotypes() {
     auto& species = mPopulation->m_Species[i];
 
     for (size_t j = 0; j < species.m_Individuals.size(); ++j) {
-      auto&      individual = species.m_Individuals[j];
-      Phenotype& p          = mPhenotypes[index];
+      auto& individual = species.m_Individuals[j];
 
-      if (p.world != nullptr)
-        p.world->reset();
-      else
-        p.world = new World(mmm::vec3(0, -9.81, 0));
-
-      if (p.spider == nullptr) {
-        p.spider = new Spider();
-        p.world->addObject(p.spider);
-      } else {
-        p.spider->reset();
-      }
-
-
-      if (p.network == nullptr)
-        p.network = new NEAT::NeuralNetwork();
-      else
-        p.network->Clear();
-
-      individual.BuildESHyperNEATPhenotype(*p.network,
+      mPhenotypes[index].reset();
+      individual.BuildESHyperNEATPhenotype(*mPhenotypes[index].network,
                                            *mSubstrate,
                                            *mParameters);
       index += 1;
