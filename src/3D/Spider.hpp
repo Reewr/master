@@ -18,9 +18,10 @@ public:
 
   struct Part {
     Part();
-    Part(unsigned short group, unsigned short mask);
+    Part(unsigned short group, unsigned short mask, float angle);
     unsigned short collisionGroup;
     unsigned short collisionMask;
+    float              restAngle;
     Drawable3D*        part;
     btHingeConstraint* hinge;
   };

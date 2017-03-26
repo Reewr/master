@@ -14,11 +14,16 @@
 using mmm::vec3;
 
 Spider::Part::Part()
-    : collisionGroup(1), collisionMask(-1), part(nullptr), hinge(nullptr) {}
+    : collisionGroup(1)
+    , collisionMask(-1)
+    , restAngle(0)
+    , part(nullptr)
+    , hinge(nullptr) {}
 
-Spider::Part::Part(unsigned short group, unsigned short mask)
+Spider::Part::Part(unsigned short group, unsigned short mask, float angle)
     : collisionGroup(group)
     , collisionMask(mask)
+    , restAngle(angle)
     , part(nullptr)
     , hinge(nullptr) {}
 
