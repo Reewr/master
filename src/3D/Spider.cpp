@@ -38,7 +38,7 @@ Spider::Spider() : Logging::Log("Spider") {
 
     for (auto& c : mElements->constraints[mesh.first]) {
 
-      // enable motors for each part
+      // find hinge-constraint ref for each part
       if (c->getConstraintType() == btTypedConstraintType::HINGE_CONSTRAINT_TYPE) {
         auto* hinge = (btHingeConstraint*)c;
 
