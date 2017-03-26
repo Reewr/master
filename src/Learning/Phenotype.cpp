@@ -7,7 +7,11 @@
 #include "../3D/World.hpp"
 
 Phenotype::Phenotype()
-    : world(nullptr), spider(nullptr), network(nullptr), fitness(0) {}
+    : Logging::Log("Phenotype")
+    , world(nullptr)
+    , spider(nullptr)
+    , network(nullptr)
+    , fitness(0) {}
 
 Phenotype::~Phenotype() {
   delete world;

@@ -2,6 +2,8 @@
 
 #include <mmm.hpp>
 
+#include "../Log.hpp"
+
 class World;
 class Spider;
 
@@ -20,7 +22,7 @@ namespace NEAT {
  * between spiders, the performance is slower than having one world per
  * spider. The downside of this approach is that it'll require more memory
  */
-struct Phenotype {
+struct Phenotype : Logging::Log {
   World*               world;
   Spider*              spider;
   NEAT::NeuralNetwork* network;
