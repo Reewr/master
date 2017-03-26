@@ -14,7 +14,7 @@ Phenotype::Phenotype()
     , world(nullptr)
     , spider(nullptr)
     , network(nullptr)
-    , fitness(0) {}
+    , fitness(1) {}
 
 Phenotype::~Phenotype() {
   delete world;
@@ -103,4 +103,6 @@ void Phenotype::reset() {
     network = new NEAT::NeuralNetwork();
   else
     network->Clear();
+
+  fitness = mmm::vec<8>(1);
 }
