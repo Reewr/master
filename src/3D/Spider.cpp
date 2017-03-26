@@ -118,6 +118,10 @@ Drawable3D* Spider::child(const std::string& name) {
   return mParts[name].part;
 }
 
+std::map<std::string, Spider::Part>& Spider::parts() {
+  return mParts;
+}
+
 void Spider::update(float) {}
 
 /**

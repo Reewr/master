@@ -40,6 +40,8 @@ public:
   // Returns the child of spider if found by name
   Drawable3D* child(const std::string& name);
 
+  std::map<std::string, Part>& parts();
+
   // Upcasts a Drawable3D objet to a Spider object, if possible.
   static Spider* upcast(Drawable3D* drawable);
 
