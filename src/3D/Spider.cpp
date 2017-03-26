@@ -13,31 +13,10 @@
 
 using mmm::vec3;
 
-Spider::Part::Part()
-    : collisionGroup(1)
-    , collisionMask(-1)
-    , inputAngX(0)
-    , inputAngY(0)
-    , inputAngZ(0)
-    , inputRot(0)
-    , output(0)
-    , part(nullptr) {}
+Spider::Part::Part() : collisionGroup(1), collisionMask(-1), part(nullptr) {}
 
-Spider::Part::Part(unsigned short group,
-                   unsigned short mask,
-                   const vec3&    inputAngX,
-                   const vec3&    inputAngY,
-                   const vec3&    inputAngZ,
-                   const vec3&    inputRot,
-                   const vec3&    output)
-    : collisionGroup(group)
-    , collisionMask(mask)
-    , inputAngX(inputAngX)
-    , inputAngY(inputAngY)
-    , inputAngZ(inputAngZ)
-    , inputRot(inputRot)
-    , output(output)
-    , part(nullptr) {}
+Spider::Part::Part(unsigned short group, unsigned short mask)
+    : collisionGroup(group), collisionMask(mask), part(nullptr) {}
 
 Spider::Spider() : Logging::Log("Spider") {
   ResourceManager* r = mAsset->rManager();
