@@ -84,42 +84,74 @@ def errorCheck():
         print('error in object ' + obj.name)
 
 
-def showVector(v):
+def showVec(v):
   if not v:
     return 'vec3(0)'
   return 'vec3(%f, %f, %f)' % (v.x, v.y, v.z)
 
-
-def showPart(part):
-  impAngX = bpy.data.objects.get(part + 'ImpAngX')
-  impAngX = impAngX.matrix_world.to_translation() if impAngX else None
-
-  impAngY = bpy.data.objects.get(part + 'ImpAngY')
-  impAngY = impAngY.matrix_world.to_translation() if impAngY else None
-
-  impAngZ = bpy.data.objects.get(part + 'ImpAngZ')
-  impAngZ = impAngZ.matrix_world.to_translation() if impAngZ else None
-
-  impRot  = bpy.data.objects.get(part + 'ImpRot')
-  impRot = impRot.matrix_world.to_translation() if impRot else None
-
-  output  = bpy.data.objects.get(part + 'Output')
-  output = output.matrix_world.to_translation() if output else None
-
-  xs = [
-    PARTS[part][0],
-    PARTS[part][1],
-    showVector(impAngX),
-    showVector(impAngY),
-    showVector(impAngZ),
-    showVector(impRot),
-    showVector(output)
-    ]
-
-  return '{ "%s", {%s } }' % (part, ','.join([ '\n      ' + x for x in xs ]))
+def showVector(v):
+  if not v:
+    return ''
+  return '{ %f, %f, %f }' % (v.x, v.y, v.z)
 
 
-r = ',\n    '.join([ showPart(x) for x in PARTS if bpy.data.objects.get(x) ])
-r = '  { ' + r
-r += ' };'
-print(r)
+def showPart(name):
+  xs = [ PARTS[name][0], PARTS[name][1] ]
+  return '{ "%s", { %s } }' % (name, ', '.join(xs))
+
+def printParts():
+  r = ',\n    '.join([ showPart(x) for x in sorted(PARTS) if bpy.data.objects.get(x) ])
+  r = '  { ' + r
+  r += ' };'
+  print('std::map<std::string, Spider::Part> Spider::SPIDER_PARTS =')
+  print(r)
+
+def getInputNeurons(name):
+  xs = []
+
+  impAngX = bpy.data.objects.get(name + 'ImpAngX')
+  if impAngX:
+    xs.append(impAngX.matrix_world.to_translation())
+
+  impAngY = bpy.data.objects.get(name + 'ImpAngY')
+  if impAngY:
+    xs.append(impAngY.matrix_world.to_translation())
+
+  impAngZ = bpy.data.objects.get(name + 'ImpAngZ')
+  if impAngZ:
+    xs.append(impAngZ.matrix_world.to_translation())
+
+  impRot  = bpy.data.objects.get(name + 'ImpRot')
+  if impRot:
+    xs.append(impRot.matrix_world.to_translation())
+
+  return xs;
+
+def getOutputNeurons(name):
+  xs = []
+
+  output  = bpy.data.objects.get(name + 'Output')
+  if output:
+    xs.append(output.matrix_world.to_translation())
+
+  return xs
+
+def printNeuronData():
+  inn = [ getInputNeurons(x) for x in sorted(PARTS) if bpy.data.objects.get(x) ]
+  out = [ getOutputNeurons(x) for x in sorted(PARTS) if bpy.data.objects.get(x) ]
+
+  # flatten lists
+  inn = [ '    ' + showVector(x) for xs in inn for x in xs if len(xs) > 0 ]
+  out = [ '    ' + showVector(x) for xs in out for x in xs if len(xs) > 0 ]
+
+  print('  std::vector<std::vector<double>> inputs{')
+  print(',\n'.join(inn))
+  print('  };')
+  print('  std::vector<std::vector<double>> hidden{};')
+  print('  std::vector<std::vector<double>> outputs{')
+  print(',\n'.join(out))
+  print('  };')
+
+errorCheck()
+printParts()
+printNeuronData()
