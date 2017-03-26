@@ -123,16 +123,24 @@ void SpiderSwarm::updateEpoch() {
   mBatchStart      = 0;
   mBatchEnd        = mmm::min(mBatchSize, mPhenotypes.size());
 
-  for (size_t i = 0; i < mPopulation->m_Species.size(); i++) {
-    for (size_t j = 0; j < mPopulation->m_Species[i].m_Individuals.size();
-         j++) {
+  float      best       = -1.f;
+  static int generation = 1;
 
-      // calculate total fitness for each individual
+  size_t index = 0;
+  for (size_t i = 0; i < mPopulation->m_Species.size(); ++i) {
+    for (size_t j = 0; j < mPopulation->m_Species[i].m_Individuals.size(); ++j) {
 
-      mPopulation->m_Species[i].m_Individuals[j].SetFitness(0.0);
+      float fitness = mmm::product(mPhenotypes[index].fitness);
+      mPopulation->m_Species[i].m_Individuals[j].SetFitness(fitness);
       mPopulation->m_Species[i].m_Individuals[j].SetEvaluated();
+
+      best = mmm::max(fitness, best);
+      index += 1;
     }
   }
+
+  mLog->info("Generation {}: best {}", generation, best);
+  generation += 1;
 
   mPopulation->Epoch();
   recreatePhenotypes();
