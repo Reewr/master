@@ -21,7 +21,8 @@ public:
     Part(unsigned short group, unsigned short mask);
     unsigned short collisionGroup;
     unsigned short collisionMask;
-    Drawable3D* part;
+    Drawable3D*        part;
+    btHingeConstraint* hinge;
   };
 
   Spider();

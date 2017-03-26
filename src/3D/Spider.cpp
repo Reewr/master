@@ -13,10 +13,14 @@
 
 using mmm::vec3;
 
-Spider::Part::Part() : collisionGroup(1), collisionMask(-1), part(nullptr) {}
+Spider::Part::Part()
+    : collisionGroup(1), collisionMask(-1), part(nullptr), hinge(nullptr) {}
 
 Spider::Part::Part(unsigned short group, unsigned short mask)
-    : collisionGroup(group), collisionMask(mask), part(nullptr) {}
+    : collisionGroup(group)
+    , collisionMask(mask)
+    , part(nullptr)
+    , hinge(nullptr) {}
 
 Spider::Spider() : Logging::Log("Spider") {
   ResourceManager* r = mAsset->rManager();
@@ -33,6 +37,26 @@ Spider::Spider() : Logging::Log("Spider") {
     child->setCollisionMask(mParts[mesh.first].collisionMask);
 
     for (auto& c : mElements->constraints[mesh.first]) {
+
+      // enable motors for each part
+      if (c->getConstraintType() == btTypedConstraintType::HINGE_CONSTRAINT_TYPE) {
+        auto* hinge = (btHingeConstraint*)c;
+
+        auto* a = &(hinge->getRigidBodyA());
+        auto* b = &(hinge->getRigidBodyB());
+        std::string nameA;
+        std::string nameB;
+
+        for (auto& m : mElements->bodies) {
+          if (m.second == a) nameA = m.first;
+          if (m.second == b) nameB = m.first;
+        }
+
+        if (nameA == mesh.first) {
+          mParts[mesh.first].hinge = hinge;
+        }
+      }
+
       child->addConstraint(c);
     }
 
