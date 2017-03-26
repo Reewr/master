@@ -2,9 +2,12 @@
 
 #include <Genome.h>
 #include <NeuralNetwork.h>
+#include <btBulletDynamicsCommon.h>
 
 #include "../3D/Spider.hpp"
 #include "../3D/World.hpp"
+
+using mmm::vec3;
 
 Phenotype::Phenotype()
     : Logging::Log("Phenotype")
@@ -30,9 +33,57 @@ Phenotype::~Phenotype() {
  * @param deltaTime
  */
 void Phenotype::update(float deltaTime) {
-  // activate network for each spider given current motion state
+
+  // construct input vector
+  std::vector<double> inputs{};
+  for (auto& part : spider->parts()) {
+    if (part.second.hinge == nullptr)
+      continue;
+
+    vec3  ang = part.second.part->angularVelocity();
+    float rot = part.second.hinge->getHingeAngle();
+
+    inputs.push_back(ang.x);
+    inputs.push_back(ang.y);
+    inputs.push_back(ang.z);
+    inputs.push_back(rot - part.second.restAngle);
+  }
+
+  // activate network to retrieve output vector
+  network->Flush();
+  network->Input(inputs);
+  network->Activate();
+  std::vector<double> outputs = network->Output();
+
+  // set hinge motor targets based on network output
+  size_t i = 0;
+  for (auto& part : spider->parts()) {
+    if (part.second.hinge == nullptr)
+      continue;
+
+    // part.second.hinge->enableAngularMotor(true, 0, 100);
+    // part.second.hinge->setMotorTarget(part.second.restAngle, deltaTime);
+
+    part.second.hinge->enableAngularMotor(true, 0, 100);
+    part.second.hinge->setMotorTarget(outputs[i] + part.second.restAngle,
+                                      deltaTime);
+    i+=1;
+  }
+
+  // update physics
   world->doPhysics(deltaTime);
+
   // update fitness if we can detect some state that we can judge fitness on
+
+  // testing fitness...
+  for (auto& part : spider->parts()) {
+    if (part.second.hinge == nullptr)
+      continue;
+
+    float rot = mmm::abs(part.second.hinge->getHingeAngle() + part.second.restAngle);
+    fitness[0] *= 1 / (rot + 1);
+  }
+
 }
 
 void Phenotype::reset() {
