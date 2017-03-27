@@ -6,6 +6,7 @@
 #include "../OpenGLHeaders.hpp"
 #include <algorithm>
 #include <btBulletDynamicsCommon.h>
+#include <assert.h>
 
 using mmm::vec3;
 
@@ -85,11 +86,21 @@ void World::addObject(Drawable3D* element) {
  *   Resets all the information of the world
  */
 void World::reset() {
-  btOverlappingPairCache* pairCache = mPhase->getOverlappingPairCache();
-  btBroadphasePairArray&  pairArray = pairCache->getOverlappingPairArray();
 
-  for (int i = 0; i < pairArray.size(); ++i)
-    pairCache->cleanOverlappingPair(pairArray[i], mWorld->getDispatcher());
+  // No internal values should be nullptr
+  assert(mPhase != nullptr);
+  assert(mWorld != nullptr);
+  assert(mSolver != nullptr);
+  assert(mDispatcher != nullptr);
+
+  btOverlappingPairCache* pairCache = mPhase->getOverlappingPairCache();
+
+  if (pairCache != nullptr) {
+    btBroadphasePairArray&  pairArray = pairCache->getOverlappingPairArray();
+
+    for (int i = 0; i < pairArray.size(); ++i)
+      pairCache->cleanOverlappingPair(pairArray[i], mWorld->getDispatcher());
+  }
 
   mSolver->reset();
   mWorld->clearForces();
