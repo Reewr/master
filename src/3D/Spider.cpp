@@ -79,7 +79,7 @@ Spider::Spider() : Logging::Log("Spider") {
     }
   }
 
-  mLog->debug("Spider loaded with weight of: {}", weight());
+  mLog->debug("Spider loaded");
 
   reset();
 }
