@@ -48,10 +48,13 @@ public:
   // By disabling mousepickups, the user is not allowed to move objects
   void disableMousePickups();
 
+  // Disables physics, stopping all components from moving
   void disablePhysics();
 
+  // Enables physics again, resuming movement of compontents
   void enablePhysics();
 
+  // Resets the world, resetting all caches
   void reset();
 
   // The function that handles input events

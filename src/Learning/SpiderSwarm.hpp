@@ -50,8 +50,15 @@ private:
   float  mIterationDuration;
   size_t mDrawLimit;
 
+  // Goes through the current batch and updates each spider in
+  // current batch with physics and neural network activation
   void updateNormal(float deltaTime);
+
+  // Increments the batch
   void setNextBatch();
+
+  // When all batches are complete, update the epoch,
+  // resetting all spiders
   void updateEpoch();
   void recreatePhenotypes();
 

@@ -45,7 +45,13 @@ SpiderSwarm::~SpiderSwarm() {
 
 /**
  * @brief
+ *   This is the main update function that controls what to do next.
+ *   Most of the time this will update the spiders by activating the networks,
+ *   using the networks output before running physics.
  *
+ *   When a batch is complete, the next one is chosen. Once all batches are
+ *   complete, the next epoch is started, resetting all the spiders to their
+ *   original position.
  */
 void SpiderSwarm::update(float deltaTime) {
   if (mCurrentDuration == 0)
