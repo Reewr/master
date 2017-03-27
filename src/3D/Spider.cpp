@@ -45,17 +45,20 @@ Spider::Spider() : Logging::Log("Spider") {
     for (auto& c : mElements->constraints[mesh.first]) {
 
       // find hinge-constraint ref for each part
-      if (c->getConstraintType() == btTypedConstraintType::HINGE_CONSTRAINT_TYPE) {
-        auto* hinge = (btHingeConstraint*)c;
+      if (c->getConstraintType() ==
+          btTypedConstraintType::HINGE_CONSTRAINT_TYPE) {
+        auto* hinge = (btHingeConstraint*) c;
 
-        auto* a = &(hinge->getRigidBodyA());
-        auto* b = &(hinge->getRigidBodyB());
+        auto*       a = &(hinge->getRigidBodyA());
+        auto*       b = &(hinge->getRigidBodyB());
         std::string nameA;
         std::string nameB;
 
         for (auto& m : mElements->bodies) {
-          if (m.second == a) nameA = m.first;
-          if (m.second == b) nameB = m.first;
+          if (m.second == a)
+            nameA = m.first;
+          if (m.second == b)
+            nameB = m.first;
         }
 
         if (nameA == mesh.first) {
@@ -165,49 +168,50 @@ Spider* Spider::upcast(Drawable3D* drawable) {
 }
 
 std::map<std::string, btTransform>  Spider::SPIDER_POSITIONS = {};
-std::map<std::string, Spider::Part> Spider::SPIDER_PARTS =
-  { { "Abdomin", { 0b1000000000000000, 0b1011111111111111, radians(0) } },
-    { "Eye", { 0b1000000000000000, 0b1011111111111111, radians(0) } },
-    { "FemurL1", { 0b0010100000000000, 0b1001011111111111, radians(35) } },
-    { "FemurL2", { 0b0010010000000000, 0b1001101111111111, radians(35) } },
-    { "FemurL3", { 0b0010001000000000, 0b1001110111111111, radians(35) } },
-    { "FemurL4", { 0b0010000100000000, 0b1001111011111111, radians(35) } },
-    { "FemurR1", { 0b0001100000000000, 0b1010011111111111, radians(35) } },
-    { "FemurR2", { 0b0001010000000000, 0b1010101111111111, radians(35) } },
-    { "FemurR3", { 0b0001001000000000, 0b1010110111111111, radians(35) } },
-    { "FemurR4", { 0b0001000100000000, 0b1010111011111111, radians(35) } },
-    { "Hip", { 0b0100000000000000, 0b0011111111111111, radians(0) } },
-    { "Neck", { 0b0100000000000000, 0b0011111111111111, radians(0) } },
-    { "PatellaL1", { 0b0010100000000000, 0b1101011111111111, radians(-45) } },
-    { "PatellaL2", { 0b0010010000000000, 0b1101101111111111, radians(-45) } },
-    { "PatellaL3", { 0b0010001000000000, 0b1101110111111111, radians(-45) } },
-    { "PatellaL4", { 0b0010000100000000, 0b1101111011111111, radians(-45) } },
-    { "PatellaR1", { 0b0001100000000000, 0b1110011111111111, radians(-45) } },
-    { "PatellaR2", { 0b0001010000000000, 0b1110101111111111, radians(-45) } },
-    { "PatellaR3", { 0b0001001000000000, 0b1110110111111111, radians(-45) } },
-    { "PatellaR4", { 0b0001000100000000, 0b1110111011111111, radians(-45) } },
-    { "Sternum", { 0b0100000000000000, 0b1011111111111111, radians(0) } },
-    { "TarsusL1", { 0b0010100000000000, 0b1101011111111111, radians(-20) } },
-    { "TarsusL2", { 0b0010010000000000, 0b1101101111111111, radians(-20) } },
-    { "TarsusL3", { 0b0010001000000000, 0b1101110111111111, radians(-20) } },
-    { "TarsusL4", { 0b0010000100000000, 0b1101111011111111, radians(-20) } },
-    { "TarsusR1", { 0b0001100000000000, 0b1110011111111111, radians(-20) } },
-    { "TarsusR2", { 0b0001010000000000, 0b1110101111111111, radians(-20) } },
-    { "TarsusR3", { 0b0001001000000000, 0b1110110111111111, radians(-20) } },
-    { "TarsusR4", { 0b0001000100000000, 0b1110111011111111, radians(-20) } },
-    { "TibiaL1", { 0b0010100000000000, 0b1101011111111111, radians(-45) } },
-    { "TibiaL2", { 0b0010010000000000, 0b1101101111111111, radians(-45) } },
-    { "TibiaL3", { 0b0010001000000000, 0b1101110111111111, radians(-45) } },
-    { "TibiaL4", { 0b0010000100000000, 0b1101111011111111, radians(-45) } },
-    { "TibiaR1", { 0b0001100000000000, 0b1110011111111111, radians(-45) } },
-    { "TibiaR2", { 0b0001010000000000, 0b1110101111111111, radians(-45) } },
-    { "TibiaR3", { 0b0001001000000000, 0b1110110111111111, radians(-45) } },
-    { "TibiaR4", { 0b0001000100000000, 0b1110111011111111, radians(-45) } },
-    { "TrochanterL1", { 0b0010100000000000, 0b1001011111111111, radians(30) } },
-    { "TrochanterL2", { 0b0010010000000000, 0b1001101111111111, radians(10) } },
-    { "TrochanterL3", { 0b0010001000000000, 0b1001110111111111, radians(-15) } },
-    { "TrochanterL4", { 0b0010000100000000, 0b1001111011111111, radians(-40) } },
-    { "TrochanterR1", { 0b0001100000000000, 0b1010011111111111, radians(30) } },
-    { "TrochanterR2", { 0b0001010000000000, 0b1010101111111111, radians(10) } },
-    { "TrochanterR3", { 0b0001001000000000, 0b1010110111111111, radians(-15) } },
-    { "TrochanterR4", { 0b0001000100000000, 0b1010111011111111, radians(-40) } } };
+std::map<std::string, Spider::Part> Spider::SPIDER_PARTS     = {
+  { "Abdomin", { 0b1000000000000000, 0b1011111111111111, radians(0) } },
+  { "Eye", { 0b1000000000000000, 0b1011111111111111, radians(0) } },
+  { "FemurL1", { 0b0010100000000000, 0b1001011111111111, radians(35) } },
+  { "FemurL2", { 0b0010010000000000, 0b1001101111111111, radians(35) } },
+  { "FemurL3", { 0b0010001000000000, 0b1001110111111111, radians(35) } },
+  { "FemurL4", { 0b0010000100000000, 0b1001111011111111, radians(35) } },
+  { "FemurR1", { 0b0001100000000000, 0b1010011111111111, radians(35) } },
+  { "FemurR2", { 0b0001010000000000, 0b1010101111111111, radians(35) } },
+  { "FemurR3", { 0b0001001000000000, 0b1010110111111111, radians(35) } },
+  { "FemurR4", { 0b0001000100000000, 0b1010111011111111, radians(35) } },
+  { "Hip", { 0b0100000000000000, 0b0011111111111111, radians(0) } },
+  { "Neck", { 0b0100000000000000, 0b0011111111111111, radians(0) } },
+  { "PatellaL1", { 0b0010100000000000, 0b1101011111111111, radians(-45) } },
+  { "PatellaL2", { 0b0010010000000000, 0b1101101111111111, radians(-45) } },
+  { "PatellaL3", { 0b0010001000000000, 0b1101110111111111, radians(-45) } },
+  { "PatellaL4", { 0b0010000100000000, 0b1101111011111111, radians(-45) } },
+  { "PatellaR1", { 0b0001100000000000, 0b1110011111111111, radians(-45) } },
+  { "PatellaR2", { 0b0001010000000000, 0b1110101111111111, radians(-45) } },
+  { "PatellaR3", { 0b0001001000000000, 0b1110110111111111, radians(-45) } },
+  { "PatellaR4", { 0b0001000100000000, 0b1110111011111111, radians(-45) } },
+  { "Sternum", { 0b0100000000000000, 0b1011111111111111, radians(0) } },
+  { "TarsusL1", { 0b0010100000000000, 0b1101011111111111, radians(-20) } },
+  { "TarsusL2", { 0b0010010000000000, 0b1101101111111111, radians(-20) } },
+  { "TarsusL3", { 0b0010001000000000, 0b1101110111111111, radians(-20) } },
+  { "TarsusL4", { 0b0010000100000000, 0b1101111011111111, radians(-20) } },
+  { "TarsusR1", { 0b0001100000000000, 0b1110011111111111, radians(-20) } },
+  { "TarsusR2", { 0b0001010000000000, 0b1110101111111111, radians(-20) } },
+  { "TarsusR3", { 0b0001001000000000, 0b1110110111111111, radians(-20) } },
+  { "TarsusR4", { 0b0001000100000000, 0b1110111011111111, radians(-20) } },
+  { "TibiaL1", { 0b0010100000000000, 0b1101011111111111, radians(-45) } },
+  { "TibiaL2", { 0b0010010000000000, 0b1101101111111111, radians(-45) } },
+  { "TibiaL3", { 0b0010001000000000, 0b1101110111111111, radians(-45) } },
+  { "TibiaL4", { 0b0010000100000000, 0b1101111011111111, radians(-45) } },
+  { "TibiaR1", { 0b0001100000000000, 0b1110011111111111, radians(-45) } },
+  { "TibiaR2", { 0b0001010000000000, 0b1110101111111111, radians(-45) } },
+  { "TibiaR3", { 0b0001001000000000, 0b1110110111111111, radians(-45) } },
+  { "TibiaR4", { 0b0001000100000000, 0b1110111011111111, radians(-45) } },
+  { "TrochanterL1", { 0b0010100000000000, 0b1001011111111111, radians(30) } },
+  { "TrochanterL2", { 0b0010010000000000, 0b1001101111111111, radians(10) } },
+  { "TrochanterL3", { 0b0010001000000000, 0b1001110111111111, radians(-15) } },
+  { "TrochanterL4", { 0b0010000100000000, 0b1001111011111111, radians(-40) } },
+  { "TrochanterR1", { 0b0001100000000000, 0b1010011111111111, radians(30) } },
+  { "TrochanterR2", { 0b0001010000000000, 0b1010101111111111, radians(10) } },
+  { "TrochanterR3", { 0b0001001000000000, 0b1010110111111111, radians(-15) } },
+  { "TrochanterR4", { 0b0001000100000000, 0b1010111011111111, radians(-40) } }
+};

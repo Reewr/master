@@ -15,12 +15,11 @@ class btTransform;
 
 class Spider : public Drawable3D, public Logging::Log {
 public:
-
   struct Part {
     Part();
     Part(unsigned short group, unsigned short mask, float angle);
-    unsigned short collisionGroup;
-    unsigned short collisionMask;
+    unsigned short     collisionGroup;
+    unsigned short     collisionMask;
     float              restAngle;
     Drawable3D*        part;
     btHingeConstraint* hinge;

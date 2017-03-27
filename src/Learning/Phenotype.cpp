@@ -67,7 +67,7 @@ void Phenotype::update(float deltaTime) {
     part.second.hinge->enableAngularMotor(true, 0, 100);
     part.second.hinge->setMotorTarget(outputs[i] + part.second.restAngle,
                                       deltaTime);
-    i+=1;
+    i += 1;
   }
 
   // update physics
@@ -80,10 +80,10 @@ void Phenotype::update(float deltaTime) {
     if (part.second.hinge == nullptr)
       continue;
 
-    float rot = mmm::abs(part.second.hinge->getHingeAngle() + part.second.restAngle);
+    float rot =
+      mmm::abs(part.second.hinge->getHingeAngle() + part.second.restAngle);
     fitness[0] *= 1 / (rot + 1);
   }
-
 }
 
 void Phenotype::reset() {
