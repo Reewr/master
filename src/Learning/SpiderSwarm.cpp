@@ -54,6 +54,9 @@ SpiderSwarm::~SpiderSwarm() {
  *   original position.
  */
 void SpiderSwarm::update(float deltaTime) {
+  if (deltaTime > 0.5)
+    return;
+
   if (mCurrentDuration == 0)
     mLog->debug("Processing {} individuals", mBatchEnd - mBatchStart);
 
