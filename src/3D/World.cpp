@@ -116,6 +116,9 @@ void World::reset() {
  * @param element the drawable element to remove
  */
 void World::removeObject(Drawable3D* element) {
+  if (element == nullptr)
+    return;
+
   // remove them from the world first
   for (auto a : mElements) {
     if (a == element && element != nullptr) {
