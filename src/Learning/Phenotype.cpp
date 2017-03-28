@@ -16,7 +16,13 @@ Phenotype::Phenotype()
     , network(nullptr)
     , fitness(1) {}
 
-Phenotype::~Phenotype() {
+Phenotype::~Phenotype() {}
+
+/**
+ * @brief
+ *   Deletes the memory allocated for the phenotype.
+ */
+void Phenotype::remove() {
   delete world;
   delete spider;
   delete network;

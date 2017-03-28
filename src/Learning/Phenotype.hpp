@@ -31,6 +31,9 @@ struct Phenotype : Logging::Log {
   Phenotype();
   ~Phenotype();
 
+  // Deletes the memory allocated in reset
+  void remove();
+
   // Resets the phenotype back into its original state
   void reset();
 

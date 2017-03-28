@@ -28,6 +28,8 @@ SpiderSwarm::SpiderSwarm()
   setDefaultSubstrate();
   setDefaultPopulation();
 
+  mPhenotypes.reserve(mParameters->PopulationSize);
+
   recreatePhenotypes();
 }
 
@@ -37,6 +39,9 @@ SpiderSwarm::SpiderSwarm()
  *   some information, it has to be done before you delete things
  */
 SpiderSwarm::~SpiderSwarm() {
+  for(auto& p : mPhenotypes)
+    p.remove();
+
   mPhenotypes.clear();
   delete mParameters;
   delete mSubstrate;
@@ -159,24 +164,34 @@ void SpiderSwarm::updateEpoch() {
 void SpiderSwarm::recreatePhenotypes() {
   mLog->debug("Recreating {} phenotypes...", mParameters->PopulationSize);
 
-  mPhenotypes.resize(mParameters->PopulationSize);
-
   size_t index = 0;
   for (size_t i = 0; i < mPopulation->m_Species.size(); ++i) {
     auto& species = mPopulation->m_Species[i];
 
     for (size_t j = 0; j < species.m_Individuals.size(); ++j) {
-      auto& individual = species.m_Individuals[j];
+      auto&  individual = species.m_Individuals[j];
+      size_t len        = mPhenotypes.size();
 
+
+      // Add new element if the population size has increased
+      if (index >= mPhenotypes.size()) {
+        mLog->debug("Adding new spider due to increase in population");
+        mPhenotypes.push_back(Phenotype());
+      }
+
+      mLog->debug("Resetting {} of {}", index, len);
       mPhenotypes[index].reset();
+
+      mLog->debug("Building {} of {}", index, len);
       individual.BuildESHyperNEATPhenotype(*mPhenotypes[index].network,
                                            *mSubstrate,
                                            *mParameters);
-      index += 1;
+      mLog->debug("Done with {} of {} vs {}", index, len);
+      ++index;
     }
   }
 
-  mLog->debug("Created {} spiders", index);
+  mLog->debug("Created {} spiders", mPhenotypes.size());
 }
 
 void SpiderSwarm::setDefaultParameters() {
