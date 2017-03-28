@@ -38,6 +38,13 @@ public:
   // to update the position and rotation of the object
   void updateFromPhysics();
 
+  // If the element is never drawn, you can disable the automatic updating
+  // of position and rotation to save some calculations
+  void disableUpdatingFromPhysics();
+
+  // Enables the updating from physics if it has been disabled.
+  void enableUpdatingFromPhysics();
+
   // If the element has shape, rigidbody and motion it is considered
   // to have physics
   bool hasPhysics() const;
@@ -112,6 +119,7 @@ protected:
   std::vector<btTypedConstraint*> mConstraints;
   std::vector<Drawable3D*>        mChildren;
 
+  bool mUpdateFromPhysics;
   int mCollisionGroup;
   int mCollisionMask;
 };

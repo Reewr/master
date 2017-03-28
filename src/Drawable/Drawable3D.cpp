@@ -15,6 +15,7 @@ Drawable3D::Drawable3D()
     , mMotion(nullptr)
     , mBody(nullptr)
     , mChildren({})
+    , mUpdateFromPhysics(true)
     , mCollisionGroup(btBroadphaseProxy::StaticFilter)
     , mCollisionMask(btBroadphaseProxy::AllFilter ^
                      btBroadphaseProxy::StaticFilter) {}
@@ -31,6 +32,9 @@ Drawable3D::~Drawable3D() {}
  *   rotation and position
  */
 void Drawable3D::updateFromPhysics() {
+  if (!mUpdateFromPhysics)
+    return;
+
   if (hasPhysics()) {
     btTransform trans;
     mMotion->getWorldTransform(trans);
@@ -60,9 +64,43 @@ void Drawable3D::updateFromPhysics() {
                           0.0f,
                           1.0f);
   }
+}
+
+/**
+ * @brief
+ *   If it has been disable, enable updating position and rotations from physics
+ *   again.
+ */
+void Drawable3D::enableUpdatingFromPhysics() {
+  if (mUpdateFromPhysics)
+    return;
+
+  mUpdateFromPhysics = true;
 
   for (auto& child : mChildren)
-    child->updateFromPhysics();
+    child->enableUpdatingFromPhysics();
+
+  updateFromPhysics();
+}
+
+/**
+ * @brief
+ *   Sometimes its useful to just perform simulations and not care about
+ *   the rotation and position of a body.
+ *
+ *   This function optimizes the simulation by not updating position
+ *   and rotation of a body.
+ *
+ *   Note: Using this function makes rotation() and position() outdated
+ */
+void Drawable3D::disableUpdatingFromPhysics() {
+  if (!mUpdateFromPhysics)
+    return;
+
+  mUpdateFromPhysics = false;
+
+  for (auto& child : mChildren)
+    child->disableUpdatingFromPhysics();
 }
 
 /**

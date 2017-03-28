@@ -85,6 +85,7 @@ void SpiderSwarm::update(float deltaTime) {
 void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
   size_t draw = mmm::min(mBatchEnd - mBatchStart, mDrawLimit) + mBatchStart;
   for (size_t i = mBatchStart; i < draw; ++i) {
+    mPhenotypes[i].spider->enableUpdatingFromPhysics();
     mPhenotypes[i].spider->draw(prog, bindTexture);
   }
 }
@@ -181,8 +182,9 @@ void SpiderSwarm::recreatePhenotypes() {
 
       mLog->debug("Resetting {} of {}", index, len);
       mPhenotypes[index].reset();
+      mPhenotypes[index].spider->disableUpdatingFromPhysics();
 
-      mLog->debug("Building {} of {}", index, len);
+      mLog->debug("BuildESHyperNEATPhenotype {} of {}", index, len);
       individual.BuildESHyperNEATPhenotype(*mPhenotypes[index].network,
                                            *mSubstrate,
                                            *mParameters);
