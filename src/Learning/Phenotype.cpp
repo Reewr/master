@@ -40,8 +40,9 @@ void Phenotype::remove() {
  */
 void Phenotype::update(float deltaTime) {
 
-  // construct input vector
-  std::vector<double> inputs{};
+  // construct input vector which is known to be exactly 172 elements
+  std::vector<double> inputs;
+  inputs.reserve(172);
   for (auto& part : spider->parts()) {
     if (part.second.hinge == nullptr)
       continue;
