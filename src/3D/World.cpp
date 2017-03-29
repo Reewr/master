@@ -66,18 +66,43 @@ World::World(const vec3& gravity,
     new btDiscreteDynamicsWorld(mDispatcher, mPhase, mSolver, mCollision);
   mWorld->setGravity(btVector3(gravity.x, gravity.y, gravity.z));
 
+  //
+  // Configure solver
+  //
+
+  btContactSolverInfo& info = mWorld->getSolverInfo();
+
+  // info.m_tau = 0.6;
+  // info.m_damping = 1;
+  // info.m_friction = 0.3;
+  // info.m_restitution = 0;
+  // info.m_numIterations = 10;
+  // info.m_maxErrorReduction = 20;
+  // info.m_sor = 1;
+  // info.m_erp = 0.2;
+  // info.m_erp2 = 0.2;
+
+  info.m_globalCfm = 0.00001; // default = 0
+
+  // info.m_splitImpulse = 1;
+  // info.m_splitImpulsePenetrationThreshold = -0.04;
+  // info.m_splitImpulseTurnErp = 0.1;
+  // info.m_linearSlop = 0;
+  // info.m_warmstartingFactor = 0.85;
+  // info.m_solverMode = 260;
+  // info.m_restingContactRestitutionThreshold = 2;
+
   // If using a MLCP solver it is better to have a small A matrix according
   // to Bullet docs
   //
   // Otherwise have a large batch size since small batches have larger overhead
   // btSequentialImpulseConstraintSolver
-  if (solver != Solver::Standard) {
-    mWorld->getSolverInfo().m_minimumSolverBatchSize = 1;
-  } else {
-    mWorld->getSolverInfo().m_minimumSolverBatchSize = 128;
-  }
+  info.m_minimumSolverBatchSize = (solver != Solver::Standard) ? 1 : 128;
 
-  mWorld->getSolverInfo().m_globalCfm = 0.00001;
+  // info.m_minimumSolverBatchSize = 128;
+  // info.m_maxGyroscopicForce = 100;
+  // info.m_singleAxisRollingFrictionThreshold = 1e30;
+
 }
 
 World::~World() {
@@ -205,7 +230,7 @@ void World::removeObject(Drawable3D* element) {
  * @param deltaTime
  */
 void World::doPhysics(float deltaTime) {
-  mWorld->stepSimulation(deltaTime, 2);
+  mWorld->stepSimulation(deltaTime, 32);
 
   for (auto a : mElements)
     a->updateFromPhysics();
