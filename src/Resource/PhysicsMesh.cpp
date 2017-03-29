@@ -208,7 +208,7 @@ SubMeshPhysics PhysicsMesh::findByName(const std::string& name) {
  * @return
  */
 PhysicsElements* PhysicsMesh::createCopyAll() {
-  auto            meshes = getAll();
+  auto&            meshes = getAll();
   PhysicsElements elements;
 
   // First create copies of the rigid bodies together with new
@@ -229,10 +229,7 @@ PhysicsElements* PhysicsMesh::createCopyAll() {
     mat.setFromOpenGLSubMatrix(mmm::transpose(t).rawdata);
 
     btMotionState* motion = new btDefaultMotionState(btTransform(mat, pos));
-    // btMotionState* motion = new
-    // btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0,
-    // 0, 0)));
-    btRigidBody* body = new btRigidBody(mass, motion, shape, inertia);
+    btRigidBody* body     = new btRigidBody(mass, motion, shape, inertia);
 
     elements.bodies[mesh.first]  = body;
     elements.motions[mesh.first] = motion;
@@ -413,8 +410,10 @@ bool hasString(std::vector<std::string>& v, const std::string& s) {
  *
  * @return
  */
-std::vector<std::pair<std::string, SubMeshPhysics>> PhysicsMesh::getAll() {
-  std::vector<std::pair<std::string, SubMeshPhysics>> meshes;
+const std::vector<std::pair<std::string, SubMeshPhysics>>& PhysicsMesh::getAll() {
+  if (mAllElements.size())
+    return mAllElements;
+
   std::vector<std::string> meshNames = mMesh->names();
 
   for (auto& name : names()) {
@@ -434,10 +433,10 @@ std::vector<std::pair<std::string, SubMeshPhysics>> PhysicsMesh::getAll() {
       continue;
     }
 
-    meshes.push_back(std::make_pair(name, findByName(name)));
+    mAllElements.push_back(std::make_pair(name, findByName(name)));
   }
 
-  return meshes;
+  return mAllElements;
 }
 
 const std::shared_ptr<Mesh>& PhysicsMesh::mesh() const {

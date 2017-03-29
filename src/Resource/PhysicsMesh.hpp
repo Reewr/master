@@ -73,7 +73,7 @@ public:
   //
   // This may also include mesh without rigid body and rigid body without
   // mesh
-  std::vector<std::pair<std::string, SubMeshPhysics>> getAll();
+  const std::vector<std::pair<std::string, SubMeshPhysics>>& getAll();
 
   // Returns the mesh
   const std::shared_ptr<Mesh>& mesh() const;
@@ -87,6 +87,7 @@ private:
   std::map<std::string, std::vector<btTypedConstraint*>> mConstraints;
   std::map<std::string, btRigidBody*>                    mBodies;
   std::map<btRigidBody*, std::string>                    mNames;
+  std::vector<std::pair<std::string, SubMeshPhysics>>    mAllElements;
 
   std::vector<PhysicsElements> mCopies;
 };
