@@ -32,6 +32,10 @@ endmacro()
 # build dependencies as shared libraries
 set(BUILD_SHARED_LIBS ON)
 
+# In order for multithreading to work with bullet, profiling has to be turned
+# off.
+add_definitions(-DBT_NO_PROFILE=1)
+
 # Find & add TinyXML2
 #
 # Note:
@@ -394,10 +398,6 @@ add_definitions(-DSOL_SAFE_USERTYPE=1)
 # This tells BackwardCpp that we are using DW as the inspector of stacks,
 # enabling stacktraces on segmentation faults or uncaught errors
 add_definitions(-DBACKWARD_HAS_DW=1)
-
-# In order for multithreading to work with bullet, profiling has to be turned
-# off.
-add_definitions(-DBT_NO_PROFILE=1)
 
 # Note regarding TinyXML2:
 # ------------------------
