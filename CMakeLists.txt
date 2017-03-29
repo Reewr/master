@@ -377,13 +377,26 @@ find_library(ASSIMP_LIBRARY NAME assimp)
 find_library(BULLET_LIBRARY NAME bullet)
 find_library(MultiNEAT_LIBRARY NAME MultiNEAT)
 
+
+# Macro definitions
+# ---------------------
 # Below follows defines that is defined for all our code base. These
 # defines are defined here so that they're defined for all the code as
 # defining them inside the main file did not work properly.
+
+# These two SOL related macros sacrifices a bit of performance for safety when
+# it comes to checking arguments and usertypes in Lua. If not enabled, the
+# engine will crash instead of logging error when incorrect arguments are
+# sent to C++ functions from Lua.
 add_definitions(-DSOL_CHECK_ARGUMENTS=1)
 add_definitions(-DSOL_SAFE_USERTYPE=1)
+
+# This tells BackwardCpp that we are using DW as the inspector of stacks,
+# enabling stacktraces on segmentation faults or uncaught errors
 add_definitions(-DBACKWARD_HAS_DW=1)
 
+# In order for multithreading to work with bullet, profiling has to be turned
+# off.
 add_definitions(-DBT_NO_PROFILE=1)
 
 # Note regarding TinyXML2:
