@@ -272,24 +272,24 @@ PhysicsElements* PhysicsMesh::createCopyAll() {
           n->setLimit(h->getLowerLimit(), h->getUpperLimit());
         }
 
-        mLog->debug("Constraint between A: '{}' -> B: {}", fromConstraint,
-        toConstraint);
+        // mLog->debug("Constraint between A: '{}' -> B: {}", fromConstraint,
+        // toConstraint);
 
-        const btVector3& aOrigin = aFrame.getOrigin();
-        const btVector3& bOrigin = bFrame.getOrigin();
+        // const btVector3& aOrigin = aFrame.getOrigin();
+        // const btVector3& bOrigin = bFrame.getOrigin();
 
-        mLog->debug("  PivotA: [{}, {}, {}]", aOrigin.x(), aOrigin.y(), aOrigin.z());
-        mLog->debug("  PivotB: [{}, {}, {}]", bOrigin.x(), bOrigin.y(), bOrigin.z());
+        // mLog->debug("  PivotA: [{}, {}, {}]", aOrigin.x(), aOrigin.y(), aOrigin.z());
+        // mLog->debug("  PivotB: [{}, {}, {}]", bOrigin.x(), bOrigin.y(), bOrigin.z());
 
-        const btVector3& axisRowA = aFrame.getBasis().getColumn(2);
-        const btVector3& axisRowB = bFrame.getBasis().getColumn(2);
+        // const btVector3& axisRowA = aFrame.getBasis().getColumn(2);
+        // const btVector3& axisRowB = bFrame.getBasis().getColumn(2);
 
-        mLog->debug("  AxisA: [{}, {}, {}]", axisRowA.x(), axisRowA.y(), axisRowA.z());
-        mLog->debug("  AxisB: [{}, {}, {}]", axisRowB.x(), axisRowB.y(), axisRowB.z());
+        // mLog->debug("  AxisA: [{}, {}, {}]", axisRowA.x(), axisRowA.y(), axisRowA.z());
+        // mLog->debug("  AxisB: [{}, {}, {}]", axisRowB.x(), axisRowB.y(), axisRowB.z());
 
-        if (h->hasLimit())
-          mLog->debug("  hasLimit, lower: {}, upper: {}", h->getLowerLimit(),
-          h->getUpperLimit());
+        // if (h->hasLimit())
+        //   mLog->debug("  hasLimit, lower: {}, upper: {}", h->getLowerLimit(),
+        //   h->getUpperLimit());
 
         constraintCopy = n;
         break;
