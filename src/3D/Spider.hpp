@@ -10,6 +10,7 @@ class PhysicsMesh;
 struct PhysicsElements;
 class Program;
 
+class btGeneric6DofSpringConstraint;
 class btHingeConstraint;
 class btTransform;
 
@@ -23,6 +24,7 @@ public:
     float              restAngle;
     Drawable3D*        part;
     btHingeConstraint* hinge;
+    btGeneric6DofSpringConstraint* dof;
   };
 
   Spider();

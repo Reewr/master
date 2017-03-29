@@ -19,14 +19,16 @@ Spider::Part::Part()
     , collisionMask(-1)
     , restAngle(0)
     , part(nullptr)
-    , hinge(nullptr) {}
+    , hinge(nullptr)
+    , dof(nullptr) {}
 
 Spider::Part::Part(unsigned short group, unsigned short mask, float angle)
     : collisionGroup(group)
     , collisionMask(mask)
     , restAngle(angle)
     , part(nullptr)
-    , hinge(nullptr) {}
+    , hinge(nullptr)
+    , dof(nullptr) {}
 
 Spider::Spider() : Logging::Log("Spider") {
   ResourceManager* r = mAsset->rManager();
@@ -64,9 +66,30 @@ Spider::Spider() : Logging::Log("Spider") {
         if (nameA == mesh.first) {
           mParts[mesh.first].hinge = hinge;
         }
+      } else if (c->getConstraintType() ==
+                 btTypedConstraintType::D6_SPRING_CONSTRAINT_TYPE) {
+
+        auto* dof = (btGeneric6DofSpringConstraint*) c;
+
+        auto*       a = &(dof->getRigidBodyA());
+        auto*       b = &(dof->getRigidBodyB());
+        std::string nameA;
+        std::string nameB;
+
+        for (auto& m : mElements->bodies) {
+          if (m.second == a)
+            nameA = m.first;
+          if (m.second == b)
+            nameB = m.first;
+        }
+
+        if (nameA == mesh.first) {
+          mParts[mesh.first].dof = dof;
+        }
+
       }
 
-      child->addConstraint(c);
+        child->addConstraint(c);
     }
 
     mParts[mesh.first].part = child;

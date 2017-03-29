@@ -44,16 +44,21 @@ void Phenotype::update(float deltaTime) {
   std::vector<double> inputs;
   inputs.reserve(172);
   for (auto& part : spider->parts()) {
-    if (part.second.hinge == nullptr)
-      continue;
+    if (part.second.hinge != nullptr) {
 
-    vec3  ang = part.second.part->angularVelocity();
-    float rot = part.second.hinge->getHingeAngle();
+      vec3  ang = part.second.part->angularVelocity();
+      float rot = part.second.hinge->getHingeAngle();
 
-    inputs.push_back(ang.x);
-    inputs.push_back(ang.y);
-    inputs.push_back(ang.z);
-    inputs.push_back(rot - part.second.restAngle);
+      inputs.push_back(ang.x);
+      inputs.push_back(ang.y);
+      inputs.push_back(ang.z);
+      inputs.push_back(rot - part.second.restAngle);
+
+    } else if (part.second.dof != nullptr) {
+
+      // TODO
+
+    }
   }
 
   // activate network to retrieve output vector
@@ -65,16 +70,32 @@ void Phenotype::update(float deltaTime) {
   // set hinge motor targets based on network output
   size_t i = 0;
   for (auto& part : spider->parts()) {
-    if (part.second.hinge == nullptr)
-      continue;
+    if (part.second.hinge != nullptr) {
 
-    // part.second.hinge->enableAngularMotor(true, 0, 100);
-    // part.second.hinge->setMotorTarget(part.second.restAngle, deltaTime);
+      part.second.hinge->enableAngularMotor(true, 0, 1);
 
-    part.second.hinge->enableAngularMotor(true, 0, 100);
-    part.second.hinge->setMotorTarget(outputs[i] + part.second.restAngle,
-                                      deltaTime);
-    i += 1;
+      auto speed        = 5.f;
+      auto currentAngle = part.second.hinge->getHingeAngle();
+      auto targetAngle  =
+        currentAngle +
+        mmm::clamp(part.second.restAngle - currentAngle, -speed, speed) *
+        deltaTime;
+
+      part.second.hinge->setMotorTarget(targetAngle, deltaTime);
+
+      // part.second.hinge->setMotorTarget(part.second.restAngle, deltaTime);
+
+      // part.second.hinge->setMotorTarget(outputs[i] + part.second.restAngle,
+      //                                   deltaTime);
+
+      i += 1;
+
+    } else if (part.second.dof != nullptr) {
+
+      // TODO
+
+      i += 1;
+    }
   }
 
   // update physics
@@ -84,12 +105,17 @@ void Phenotype::update(float deltaTime) {
 
   // testing fitness...
   for (auto& part : spider->parts()) {
-    if (part.second.hinge == nullptr)
-      continue;
+    if (part.second.hinge != nullptr) {
 
-    float rot =
-      mmm::abs(part.second.hinge->getHingeAngle() + part.second.restAngle);
-    fitness[0] *= 1 / (rot + 1);
+      float r =
+        mmm::abs(part.second.hinge->getHingeAngle() + part.second.restAngle);
+      fitness[0] *= 1 / (r + 1);
+
+    } else if (part.second.dof != nullptr) {
+
+      // TODO
+
+    }
   }
 }
 
