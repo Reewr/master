@@ -5,8 +5,12 @@
 #include "../Input/Event.hpp"
 #include "../OpenGLHeaders.hpp"
 #include <algorithm>
-#include <btBulletDynamicsCommon.h>
 #include <assert.h>
+#include <btBulletDynamicsCommon.h>
+#include <BulletDynamics/MLCPSolvers/btDantzigSolver.h>
+#include <BulletDynamics/MLCPSolvers/btLemkeSolver.h>
+#include <BulletDynamics/MLCPSolvers/btSolveProjectedGaussSeidel.h>
+#include <BulletDynamics/MLCPSolvers/btMLCPSolver.h>
 
 using mmm::vec3;
 
@@ -16,8 +20,11 @@ using mmm::vec3;
  *
  * @param gravity
  */
-World::World(const vec3& gravity)
+World::World(const vec3& gravity,
+             World::Solver solver,
+             World::Broadphase phase)
     : Logging::Log("World")
+    , mSolverInterface(nullptr)
     , mHasMousePickup(false)
     , mPickedBody(nullptr)
     , mPickedConstraint(nullptr)
@@ -27,11 +34,50 @@ World::World(const vec3& gravity)
   mCollision  = new btDefaultCollisionConfiguration();
   mDispatcher = new btCollisionDispatcher(mCollision);
   mPhase      = new btDbvtBroadphase();
-  mSolver     = new btSequentialImpulseConstraintSolver;
+
+  switch (solver) {
+    case Solver::Standard:
+      mSolver = new btSequentialImpulseConstraintSolver;
+      break;
+    case Solver::Dantzig:
+      mSolverInterface = new btDantzigSolver();
+      mSolver          = new btMLCPSolver(mSolverInterface);
+      break;
+    case Solver::Lemke:
+      mSolverInterface = new btLemkeSolver();
+      mSolver          = new btMLCPSolver(mSolverInterface);
+      break;
+    case Solver::ProjectedGaussSeidel:
+      mSolverInterface = new btSolveProjectedGaussSeidel();
+      mSolver          = new btMLCPSolver(mSolverInterface);
+      break;
+  }
+
+  switch (phase) {
+    case Broadphase::Dbvt:
+      mPhase = new btDbvtBroadphase();
+      break;
+    case Broadphase::AxisSweep:
+      mPhase = new btAxisSweep3(btVector3(-1000, -1000, -1000),
+                                btVector3(1000, 1000, 1000));
+  }
 
   mWorld =
     new btDiscreteDynamicsWorld(mDispatcher, mPhase, mSolver, mCollision);
   mWorld->setGravity(btVector3(gravity.x, gravity.y, gravity.z));
+
+  // If using a MLCP solver it is better to have a small A matrix according
+  // to Bullet docs
+  //
+  // Otherwise have a large batch size since small batches have larger overhead
+  // btSequentialImpulseConstraintSolver
+  if (solver != Solver::Standard) {
+    mWorld->getSolverInfo().m_minimumSolverBatchSize = 1;
+  } else {
+    mWorld->getSolverInfo().m_minimumSolverBatchSize = 128;
+  }
+
+  mWorld->getSolverInfo().m_globalCfm = 0.00001;
 }
 
 World::~World() {
@@ -42,6 +88,7 @@ World::~World() {
 
   delete mWorld;
   delete mSolver;
+  delete mSolverInterface;
   delete mCollision;
   delete mDispatcher;
   delete mPhase;

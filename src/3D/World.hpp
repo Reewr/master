@@ -11,7 +11,8 @@ class btDiscreteDynamicsWorld;
 class btPoint2PointConstraint;
 class btRigidBody;
 class btSequentialImpulseConstraintSolver;
-struct btDbvtBroadphase;
+class btMLCPSolverInterface;
+class btBroadphaseInterface;
 struct btOverlapFilterCallback;
 
 class Drawable3D;
@@ -23,7 +24,22 @@ namespace Input {
 
 class World : public Logging::Log {
 public:
-  World(const mmm::vec3& gravity);
+
+  enum class Solver {
+    Standard,
+    Dantzig,
+    Lemke,
+    ProjectedGaussSeidel
+  };
+
+  enum class Broadphase {
+    Dbvt,
+    AxisSweep
+  };
+
+  World(const mmm::vec3& gravity,
+        Solver solver = Solver::Standard,
+        Broadphase phase = Broadphase::Dbvt);
   ~World();
 
   // adds an element to the physics world
@@ -68,11 +84,12 @@ private:
 
   void removePickingConstraint();
 
-  btDbvtBroadphase*                    mPhase;
+  btBroadphaseInterface*               mPhase;
   btSequentialImpulseConstraintSolver* mSolver;
   btDefaultCollisionConfiguration*     mCollision;
   btCollisionDispatcher*               mDispatcher;
   btDiscreteDynamicsWorld*             mWorld;
+  btMLCPSolverInterface*               mSolverInterface;
 
   // Mouse pickup variables
   bool                     mHasMousePickup;
