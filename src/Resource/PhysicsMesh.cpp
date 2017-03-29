@@ -306,9 +306,35 @@ PhysicsElements* PhysicsMesh::createCopyAll() {
       case btTypedConstraintType::CONTACT_CONSTRAINT_TYPE:
         mLog->error("No duplication handler for Contact constraint");
         break;
-      case btTypedConstraintType::D6_SPRING_CONSTRAINT_TYPE:
-        mLog->error("No duplication handler for D6Spring constraint");
+      case btTypedConstraintType::D6_SPRING_CONSTRAINT_TYPE: {
+
+        btGeneric6DofSpringConstraint* d =
+          dynamic_cast<btGeneric6DofSpringConstraint*>(c);
+
+        const btTransform& aFrame = d->getFrameOffsetA();
+        const btTransform& bFrame = d->getFrameOffsetB();
+
+        btGeneric6DofSpringConstraint* n =
+          new btGeneric6DofSpringConstraint(*a, *b, aFrame, bFrame, true);
+
+        btVector3 lll;
+        btVector3 lul;
+        btVector3 all;
+        btVector3 aul;
+
+        d->getLinearLowerLimit(lll);
+        d->getLinearUpperLimit(lul);
+        d->getAngularLowerLimit(all);
+        d->getAngularUpperLimit(aul);
+
+        n->setLinearLowerLimit(lll);
+        n->setLinearUpperLimit(lul);
+        n->setAngularLowerLimit(all);
+        n->setAngularUpperLimit(aul);
+
+        constraintCopy = n;
         break;
+      }
       case btTypedConstraintType::GEAR_CONSTRAINT_TYPE:
         mLog->error("No duplication handler for Gear constraint");
         break;
