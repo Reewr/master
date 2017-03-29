@@ -147,6 +147,7 @@ void PhysicsMesh::unload() {
   mConstraints.clear();
   mBodies.clear();
   mNames.clear();
+  mAllElements.clear();
   mFileloader->deleteAllData();
 
   setLoaded(false);
