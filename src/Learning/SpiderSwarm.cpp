@@ -4,6 +4,7 @@
 #include "../3D/World.hpp"
 
 #include <btBulletDynamicsCommon.h>
+#include <thread>
 
 #include <Genome.h>
 #include <NeuralNetwork.h>
@@ -23,6 +24,17 @@ SpiderSwarm::SpiderSwarm()
     , mParameters(nullptr)
     , mSubstrate(nullptr)
     , mPopulation(nullptr) {
+
+// Save some memory if bullet has profiling on and therefore
+// does not allow for threading
+#ifdef BT_NO_PROFILE
+  mWorker = [](std::vector<Phenotype>::iterator begin,
+               std::vector<Phenotype>::iterator end,
+               float                            deltaTime) {
+    for (auto it = begin; it != end; ++it)
+      it->update(deltaTime);
+  };
+#endif
 
   setDefaultParameters();
   setDefaultSubstrate();
@@ -92,11 +104,55 @@ void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
 
 /**
  * @brief
+ *   Works exactly like `updateNormal` but instead of performing everything in
+ *   a single thread, it runs multiple threads (as many as the system can
+ *   support, returned by std::thread::hardware_concurrency or the max
+ *   number in the batch size)
+ *
+ *   Please keep in mind that this will not work if BT_NO_PROFILE is not
+ *   defined and it will fall back to using `updateNormal`. The same
+ *   goes if the system does not support threading (where the
+ *   std::thread:;hardware_concurrency returns 0)
+ *
+ * @param deltaTime
+ */
+void SpiderSwarm::updateUsingThreads(float deltaTime) {
+
+// If Bullet profiling is on, we cant multithread.
+#ifndef BT_NO_PROFILE
+  return updateNormal(deltaTime);
+#else
+  int nThread = mmm::min(std::thread::hardware_concurrency(), mBatchSize);
+
+  // If batchsize == 0 or hardware_concurrency returns 0, do nothing
+  if (nThread == 0)
+    return updateNormal(deltaTime);
+
+  std::vector<std::thread> threads(nThread);
+  int grainSize = mBatchSize / threads.size();
+  auto workIter = std::begin(mPhenotypes) + mBatchStart;
+
+  for(auto it = std::begin(threads); it != std::end(threads) - 1; ++it) {
+    *it = std::thread(mWorker, workIter, workIter + grainSize, deltaTime);
+    workIter += grainSize;
+  }
+
+  threads.back() = std::thread(mWorker, workIter, std::begin(mPhenotypes) + mBatchEnd, deltaTime);
+
+  for(auto&& i : threads)
+    i.join();
+#endif
+}
+
+/**
+ * @brief
  *   Goes through the current patch and performs the following on it:
  *
  *   1. Activate each network and use output to set information on the spider
  *   2. Perform physics to see the changes of the given output
  *   3. Update fitness based on how well it did.
+ *
+ *   See `updateUsingThreads` for the threaded version
  *
  * @param deltaTime
  */

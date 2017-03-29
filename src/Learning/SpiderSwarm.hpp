@@ -50,6 +50,17 @@ private:
   float  mIterationDuration;
   size_t mDrawLimit;
 
+// Save some memory if bullet has profiling on and therefore
+// does not allow for threading
+#ifdef BT_NO_PROFILE
+  std::function<void(std::vector<Phenotype>::iterator begin,
+                     std::vector<Phenotype>::iterator end,
+                     float deltaTime)> mWorker;
+#endif
+
+  // If called, it will use as many threads as possible to
+  void updateUsingThreads(float deltaTime);
+
   // Goes through the current batch and updates each spider in
   // current batch with physics and neural network activation
   void updateNormal(float deltaTime);

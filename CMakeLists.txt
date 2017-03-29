@@ -384,6 +384,8 @@ add_definitions(-DSOL_CHECK_ARGUMENTS=1)
 add_definitions(-DSOL_SAFE_USERTYPE=1)
 add_definitions(-DBACKWARD_HAS_DW=1)
 
+add_definitions(-DBT_NO_PROFILE=1)
+
 # Note regarding TinyXML2:
 # ------------------------
 # Due to a strange usecase in TinyXML2, there's some issue with undefined
