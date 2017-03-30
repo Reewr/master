@@ -4,6 +4,10 @@
 
 #include "../Log.hpp"
 
+struct btDefaultMotionState;
+class btRigidBody;
+class btStaticPlaneShape;
+
 class World;
 class Spider;
 
@@ -27,6 +31,10 @@ struct Phenotype : Logging::Log {
   Spider*              spider;
   NEAT::NeuralNetwork* network;
   mmm::vec<8>          fitness;
+
+  btDefaultMotionState*      planeMotion;
+  btRigidBody*               planeBody;
+  static btStaticPlaneShape* plane;
 
   Phenotype();
   ~Phenotype();

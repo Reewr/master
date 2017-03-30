@@ -26,6 +26,8 @@ void Phenotype::remove() {
   delete world;
   delete spider;
   delete network;
+  delete planeMotion;
+  delete planeBody;
 }
 
 /**
@@ -127,6 +129,15 @@ void Phenotype::reset() {
   else
     world->reset();
 
+  if (planeBody == nullptr) {
+    planeMotion = new btDefaultMotionState(
+      btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1, 0)));
+    btRigidBody::btRigidBodyConstructionInfo consInfo(
+      0, planeMotion, plane, btVector3(0, 0, 0));
+    planeBody = new btRigidBody(consInfo);
+    world->world()->addRigidBody(planeBody);
+  }
+
   if (spider == nullptr) {
     spider = new Spider();
     world->addObject(spider);
@@ -141,3 +152,6 @@ void Phenotype::reset() {
 
   fitness = mmm::vec<8>(1);
 }
+
+btStaticPlaneShape* Phenotype::plane =
+  new btStaticPlaneShape(btVector3(0, 1, 0), 1);
