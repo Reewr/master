@@ -199,6 +199,50 @@ SubMeshPhysics PhysicsMesh::findByName(const std::string& name) {
   return s;
 }
 
+PhysicsElements* PhysicsMesh::createAll() {
+  auto&            meshes  = getAll();
+  PhysicsElements* elements = new PhysicsElements();
+
+  // First create copies of the rigid bodies together with new
+  // motion state based on the internal variables of the rigid bodies
+  for (auto& mesh : meshes) {
+    btRigidBody* mainBody = mesh.second.body;
+    btCollisionShape* shape = mainBody->getCollisionShape();
+
+    btMatrix3x3      mat;
+    const mmm::mat4& t      = mesh.second.subMesh->transform();
+    const mmm::vec3& matPos = mmm::dropColumns<3>(t).xyz;
+
+    // TODO fix static +2 up translation
+    const btVector3  pos     = btVector3(matPos.x, matPos.y + 1, matPos.z);
+
+    mat.setFromOpenGLSubMatrix(mmm::transpose(t).rawdata);
+
+    btMotionState* motion = new btDefaultMotionState(btTransform(mat, pos));
+    btVector3 inertia;
+    shape->calculateLocalInertia(0.1, inertia);
+    mainBody->setMotionState(motion);
+    mainBody->setMassProps(0.1, inertia);
+
+    elements->bodies[mesh.first]  = mainBody;
+    elements->meshes[mesh.first]  = mesh.second.subMesh;
+    elements->motions[mesh.first] = mainBody->getMotionState();
+  }
+
+  for (int i = 0; i < mFileloader->getNumConstraints(); ++i) {
+    btTypedConstraint* c              = mFileloader->getConstraintByIndex(i);
+    const std::string& fromConstraint = findNameByPointer(&c->getRigidBodyA());
+    const std::string& toConstraint   = findNameByPointer(&c->getRigidBodyB());
+
+    if (c != nullptr) {
+      elements->constraints[fromConstraint].push_back(c);
+      elements->constraints[toConstraint].push_back(c);
+    }
+  }
+
+  return elements;
+}
+
 /**
  * @brief
  *   Creates a copy of all the physics elements stored and returns those to you.

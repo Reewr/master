@@ -16,6 +16,7 @@ class btRigidBody;
 class btBulletWorldImporter;
 class btTypedConstraint;
 class btMotionState;
+class btDiscreteDynamicsWorld;
 
 /**
  * @brief
@@ -61,6 +62,7 @@ public:
   // rigidbodies to a world. This copies each rigidBody, sets a motion state
   // based on the transforms in the Mesh and setup the constraints.
   PhysicsElements* createCopyAll();
+  PhysicsElements* createAll();
 
   // Releases the resources allocated for a copy of the elements.
   //
@@ -82,6 +84,7 @@ private:
   std::string findNameByPointer(btRigidBody* body);
 
   btBulletWorldImporter* mFileloader;
+  btBulletWorldImporter* mTestloader;
   std::shared_ptr<Mesh>  mMesh;
 
   std::map<std::string, std::vector<btTypedConstraint*>> mConstraints;
