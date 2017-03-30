@@ -33,7 +33,7 @@ Spider::Part::Part(unsigned short group, unsigned short mask, float angle)
 Spider::Spider() : Logging::Log("Spider") {
   ResourceManager* r = mAsset->rManager();
   mMesh              = r->get<PhysicsMesh>("PhysicsMesh::Spider");
-  mElements          = mMesh->createAll();
+  mElements          = mMesh->createCopyAll();
   mParts             = SPIDER_PARTS;
 
   for (auto& mesh : mElements->meshes) {
