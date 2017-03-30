@@ -123,9 +123,7 @@ void Phenotype::update(float deltaTime) {
 
 void Phenotype::reset() {
   if (world == nullptr)
-    world = new World(mmm::vec3(0, -9.81, 0),
-                      World::Solver::Dantzig,
-                      World::Broadphase::AxisSweep);
+    world = new World(mmm::vec3(0, -9.81, 0));
   else
     world->reset();
 
