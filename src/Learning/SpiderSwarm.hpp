@@ -61,6 +61,8 @@ private:
   // If called, it will use as many threads as possible to
   void updateUsingThreads(float deltaTime);
 
+  void updateThreadBatches(float deltaTime);
+
   // Goes through the current batch and updates each spider in
   // current batch with physics and neural network activation
   void updateNormal(float deltaTime);

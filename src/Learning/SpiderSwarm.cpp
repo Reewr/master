@@ -77,17 +77,25 @@ void SpiderSwarm::update(float deltaTime) {
   if (mCurrentDuration == 0)
     mLog->debug("Processing {} individuals", mBatchEnd - mBatchStart);
 
-  if (mCurrentDuration < mIterationDuration) {
 #ifndef BT_NO_PROFILE
+
+  if (mCurrentDuration < mIterationDuration) {
     updateNormal(deltaTime);
-#else
-    updateUsingThreads(deltaTime);
-#endif
   } else if (mBatchEnd < mPhenotypes.size()) {
     setNextBatch();
   } else {
     updateEpoch();
   }
+
+#else
+
+  if (mCurrentDuration < mIterationDuration) {
+    updateThreadBatches(deltaTime);
+  } else {
+    updateEpoch();
+  }
+
+#endif
 }
 
 /**
@@ -126,14 +134,14 @@ void SpiderSwarm::updateUsingThreads(float deltaTime) {
 #ifndef BT_NO_PROFILE
   return updateNormal(deltaTime);
 #else
-  int nThread = mmm::min(std::thread::hardware_concurrency(), mBatchSize);
-
+  int size    = mBatchEnd - mBatchStart;
+  int nThread = mmm::min(std::thread::hardware_concurrency(), size);
   // If batchsize == 0 or hardware_concurrency returns 0, do nothing
-  if (nThread == 0)
+  if (nThread <= 0)
     return updateNormal(deltaTime);
 
   std::vector<std::thread> threads(nThread);
-  int grainSize = mBatchSize / threads.size();
+  int grainSize = size / threads.size();
   auto workIter = std::begin(mPhenotypes) + mBatchStart;
 
   for(auto it = std::begin(threads); it != std::end(threads) - 1; ++it) {
@@ -148,6 +156,28 @@ void SpiderSwarm::updateUsingThreads(float deltaTime) {
 
   mCurrentDuration += deltaTime;
 #endif
+}
+
+void SpiderSwarm::updateThreadBatches(float deltaTime) {
+
+  int size    = mPhenotypes.size();
+  int nThread = mmm::min(std::thread::hardware_concurrency(), size);
+  std::vector<std::thread> threads(nThread);
+
+  auto workIter = std::begin(mPhenotypes);
+  int grainSize = size / threads.size();
+
+  for (auto it = std::begin(threads); it != std::end(threads) - 1; ++it) {
+    *it = std::thread(mWorker, workIter, workIter + grainSize, deltaTime);
+    workIter += grainSize;
+  }
+
+  threads.back() = std::thread(mWorker, workIter, std::end(mPhenotypes), deltaTime);
+
+  for(auto&& i : threads)
+    i.join();
+
+  mCurrentDuration += deltaTime;
 }
 
 /**
