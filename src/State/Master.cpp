@@ -71,6 +71,9 @@ Master::Master(Asset* a) : mAsset(a) {
   // for (auto m : test->names()) {
   //   mLog->debug("{}", m);
   // }
+
+  // just run physics once so the terrain is positioned correctly
+  mWorld->doPhysics(1);
 }
 
 Master::~Master() {
