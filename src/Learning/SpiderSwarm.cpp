@@ -285,6 +285,12 @@ void SpiderSwarm::recreatePhenotypes() {
     }
   }
 
+  while (index < mPhenotypes.size()) {
+    mPhenotypes.back().remove();
+    mPhenotypes.pop_back();
+    mLog->debug("Removing spider due to decrease in population");
+  }
+
   mLog->debug("Created {} spiders", mPhenotypes.size());
 }
 
