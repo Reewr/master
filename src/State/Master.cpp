@@ -177,8 +177,8 @@ void Master::update(float deltaTime) {
     }
 
     part.second.hinge->enableAngularMotor(true,
-        diff * 20.0,
-        20.0);
+        diff * 10.0,
+        1.0);
     mLog->debug("Setting motor on: {}, from {} to {}, velocity: {}, torque: {}, {}, {}",
                 part.first,
                 mmm::degrees(part.second.hinge->getHingeAngle()),
