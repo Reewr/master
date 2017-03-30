@@ -307,6 +307,10 @@ void World::input(Camera* camera, const Input::Event& event) {
   }
 }
 
+btDiscreteDynamicsWorld* World::world() {
+  return mWorld;
+}
+
 /**
  * @brief
  *   When the user clicks the mouse, this function is called to see whether

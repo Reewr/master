@@ -76,6 +76,8 @@ public:
   // The function that handles input events
   void input(Camera* camera, const Input::Event& event);
 
+  btDiscreteDynamicsWorld* world();
+
 private:
   bool pickBody(const mmm::vec3& rayFromWorld, const mmm::vec3& rayToWorld);
 
