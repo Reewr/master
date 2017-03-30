@@ -33,10 +33,11 @@ Spider::Part::Part(unsigned short group, unsigned short mask, float angle)
 Spider::Spider() : Logging::Log("Spider") {
   ResourceManager* r = mAsset->rManager();
   mMesh              = r->get<PhysicsMesh>("PhysicsMesh::Spider");
-  mElements          = mMesh->createCopyAll();
+  mElements          = mMesh->createAll();
   mParts             = SPIDER_PARTS;
 
   for (auto& mesh : mElements->meshes) {
+    mElements->bodies[mesh.first]->setDeactivationTime(100000);
     Drawable3D* child = new MeshPart(mesh.second,
                                      mElements->bodies[mesh.first],
                                      mElements->motions[mesh.first]);
