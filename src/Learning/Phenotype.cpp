@@ -14,6 +14,8 @@ Phenotype::Phenotype()
     , world(nullptr)
     , spider(nullptr)
     , network(nullptr)
+    , planeMotion(nullptr)
+    , planeBody(nullptr)
     , fitness(1) {}
 
 Phenotype::~Phenotype() {}
