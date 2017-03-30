@@ -111,8 +111,8 @@ void Phenotype::update(float deltaTime) {
     if (part.second.hinge != nullptr) {
 
       float r =
-        mmm::abs(part.second.hinge->getHingeAngle() + part.second.restAngle);
-      fitness[0] *= 1 / (r + 1);
+        mmm::abs(part.second.hinge->getHingeAngle() - part.second.restAngle);
+      fitness[0] += 1.f / (r + 1.f);
 
     } else if (part.second.dof != nullptr) {
 
@@ -120,6 +120,8 @@ void Phenotype::update(float deltaTime) {
 
     }
   }
+
+  fitness[0] /= float(i);
 }
 
 void Phenotype::reset() {
