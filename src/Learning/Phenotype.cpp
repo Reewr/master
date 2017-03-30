@@ -46,16 +46,16 @@ void Phenotype::update(float deltaTime) {
 
   // construct input vector which is known to be exactly 172 elements
   std::vector<double> inputs;
-  inputs.reserve(172);
+  inputs.reserve(44);
   for (auto& part : spider->parts()) {
     if (part.second.hinge != nullptr) {
 
-      vec3  ang = part.second.part->angularVelocity();
+      // vec3  ang = part.second.part->angularVelocity();
       float rot = part.second.hinge->getHingeAngle();
 
-      inputs.push_back(ang.x);
-      inputs.push_back(ang.y);
-      inputs.push_back(ang.z);
+      // inputs.push_back(ang.x);
+      // inputs.push_back(ang.y);
+      // inputs.push_back(ang.z);
       inputs.push_back(rot - part.second.restAngle);
 
     } else if (part.second.dof != nullptr) {
