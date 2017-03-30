@@ -76,10 +76,10 @@ World::World(const vec3& gravity,
   // info.m_damping = 1;
   // info.m_friction = 0.3;
   // info.m_restitution = 0;
-  // info.m_numIterations = 10;
+  info.m_numIterations = 25;
   // info.m_maxErrorReduction = 20;
   // info.m_sor = 1;
-  // info.m_erp = 0.2;
+  info.m_erp = 0.8;
   // info.m_erp2 = 0.2;
 
   info.m_globalCfm = 0.00001; // default = 0
@@ -230,7 +230,7 @@ void World::removeObject(Drawable3D* element) {
  * @param deltaTime
  */
 void World::doPhysics(float deltaTime) {
-  mWorld->stepSimulation(deltaTime, 32);
+  mWorld->stepSimulation(deltaTime, 2);
 
   for (auto a : mElements)
     a->updateFromPhysics();
