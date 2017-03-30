@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.78.0 commit date:2017-02-24, commit time:14:33, hash:e92f235283</authoring_tool>
     </contributor>
-    <created>2017-03-28T21:38:07</created>
-    <modified>2017-03-28T21:38:07</modified>
+    <created>2017-03-30T20:37:53</created>
+    <modified>2017-03-30T20:37:53</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -679,7 +679,7 @@
     <geometry id="Plane-mesh" name="Plane">
       <mesh>
         <source id="Plane-mesh-positions">
-          <float_array id="Plane-mesh-positions-array" count="12">-4.999999 -4.999999 0 4.999999 -4.999999 0 -4.999999 4.999999 0 4.999999 4.999999 0</float_array>
+          <float_array id="Plane-mesh-positions-array" count="12">-25 -25 0 25 -25 0 -25 25 0 25 25 0</float_array>
           <technique_common>
             <accessor source="#Plane-mesh-positions-array" count="4" stride="3">
               <param name="X" type="float"/>
