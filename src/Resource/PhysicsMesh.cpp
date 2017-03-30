@@ -268,13 +268,13 @@ PhysicsElements* PhysicsMesh::createCopyAll() {
 
     // TODO fix static +2 up translation
     const btVector3  pos     = btVector3(matPos.x, matPos.y + 1, matPos.z);
-    const btVector3& inertia = mainBody->getLocalInertia();
-    const btScalar   mass    = mainBody->getInvMass();
+    btVector3 inertia;
+    shape->calculateLocalInertia(0.1, inertia);
 
     mat.setFromOpenGLSubMatrix(mmm::transpose(t).rawdata);
 
     btMotionState* motion = new btDefaultMotionState(btTransform(mat, pos));
-    btRigidBody* body     = new btRigidBody(mass, motion, shape, inertia);
+    btRigidBody* body     = new btRigidBody(0.1, motion, shape, inertia);
 
     elements.bodies[mesh.first]  = body;
     elements.motions[mesh.first] = motion;
@@ -310,7 +310,11 @@ PhysicsElements* PhysicsMesh::createCopyAll() {
         btHingeConstraint* h      = dynamic_cast<btHingeConstraint*>(c);
         const btTransform& aFrame = h->getAFrame();
         const btTransform& bFrame = h->getBFrame();
-        btHingeConstraint* n = new btHingeConstraint(*a, *b, aFrame, bFrame);
+
+        btHingeConstraint* n      = new btHingeConstraint(
+          *a, *b, aFrame, bFrame, h->getUseReferenceFrameA());
+
+        n->setAngularOnly(n->getAngularOnly());
 
         if (h->hasLimit()) {
           n->setLimit(h->getLowerLimit(), h->getUpperLimit());
