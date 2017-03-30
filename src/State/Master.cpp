@@ -45,45 +45,13 @@ Master::Master(Asset* a) : mAsset(a) {
                                shadowRes,
                                true);
 
-  mDrawable3D = { new Terrain() };
-  mSwarm      = new SpiderSwarm();
+  mDrawable3D = { new Terrain(), new Spider() };
+  // mSwarm      = new SpiderSwarm();
 
   for (auto d : mDrawable3D)
     mWorld->addObject(d);
 
   mLua->reInitialize();
-  mLua->engine.set_function("drawables", [&](unsigned int i) -> Drawable3D* {
-    if (i > mDrawable3D.size())
-      return nullptr;
-    return mDrawable3D[i];
-  });
-
-  mLua->engine.set_function("addCubes", [&](int i) {
-    std::random_device               rd;
-    std::mt19937                     gen(rd());
-    std::uniform_real_distribution<> dis(1, 5);
-    for (int j = 0; j <= i; ++j) {
-      vec3 size = vec3(mmm::max(dis(gen), 0.0001f),
-                       mmm::max(dis(gen), 0.0001f),
-                       mmm::max(dis(gen), 0.0001f));
-      mLog->debug("Creating cube with: {}", size);
-      mDrawable3D.push_back(new Cube(size));
-      mWorld->addObject(mDrawable3D.back());
-    }
-  });
-
-  mLua->engine.set_function("clearCubes", [&]() {
-    for (unsigned int i = 0; i < mDrawable3D.size(); ++i) {
-      if (i != 0) {
-        mWorld->removeObject(mDrawable3D[i]);
-        delete mDrawable3D[i];
-      }
-    }
-
-    while (mDrawable3D.size() > 1)
-      mDrawable3D.pop_back();
-  });
-
   mLua->engine.set_function("disablePhysics",
                             [&]() { mWorld->disablePhysics(); });
 
@@ -109,7 +77,7 @@ Master::~Master() {
   delete mCamera;
   delete mShadowmap;
   delete mWorld;
-  delete mSwarm;
+  // delete mSwarm;
 
   for (auto d : mDrawable3D)
     delete d;
@@ -131,7 +99,7 @@ void Master::draw3D() {
   mShadowmap->bind(true);
   for (auto d : mDrawable3D)
     d->draw(shadowProgram, false);
-  mSwarm->draw(shadowProgram, false);
+  // mSwarm->draw(shadowProgram, false);
   mShadowmap->finalize();
   mShadowmap->texture()->bind(0);
 
@@ -146,7 +114,7 @@ void Master::draw3D() {
 
   for (auto d : mDrawable3D)
     d->draw(modelProgram, true);
-  mSwarm->draw(modelProgram, true);
+  // mSwarm->draw(modelProgram, true);
 }
 
 void Master::drawGUI() {
@@ -187,7 +155,40 @@ void Master::input(const Input::Event& event) {
 void Master::update(float deltaTime) {
   mDeltaTime = deltaTime;
   mWorld->doPhysics(deltaTime);
-  mSwarm->update(deltaTime);
+  Spider* s = Spider::upcast(mDrawable3D[1]);
+
+  for(auto& part : s->parts()) {
+    if (part.second.hinge == nullptr)
+        // part.first.find("Abdomin") != std::string::npos ||
+        // part.first.find("Neck") != std::string::npos ||
+        // part.first.find("Hip") != std::string::npos ||
+        // part.first.find("Eye") != std::string::npos)
+        // part.first.find("R1") != std::string::npos ||
+        // part.first.find("R2") != std::string::npos ||
+        // part.first.find("R3") != std::string::npos ||
+        // part.first.find("R4") != std::string::npos)
+      continue;
+
+    float diff = part.second.restAngle - part.second.hinge->getHingeAngle();
+
+    if (mmm::abs(diff) < 0.01) {
+      mLog->debug("Diff on: {} is below trigger", part.first);
+      continue;
+    }
+
+    part.second.hinge->enableAngularMotor(true,
+        diff * 20.0,
+        20.0);
+    mLog->debug("Setting motor on: {}, from {} to {}, velocity: {}, torque: {}, {}, {}",
+                part.first,
+                mmm::degrees(part.second.hinge->getHingeAngle()),
+                mmm::degrees(part.second.restAngle),
+                part.second.hinge->getMotorTargetVelosity(),
+                part.second.part->rigidBody()->getTotalTorque().x(),
+                part.second.part->rigidBody()->getTotalTorque().y(),
+                part.second.part->rigidBody()->getTotalTorque().y());
+  }
+  // mSwarm->update(deltaTime);
 
   if (mGUIElements.size() == 0 || !mGUIElements.back()->isVisible())
     mCamera->input(deltaTime);
