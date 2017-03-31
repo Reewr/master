@@ -275,10 +275,10 @@ void SpiderSwarm::updateEpoch() {
   mLog->info("Breakdown of fitness of {}");
   mLog->info(
     "Angles: {}, Z of Sternum: {}, Y of Sternum: {}, Velocity of Sternum: {}",
-    mPhenotypes[index].fitness[0],
-    mPhenotypes[index].fitness[1],
-    mPhenotypes[index].fitness[2],
-    mPhenotypes[index].fitness[3]);
+    mPhenotypes[mBestIndex].fitness[0],
+    mPhenotypes[mBestIndex].fitness[1],
+    mPhenotypes[mBestIndex].fitness[2],
+    mPhenotypes[mBestIndex].fitness[3]);
 
   mPopulation->Epoch();
   recreatePhenotypes();
