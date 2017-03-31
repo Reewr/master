@@ -180,6 +180,7 @@ void Phenotype::reset() {
   if (spider == nullptr) {
     spider = new Spider();
     world->addObject(spider);
+    world->enablePhysics();
   } else {
     spider->reset();
   }
