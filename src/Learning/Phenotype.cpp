@@ -103,7 +103,7 @@ void Phenotype::update(float deltaTime) {
   }
 
   // activate network to retrieve output vector
-  network->Flush();
+  // network->Flush();
   network->Input(inputs);
   network->Activate();
   std::vector<double> outputs = network->Output();
@@ -186,8 +186,10 @@ void Phenotype::reset() {
 
   if (network == nullptr)
     network = new NEAT::NeuralNetwork();
-  else
+  else {
     network->Clear();
+    network->Flush();
+  }
 
   numUpdates = 0;
   fitness = mmm::vec<8>(1);
