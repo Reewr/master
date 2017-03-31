@@ -18,8 +18,11 @@ SpiderSwarm::SpiderSwarm()
     , mBatchStart(0)
     , mBatchEnd(7)
     , mBatchSize(7)
+    , mBestIndex(0)
+    , mGeneration(0)
+    , mBestPossibleFitness(0)
     , mCurrentDuration(0)
-    , mIterationDuration(5)
+    , mIterationDuration(10)
     , mDrawLimit(1)
     , mParameters(nullptr)
     , mSubstrate(nullptr)
@@ -107,11 +110,14 @@ void SpiderSwarm::update(float deltaTime) {
  * @param bindTexture
  */
 void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
-  size_t draw = mmm::min(mBatchEnd - mBatchStart, mDrawLimit) + mBatchStart;
-  for (size_t i = mBatchStart; i < draw; ++i) {
-    mPhenotypes[i].spider->enableUpdatingFromPhysics();
-    mPhenotypes[i].spider->draw(prog, bindTexture);
-  }
+  mPhenotypes[mBestIndex].spider->enableUpdatingFromPhysics();
+  mPhenotypes[mBestIndex].spider->draw(prog, bindTexture);
+
+  // Draw all of the spiders.
+  // for(auto e : mPhenotypes) {
+  //   e.spider->enableUpdatingFromPhysics();
+  //   e.spider->draw(prog, bindTexture);
+  // }
 }
 
 /**
@@ -230,25 +236,44 @@ void SpiderSwarm::updateEpoch() {
   mBatchStart      = 0;
   mBatchEnd        = mmm::min(mBatchSize, mPhenotypes.size());
 
-  float      best       = -1.f;
-  static int generation = 1;
+  float  best       = -1.f;
+  size_t bestIndex  = 0;
 
   size_t index = 0;
   for (size_t i = 0; i < mPopulation->m_Species.size(); ++i) {
     for (size_t j = 0; j < mPopulation->m_Species[i].m_Individuals.size();
          ++j) {
 
-      float fitness = mmm::product(mPhenotypes[index].fitness);
+      float fitness = mPhenotypes[index].finalizeFitness();
       mPopulation->m_Species[i].m_Individuals[j].SetFitness(fitness);
       mPopulation->m_Species[i].m_Individuals[j].SetEvaluated();
 
-      best = mmm::max(fitness, best);
+      // Save the best fitness and its index so it can
+      // be drawn on the next generation
+      if (fitness > best) {
+        best = fitness;
+        bestIndex = index;
+      }
+
       index += 1;
     }
   }
 
-  mLog->info("Generation {}: best {}", generation, best);
-  generation += 1;
+  ++mGeneration;
+  mBestIndex = bestIndex;
+  mBestPossibleFitness = mmm::max(best, mBestPossibleFitness);
+
+  mLog->info("Generation {}: Best of current generation {}, Best of all: {}",
+             mGeneration,
+             best,
+             mBestPossibleFitness);
+  mLog->info("The index being drawn is now: {}", mBestIndex);
+  mLog->info("Breakdown of fitness of {}");
+  mLog->info("Angles: {}, Z of Sternum: {}, Y of Sternum: {}, Velocity of Sternum: {}",
+             mPhenotypes[index].fitness[0],
+             mPhenotypes[index].fitness[1],
+             mPhenotypes[index].fitness[2],
+             mPhenotypes[index].fitness[3]);
 
   mPopulation->Epoch();
   recreatePhenotypes();

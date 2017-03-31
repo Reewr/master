@@ -45,9 +45,12 @@ private:
   size_t mBatchStart;
   size_t mBatchEnd;
   size_t mBatchSize;
+  size_t mBestIndex;
+  size_t mGeneration;
 
   float  mCurrentDuration;
   float  mIterationDuration;
+  float  mBestPossibleFitness;
   size_t mDrawLimit;
 
 // Save some memory if bullet has profiling on and therefore
