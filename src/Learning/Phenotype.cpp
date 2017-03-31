@@ -118,12 +118,6 @@ void Phenotype::update(float deltaTime) {
       auto targetAngle  = part.second.restAngle < 0 ? -outputs[i] : outputs[i];
       //+ part.second.restAngle;
 
-      if (part.second.hinge->hasLimit()) {
-        auto lowerLimit = part.second.hinge->getLowerLimit();
-        auto upperLimit = part.second.hinge->getUpperLimit();
-        targetAngle     = mmm::clamp(targetAngle, lowerLimit, upperLimit);
-      }
-
       auto velocity = (targetAngle - currentAngle) * 10.0f;
       part.second.hinge->enableAngularMotor(true, velocity, 1.f);
 
