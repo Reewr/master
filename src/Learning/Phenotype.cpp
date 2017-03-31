@@ -113,11 +113,11 @@ void Phenotype::update(float deltaTime) {
   for (auto& part : spider->parts()) {
     if (part.second.hinge != nullptr) {
 
-
     // part.second.hinge->enableAngularMotor(true, diff * 10.0, 1.0);
 
       auto currentAngle = part.second.hinge->getHingeAngle();
-      auto targetAngle  = outputs[i] + part.second.restAngle;
+      auto targetAngle  = part.second.restAngle < 0 ? -outputs[i] : outputs[i];
+      //+ part.second.restAngle;
 
       if (part.second.hinge->hasLimit()) {
         auto lowerLimit = part.second.hinge->getLowerLimit();
@@ -144,12 +144,14 @@ void Phenotype::update(float deltaTime) {
   // update fitness if we can detect some state that we can judge fitness on
 
   // testing fitness...
+  float maxFitnessAngle = 0;
+
   for (auto& part : spider->parts()) {
     if (part.second.hinge != nullptr) {
 
       float r =
         mmm::abs(part.second.hinge->getHingeAngle() - part.second.restAngle);
-      fitness[0] += 1.f / (r + 1.f);
+      maxFitnessAngle += 1.f / (r + 1.f);
 
     } else if (part.second.dof != nullptr) {
 
