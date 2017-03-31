@@ -9,6 +9,42 @@
 
 using mmm::vec3;
 
+/**
+ * @brief
+ *   Returns the Euler angles of a Quaternion
+ *
+ * @param v
+ *
+ * @return
+ */
+mmm::vec3 getEulerAngles(mmm::vec4 v) {
+  double sqw = v.w*v.w;
+  double sqx = v.x*v.x;
+  double sqy = v.y*v.y;
+  double sqz = v.z*v.z;
+  double unit = sqx + sqy + sqz + sqw;
+  double test = v.x*v.y + v.z*v.w;
+  mmm::vec3 r;
+
+  if (test > 0.499*unit) { // singularity at north pole
+    r.z = 2 * atan2(v.x, v.w);
+    r.x = mmm::constants<double>::pi/2;
+    r.y = 0;
+    return r;
+  }
+  if (test < -0.499*unit) { // singularity at south pole
+    r.z = -2 * atan2(v.x, v.w);
+    r.x = -mmm::constants<double>::pi/2;
+    r.y = 0;
+    return r;
+  }
+  r.z = atan2((double)(2*v.y*v.w-2*v.x*v.z ), (double)(sqx - sqy - sqz + sqw));
+  r.x = asin(2*test/unit);
+  r.y = atan2((double)(2*v.x*v.w-2*v.y*v.z) ,(double)( -sqx + sqy - sqz + sqw));
+
+  return r;
+}
+
 Phenotype::Phenotype()
     : Logging::Log("Phenotype")
     , world(nullptr)
