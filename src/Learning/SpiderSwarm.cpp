@@ -263,8 +263,6 @@ void SpiderSwarm::recreatePhenotypes() {
 
     for (size_t j = 0; j < species.m_Individuals.size(); ++j) {
       auto&  individual = species.m_Individuals[j];
-      size_t len        = mPhenotypes.size();
-
 
       // Add new element if the population size has increased
       if (index >= mPhenotypes.size()) {
@@ -272,15 +270,12 @@ void SpiderSwarm::recreatePhenotypes() {
         mPhenotypes.push_back(Phenotype());
       }
 
-      mLog->debug("Resetting {} of {}", index, len);
       mPhenotypes[index].reset();
       mPhenotypes[index].spider->disableUpdatingFromPhysics();
 
-      mLog->debug("BuildESHyperNEATPhenotype {} of {}", index, len);
       individual.BuildESHyperNEATPhenotype(*mPhenotypes[index].network,
                                            *mSubstrate,
                                            *mParameters);
-      mLog->debug("Done with {} of {} vs {}", index, len);
       ++index;
     }
   }
