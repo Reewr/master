@@ -168,23 +168,24 @@ void Phenotype::update(float deltaTime) {
   btRigidBody* sternum  = spider->parts()["Sternum"].part->rigidBody();
   float        pos      = sternum->getCenterOfMassPosition().z();
   float        ySternum = sternum->getCenterOfMassPosition().y();
-  float        velocity = sternum->getLinearVelocity().normalized().z();
+  btVector3    lVelocity = sternum->getLinearVelocity();
+  float        zVelocity = lVelocity.safeNormalize().z();
 
   // Calculate the fitness based on the angle of its hinges, dividing the
   // accumlicated value by the number of hinges
-  fitness[0] += mmm::min(maxFitnessAngle / float(i), 1.0);
+  fitness[0] += mmm::clamp(maxFitnessAngle / float(i), 0.0, 1.0);
 
   // Calculate the fitness based on the position of the sternum. The closer
   // to 5z the better.
-  fitness[1] += mmm::min(1.0 / (mmm::abs(pos - 5) + 1), 1.0);
+  fitness[1] += mmm::clamp(1.0 / (mmm::abs(pos - 5) + 1), 0.0, 1.0);
 
   // Calculate the fitness based on the height of the sternum. The closer to
   // 1.5y, the better.
-  fitness[2] += mmm::min(1.0 / (mmm::abs(ySternum - 1.5) + 1), 1.0);
+  fitness[2] += mmm::clamp(1.0 / (mmm::abs(ySternum - 1.0) + 1), 0.0, 1.0);
 
   // Calculate the fitness based on the z-velocity of the sternum. The closer
   // to 1 the better.
-  fitness[3] += mmm::min(1.0 / (mmm::abs(velocity - 1.0) + 1), 1.0);
+  fitness[3] += mmm::clamp(1.0 / (mmm::abs(zVelocity - 1.0) + 1), 0.0, 1.0);
 
   ++numUpdates;
 }
