@@ -41,6 +41,9 @@ struct Phenotype : Logging::Log {
   Phenotype();
   ~Phenotype();
 
+  // Returns the final fitness of the Phenotype
+  float finalizeFitness();
+
   // Deletes the memory allocated in reset
   void remove();
 

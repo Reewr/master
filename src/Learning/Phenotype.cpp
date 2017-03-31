@@ -158,10 +158,68 @@ void Phenotype::update(float deltaTime) {
     }
   }
 
-  fitness[0] /= float(i);
+  // The below fitness calculation are purely for testing to see what manner
+  // of insane spiders we can get. Mostly crabs now.
+  //
+  // The below always gives a number between 0 and 1 and is added
+  // to each of the different fitness values. When doing the final
+  // calculations, all values are divided by the number of updates
+  // to give an average over the time of the simulation.
+  //
+  // The latter calculation forces the robot to do well during the entire
+  // simulation instead of just at the end of it.
+  //
+  // See `finalizeFitness` for more information
+
+  btRigidBody* sternum = spider->parts()["Sternum"].part->rigidBody();
+  float pos            = sternum->getCenterOfMassPosition().z();
+  float ySternum       = sternum->getCenterOfMassPosition().y();
+  float velocity       = sternum->getLinearVelocity().normalized().z();
+
+  // Calculate the fitness based on the angle of its hinges, dividing the
+  // accumlicated value by the number of hinges
+  fitness[0] += mmm::min(maxFitnessAngle / float(i), 1.0);
+
+  // Calculate the fitness based on the position of the sternum. The closer
+  // to 5z the better.
+  fitness[1] += mmm::min(1.0 / (mmm::abs(pos - 5) + 1), 1.0);
+
+  // Calculate the fitness based on the height of the sternum. The closer to
+  // 1.5y, the better.
+  fitness[2] += mmm::min(1.0 / (mmm::abs(ySternum - 1.5) + 1), 1.0);
+
+  // Calculate the fitness based on the z-velocity of the sternum. The closer
+  // to 1 the better.
+  fitness[3] += mmm::min(1.0 / (mmm::abs(velocity - 1.0) + 1), 1.0);
+
   ++numUpdates;
 }
 
+/**
+ * @brief
+ *   Makes the final calculations of the Phenotype, returning the fitness
+ *   as a floating point value
+ *
+ * @return
+ */
+float Phenotype::finalizeFitness() {
+  float updates = numUpdates;
+  fitness[0] /= updates;
+  fitness[1] /= updates;
+  fitness[2] /= updates;
+  fitness[3] /= updates;
+
+  return mmm::product(fitness);
+}
+
+/**
+ * @brief
+ *   Resets the Phenotype by resetting the values
+ *   on the world, spider and network. Also resets
+ *   the fitness and number of updates.
+ *
+ *   If all the values are nullptr, allocate them
+ */
 void Phenotype::reset() {
   if (world == nullptr)
     world = new World(mmm::vec3(0, -9.81, 0));
