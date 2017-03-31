@@ -114,11 +114,8 @@ void Phenotype::update(float deltaTime) {
   for (auto& part : spider->parts()) {
     if (part.second.hinge != nullptr) {
 
-      // part.second.hinge->enableAngularMotor(true, diff * 10.0, 1.0);
-
       auto currentAngle = part.second.hinge->getHingeAngle();
-      auto targetAngle  = part.second.restAngle < 0 ? -outputs[i] : outputs[i];
-      //+ part.second.restAngle;
+      auto targetAngle  = outputs[i] + part.second.restAngle;
 
       auto velocity = (targetAngle - currentAngle) * 10.0f;
       part.second.hinge->enableAngularMotor(true, velocity, 1.f);
