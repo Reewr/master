@@ -120,6 +120,6 @@ protected:
   std::vector<Drawable3D*>        mChildren;
 
   bool mUpdateFromPhysics;
-  int mCollisionGroup;
-  int mCollisionMask;
+  int  mCollisionGroup;
+  int  mCollisionMask;
 };

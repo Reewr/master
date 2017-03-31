@@ -18,29 +18,29 @@ using mmm::vec3;
  * @return
  */
 mmm::vec3 getEulerAngles(mmm::vec4 v) {
-  double sqw = v.w*v.w;
-  double sqx = v.x*v.x;
-  double sqy = v.y*v.y;
-  double sqz = v.z*v.z;
-  double unit = sqx + sqy + sqz + sqw;
-  double test = v.x*v.y + v.z*v.w;
+  double    sqw  = v.w * v.w;
+  double    sqx  = v.x * v.x;
+  double    sqy  = v.y * v.y;
+  double    sqz  = v.z * v.z;
+  double    unit = sqx + sqy + sqz + sqw;
+  double    test = v.x * v.y + v.z * v.w;
   mmm::vec3 r;
 
-  if (test > 0.499*unit) { // singularity at north pole
+  if (test > 0.499 * unit) { // singularity at north pole
     r.z = 2 * atan2(v.x, v.w);
-    r.x = mmm::constants<double>::pi/2;
+    r.x = mmm::constants<double>::pi / 2;
     r.y = 0;
     return r;
   }
-  if (test < -0.499*unit) { // singularity at south pole
+  if (test < -0.499 * unit) { // singularity at south pole
     r.z = -2 * atan2(v.x, v.w);
-    r.x = -mmm::constants<double>::pi/2;
+    r.x = -mmm::constants<double>::pi / 2;
     r.y = 0;
     return r;
   }
-  r.z = atan2((double)(2*v.y*v.w-2*v.x*v.z ), (double)(sqx - sqy - sqz + sqw));
-  r.x = asin(2*test/unit);
-  r.y = atan2((double)(2*v.x*v.w-2*v.y*v.z) ,(double)( -sqx + sqy - sqz + sqw));
+  r.z = atan2(2.0 * v.y * v.w - 2.0 * v.x * v.z, sqx - sqy - sqz + sqw);
+  r.x = asin(2.0 * test / unit);
+  r.y = atan2(2.0 * v.x * v.w - 2 * v.y * v.z, -sqx + sqy - sqz + sqw);
 
   return r;
 }
@@ -98,7 +98,6 @@ void Phenotype::update(float deltaTime) {
     } else if (part.second.dof != nullptr) {
 
       // TODO
-
     }
   }
 
@@ -113,7 +112,7 @@ void Phenotype::update(float deltaTime) {
   for (auto& part : spider->parts()) {
     if (part.second.hinge != nullptr) {
 
-    // part.second.hinge->enableAngularMotor(true, diff * 10.0, 1.0);
+      // part.second.hinge->enableAngularMotor(true, diff * 10.0, 1.0);
 
       auto currentAngle = part.second.hinge->getHingeAngle();
       auto targetAngle  = part.second.restAngle < 0 ? -outputs[i] : outputs[i];
@@ -125,7 +124,7 @@ void Phenotype::update(float deltaTime) {
         targetAngle     = mmm::clamp(targetAngle, lowerLimit, upperLimit);
       }
 
-      auto velocity     = (targetAngle - currentAngle) * 10.0f;
+      auto velocity = (targetAngle - currentAngle) * 10.0f;
       part.second.hinge->enableAngularMotor(true, velocity, 1.f);
 
       i += 1;
@@ -156,7 +155,6 @@ void Phenotype::update(float deltaTime) {
     } else if (part.second.dof != nullptr) {
 
       // TODO
-
     }
   }
 
@@ -173,10 +171,10 @@ void Phenotype::update(float deltaTime) {
   //
   // See `finalizeFitness` for more information
 
-  btRigidBody* sternum = spider->parts()["Sternum"].part->rigidBody();
-  float pos            = sternum->getCenterOfMassPosition().z();
-  float ySternum       = sternum->getCenterOfMassPosition().y();
-  float velocity       = sternum->getLinearVelocity().normalized().z();
+  btRigidBody* sternum  = spider->parts()["Sternum"].part->rigidBody();
+  float        pos      = sternum->getCenterOfMassPosition().z();
+  float        ySternum = sternum->getCenterOfMassPosition().y();
+  float        velocity = sternum->getLinearVelocity().normalized().z();
 
   // Calculate the fitness based on the angle of its hinges, dividing the
   // accumlicated value by the number of hinges
@@ -231,8 +229,10 @@ void Phenotype::reset() {
   if (planeBody == nullptr) {
     planeMotion = new btDefaultMotionState(
       btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1, 0)));
-    btRigidBody::btRigidBodyConstructionInfo consInfo(
-      0, planeMotion, plane, btVector3(0, 0, 0));
+    btRigidBody::btRigidBodyConstructionInfo consInfo(0,
+                                                      planeMotion,
+                                                      plane,
+                                                      btVector3(0, 0, 0));
     planeBody = new btRigidBody(consInfo);
     world->world()->addRigidBody(planeBody);
   }
@@ -253,7 +253,7 @@ void Phenotype::reset() {
   }
 
   numUpdates = 0;
-  fitness = mmm::vec<8>(1);
+  fitness    = mmm::vec<8>(1);
 }
 
 btStaticPlaneShape* Phenotype::plane =

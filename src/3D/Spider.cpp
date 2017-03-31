@@ -87,10 +87,9 @@ Spider::Spider() : Logging::Log("Spider") {
         if (nameA == mesh.first) {
           mParts[mesh.first].dof = dof;
         }
-
       }
 
-        child->addConstraint(c);
+      child->addConstraint(c);
     }
 
     mParts[mesh.first].part = child;

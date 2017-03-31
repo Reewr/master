@@ -200,26 +200,26 @@ SubMeshPhysics PhysicsMesh::findByName(const std::string& name) {
 }
 
 PhysicsElements* PhysicsMesh::createAll() {
-  auto&            meshes  = getAll();
+  auto&            meshes   = getAll();
   PhysicsElements* elements = new PhysicsElements();
 
   // First create copies of the rigid bodies together with new
   // motion state based on the internal variables of the rigid bodies
   for (auto& mesh : meshes) {
-    btRigidBody* mainBody = mesh.second.body;
-    btCollisionShape* shape = mainBody->getCollisionShape();
+    btRigidBody*      mainBody = mesh.second.body;
+    btCollisionShape* shape    = mainBody->getCollisionShape();
 
     btMatrix3x3      mat;
     const mmm::mat4& t      = mesh.second.subMesh->transform();
     const mmm::vec3& matPos = mmm::dropColumns<3>(t).xyz;
 
     // TODO fix static +2 up translation
-    const btVector3  pos     = btVector3(matPos.x, matPos.y + 1, matPos.z);
+    const btVector3 pos = btVector3(matPos.x, matPos.y + 1, matPos.z);
 
     mat.setFromOpenGLSubMatrix(mmm::transpose(t).rawdata);
 
     btMotionState* motion = new btDefaultMotionState(btTransform(mat, pos));
-    btVector3 inertia;
+    btVector3      inertia;
     shape->calculateLocalInertia(0.1, inertia);
     mainBody->setMotionState(motion);
     mainBody->setMassProps(0.1, inertia);
@@ -253,7 +253,7 @@ PhysicsElements* PhysicsMesh::createAll() {
  * @return
  */
 PhysicsElements* PhysicsMesh::createCopyAll() {
-  auto&            meshes = getAll();
+  auto&           meshes = getAll();
   PhysicsElements elements;
 
   // First create copies of the rigid bodies together with new
@@ -267,14 +267,14 @@ PhysicsElements* PhysicsMesh::createCopyAll() {
     const mmm::vec3& matPos = mmm::dropColumns<3>(t).xyz;
 
     // TODO fix static +2 up translation
-    const btVector3  pos     = btVector3(matPos.x, matPos.y + 1, matPos.z);
-    btVector3 inertia;
+    const btVector3 pos = btVector3(matPos.x, matPos.y + 1, matPos.z);
+    btVector3       inertia;
     shape->calculateLocalInertia(0.1, inertia);
 
     mat.setFromOpenGLSubMatrix(mmm::transpose(t).rawdata);
 
     btMotionState* motion = new btDefaultMotionState(btTransform(mat, pos));
-    btRigidBody* body     = new btRigidBody(0.1, motion, shape, inertia);
+    btRigidBody*   body   = new btRigidBody(0.1, motion, shape, inertia);
 
     elements.bodies[mesh.first]  = body;
     elements.motions[mesh.first] = motion;
@@ -311,8 +311,12 @@ PhysicsElements* PhysicsMesh::createCopyAll() {
         const btTransform& aFrame = h->getAFrame();
         const btTransform& bFrame = h->getBFrame();
 
-        btHingeConstraint* n      = new btHingeConstraint(
-          *a, *b, aFrame, bFrame, h->getUseReferenceFrameA());
+        btHingeConstraint* n =
+          new btHingeConstraint(*a,
+                                *b,
+                                aFrame,
+                                bFrame,
+                                h->getUseReferenceFrameA());
 
         n->setAngularOnly(n->getAngularOnly());
 
@@ -466,7 +470,8 @@ bool hasString(std::vector<std::string>& v, const std::string& s) {
  *
  * @return
  */
-const std::vector<std::pair<std::string, SubMeshPhysics>>& PhysicsMesh::getAll() {
+const std::vector<std::pair<std::string, SubMeshPhysics>>&
+PhysicsMesh::getAll() {
   if (mAllElements.size())
     return mAllElements;
 

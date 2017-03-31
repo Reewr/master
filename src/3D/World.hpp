@@ -24,22 +24,13 @@ namespace Input {
 
 class World : public Logging::Log {
 public:
+  enum class Solver { Standard, Dantzig, Lemke, ProjectedGaussSeidel };
 
-  enum class Solver {
-    Standard,
-    Dantzig,
-    Lemke,
-    ProjectedGaussSeidel
-  };
-
-  enum class Broadphase {
-    Dbvt,
-    AxisSweep
-  };
+  enum class Broadphase { Dbvt, AxisSweep };
 
   World(const mmm::vec3& gravity,
-        Solver solver = Solver::Standard,
-        Broadphase phase = Broadphase::Dbvt);
+        Solver           solver = Solver::Standard,
+        Broadphase       phase  = Broadphase::Dbvt);
   ~World();
 
   // adds an element to the physics world

@@ -58,7 +58,8 @@ private:
 #ifdef BT_NO_PROFILE
   std::function<void(std::vector<Phenotype>::iterator begin,
                      std::vector<Phenotype>::iterator end,
-                     float deltaTime)> mWorker;
+                     float                            deltaTime)>
+    mWorker;
 #endif
 
   // If called, it will use as many threads as possible to

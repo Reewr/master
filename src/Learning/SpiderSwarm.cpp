@@ -54,7 +54,7 @@ SpiderSwarm::SpiderSwarm()
  *   some information, it has to be done before you delete things
  */
 SpiderSwarm::~SpiderSwarm() {
-  for(auto& p : mPhenotypes)
+  for (auto& p : mPhenotypes)
     p.remove();
 
   mPhenotypes.clear();
@@ -147,17 +147,20 @@ void SpiderSwarm::updateUsingThreads(float deltaTime) {
     return updateNormal(deltaTime);
 
   std::vector<std::thread> threads(nThread);
-  int grainSize = size / threads.size();
-  auto workIter = std::begin(mPhenotypes) + mBatchStart;
+  int                      grainSize = size / threads.size();
+  auto                     workIter  = std::begin(mPhenotypes) + mBatchStart;
 
-  for(auto it = std::begin(threads); it != std::end(threads) - 1; ++it) {
+  for (auto it = std::begin(threads); it != std::end(threads) - 1; ++it) {
     *it = std::thread(mWorker, workIter, workIter + grainSize, deltaTime);
     workIter += grainSize;
   }
 
-  threads.back() = std::thread(mWorker, workIter, std::begin(mPhenotypes) + mBatchEnd, deltaTime);
+  threads.back() = std::thread(mWorker,
+                               workIter,
+                               std::begin(mPhenotypes) + mBatchEnd,
+                               deltaTime);
 
-  for(auto&& i : threads)
+  for (auto&& i : threads)
     i.join();
 
   mCurrentDuration += deltaTime;
@@ -170,17 +173,18 @@ void SpiderSwarm::updateThreadBatches(float deltaTime) {
   int nThread = mmm::min(std::thread::hardware_concurrency(), size);
   std::vector<std::thread> threads(nThread);
 
-  auto workIter = std::begin(mPhenotypes);
-  int grainSize = size / threads.size();
+  auto workIter  = std::begin(mPhenotypes);
+  int  grainSize = size / threads.size();
 
   for (auto it = std::begin(threads); it != std::end(threads) - 1; ++it) {
     *it = std::thread(mWorker, workIter, workIter + grainSize, deltaTime);
     workIter += grainSize;
   }
 
-  threads.back() = std::thread(mWorker, workIter, std::end(mPhenotypes), deltaTime);
+  threads.back() =
+    std::thread(mWorker, workIter, std::end(mPhenotypes), deltaTime);
 
-  for(auto&& i : threads)
+  for (auto&& i : threads)
     i.join();
 
   mCurrentDuration += deltaTime;
@@ -236,8 +240,8 @@ void SpiderSwarm::updateEpoch() {
   mBatchStart      = 0;
   mBatchEnd        = mmm::min(mBatchSize, mPhenotypes.size());
 
-  float  best       = -1.f;
-  size_t bestIndex  = 0;
+  float  best      = -1.f;
+  size_t bestIndex = 0;
 
   size_t index = 0;
   for (size_t i = 0; i < mPopulation->m_Species.size(); ++i) {
@@ -251,7 +255,7 @@ void SpiderSwarm::updateEpoch() {
       // Save the best fitness and its index so it can
       // be drawn on the next generation
       if (fitness > best) {
-        best = fitness;
+        best      = fitness;
         bestIndex = index;
       }
 
@@ -260,7 +264,7 @@ void SpiderSwarm::updateEpoch() {
   }
 
   ++mGeneration;
-  mBestIndex = bestIndex;
+  mBestIndex           = bestIndex;
   mBestPossibleFitness = mmm::max(best, mBestPossibleFitness);
 
   mLog->info("Generation {}: Best of current generation {}, Best of all: {}",
@@ -269,11 +273,12 @@ void SpiderSwarm::updateEpoch() {
              mBestPossibleFitness);
   mLog->info("The index being drawn is now: {}", mBestIndex);
   mLog->info("Breakdown of fitness of {}");
-  mLog->info("Angles: {}, Z of Sternum: {}, Y of Sternum: {}, Velocity of Sternum: {}",
-             mPhenotypes[index].fitness[0],
-             mPhenotypes[index].fitness[1],
-             mPhenotypes[index].fitness[2],
-             mPhenotypes[index].fitness[3]);
+  mLog->info(
+    "Angles: {}, Z of Sternum: {}, Y of Sternum: {}, Velocity of Sternum: {}",
+    mPhenotypes[index].fitness[0],
+    mPhenotypes[index].fitness[1],
+    mPhenotypes[index].fitness[2],
+    mPhenotypes[index].fitness[3]);
 
   mPopulation->Epoch();
   recreatePhenotypes();
@@ -287,7 +292,7 @@ void SpiderSwarm::recreatePhenotypes() {
     auto& species = mPopulation->m_Species[i];
 
     for (size_t j = 0; j < species.m_Individuals.size(); ++j) {
-      auto&  individual = species.m_Individuals[j];
+      auto& individual = species.m_Individuals[j];
 
       // Add new element if the population size has increased
       if (index >= mPhenotypes.size()) {

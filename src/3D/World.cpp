@@ -4,13 +4,13 @@
 #include "../Drawable/Drawable3D.hpp"
 #include "../Input/Event.hpp"
 #include "../OpenGLHeaders.hpp"
+#include <BulletDynamics/MLCPSolvers/btDantzigSolver.h>
+#include <BulletDynamics/MLCPSolvers/btLemkeSolver.h>
+#include <BulletDynamics/MLCPSolvers/btMLCPSolver.h>
+#include <BulletDynamics/MLCPSolvers/btSolveProjectedGaussSeidel.h>
 #include <algorithm>
 #include <assert.h>
 #include <btBulletDynamicsCommon.h>
-#include <BulletDynamics/MLCPSolvers/btDantzigSolver.h>
-#include <BulletDynamics/MLCPSolvers/btLemkeSolver.h>
-#include <BulletDynamics/MLCPSolvers/btSolveProjectedGaussSeidel.h>
-#include <BulletDynamics/MLCPSolvers/btMLCPSolver.h>
 
 using mmm::vec3;
 
@@ -20,9 +20,7 @@ using mmm::vec3;
  *
  * @param gravity
  */
-World::World(const vec3& gravity,
-             World::Solver solver,
-             World::Broadphase phase)
+World::World(const vec3& gravity, World::Solver solver, World::Broadphase phase)
     : Logging::Log("World")
     , mSolverInterface(nullptr)
     , mHasMousePickup(false)
@@ -102,7 +100,6 @@ World::World(const vec3& gravity,
   // info.m_minimumSolverBatchSize = 128;
   // info.m_maxGyroscopicForce = 100;
   // info.m_singleAxisRollingFrictionThreshold = 1e30;
-
 }
 
 World::~World() {
@@ -168,7 +165,7 @@ void World::reset() {
   btOverlappingPairCache* pairCache = mPhase->getOverlappingPairCache();
 
   if (pairCache != nullptr) {
-    btBroadphasePairArray&  pairArray = pairCache->getOverlappingPairArray();
+    btBroadphasePairArray& pairArray = pairCache->getOverlappingPairArray();
 
     for (int i = 0; i < pairArray.size(); ++i)
       pairCache->cleanOverlappingPair(pairArray[i], mWorld->getDispatcher());
