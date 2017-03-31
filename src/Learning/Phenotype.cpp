@@ -52,7 +52,8 @@ Phenotype::Phenotype()
     , network(nullptr)
     , planeMotion(nullptr)
     , planeBody(nullptr)
-    , fitness(1) {}
+    , fitness(1)
+    , numUpdates(0) {}
 
 Phenotype::~Phenotype() {}
 
@@ -158,6 +159,7 @@ void Phenotype::update(float deltaTime) {
   }
 
   fitness[0] /= float(i);
+  ++numUpdates;
 }
 
 void Phenotype::reset() {
@@ -187,6 +189,7 @@ void Phenotype::reset() {
   else
     network->Clear();
 
+  numUpdates = 0;
   fitness = mmm::vec<8>(1);
 }
 

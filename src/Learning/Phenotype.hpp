@@ -30,11 +30,13 @@ struct Phenotype : Logging::Log {
   World*               world;
   Spider*              spider;
   NEAT::NeuralNetwork* network;
-  mmm::vec<8>          fitness;
 
   btDefaultMotionState*      planeMotion;
   btRigidBody*               planeBody;
   static btStaticPlaneShape* plane;
+
+  mmm::vec<8> fitness;
+  int         numUpdates;
 
   Phenotype();
   ~Phenotype();
