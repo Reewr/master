@@ -489,11 +489,11 @@ void SpiderSwarm::setDefaultParameters() {
   mParameters->ActivationFunction_UnsignedSine_Prob    = 0.0;
   mParameters->ActivationFunction_Linear_Prob          = 1.0;
 
-  mParameters->DivisionThreshold = 0.5;
+  mParameters->DivisionThreshold = 0.03;
   mParameters->VarianceThreshold = 0.03;
   mParameters->BandThreshold     = 0.3;
-  mParameters->InitialDepth      = 2;
-  mParameters->MaxDepth          = 3;
+  mParameters->InitialDepth      = 3;
+  mParameters->MaxDepth          = 6;
   mParameters->IterationLevel    = 1;
   mParameters->Leo               = false;
   mParameters->GeometrySeed      = false;
@@ -564,19 +564,19 @@ void SpiderSwarm::setDefaultSubstrate() {
 
   mSubstrate = new Substrate(inputs, hidden, outputs);
 
-  mSubstrate->m_allow_input_hidden_links  = false;
-  mSubstrate->m_allow_input_output_links  = false;
-  mSubstrate->m_allow_hidden_hidden_links = false;
-  mSubstrate->m_allow_hidden_output_links = false;
-  mSubstrate->m_allow_output_hidden_links = false;
-  mSubstrate->m_allow_output_output_links = false;
+  mSubstrate->m_allow_input_hidden_links  = true;
+  mSubstrate->m_allow_input_output_links  = true;
+  mSubstrate->m_allow_hidden_hidden_links = true;
+  mSubstrate->m_allow_hidden_output_links = true;
+  mSubstrate->m_allow_output_hidden_links = true;
+  mSubstrate->m_allow_output_output_links = true;
   mSubstrate->m_allow_looped_hidden_links = false;
   mSubstrate->m_allow_looped_output_links = false;
 
-  mSubstrate->m_allow_input_hidden_links  = true;
-  mSubstrate->m_allow_input_output_links  = false;
-  mSubstrate->m_allow_hidden_output_links = true;
-  mSubstrate->m_allow_hidden_hidden_links = false;
+  // mSubstrate->m_allow_input_hidden_links  = true;
+  // mSubstrate->m_allow_input_output_links  = false;
+  // mSubstrate->m_allow_hidden_output_links = true;
+  // mSubstrate->m_allow_hidden_hidden_links = false;
 
   mSubstrate->m_hidden_nodes_activation =
     NEAT::ActivationFunction::SIGNED_SIGMOID;
