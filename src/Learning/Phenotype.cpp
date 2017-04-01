@@ -134,60 +134,85 @@ void Phenotype::update(float deltaTime) {
   // update physics
   world->doPhysics(deltaTime);
 
-  // update fitness if we can detect some state that we can judge fitness on
+  // judge fitness, if we can
+  updateFitness(deltaTime);
 
-  // testing fitness...
-  float maxFitnessAngle = 0;
+  // update counter
+  ++numUpdates;
+}
 
-  for (auto& part : spider->parts()) {
-    if (part.second.hinge != nullptr) {
+void Phenotype::updateFitness(float deltaTime) {
 
-      float r =
-        mmm::abs(part.second.hinge->getHingeAngle() - part.second.restAngle);
-      maxFitnessAngle += 1.f / (r + 1.f);
+  // { // Stability
+  //   btRigidBody* sternum  = spider->parts()["Sternum"].part->rigidBody();
 
-    } else if (part.second.dof != nullptr) {
+  //   // height of the sternum
+  //   float h = sternum->getCenterOfMassPosition().y() - 0.75f;
 
-      // TODO
+  //   // rotation of the sternum in the xz plane
+  //   auto  q = sternum->getOrientation();
+  //   vec3  r = getEulerAngles(q.x(), q.y(), q.z(), q.w());
+
+  //   // fitness[0] *= 1.f / (mmm::abs(h) * deltaTime + 1.f);
+  //   // fitness[1] *= 1.f / (mmm::abs(r.x) * deltaTime + 1.f);
+  //   // fitness[2] *= 1.f / (mmm::abs(r.z) * deltaTime + 1.f);
+
+  //   fitness[0] *=
+  //     mmm::product(1.f / (mmm::abs(vec3(r.x, h, r.z)) * deltaTime + 1.f));
+  // }
+
+  { // Angles
+
+    float x = 0;
+    float i = 0;
+
+    for (auto& part : spider->parts()) {
+      if (part.second.hinge != nullptr) {
+
+        float current = part.second.hinge->getHingeAngle();
+        x += mmm::abs(current - part.second.restAngle) * deltaTime;
+        i += 1;
+
+      } else if (part.second.dof != nullptr) {
+        // TODO
+      }
     }
+
+    fitness[1] *= 1.f / ((x / i) + 1.f);
   }
 
-  // The below fitness calculation are purely for testing to see what manner
-  // of insane spiders we can get. Mostly crabs now.
-  //
-  // The below always gives a number between 0 and 1 and is added
-  // to each of the different fitness values. When doing the final
-  // calculations, all values are divided by the number of updates
-  // to give an average over the time of the simulation.
-  //
-  // The latter calculation forces the robot to do well during the entire
-  // simulation instead of just at the end of it.
-  //
-  // See `finalizeFitness` for more information
 
-  btRigidBody* sternum  = spider->parts()["Sternum"].part->rigidBody();
-  float        pos      = sternum->getCenterOfMassPosition().z();
-  float        ySternum = sternum->getCenterOfMassPosition().y();
-  btVector3    lVelocity = sternum->getLinearVelocity();
-  float        zVelocity = lVelocity.safeNormalize().z();
+  // { // Leg ground contact
+  //   float l1 = mmm::clamp(spider->parts()["TarsusL1"].part->rigidBody()->getCenterOfMassPosition().y() - 0.3f, 0.f, 2.f) / 2.f;
+  //   float l2 = mmm::clamp(spider->parts()["TarsusL2"].part->rigidBody()->getCenterOfMassPosition().y() - 0.3f, 0.f, 2.f) / 2.f;
+  //   float l3 = mmm::clamp(spider->parts()["TarsusL3"].part->rigidBody()->getCenterOfMassPosition().y() - 0.3f, 0.f, 2.f) / 2.f;
+  //   float l4 = mmm::clamp(spider->parts()["TarsusL4"].part->rigidBody()->getCenterOfMassPosition().y() - 0.3f, 0.f, 2.f) / 2.f;
+  //   float r1 = mmm::clamp(spider->parts()["TarsusR1"].part->rigidBody()->getCenterOfMassPosition().y() - 0.3f, 0.f, 2.f) / 2.f;
+  //   float r2 = mmm::clamp(spider->parts()["TarsusR2"].part->rigidBody()->getCenterOfMassPosition().y() - 0.3f, 0.f, 2.f) / 2.f;
+  //   float r3 = mmm::clamp(spider->parts()["TarsusR3"].part->rigidBody()->getCenterOfMassPosition().y() - 0.3f, 0.f, 2.f) / 2.f;
+  //   float r4 = mmm::clamp(spider->parts()["TarsusR4"].part->rigidBody()->getCenterOfMassPosition().y() - 0.3f, 0.f, 2.f) / 2.f;
 
-  // Calculate the fitness based on the angle of its hinges, dividing the
-  // accumlicated value by the number of hinges
-  fitness[0] += mmm::clamp(maxFitnessAngle / float(i), 0.0, 1.0);
+  //   float x  = mmm::abs(l1 + l2 + l3 + l4 + r1 + r2 + r3 + r4);
 
-  // Calculate the fitness based on the position of the sternum. The closer
-  // to 5z the better.
-  fitness[1] += mmm::clamp(1.0 / (mmm::abs(pos - 5) + 1), 0.0, 1.0);
+  //   fitness[1] *= 1.f / (mmm::abs(x) + 1.f);
+  // }
 
-  // Calculate the fitness based on the height of the sternum. The closer to
-  // 1.5y, the better.
-  fitness[2] += mmm::clamp(1.0 / (mmm::abs(ySternum - 1.0) + 1), 0.0, 1.0);
 
-  // Calculate the fitness based on the z-velocity of the sternum. The closer
-  // to 1 the better.
-  fitness[3] += mmm::clamp(1.0 / (mmm::abs(zVelocity - 1.0) + 1), 0.0, 1.0);
+  // // Calculate the fitness based on the angle of its hinges, dividing the
+  // // accumlicated value by the number of hinges
+  // fitness[0] += mmm::clamp(maxFitnessAngle / float(i), 0.0, 1.0);
 
-  ++numUpdates;
+  // // Calculate the fitness based on the position of the sternum. The closer
+  // // to 5z the better.
+  // fitness[1] += mmm::clamp(1.0 / (mmm::abs(pos - 5) + 1), 0.0, 1.0);
+
+  // // Calculate the fitness based on the height of the sternum. The closer to
+  // // 1.5y, the better.
+  // fitness[2] += mmm::clamp(1.0 / (mmm::abs(ySternum - 1.0) + 1), 0.0, 1.0);
+
+  // // Calculate the fitness based on the z-velocity of the sternum. The closer
+  // // to 1 the better.
+  // fitness[3] += mmm::clamp(1.0 / (mmm::abs(zVelocity - 1.0) + 1), 0.0, 1.0);
 }
 
 /**
@@ -198,11 +223,16 @@ void Phenotype::update(float deltaTime) {
  * @return
  */
 float Phenotype::finalizeFitness() {
-  float updates = numUpdates;
-  fitness[0] /= updates;
-  fitness[1] /= updates;
-  fitness[2] /= updates;
-  fitness[3] /= updates;
+  // float updates = numUpdates;
+  // fitness[0] /= updates;
+  // fitness[1] /= updates;
+  // fitness[2] /= updates;
+  // fitness[3] /= updates;
+
+  // length walked
+  // btRigidBody* sternum = spider->parts()["Sternum"].part->rigidBody();
+  // auto         pos_    = sternum->getCenterOfMassPosition();
+  // mmm::vec3    pos     = mmm::vec3(pos_.x(), pos_.y(), pos_.z());
 
   return mmm::product(fitness);
 }
