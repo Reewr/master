@@ -147,35 +147,35 @@ void Phenotype::update(float deltaTime) {
 }
 
 void Phenotype::updateFitness(float deltaTime) {
+  auto& parts = spider->parts();
 
-  // { // Stability
-  //   btRigidBody* sternum  = spider->parts()["Sternum"].part->rigidBody();
+  { // Stability
+    btRigidBody* sternum  = parts["Sternum"].part->rigidBody();
 
-  //   // height of the sternum
-  //   float h = sternum->getCenterOfMassPosition().y() - 0.75f;
+    // height of the sternum
+    float h = sternum->getCenterOfMassPosition().y() - 0.75f;
 
-  //   // rotation of the sternum in the xz plane
-  //   auto  q = sternum->getOrientation();
-  //   vec3  r = getEulerAngles(q.x(), q.y(), q.z(), q.w());
+    // rotation of the sternum in the xz plane
+    auto  q = sternum->getOrientation();
+    vec3  r = getEulerAngles(q.x(), q.y(), q.z(), q.w());
 
-  //   // fitness[0] *= 1.f / (mmm::abs(h) * deltaTime + 1.f);
-  //   // fitness[1] *= 1.f / (mmm::abs(r.x) * deltaTime + 1.f);
-  //   // fitness[2] *= 1.f / (mmm::abs(r.z) * deltaTime + 1.f);
+    // fitness[0] *= 1.f / (mmm::abs(h) * deltaTime + 1.f);
+    // fitness[1] *= 1.f / (mmm::abs(r.x) * deltaTime + 1.f);
+    // fitness[2] *= 1.f / (mmm::abs(r.z) * deltaTime + 1.f);
 
-  //   fitness[0] *=
-  //     mmm::product(1.f / (mmm::abs(vec3(r.x, h, r.z)) * deltaTime + 1.f));
-  // }
+    fitness[0] *=
+      mmm::product(1.f / (mmm::abs(vec3(r.x, h, r.z)) * deltaTime + 1.f));
+  }
 
   { // Angles
-
     float x = 0;
     float i = 0;
 
-    for (auto& part : spider->parts()) {
+    for (auto& part : parts) {
       if (part.second.hinge != nullptr) {
 
         float current = part.second.hinge->getHingeAngle();
-        x += mmm::abs(current - part.second.restAngle) * deltaTime;
+        x += 1.f / (mmm::abs(current - part.second.restAngle) * deltaTime + 1.f);
         i += 1;
 
       } else if (part.second.dof != nullptr) {
@@ -183,24 +183,22 @@ void Phenotype::updateFitness(float deltaTime) {
       }
     }
 
-    fitness[1] *= 1.f / ((x / i) + 1.f);
+    fitness[1] *= x / i;
   }
 
 
-  // { // Leg ground contact
-  //   float l1 = mmm::clamp(spider->parts()["TarsusL1"].part->rigidBody()->getCenterOfMassPosition().y() - 0.3f, 0.f, 2.f) / 2.f;
-  //   float l2 = mmm::clamp(spider->parts()["TarsusL2"].part->rigidBody()->getCenterOfMassPosition().y() - 0.3f, 0.f, 2.f) / 2.f;
-  //   float l3 = mmm::clamp(spider->parts()["TarsusL3"].part->rigidBody()->getCenterOfMassPosition().y() - 0.3f, 0.f, 2.f) / 2.f;
-  //   float l4 = mmm::clamp(spider->parts()["TarsusL4"].part->rigidBody()->getCenterOfMassPosition().y() - 0.3f, 0.f, 2.f) / 2.f;
-  //   float r1 = mmm::clamp(spider->parts()["TarsusR1"].part->rigidBody()->getCenterOfMassPosition().y() - 0.3f, 0.f, 2.f) / 2.f;
-  //   float r2 = mmm::clamp(spider->parts()["TarsusR2"].part->rigidBody()->getCenterOfMassPosition().y() - 0.3f, 0.f, 2.f) / 2.f;
-  //   float r3 = mmm::clamp(spider->parts()["TarsusR3"].part->rigidBody()->getCenterOfMassPosition().y() - 0.3f, 0.f, 2.f) / 2.f;
-  //   float r4 = mmm::clamp(spider->parts()["TarsusR4"].part->rigidBody()->getCenterOfMassPosition().y() - 0.3f, 0.f, 2.f) / 2.f;
+  { // Leg ground contact
+    float l1 = mmm::clamp(parts["TarsusL1"].part->rigidBody()->getCenterOfMassPosition().y() - 0.3f, 0.f, 1.f);
+    float l2 = mmm::clamp(parts["TarsusL2"].part->rigidBody()->getCenterOfMassPosition().y() - 0.3f, 0.f, 1.f);
+    float l3 = mmm::clamp(parts["TarsusL3"].part->rigidBody()->getCenterOfMassPosition().y() - 0.3f, 0.f, 1.f);
+    float l4 = mmm::clamp(parts["TarsusL4"].part->rigidBody()->getCenterOfMassPosition().y() - 0.3f, 0.f, 1.f);
+    float r1 = mmm::clamp(parts["TarsusR1"].part->rigidBody()->getCenterOfMassPosition().y() - 0.3f, 0.f, 1.f);
+    float r2 = mmm::clamp(parts["TarsusR2"].part->rigidBody()->getCenterOfMassPosition().y() - 0.3f, 0.f, 1.f);
+    float r3 = mmm::clamp(parts["TarsusR3"].part->rigidBody()->getCenterOfMassPosition().y() - 0.3f, 0.f, 1.f);
+    float r4 = mmm::clamp(parts["TarsusR4"].part->rigidBody()->getCenterOfMassPosition().y() - 0.3f, 0.f, 1.f);
 
-  //   float x  = mmm::abs(l1 + l2 + l3 + l4 + r1 + r2 + r3 + r4);
-
-  //   fitness[1] *= 1.f / (mmm::abs(x) + 1.f);
-  // }
+    fitness[2] *= 1.f / (mmm::abs(l1 + l2 + l3 + l4 + r1 + r2 + r3 + r4) * deltaTime + 1.f);
+  }
 
 
   // // Calculate the fitness based on the angle of its hinges, dividing the
@@ -238,6 +236,7 @@ float Phenotype::finalizeFitness() {
   // btRigidBody* sternum = spider->parts()["Sternum"].part->rigidBody();
   // auto         pos_    = sternum->getCenterOfMassPosition();
   // mmm::vec3    pos     = mmm::vec3(pos_.x(), pos_.y(), pos_.z());
+  // return mmm::length(pos);
 
   return mmm::product(fitness);
 }
