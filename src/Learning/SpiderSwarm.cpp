@@ -356,11 +356,11 @@ void SpiderSwarm::updateEpoch() {
   mBestIndex           = bestIndex;
   mBestPossibleFitness = mmm::max(best, mBestPossibleFitness);
 
-  mLog->info("Generation {}: Best of current generation {}, Best of all: {}",
-             mGeneration,
-             best,
-             mBestPossibleFitness);
-  // mLog->info("The index being drawn is now: {}", mBestIndex);
+  mLog->info("Generation {}", mGeneration);
+  mLog->info("Best of current generation {} %, Best of all: {} %",
+             best * 100,
+             mBestPossibleFitness * 100);
+  mLog->info("The index being drawn is now: {}", mBestIndex);
 
   mLog->info("Breakdown of fitness:");
   mLog->info("  0: {} %", mPhenotypes[mBestIndex].fitness[0] * 100);
