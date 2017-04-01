@@ -304,8 +304,6 @@ void SpiderSwarm::recreatePhenotypes() {
     auto& species = mPopulation->m_Species[i];
 
     for (size_t j = 0; j < species.m_Individuals.size(); ++j) {
-      auto& individual = species.m_Individuals[j];
-
       // Add new element if the population size has increased
       if (index >= mPhenotypes.size()) {
         mLog->debug("Adding new spider due to increase in population");
@@ -316,6 +314,7 @@ void SpiderSwarm::recreatePhenotypes() {
       mPhenotypes[index].spider->disableUpdatingFromPhysics();
 
 #ifndef BT_NO_PROFILE
+      auto& individual = species.m_Individuals[j];
       individual.BuildESHyperNEATPhenotype(*mPhenotypes[index].network,
                                            *mSubstrate,
                                            *mParameters);
