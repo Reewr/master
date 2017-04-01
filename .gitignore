@@ -10,5 +10,10 @@ bin
 compile_commands.json
 *.gch
 
+# HyperNEAT files
+*.population
+*.parameters
+*.substrate
+
 # Temporary blender files
 *.blend1
