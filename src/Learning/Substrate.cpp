@@ -106,41 +106,41 @@ void Substrate::load(const std::string& filename) {
     else if (a.first == "m_output_coords")
       m_output_coords = loadArrayValue<double>(a.second);
     else if (a.first == "m_leaky")
-      m_leaky = loadValue<bool>(a.second);
+      loadValue(a.second, m_leaky);
     else if (a.first == "m_with_distance")
-      m_with_distance = loadValue<bool>(a.second);
+      loadValue(a.second, m_with_distance);
     else if (a.first == "m_allow_input_hidden_links")
-      m_allow_input_hidden_links = loadValue<bool>(a.second);
+      loadValue(a.second, m_allow_input_hidden_links);
     else if (a.first == "m_allow_input_output_links")
-      m_allow_input_output_links = loadValue<bool>(a.second);
+      loadValue(a.second, m_allow_input_output_links);
     else if (a.first == "m_allow_hidden_hidden_links")
-      m_allow_hidden_hidden_links = loadValue<bool>(a.second);
+      loadValue(a.second, m_allow_hidden_hidden_links);
     else if (a.first == "m_allow_hidden_output_links")
-      m_allow_hidden_output_links = loadValue<bool>(a.second);
+      loadValue(a.second, m_allow_hidden_output_links);
     else if (a.first == "m_allow_output_hidden_links")
-      m_allow_output_hidden_links = loadValue<bool>(a.second);
+      loadValue(a.second, m_allow_output_hidden_links);
     else if (a.first == "m_allow_output_output_links")
-      m_allow_output_output_links = loadValue<bool>(a.second);
+      loadValue(a.second, m_allow_output_output_links);
     else if (a.first == "m_allow_looped_hidden_links")
-      m_allow_looped_hidden_links = loadValue<bool>(a.second);
+      loadValue(a.second, m_allow_looped_hidden_links);
     else if (a.first == "m_allow_looped_output_links")
-      m_allow_looped_output_links = loadValue<bool>(a.second);
+      loadValue(a.second, m_allow_looped_output_links);
     else if (a.first == "m_custom_connectivity")
       m_custom_connectivity = loadArrayValue<int>(a.second);
     else if (a.first == "m_custom_conn_obeys_flags")
-      m_custom_conn_obeys_flags = loadValue<bool>(a.second);
+      loadValue(a.second, m_custom_conn_obeys_flags);
     else if (a.first == "m_query_weights_only")
-      m_query_weights_only = loadValue<bool>(a.second);
+      loadValue(a.second, m_query_weights_only);
     else if (a.first == "m_hidden_nodes_activation")
-      m_hidden_nodes_activation = loadValue<NEAT::ActivationFunction>(a.second);
+      loadValue(a.second, m_hidden_nodes_activation);
     else if (a.first == "m_output_nodes_activation")
-      m_output_nodes_activation = loadValue<NEAT::ActivationFunction>(a.second);
+      loadValue(a.second, m_output_nodes_activation);
     else if (a.first == "m_max_weight_and_bias")
-      m_max_weight_and_bias = loadValue<double>(a.second);
+      loadValue(a.second, m_max_weight_and_bias);
     else if (a.first == "m_min_time_const")
-      m_min_time_const = loadValue<double>(a.second);
+      loadValue(a.second, m_min_time_const);
     else if (a.first == "m_max_time_const")
-      m_max_time_const = loadValue<double>(a.second);
+      loadValue(a.second, m_max_time_const);
   }
 
   // Load each and every variable if they exist in the file
@@ -163,4 +163,24 @@ std::string Substrate::fillName(const std::string& name) {
   int fillLength = mmm::max(0, nameLength - name.size());
 
   return name + std::string(" ", fillLength);
+}
+
+void Substrate::loadValue(const std::string& value, bool& t) {
+  t = value == "1";
+}
+
+void Substrate::loadValue(const std::string& value, int& t) {
+  t = std::stoi(value);
+}
+
+void Substrate::loadValue(const std::string& value, float& t) {
+  t = std::stof(value);
+}
+
+void Substrate::loadValue(const std::string& value, double& t) {
+  t = std::stod(value);
+}
+
+void Substrate::loadValue(const std::string& value, NEAT::ActivationFunction& t) {
+  t = (NEAT::ActivationFunction)std::stoi(value);
 }

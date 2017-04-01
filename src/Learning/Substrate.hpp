@@ -51,37 +51,15 @@ private:
   std::vector<std::vector<T>> loadArrayValue(const std::string& value);
 
   // Loads a generic value from string
-  template<typename T>
-  T loadValue(const std::string& value);
+  void loadValue(const std::string& value, bool& t);
+  void loadValue(const std::string& value, int& t);
+  void loadValue(const std::string& value, float& t);
+  void loadValue(const std::string& value, double& t);
+  void loadValue(const std::string& value, NEAT::ActivationFunction& t);
 };
 
 // Below follow template definitons of saveValue
 // --------------------------------------------
-
-template <>
-bool Substrate::loadValue(const std::string& v) {
-  return v == "1";
-}
-
-template <>
-int Substrate::loadValue(const std::string& v) {
-  return std::stoi(v);
-}
-
-template <>
-float Substrate::loadValue(const std::string& v) {
-  return std::stof(v);
-}
-
-template <>
-double Substrate::loadValue(const std::string& v) {
-  return std::stod(v);
-}
-
-template <>
-NEAT::ActivationFunction Substrate::loadValue(const std::string& v) {
-  return (NEAT::ActivationFunction)std::stoi(v);
-}
 
 template<typename T>
 std::string Substrate::saveValue(const std::string& name, T val) {
