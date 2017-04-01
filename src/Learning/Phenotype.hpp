@@ -38,6 +38,9 @@ struct Phenotype : Logging::Log {
   mmm::vec<8> fitness;
   int         numUpdates;
 
+  int speciesIndex;
+  int individualIndex;
+
   Phenotype();
   ~Phenotype();
 
@@ -48,7 +51,7 @@ struct Phenotype : Logging::Log {
   void remove();
 
   // Resets the phenotype back into its original state
-  void reset();
+  void reset(int speciesId, int individualId);
 
   // Performs the update of the phenotype
   void update(float deltaTime);

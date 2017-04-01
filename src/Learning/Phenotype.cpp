@@ -53,7 +53,9 @@ Phenotype::Phenotype()
     , planeMotion(nullptr)
     , planeBody(nullptr)
     , fitness(1)
-    , numUpdates(0) {}
+    , numUpdates(0)
+    , speciesIndex(-1)
+    , individualIndex(-1) {}
 
 Phenotype::~Phenotype() {}
 
@@ -215,7 +217,7 @@ float Phenotype::finalizeFitness() {
  *
  *   If all the values are nullptr, allocate them
  */
-void Phenotype::reset() {
+void Phenotype::reset(int speciesId, int individualId) {
   if (world == nullptr)
     world = new World(mmm::vec3(0, -9.81, 0));
   else
@@ -249,6 +251,8 @@ void Phenotype::reset() {
 
   numUpdates = 0;
   fitness    = mmm::vec<8>(1);
+  speciesIndex = speciesId;
+  individualIndex = individualId;
 }
 
 btStaticPlaneShape* Phenotype::plane =

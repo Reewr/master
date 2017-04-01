@@ -300,7 +300,7 @@ void SpiderSwarm::recreatePhenotypes() {
         mPhenotypes.push_back(Phenotype());
       }
 
-      mPhenotypes[index].reset();
+      mPhenotypes[index].reset(i, j);
       mPhenotypes[index].spider->disableUpdatingFromPhysics();
 
       individual.BuildESHyperNEATPhenotype(*mPhenotypes[index].network,
