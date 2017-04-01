@@ -38,6 +38,14 @@ public:
   // Draws X number of spiders from current batch set by DrawLimit
   void draw(std::shared_ptr<Program>& prog, bool bindTexture);
 
+  // Saves the population, parameters and substrate of spiderswarm
+  // to file
+  void save(const std::string& filename);
+
+  // Loads the population, parameters and substrate of spiderswarm
+  // from file
+  void load(const std::string& filename);
+
 private:
   std::vector<Phenotype> mPhenotypes;
 

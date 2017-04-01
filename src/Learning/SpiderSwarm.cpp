@@ -135,6 +135,77 @@ void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
 
 /**
  * @brief
+ *   Saves the SpiderSwarm to several files, by using a common
+ *   filename. It will save three files representing:
+ *
+ *   - Population
+ *   - Parameters
+ *   - Substrate
+ *
+ *   The filename convention will be:
+ *
+ *   - `filename.population`
+ *   - `filename.parameters`
+ *   - `filename.substrate`
+ *
+ * @param filename
+ */
+void SpiderSwarm::save(const std::string& filename) {
+  std::string popFilename   = filename + ".population";
+  std::string paramFilename = filename + ".parameters";
+  std::string subFilename   = filename + ".substrate";
+
+  mPopulation->Save(popFilename.c_str());
+  mParameters->Save(paramFilename.c_str());
+}
+
+/**
+ * @brief
+ *   Loads the SpiderSwarm from several files indicated
+ *   by the filename. Just like save, it will expect several files.
+ *
+ *   If filename is `mySpiderSwarm`, it will expect to find
+ *   three different files:
+ *
+ *   - `mySpiderSwarm.population`
+ *   - `mySpiderSwarm.parameters`
+ *   - `mySpiderSwarm.substrate`
+ *
+ *   **Note**: This also resets the current values to their
+ *   initial values:
+ *
+ *   - mCurrentBatch
+ *   - mBestIndex
+ *   - mCurrentDuration
+ *   - mBestPossibleFitness
+ *
+ *   And it will retrieve the generation count from
+ *   the population
+ *
+ * @param filename
+ */
+void SpiderSwarm::load(const std::string& filename) {
+  std::string popFilename   = filename + ".population";
+  std::string paramFilename = filename + ".parameters";
+  std::string subFilename   = filename + ".substrate";
+
+  if (mPopulation != nullptr)
+    delete mPopulation;
+
+  mPopulation = new NEAT::Population(popFilename.c_str());
+  mParameters->Load(paramFilename.c_str());
+
+  mCurrentBatch        = 0;
+  mBestIndex           = 0;
+  mGeneration          = mPopulation->m_Generation;
+  mCurrentDuration     = 0;
+  mBestPossibleFitness = 0;
+
+  recreatePhenotypes();
+}
+
+/**
+ * @brief
  *   Works exactly like `updateNormal` but instead of performing everything in
  *   a single thread, it runs multiple threads (as many as the system can
  *   support, returned by std::thread::hardware_concurrency or the max
