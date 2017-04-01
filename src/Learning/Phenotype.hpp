@@ -44,6 +44,8 @@ struct Phenotype : Logging::Log {
   Phenotype();
   ~Phenotype();
 
+  void updateFitness(float deltaTime);
+
   // Returns the final fitness of the Phenotype
   float finalizeFitness();
 
