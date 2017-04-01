@@ -58,6 +58,16 @@ Master::Master(Asset* a) : mAsset(a) {
   mLua->engine.set_function("enablePhysics",
                             [&]() { mWorld->enablePhysics(); });
 
+  mLua->engine.set_function("saveSwarm",
+                            [&](const std::string& filename) {
+                              mSwarm->save(filename);
+                            });
+
+  mLua->engine.set_function("loadSwarm",
+                            [&](const std::string& filename) {
+                              mSwarm->load(filename);
+                            });
+
   // add CFG is enabled
   if (a->cfg()->console.enabled) {
     mGUIElements.push_back(new Console(a));
