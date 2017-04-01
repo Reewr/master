@@ -87,14 +87,19 @@ void Phenotype::update(float deltaTime) {
   std::vector<double> inputs;
   inputs.reserve(44);
   for (auto& part : spider->parts()) {
+
+    // vec3  ang = part.second.part->angularVelocity();
+    // inputs.push_back(ang.x);
+    // inputs.push_back(ang.y);
+    // inputs.push_back(ang.z);
+
+    // auto ypos = part.second.part->rigidBody()->getCenterOfMassPosition().y();
+    // inputs.push_back(ypos);
+
     if (part.second.hinge != nullptr) {
 
-      // vec3  ang = part.second.part->angularVelocity();
       float rot = part.second.hinge->getHingeAngle();
 
-      // inputs.push_back(ang.x);
-      // inputs.push_back(ang.y);
-      // inputs.push_back(ang.z);
       inputs.push_back(rot);
 
     } else if (part.second.dof != nullptr) {
