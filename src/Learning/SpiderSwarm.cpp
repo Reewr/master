@@ -358,14 +358,17 @@ void SpiderSwarm::updateEpoch() {
              mGeneration,
              best,
              mBestPossibleFitness);
-  mLog->info("The index being drawn is now: {}", mBestIndex);
-  mLog->info("Breakdown of fitness of {}");
-  mLog->info(
-    "Angles: {}, Z of Sternum: {}, Y of Sternum: {}, Velocity of Sternum: {}",
-    mPhenotypes[mBestIndex].fitness[0],
-    mPhenotypes[mBestIndex].fitness[1],
-    mPhenotypes[mBestIndex].fitness[2],
-    mPhenotypes[mBestIndex].fitness[3]);
+  // mLog->info("The index being drawn is now: {}", mBestIndex);
+
+  mLog->info("Breakdown of fitness:");
+  mLog->info("  0: {} %", mPhenotypes[mBestIndex].fitness[0] * 100);
+  mLog->info("  1: {} %", mPhenotypes[mBestIndex].fitness[1] * 100);
+  mLog->info("  2: {} %", mPhenotypes[mBestIndex].fitness[2] * 100);
+  mLog->info("  3: {} %", mPhenotypes[mBestIndex].fitness[3] * 100);
+  mLog->info("  4: {} %", mPhenotypes[mBestIndex].fitness[4] * 100);
+  mLog->info("  5: {} %", mPhenotypes[mBestIndex].fitness[5] * 100);
+  mLog->info("  6: {} %", mPhenotypes[mBestIndex].fitness[6] * 100);
+  mLog->info("  7: {} %", mPhenotypes[mBestIndex].fitness[7] * 100);
 
   mPopulation->Epoch();
   recreatePhenotypes();
