@@ -89,10 +89,9 @@ void SpiderSwarm::update(float deltaTime) {
   if (deltaTime > 0.5)
     return;
 
+#ifndef BT_NO_PROFILE
   if (mCurrentDuration == 0)
     mLog->debug("Processing {} individuals", mBatchEnd - mBatchStart);
-
-#ifndef BT_NO_PROFILE
 
   if (mCurrentDuration < mIterationDuration) {
     updateNormal(deltaTime);
@@ -103,6 +102,8 @@ void SpiderSwarm::update(float deltaTime) {
   }
 
 #else
+  if (mCurrentDuration == 0)
+    mLog->debug("Processing {} individuals", mPhenotypes.size());
 
   if (mCurrentDuration < mIterationDuration) {
     updateThreadBatches(deltaTime);
