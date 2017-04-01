@@ -17,30 +17,30 @@ using mmm::vec3;
  *
  * @return
  */
-mmm::vec3 getEulerAngles(mmm::vec4 v) {
-  double    sqw  = v.w * v.w;
-  double    sqx  = v.x * v.x;
-  double    sqy  = v.y * v.y;
-  double    sqz  = v.z * v.z;
+mmm::vec3 getEulerAngles(float x, float y, float z, float w) {
+  double    sqw  = w * w;
+  double    sqx  = x * x;
+  double    sqy  = y * y;
+  double    sqz  = z * z;
   double    unit = sqx + sqy + sqz + sqw;
-  double    test = v.x * v.y + v.z * v.w;
+  double    test = x * y + z * w;
   mmm::vec3 r;
 
   if (test > 0.499 * unit) { // singularity at north pole
-    r.z = 2 * atan2(v.x, v.w);
-    r.x = mmm::constants<double>::pi / 2;
-    r.y = 0;
+    r.z = 2.0 * atan2(x, w);
+    r.x = mmm::constants<double>::pi / 2.0;
+    r.y = 0.0;
     return r;
   }
   if (test < -0.499 * unit) { // singularity at south pole
-    r.z = -2 * atan2(v.x, v.w);
-    r.x = -mmm::constants<double>::pi / 2;
-    r.y = 0;
+    r.z = -2.0 * atan2(x, w);
+    r.x = -mmm::constants<double>::pi / 2.0;
+    r.y = 0.0;
     return r;
   }
-  r.z = atan2(2.0 * v.y * v.w - 2.0 * v.x * v.z, sqx - sqy - sqz + sqw);
+  r.z = atan2(2.0 * y * w - 2.0 * x * z, sqx - sqy - sqz + sqw);
   r.x = asin(2.0 * test / unit);
-  r.y = atan2(2.0 * v.x * v.w - 2 * v.y * v.z, -sqx + sqy - sqz + sqw);
+  r.y = atan2(2.0 * x * w - 2.0 * y * z, -sqx + sqy - sqz + sqw);
 
   return r;
 }
