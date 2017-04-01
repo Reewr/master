@@ -33,9 +33,6 @@ public:
   void load(const std::string& filename);
 
 private:
-  // Fills the variable name with padding if under a certain length
-  std::string fillName(const std::string& name);
-
   // Converts a generic value to string
   template<typename T>
   std::string saveValue(const std::string& name, T val);
@@ -63,7 +60,7 @@ private:
 
 template<typename T>
 std::string Substrate::saveValue(const std::string& name, T val) {
-  return fillName(name) + " " + std::to_string(val);
+  return name + " " + std::to_string(val);
 }
 
 /**
@@ -83,7 +80,7 @@ std::string Substrate::saveValue(const std::string& name, T val) {
 template<typename T>
 std::string Substrate::saveValue(const std::string& name,
                                  std::vector<std::vector<T>>& d) {
-  std::string final = fillName(name) + "[";
+  std::string final = name + " [";
 
   for (auto& vec : d) {
     final += "[";
@@ -124,20 +121,25 @@ std::vector<std::vector<T>> Substrate::loadArrayValue(const std::string& value) 
     throw std::runtime_error("Invalid format");
   }
 
-  if (firstSquare != 0 || lastSquare != val.size() - 1)
-    throw std::runtime_error("invalid format");
+  val = val.substr(firstSquare + 1, firstSquare + lastSquare - 1);
+
+  if (val.find_first_of("1234567890") == std::string::npos) {
+    return {{}};
+  }
 
   std::vector<std::string> arrays;
-  while (val.size() > 0) {
-    size_t startBrace = val.find_first_of("[");
-    size_t endBrace   = val.find_first_of("]");
+  size_t startBrace = val.find_first_of("[");
+  size_t endBrace   = val.find_first_of("]");
+  while (startBrace != std::string::npos && endBrace != std::string::npos) {
+    std::string item = val.substr(startBrace + 1, startBrace + endBrace - 1);
 
-    if (startBrace == std::string::npos || endBrace == std::string::npos) {
-      throw std::runtime_error("invalid format");
+    if (item.size() != 0) {
+      arrays.push_back(item);
     }
 
-    arrays.push_back(val.substr(startBrace, startBrace + endBrace));
-    val.substr(startBrace + endBrace);
+    val = val.substr(startBrace + endBrace);
+    startBrace = val.find_first_of("[");
+    endBrace   = val.find_first_of("]");
   }
 
   std::vector<std::vector<T>> values;

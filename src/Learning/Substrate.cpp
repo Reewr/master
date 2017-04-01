@@ -85,6 +85,10 @@ void Substrate::load(const std::string& filename) {
   // Expect each line to contain the name and the value separated by space
   while(fs.good()) {
     std::getline(fs, line);
+
+    if (line == "")
+      continue;
+
     size_t spacePos = line.find_first_of(" ");
 
     if (spacePos == std::string::npos)
@@ -146,23 +150,6 @@ void Substrate::load(const std::string& filename) {
   // Load each and every variable if they exist in the file
 
   fs.close();
-}
-
-/**
- * @brief
- *   Pads the name to a specific length.
- *
- * @param name
- *
- * @return
- */
-std::string Substrate::fillName(const std::string& name) {
-  // Describes the maximum length of the
-  // variable names in NEAT::Substrate
-  static int nameLength = 30;
-  int fillLength = mmm::max(0, nameLength - name.size());
-
-  return name + std::string(" ", fillLength);
 }
 
 void Substrate::loadValue(const std::string& value, bool& t) {
