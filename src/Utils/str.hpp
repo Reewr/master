@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 namespace str {
   std::string toUpper(const std::string& s);
@@ -11,4 +12,6 @@ namespace str {
   void rTrim(std::string& s);
   void lTrim(std::string& s);
   void trim(std::string& s);
+
+  std::vector<std::string> split(const std::string& s, char delimiter);
 }

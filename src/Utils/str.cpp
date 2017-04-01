@@ -1,5 +1,6 @@
 #include "str.hpp"
 #include <algorithm>
+#include <sstream>
 #include <map>
 
 static std::map<unsigned int, std::string> utf8Characters = {};
@@ -126,4 +127,30 @@ void str::lTrim(std::string& s) {
 void str::trim(std::string& s) {
   rTrim(s);
   lTrim(s);
+}
+
+/**
+ * @brief
+ *   Splits the given string on where it can found the given delimiter,
+ *   returns a list of strings.
+ *
+ *   Example:
+ *    str::split("1, 2, 3, 4, 5", ',') -> { "1", "2", "3", "4", "5" }
+ *
+ * @param s
+ * @param delimiter
+ *
+ * @return
+ */
+std::vector<std::string> str::split(const std::string& s, char delimiter) {
+  std::stringstream ss;
+  std::string item;
+  std::vector<std::string> items;
+  ss.str(s);
+
+  while(std::getline(ss, item, delimiter)) {
+    items.push_back(item);
+  }
+
+  return items;
 }
