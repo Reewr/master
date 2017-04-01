@@ -60,6 +60,13 @@ private:
                      std::vector<Phenotype>::iterator end,
                      float                            deltaTime)>
     mWorker;
+
+  std::function<void(std::vector<Phenotype>::iterator begin,
+                     std::vector<Phenotype>::iterator end,
+                     NEAT::Population& pop,
+                     NEAT::Substrate& sub,
+                     NEAT::Parameters& params)>
+    mBuildingESHyperNeatWorker;
 #endif
 
   // If called, it will use as many threads as possible to

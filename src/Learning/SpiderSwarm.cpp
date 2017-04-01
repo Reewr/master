@@ -37,6 +37,18 @@ SpiderSwarm::SpiderSwarm()
     for (auto it = begin; it != end; ++it)
       it->update(deltaTime);
   };
+
+  mBuildingESHyperNeatWorker = [](std::vector<Phenotype>::iterator begin,
+                                  std::vector<Phenotype>::iterator end,
+                                  NEAT::Population&                pop,
+                                  NEAT::Substrate&                 sub,
+                                  NEAT::Parameters&                params) {
+    for (auto it = begin; it != end; ++it) {
+      pop.m_Species[it->speciesIndex]
+        .m_Individuals[it->individualIndex]
+        .BuildESHyperNEATPhenotype(*it->network, sub, params);
+    }
+  };
 #endif
 
   setDefaultParameters();
@@ -303,9 +315,11 @@ void SpiderSwarm::recreatePhenotypes() {
       mPhenotypes[index].reset(i, j);
       mPhenotypes[index].spider->disableUpdatingFromPhysics();
 
+#ifndef BT_NO_PROFILE
       individual.BuildESHyperNEATPhenotype(*mPhenotypes[index].network,
                                            *mSubstrate,
                                            *mParameters);
+#endif
       ++index;
     }
   }
@@ -315,6 +329,36 @@ void SpiderSwarm::recreatePhenotypes() {
     mPhenotypes.pop_back();
     mLog->debug("Removing spider due to decrease in population");
   }
+
+#ifdef BT_NO_PROFILE
+  int size    = mPhenotypes.size();
+  int nThread = mmm::min(std::thread::hardware_concurrency(), size);
+  std::vector<std::thread> threads(nThread);
+
+  auto workIter  = std::begin(mPhenotypes);
+  int  grainSize = size / threads.size();
+
+  for (auto it = std::begin(threads); it != std::end(threads) - 1; ++it) {
+    *it = std::thread(mBuildingESHyperNeatWorker,
+                      workIter,
+                      workIter + grainSize,
+                      std::ref(*mPopulation),
+                      std::ref(*mSubstrate),
+                      std::ref(*mParameters));
+    workIter += grainSize;
+  }
+
+  threads.back() = std::thread(mBuildingESHyperNeatWorker,
+                               workIter,
+                               std::end(mPhenotypes),
+                               std::ref(*mPopulation),
+                               std::ref(*mSubstrate),
+                               std::ref(*mParameters));
+
+  for (auto&& i : threads)
+    i.join();
+
+#endif
 
   mLog->debug("Created {} spiders", mPhenotypes.size());
 }
