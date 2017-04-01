@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
 
   Engine* engine = new Engine();
 
-  if (!engine->initialize(argc, argv)) {
+  if (!engine->initialize(argc, argv, States::Init, States::MasterThesis)) {
     throw std::runtime_error("Engined failed to initialize");
   }
 
