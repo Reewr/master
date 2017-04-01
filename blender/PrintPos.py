@@ -85,15 +85,17 @@ def errorCheck():
         print('error in object ' + obj.name)
 
 
-def showVec(v):
-  if not v:
-    return 'vec3(0)'
-  return 'vec3(%f, %f, %f)' % (v.x, v.y, v.z)
+def showVec(vec):
+  for k,v in vec.items():
+    if not v:
+      return 'vec3(0)'
+    return 'vec3(%f, %f, %f)' % (v.x, v.y, v.z)
 
-def showVector(v):
-  if not v:
-    return ''
-  return '{ %f, %f, %f }' % (v.x, v.y, v.z)
+def showVector(vec):
+  for k,v in vec.items():
+    if not v:
+      return ''
+    return '{ %f, %f, %f }' % (v.x, v.y, v.z)
 
 
 def showPart(name):
@@ -112,19 +114,19 @@ def getInputNeurons(name):
 
   impAngX = bpy.data.objects.get(name + 'ImpAngX')
   if impAngX:
-    xs.append(impAngX.matrix_world.to_translation())
+    xs.append({ name+'ImpAngX': impAngX.matrix_world.to_translation() })
 
   impAngY = bpy.data.objects.get(name + 'ImpAngY')
   if impAngY:
-    xs.append(impAngY.matrix_world.to_translation())
+    xs.append({ name+'ImpAngY': impAngY.matrix_world.to_translation() })
 
   impAngZ = bpy.data.objects.get(name + 'ImpAngZ')
   if impAngZ:
-    xs.append(impAngZ.matrix_world.to_translation())
+    xs.append({ name+'ImpAngZ': impAngZ.matrix_world.to_translation() })
 
   impRot  = bpy.data.objects.get(name + 'ImpRot')
   if impRot:
-    xs.append(impRot.matrix_world.to_translation())
+    xs.append({ name+'ImpRot': impRot.matrix_world.to_translation() })
 
   return xs;
 
@@ -133,7 +135,7 @@ def getOutputNeurons(name):
 
   output  = bpy.data.objects.get(name + 'Output')
   if output:
-    xs.append(output.matrix_world.to_translation())
+    xs.append({ name+'Output': output.matrix_world.to_translation() })
 
   return xs
 
