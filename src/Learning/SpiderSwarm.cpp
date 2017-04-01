@@ -2,6 +2,7 @@
 
 #include "../3D/Spider.hpp"
 #include "../3D/World.hpp"
+#include "Substrate.hpp"
 
 #include <btBulletDynamicsCommon.h>
 #include <thread>
@@ -41,7 +42,7 @@ SpiderSwarm::SpiderSwarm()
   mBuildingESHyperNeatWorker = [](std::vector<Phenotype>::iterator begin,
                                   std::vector<Phenotype>::iterator end,
                                   NEAT::Population&                pop,
-                                  NEAT::Substrate&                 sub,
+                                  Substrate&                       sub,
                                   NEAT::Parameters&                params) {
     for (auto it = begin; it != end; ++it) {
       pop.m_Species[it->speciesIndex]
@@ -157,6 +158,7 @@ void SpiderSwarm::save(const std::string& filename) {
 
   mPopulation->Save(popFilename.c_str());
   mParameters->Save(paramFilename.c_str());
+  mSubstrate->save(subFilename);
 }
 
 /**
@@ -194,6 +196,7 @@ void SpiderSwarm::load(const std::string& filename) {
 
   mPopulation = new NEAT::Population(popFilename.c_str());
   mParameters->Load(paramFilename.c_str());
+  mSubstrate->load(subFilename);
 
   mCurrentBatch        = 0;
   mBestIndex           = 0;
@@ -554,7 +557,7 @@ void SpiderSwarm::setDefaultSubstrate() {
   };
   // clang-format on
 
-  mSubstrate = new NEAT::Substrate(inputs, hidden, outputs);
+  mSubstrate = new Substrate(inputs, hidden, outputs);
 
   mSubstrate->m_allow_input_hidden_links  = false;
   mSubstrate->m_allow_input_output_links  = false;

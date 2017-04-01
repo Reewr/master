@@ -13,11 +13,11 @@ class Program;
 class Spider;
 class Terrain;
 class World;
+class Substrate;
 
 namespace NEAT {
   class Parameters;
   class Population;
-  class Substrate;
 }
 
 /**
@@ -71,9 +71,9 @@ private:
 
   std::function<void(std::vector<Phenotype>::iterator begin,
                      std::vector<Phenotype>::iterator end,
-                     NEAT::Population& pop,
-                     NEAT::Substrate& sub,
-                     NEAT::Parameters& params)>
+                     NEAT::Population&                pop,
+                     Substrate&                       sub,
+                     NEAT::Parameters&                params)>
     mBuildingESHyperNeatWorker;
 #endif
 
@@ -96,7 +96,7 @@ private:
 
   // NEAT stuff
   NEAT::Parameters* mParameters;
-  NEAT::Substrate*  mSubstrate;
+  Substrate*  mSubstrate;
   NEAT::Population* mPopulation;
 
   void setDefaultParameters();
