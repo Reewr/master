@@ -38,7 +38,7 @@ public:
 
   // removes an object. Removes all that are equal if there
   // are multiple which are
-  void removeObject(Drawable3D* element = nullptr);
+  void removeObject(Drawable3D* element = nullptr, bool removeChildren = true);
 
   // does the physics!
   // also tells all drawable elements to update their position

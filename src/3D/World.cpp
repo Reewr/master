@@ -106,7 +106,7 @@ World::~World() {
   removePickingConstraint();
 
   for (auto element : mElements)
-    removeObject(element);
+    removeObject(element, false);
 
   delete mWorld;
   delete mSolver;
@@ -184,7 +184,7 @@ void World::reset() {
  *
  * @param element the drawable element to remove
  */
-void World::removeObject(Drawable3D* element) {
+void World::removeObject(Drawable3D* element, bool removeChildren) {
   if (element == nullptr)
     return;
 
@@ -202,8 +202,10 @@ void World::removeObject(Drawable3D* element) {
         }
       }
 
-      for (auto& child : a->children())
-        removeObject(child);
+      if (removeChildren) {
+        for (auto& child : a->children())
+          removeObject(child);
+      }
     }
   }
 
