@@ -13,6 +13,21 @@
 #include <Population.h>
 #include <Substrate.h>
 
+/**
+ * @brief
+ *
+ *
+ */
+static std::vector<mmm::vec3> grid = {
+  {-4, 0, -4}, {4, 0, -4}, {4, 0, 4},  {-4, 0, 4},
+
+  {-12, 0, 4}, {-12, 0, -4}, {-12, 0, -12},  {-4, 0, -12},
+
+  {4, 0, -12}, {12, 0, -12}, {12, 0, -4},  {12, 0, 4},
+
+  {12, 0, 12}, {4, 0, 12}, {-4, 0, 12},  {-12, 0, 12},
+};
+
 SpiderSwarm::SpiderSwarm()
     : Logging::Log("SpiderSwarm")
     , mCurrentBatch(0)
@@ -148,16 +163,22 @@ void SpiderSwarm::update(float deltaTime) {
  */
 void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
   size_t numPhenotypes = mPhenotypes.size();
+  size_t gridIndex = 0;
+  size_t gridSize  = grid.size();
 
   switch(mDrawingMethod) {
-    case DrawingMethod::SpeciesLeaders:
+    case DrawingMethod::SpeciesLeaders: {
       for(auto& a : mSpeciesLeaders) {
-        if (a < numPhenotypes) {
+        if (a < numPhenotypes && gridIndex < gridSize) {
           mPhenotypes[a].spider->enableUpdatingFromPhysics();
-          mPhenotypes[a].spider->draw(prog, bindTexture);
+          mPhenotypes[a].spider->draw(prog, grid[gridIndex], bindTexture);
         }
+
+        gridIndex++;
       }
+
       break;
+    }
     case DrawingMethod::BestFitness:
       if (mBestIndex < numPhenotypes) {
         mPhenotypes[mBestIndex].spider->enableUpdatingFromPhysics();
@@ -166,9 +187,14 @@ void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
       break;
     case DrawingMethod::DrawAll:
       for(auto& p : mPhenotypes) {
-        p.spider->enableUpdatingFromPhysics();
-        p.spider->draw(prog, bindTexture);
+        if (gridIndex < gridSize) {
+          p.spider->enableUpdatingFromPhysics();
+          p.spider->draw(prog, grid[gridIndex], bindTexture);
+        }
+        gridIndex++;
       }
+
+      break;
       break;
   }
 }
