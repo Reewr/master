@@ -250,10 +250,9 @@ float Phenotype::finalizeFitness() {
   // fitness[3] /= updates;
 
   // length walked
-  // btRigidBody* sternum = spider->parts()["Sternum"].part->rigidBody();
-  // auto         pos_    = sternum->getCenterOfMassPosition();
-  // mmm::vec3    pos     = mmm::vec3(pos_.x(), pos_.y(), pos_.z());
-  // return mmm::length(pos);
+  btRigidBody* sternum = spider->parts()["Sternum"].part->rigidBody();
+  auto x = sternum->getCenterOfMassPosition().x();
+  fitness[4] = mmm::clamp(x, 0.f, 16.f) / 16.f;
 
   return mmm::product(fitness);
 }
