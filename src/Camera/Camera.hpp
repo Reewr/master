@@ -81,6 +81,9 @@ public:
   // Returns the end position of a ray from camera position to far plane.
   mmm::vec3 screenPointToRay(const mmm::vec2& mousePosition);
 
+  // Turns a 3D position into a 2D screen coordinate
+  mmm::vec3 positionTo2D(const mmm::vec3& position);
+
 private:
   Asset* mAsset;
 
