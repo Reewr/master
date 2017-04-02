@@ -524,35 +524,70 @@ void SpiderSwarm::setDefaultParameters() {
 
   mParameters = new NEAT::Parameters();
 
-  mParameters->PopulationSize = 50;
+  // Basic parameters
+  mParameters->PopulationSize                          = 50;
+  mParameters->DynamicCompatibility                    = true;
+  mParameters->MinSpecies                              = 5;
+  mParameters->MaxSpecies                              = 10;
+  mParameters->AllowClones                             = true;
 
-  mParameters->DynamicCompatibility   = true;
-  mParameters->CompatTreshold         = 2.0;
-  mParameters->YoungAgeTreshold       = 15;
-  mParameters->SpeciesMaxStagnation   = 100;
-  mParameters->OldAgeTreshold         = 35;
-  mParameters->MinSpecies             = 5;
-  mParameters->MaxSpecies             = 10;
-  mParameters->RouletteWheelSelection = false;
+  // GA parameters
+  mParameters->YoungAgeTreshold                        = 3;
+  mParameters->YoungAgeFitnessBoost                    = 1.1;
+  mParameters->SpeciesMaxStagnation                    = 50;
+  mParameters->StagnationDelta                         = 0.0;
+  mParameters->OldAgeTreshold                          = 10;
+  mParameters->OldAgePenalty                           = 1.0;
+  mParameters->DetectCompetetiveCoevolutionStagnation  = false;
+  mParameters->KillWorstSpeciesEach                    = 8;
+  mParameters->KillWorstAge                            = 5;
+  mParameters->SurvivalRate                            = 0.25;
+  mParameters->CrossoverRate                           = 0.7;
+  mParameters->OverallMutationRate                     = 0.25;
+  mParameters->InterspeciesCrossoverRate               = 0.01;
+  mParameters->MultipointCrossoverRate                 = 0.75;
+  mParameters->RouletteWheelSelection                  = false;
+  mParameters->TournamentSize                          = 4;
+  mParameters->EliteFraction                           = 0.15;
 
-  mParameters->MutateRemLinkProb         = 0.02;
-  mParameters->RecurrentProb             = 0;
-  mParameters->OverallMutationRate       = 0.15;
-  mParameters->MutateAddLinkProb         = 0.08;
-  mParameters->MutateAddNeuronProb       = 0.01;
-  mParameters->MutateWeightsProb         = 0.90;
-  mParameters->MaxWeight                 = 8.0;
-  mParameters->WeightMutationMaxPower    = 0.2;
-  mParameters->WeightReplacementMaxPower = 1.0;
+  // Mutation parameters
+  mParameters->MutateAddNeuronProb                     = 0.01;
+  mParameters->SplitRecurrent                          = true;
+  mParameters->SplitLoopedRecurrent                    = true;
+  mParameters->MutateAddLinkProb                       = 0.08;
+  mParameters->MutateAddLinkFromBiasProb               = 0.0;
+  mParameters->MutateRemLinkProb                       = 0.2;
+  mParameters->MutateRemSimpleNeuronProb               = 0.0;
+  mParameters->LinkTries                               = 32;
+  mParameters->RecurrentProb                           = 0.25;
+  mParameters->RecurrentLoopProb                       = 0.25;
 
-  mParameters->MutateActivationAProb       = 0.0;
-  mParameters->ActivationAMutationMaxPower = 0.5;
-  mParameters->MinActivationA              = 0.05;
-  mParameters->MaxActivationA              = 6.0;
+  // Parameter mutation parameters
+  mParameters->MutateWeightsProb                       = 0.90;
+  mParameters->MutateWeightsSevereProb                 = 0.25;
+  mParameters->WeightMutationRate                      = 1.0;
+  mParameters->WeightMutationMaxPower                  = 0.2;
+  mParameters->WeightReplacementMaxPower               = 1.0;
+  mParameters->MaxWeight                               = 8.0;
+  mParameters->MutateActivationAProb                   = 0.0;
+  mParameters->MutateActivationBProb                   = 0.0;
+  mParameters->ActivationAMutationMaxPower             = 0.0;
+  mParameters->ActivationBMutationMaxPower             = 0.0;
+  mParameters->MinActivationA                          = 0.05;
+  mParameters->MaxActivationA                          = 6.0;
+  mParameters->MinActivationB                          = 0.0;
+  mParameters->MaxActivationB                          = 0.0;
+  mParameters->TimeConstantMutationMaxPower            = 0.0;
+  mParameters->MutateNeuronTimeConstantsProb           = 0.0;
+  mParameters->MutateNeuronBiasesProb                  = 0.0;
+  mParameters->MinNeuronTimeConstant                   = 0.0;
+  mParameters->MaxNeuronTimeConstant                   = 0.0;
+  mParameters->MinNeuronBias                           = 0.0;
+  mParameters->MaxNeuronBias                           = 0.0;
 
-  mParameters->MutateNeuronActivationTypeProb = 0.03;
-
-  mParameters->ActivationFunction_SignedSigmoid_Prob   = 0.0;
+  // Activation function parameters
+  mParameters->MutateNeuronActivationTypeProb          = 0.03;
+  mParameters->ActivationFunction_SignedSigmoid_Prob   = 1.0;
   mParameters->ActivationFunction_UnsignedSigmoid_Prob = 0.0;
   mParameters->ActivationFunction_Tanh_Prob            = 1.0;
   mParameters->ActivationFunction_TanhCubic_Prob       = 0.0;
@@ -564,23 +599,44 @@ void SpiderSwarm::setDefaultParameters() {
   mParameters->ActivationFunction_SignedSine_Prob      = 1.0;
   mParameters->ActivationFunction_UnsignedSine_Prob    = 0.0;
   mParameters->ActivationFunction_Linear_Prob          = 1.0;
+  mParameters->ActivationFunction_Relu_Prob            = 0.0;
+  mParameters->ActivationFunction_Softplus_Prob        = 0.0;
 
-  mParameters->DivisionThreshold = 0.03;
-  mParameters->VarianceThreshold = 0.03;
-  mParameters->BandThreshold     = 0.3;
-  mParameters->InitialDepth      = 3;
-  mParameters->MaxDepth          = 6;
-  mParameters->IterationLevel    = 1;
-  mParameters->Leo               = false;
-  mParameters->GeometrySeed      = false;
-  mParameters->LeoSeed           = false;
-  mParameters->LeoThreshold      = 0.3;
-  mParameters->CPPN_Bias         = -1.0;
-  mParameters->Qtree_X           = 0.0;
-  mParameters->Qtree_Y           = 0.0;
-  mParameters->Width             = 1.0;
-  mParameters->Height            = 1.0;
-  mParameters->EliteFraction     = 0.1;
+  // Genome properties parameters
+  // mParameters->DontUseBiasNeuron                       = false;
+  // mParameters->AllowLoops                              = true;
+
+  // Speciation parameters
+  mParameters->DisjointCoeff                           = 1.0;
+  mParameters->ExcessCoeff                             = 1.0;
+  mParameters->WeightDiffCoeff                         = 0.5;
+  mParameters->ActivationADiffCoeff                    = 0.0;
+  mParameters->ActivationBDiffCoeff                    = 0.0;
+  mParameters->TimeConstantDiffCoeff                   = 0.0;
+  mParameters->BiasDiffCoeff                           = 0.0;
+  mParameters->ActivationFunctionDiffCoeff             = 0.0;
+  mParameters->CompatTreshold                          = 2.0;
+  mParameters->MinCompatTreshold                       = 0.2;
+  mParameters->CompatTresholdModifier                  = 0.3;
+  mParameters->CompatTreshChangeInterval_Generations   = 1;
+  mParameters->CompatTreshChangeInterval_Evaluations   = 10;
+
+  // ES-HyperNEAT parameters
+  mParameters->DivisionThreshold                       = 0.03;
+  mParameters->VarianceThreshold                       = 0.03;
+  mParameters->BandThreshold                           = 0.3;
+  mParameters->InitialDepth                            = 3;
+  mParameters->MaxDepth                                = 4;
+  mParameters->IterationLevel                          = 1;
+  mParameters->CPPN_Bias                               = 1.0;
+  mParameters->Width                                   = 2.0;
+  mParameters->Height                                  = 2.0;
+  mParameters->Qtree_X                                 = 0.0;
+  mParameters->Qtree_Y                                 = 0.0;
+  mParameters->Leo                                     = false;
+  mParameters->LeoThreshold                            = 0.3;
+  mParameters->LeoSeed                                 = false;
+  mParameters->GeometrySeed                            = false;
 }
 void SpiderSwarm::setDefaultSubstrate() {
   if (mSubstrate != nullptr)
