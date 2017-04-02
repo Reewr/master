@@ -165,39 +165,58 @@ void Phenotype::updateFitness(float deltaTime) {
     fitness[0] *= mmm::product(1.f / (mmm::abs(r) * deltaTime + 1.f));
   }
 
-  { // Angles
-    float x = 0;
-    float i = 0;
+  // { // Angles
+  //   float x = 0;
+  //   float i = 0;
 
-    for (auto& part : parts) {
-      if (part.second.hinge != nullptr) {
+  //   for (auto& part : parts) {
+  //     if (part.second.hinge != nullptr) {
 
-        float current = part.second.hinge->getHingeAngle();
-        x += 1.f / (mmm::abs(current - part.second.restAngle) * deltaTime + 1.f);
-        i += 1;
+  //       float current = part.second.hinge->getHingeAngle();
+  //       x += 1.f / (mmm::abs(current - part.second.restAngle) * deltaTime + 1.f);
+  //       i += 1;
 
-      } else if (part.second.dof != nullptr) {
-        // TODO
-      }
-    }
+  //     } else if (part.second.dof != nullptr) {
+  //       // TODO
+  //     }
+  //   }
 
-    fitness[1] *= x / i;
-  }
+  //   fitness[1] *= x / i;
+  // }
 
 
-  { // Leg ground contact
-    float l1 = mmm::clamp(parts["TarsusL1"].part->rigidBody()->getCenterOfMassPosition().y() - 0.3f, 0.f, 1.f);
-    float l2 = mmm::clamp(parts["TarsusL2"].part->rigidBody()->getCenterOfMassPosition().y() - 0.3f, 0.f, 1.f);
-    float l3 = mmm::clamp(parts["TarsusL3"].part->rigidBody()->getCenterOfMassPosition().y() - 0.3f, 0.f, 1.f);
-    float l4 = mmm::clamp(parts["TarsusL4"].part->rigidBody()->getCenterOfMassPosition().y() - 0.3f, 0.f, 1.f);
-    float r1 = mmm::clamp(parts["TarsusR1"].part->rigidBody()->getCenterOfMassPosition().y() - 0.3f, 0.f, 1.f);
-    float r2 = mmm::clamp(parts["TarsusR2"].part->rigidBody()->getCenterOfMassPosition().y() - 0.3f, 0.f, 1.f);
-    float r3 = mmm::clamp(parts["TarsusR3"].part->rigidBody()->getCenterOfMassPosition().y() - 0.3f, 0.f, 1.f);
-    float r4 = mmm::clamp(parts["TarsusR4"].part->rigidBody()->getCenterOfMassPosition().y() - 0.3f, 0.f, 1.f);
+  // { // Angles
+  //   float x = 0;
+  //   float i = 0;
 
-    fitness[2] *= 1.f / (mmm::abs(l1 + l2 + l3 + l4 + r1 + r2 + r3 + r4) * deltaTime + 1.f);
-  }
+  //   for (auto& part : parts) {
+  //     if (part.second.hinge != nullptr) {
 
+  //       float current = part.second.hinge->getHingeAngle();
+  //       x += 1.f / (mmm::abs(current - part.second.restAngle) * deltaTime + 1.f);
+  //       i += 1;
+
+  //     } else if (part.second.dof != nullptr) {
+  //       // TODO
+  //     }
+  //   }
+
+  //   fitness[1] *= x / i;
+  // }
+
+
+  // { // Leg ground contact
+  //   float l1 = mmm::clamp(parts["TarsusL1"].part->rigidBody()->getCenterOfMassPosition().y() - 0.4f, 0.f, 1.f);
+  //   float l2 = mmm::clamp(parts["TarsusL2"].part->rigidBody()->getCenterOfMassPosition().y() - 0.4f, 0.f, 1.f);
+  //   float l3 = mmm::clamp(parts["TarsusL3"].part->rigidBody()->getCenterOfMassPosition().y() - 0.4f, 0.f, 1.f);
+  //   float l4 = mmm::clamp(parts["TarsusL4"].part->rigidBody()->getCenterOfMassPosition().y() - 0.4f, 0.f, 1.f);
+  //   float r1 = mmm::clamp(parts["TarsusR1"].part->rigidBody()->getCenterOfMassPosition().y() - 0.4f, 0.f, 1.f);
+  //   float r2 = mmm::clamp(parts["TarsusR2"].part->rigidBody()->getCenterOfMassPosition().y() - 0.4f, 0.f, 1.f);
+  //   float r3 = mmm::clamp(parts["TarsusR3"].part->rigidBody()->getCenterOfMassPosition().y() - 0.4f, 0.f, 1.f);
+  //   float r4 = mmm::clamp(parts["TarsusR4"].part->rigidBody()->getCenterOfMassPosition().y() - 0.4f, 0.f, 1.f);
+
+  //   fitness[2] *= 1.f / (mmm::abs(l1 + l2 + l3 + l4 + r1 + r2 + r3 + r4) * deltaTime + 1.f);
+  // }
 
   // // Calculate the fitness based on the angle of its hinges, dividing the
   // // accumlicated value by the number of hinges
