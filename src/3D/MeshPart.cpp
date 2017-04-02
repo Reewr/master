@@ -35,6 +35,10 @@ MeshPart::~MeshPart() {}
 
 void MeshPart::update(float) {}
 
+void MeshPart::draw(std::shared_ptr<Program>& program, bool bindTexture) {
+  draw(program, mmm::vec3(0), bindTexture);
+}
+
 /**
  * @brief
  *   Draws the mesh part. Since the MeshPart is suppose to be part of a larger
@@ -43,12 +47,15 @@ void MeshPart::update(float) {}
  *
  * @param c
  */
-void MeshPart::draw(std::shared_ptr<Program>& program, bool bindTexture) {
+void MeshPart::draw(std::shared_ptr<Program>& program,
+                    mmm::vec3                 offset,
+                    bool                      bindTexture) {
   if (mMesh->size() == 0)
     return;
 
   program->bind();
-  program->setUniform("model", mmm::translate(mPosition) * mRotation * mScale);
+  program->setUniform("model",
+                      mmm::translate(mPosition + offset) * mRotation * mScale);
 
   mMesh->draw(bindTexture ? 1 : -1);
 }

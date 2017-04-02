@@ -42,7 +42,14 @@ Terrain::~Terrain() {
 void Terrain::update(float) {}
 
 void Terrain::draw(std::shared_ptr<Program>& program, bool bindTexture) {
-  mat4 model = mmm::translate(mPosition + vec3(0, 1, 0)) * mRotation * mScale;
+  draw(program, mmm::vec3(0), bindTexture);
+}
+
+void Terrain::draw(std::shared_ptr<Program>& program,
+                   mmm::vec3                 offset,
+                   bool                      bindTexture) {
+  mat4 model =
+    mmm::translate(mPosition + vec3(0, 1, 0) + offset) * mRotation * mScale;
 
   program->bind();
   program->setUniform("model", model);

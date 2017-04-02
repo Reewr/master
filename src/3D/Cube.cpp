@@ -65,8 +65,22 @@ void Cube::update(float) {}
  * @param c
  */
 void Cube::draw(std::shared_ptr<Program>& program, bool bindTexture) {
+  draw(program, mmm::vec3(0), bindTexture);
+}
+
+/**
+ * @brief
+ *   Draw the cube by binding the program and setting the required
+ *   uniforms.
+ *
+ * @param c
+ */
+void Cube::draw(std::shared_ptr<Program>& program,
+                mmm::vec3                 offset,
+                bool                      bindTexture) {
   program->bind();
-  program->setUniform("model", mmm::translate(mPosition) * mRotation * mScale);
+  program->setUniform("model",
+                      mmm::translate(mPosition + offset) * mRotation * mScale);
 
   if (bindTexture)
     mTexture->bind(1);

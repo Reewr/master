@@ -156,6 +156,10 @@ std::map<std::string, Spider::Part>& Spider::parts() {
 
 void Spider::update(float) {}
 
+void Spider::draw(std::shared_ptr<Program>& program, bool bindTexture) {
+  draw(program, mmm::vec3(0), bindTexture);
+}
+
 /**
  * @brief
  *   Draws the spider by drawing each of the children
@@ -163,12 +167,12 @@ void Spider::update(float) {}
  * @param program
  * @param bindTexture
  */
-void Spider::draw(std::shared_ptr<Program>& program, bool bindTexture) {
+void Spider::draw(std::shared_ptr<Program>& program, mmm::vec3 offset, bool bindTexture) {
   program->bind();
 
   mMesh->mesh()->bindVertexArray();
   for (auto& child : mChildren)
-    child->draw(program, bindTexture);
+    child->draw(program, offset, bindTexture);
   mMesh->mesh()->unbindVertexArray();
 }
 
