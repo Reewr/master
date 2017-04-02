@@ -7,6 +7,7 @@
 #include "../3D/Spider.hpp"
 #include "../3D/World.hpp"
 
+using mmm::vec2;
 using mmm::vec3;
 
 /**
@@ -153,18 +154,13 @@ void Phenotype::updateFitness(float deltaTime) {
     btRigidBody* sternum  = parts["Sternum"].part->rigidBody();
 
     // height of the sternum
-    float h = sternum->getCenterOfMassPosition().y() - 0.75f;
+    // float h = sternum->getCenterOfMassPosition().y() - 0.70f;
 
     // rotation of the sternum in the xz plane
-    auto  q = sternum->getOrientation();
-    vec3  r = getEulerAngles(q.x(), q.y(), q.z(), q.w());
+    auto q = sternum->getOrientation();
+    vec2 r = getEulerAngles(q.x(), q.y(), q.z(), q.w()).xz;
 
-    // fitness[0] *= 1.f / (mmm::abs(h) * deltaTime + 1.f);
-    // fitness[1] *= 1.f / (mmm::abs(r.x) * deltaTime + 1.f);
-    // fitness[2] *= 1.f / (mmm::abs(r.z) * deltaTime + 1.f);
-
-    fitness[0] *=
-      mmm::product(1.f / (mmm::abs(vec3(r.x, h, r.z)) * deltaTime + 1.f));
+    fitness[0] *= mmm::product(1.f / (mmm::abs(r) * deltaTime + 1.f));
   }
 
   { // Angles
