@@ -55,6 +55,7 @@ Phenotype::Phenotype()
     , planeBody(nullptr)
     , fitness(1)
     , numUpdates(0)
+    , duration(0)
     , speciesIndex(-1)
     , individualIndex(-1) {}
 
@@ -86,7 +87,10 @@ void Phenotype::update(float deltaTime) {
 
   // construct input vector which is known to be exactly 172 elements
   std::vector<double> inputs;
-  inputs.reserve(44);
+  inputs.reserve(45);
+  inputs.push_back(mmm::sin(duration));
+  duration += deltaTime;
+
   for (auto& part : spider->parts()) {
 
     // vec3  ang = part.second.part->angularVelocity();
@@ -277,6 +281,7 @@ void Phenotype::reset(int speciesId, int individualId) {
     network->Flush();
   }
 
+  duration   = 0;
   numUpdates = 0;
   fitness    = mmm::vec<8>(1);
   speciesIndex = speciesId;
