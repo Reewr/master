@@ -82,7 +82,7 @@ public:
   mmm::vec3 screenPointToRay(const mmm::vec2& mousePosition);
 
   // Turns a 3D position into a 2D screen coordinate
-  mmm::vec3 positionTo2D(const mmm::vec3& position);
+  mmm::vec3 project(const mmm::vec3& position);
 
 private:
   Asset* mAsset;
