@@ -28,8 +28,27 @@ namespace NEAT {
  */
 class SpiderSwarm : Logging::Log {
 public:
+
+  // This describes the different drawing methods
+  //
+  // - SpeciesLeaders will draw the best of the species
+  // - BestFitness will only draw the best spider
+  // - DrawAll will draw all spiders
+  //
+  enum class DrawingMethod {
+    SpeciesLeaders,
+    BestFitness,
+    DrawAll
+  };
+
   SpiderSwarm();
   ~SpiderSwarm();
+
+  // Sets the drawing method. Will update on the next update
+  void setDrawingMethod(DrawingMethod dm = DrawingMethod::SpeciesLeaders);
+
+  // Returns the current drawing method
+  DrawingMethod drawingMethod();
 
   // Updates the SpiderSwarm which will either run a normal update
   // on the current batch or figure out which batch is next
@@ -53,13 +72,17 @@ private:
   size_t mBatchStart;
   size_t mBatchEnd;
   size_t mBatchSize;
-  size_t mBestIndex;
   size_t mGeneration;
 
   float  mCurrentDuration;
   float  mIterationDuration;
   float  mBestPossibleFitness;
-  size_t mDrawLimit;
+
+  // Drawing settings
+  DrawingMethod mDrawingMethod;
+
+  std::vector<size_t> mSpeciesLeaders;
+  size_t mBestIndex;
 
 // Save some memory if bullet has profiling on and therefore
 // does not allow for threading

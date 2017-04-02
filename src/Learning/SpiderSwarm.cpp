@@ -19,12 +19,12 @@ SpiderSwarm::SpiderSwarm()
     , mBatchStart(0)
     , mBatchEnd(7)
     , mBatchSize(7)
-    , mBestIndex(0)
     , mGeneration(0)
     , mCurrentDuration(0)
     , mIterationDuration(4)
     , mBestPossibleFitness(0)
-    , mDrawLimit(1)
+    , mDrawingMethod(SpiderSwarm::DrawingMethod::SpeciesLeaders)
+    , mBestIndex(0)
     , mParameters(nullptr)
     , mSubstrate(nullptr)
     , mPopulation(nullptr) {
@@ -78,6 +78,27 @@ SpiderSwarm::~SpiderSwarm() {
 
 /**
  * @brief
+ *   Sets the new drawing method. This will update as soon as possible,
+ *   latest during next epoch.
+ *
+ * @param dm
+ */
+void SpiderSwarm::setDrawingMethod(DrawingMethod dm) {
+  mDrawingMethod = dm;
+}
+
+/**
+ * @brief
+ *   Returns the current drawing method
+ *
+ * @return
+ */
+SpiderSwarm::DrawingMethod SpiderSwarm::drawingMethod() {
+  return mDrawingMethod;
+}
+
+/**
+ * @brief
  *   This is the main update function that controls what to do next.
  *   Most of the time this will update the spiders by activating the networks,
  *   using the networks output before running physics.
@@ -126,14 +147,30 @@ void SpiderSwarm::update(float deltaTime) {
  * @param bindTexture
  */
 void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
-  mPhenotypes[mBestIndex].spider->enableUpdatingFromPhysics();
-  mPhenotypes[mBestIndex].spider->draw(prog, bindTexture);
+  size_t numPhenotypes = mPhenotypes.size();
 
-  // Draw all of the spiders.
-  // for(auto e : mPhenotypes) {
-  //   e.spider->enableUpdatingFromPhysics();
-  //   e.spider->draw(prog, bindTexture);
-  // }
+  switch(mDrawingMethod) {
+    case DrawingMethod::SpeciesLeaders:
+      for(auto& a : mSpeciesLeaders) {
+        if (a < numPhenotypes) {
+          mPhenotypes[a].spider->enableUpdatingFromPhysics();
+          mPhenotypes[a].spider->draw(prog, bindTexture);
+        }
+      }
+      break;
+    case DrawingMethod::BestFitness:
+      if (mBestIndex < numPhenotypes) {
+        mPhenotypes[mBestIndex].spider->enableUpdatingFromPhysics();
+        mPhenotypes[mBestIndex].spider->draw(prog, bindTexture);
+      }
+      break;
+    case DrawingMethod::DrawAll:
+      for(auto& p : mPhenotypes) {
+        p.spider->enableUpdatingFromPhysics();
+        p.spider->draw(prog, bindTexture);
+      }
+      break;
+  }
 }
 
 /**
@@ -329,11 +366,16 @@ void SpiderSwarm::updateEpoch() {
   mBatchStart      = 0;
   mBatchEnd        = mmm::min(mBatchSize, mPhenotypes.size());
 
+  mSpeciesLeaders.clear();
+
   float  best      = -1.f;
   size_t bestIndex = 0;
 
   size_t index = 0;
   for (size_t i = 0; i < mPopulation->m_Species.size(); ++i) {
+    float  bestOfSpecies = 0;
+    size_t leaderIndex = 0;
+
     for (size_t j = 0; j < mPopulation->m_Species[i].m_Individuals.size();
          ++j) {
 
@@ -348,8 +390,15 @@ void SpiderSwarm::updateEpoch() {
         bestIndex = index;
       }
 
+      if (fitness > bestOfSpecies) {
+        bestOfSpecies = fitness;
+        leaderIndex   = index;
+      }
+
       index += 1;
     }
+
+    mSpeciesLeaders.push_back(leaderIndex);
   }
 
   ++mGeneration;
@@ -378,6 +427,7 @@ void SpiderSwarm::updateEpoch() {
 
 void SpiderSwarm::recreatePhenotypes() {
   mLog->debug("Recreating {} phenotypes...", mParameters->PopulationSize);
+  mLog->debug("We have {} species", mPopulation->m_Species.size());
 
   size_t index = 0;
   for (size_t i = 0; i < mPopulation->m_Species.size(); ++i) {
