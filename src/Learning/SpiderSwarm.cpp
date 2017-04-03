@@ -464,8 +464,13 @@ void SpiderSwarm::recreatePhenotypes() {
   mLog->debug("We have {} species", mPopulation->m_Species.size());
 
   size_t index = 0;
+  bool   addLeaders = mSpeciesLeaders.size() == 0;
   for (size_t i = 0; i < mPopulation->m_Species.size(); ++i) {
     auto& species = mPopulation->m_Species[i];
+
+    if (addLeaders) {
+      mSpeciesLeaders.push_back(index);
+    }
 
     for (size_t j = 0; j < species.m_Individuals.size(); ++j) {
       // Add new element if the population size has increased
