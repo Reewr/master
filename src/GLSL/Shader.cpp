@@ -193,6 +193,87 @@ Shader::Details loadTextfile(const std::string& filename) {
 
 /**
  * @brief
+ *   Takes a string that represents the filename of the shader and
+ *   checks which file extension the file has. If the file extension
+ *   is recognized as a legal extension, the Shader type is returned.
+ *
+ *   If the file extension is not recognized, Shader::Type::None
+ *   is returned.
+ *
+ * @param filename
+ *
+ * @return
+ */
+Shader::Type Shader::typeFromFilename(const std::string& filename) {
+  if (filename.find(".fs") != std::string::npos) {
+    return Shader::Type::Fragment;
+  }
+
+  if (filename.find(".vs") != std::string::npos) {
+    return Shader::Type::Vertex;
+  }
+
+  if (filename.find(".gs") != std::string::npos) {
+    return Shader::Type::Geometry;
+  }
+
+  if (filename.find(".ts") != std::string::npos) {
+    return Shader::Type::Tessellation;
+  }
+
+  if (filename.find(".es") != std::string::npos) {
+    return Shader::Type::Evaluation;
+  }
+
+  if (filename.find(".cs") != std::string::npos) {
+    return Shader::Type::Compute;
+  }
+
+  return Shader::Type::None;
+}
+
+/**
+ * @brief
+ *   Stringifies the shader type
+ *
+ * @param t
+ *
+ * @return
+ */
+std::string Shader::typeToStr(Shader::Type t) {
+  switch(t) {
+    case Shader::Type::Fragment:     return "Fragment";
+    case Shader::Type::Vertex:       return "Vertex";
+    case Shader::Type::Geometry:     return "Geometry";
+    case Shader::Type::Tessellation: return "Tessellation";
+    case Shader::Type::Evaluation:   return "Evaluation";
+    case Shader::Type::Compute:      return "Compute";
+    case Shader::Type::None:         return "None";
+  }
+}
+
+/**
+ * @brief
+ *   Returns the OpenGL type that the Shader type represents
+ *
+ * @param t
+ *
+ * @return
+ */
+GLuint Shader::typeToGLType(Type t) {
+  switch(t) {
+    case Shader::Type::Fragment:     return GL_FRAGMENT_SHADER;
+    case Shader::Type::Vertex:       return GL_VERTEX_SHADER;
+    case Shader::Type::Geometry:     return GL_GEOMETRY_SHADER;
+    case Shader::Type::Tessellation: return 0; // GL_TESS_CONTROL_SHADER;
+    case Shader::Type::Evaluation:   return 0; // GL_TESS_EVALUATION_SHADER;
+    case Shader::Type::Compute:      return 0; // GL_COMPUTE_SHADER;
+    case Shader::Type::None:         return 0;
+  }
+}
+
+/**
+ * @brief
  *   Creates an empty shader
  */
 Shader::Shader() : Logging::Log("Shader"), mId(0), mFilename("Unknown") {}
@@ -207,10 +288,9 @@ Shader::Shader() : Logging::Log("Shader"), mId(0), mFilename("Unknown") {}
  *
  * @param filename
  */
-Shader::Shader(const std::string& filename)
+Shader::Shader(const std::string& filename, Shader::Type type)
     : Logging::Log("Shader"), mFilename(filename) {
-  mId       = loadShader(filename);
-  mFilename = filename;
+  loadShader(filename, type);
 }
 
 Shader::~Shader() {
@@ -229,7 +309,7 @@ std::string Shader::filename() const {
   return mFilename;
 }
 
-std::string Shader::type() const {
+Shader::Type Shader::type() const {
   return mType;
 }
 
@@ -237,12 +317,17 @@ GLuint Shader::id() const {
   return mId;
 }
 
-GLuint Shader::loadShader(const std::string& filename) {
-  GLuint shaderType = GL_VERTEX_SHADER;
+GLuint Shader::loadShader(const std::string& filename, Shader::Type type) {
+  if (type == Shader::Type::None) {
+    type = Shader::typeFromFilename(filename);
+  }
 
-  if (filename.find(".fs") != std::string::npos)
-    shaderType = GL_FRAGMENT_SHADER;
+  if (type == Shader::Type::None) {
+    throw std::runtime_error("No type given to shader: " + filename);
+  }
 
+  GLuint shaderType = Shader::typeToGLType(type);
+  mType   = type;
   mId     = glCreateShader(shaderType);
   mDetail = loadTextfile(filename);
 
