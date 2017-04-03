@@ -9,8 +9,8 @@
 #include "../Log.hpp"
 #include "../OpenGLHeaders.hpp"
 #include "../Resource/Resource.hpp"
+#include "Shader.hpp"
 
-class Shader;
 class fstream;
 class ResourceManager;
 
@@ -73,8 +73,7 @@ public:
 
   bool isActive() const;
 
-  static bool checkErrors(const std::string&              place,
-                          const std::vector<std::string>& files = {});
+  bool checkErrors(const std::string& place);
 
 private:
   bool setGLUniform(GLint loc, const bool b);
@@ -88,23 +87,19 @@ private:
   bool setGLUniform(GLint loc, const mmm::mat3& m);
   bool setGLUniform(GLint loc, const mmm::mat4& m);
 
-  static bool checkProgram(const GLuint pro);
+  bool checkProgram(const GLuint pro);
 
-  static std::map<std::string, std::string>
-  loadDualShaderFilename(const std::string& vsfs);
+  static std::map<Shader::Type, std::string>
+  loadMultipleShaderFilename(const std::string& vsfs);
 
   static GLuint activeProgram;
 
   std::map<std::string, int> uniLocations;
-  std::vector<std::string> filenames;
+  std::map<Shader::Type, Shader*> mShaders;
 
-  GLuint program = 0;
-
-  Shader* mFS;
-  Shader* mVS;
-
-  bool isLinked = false;
-  bool isUsable = false;
+  GLuint program;
+  bool isLinked;
+  bool isUsable;
 };
 
 // ----------------------------------------------------------

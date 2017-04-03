@@ -5,6 +5,7 @@
 
 #include "../GlobalLog.hpp"
 #include "../Utils/Utils.hpp"
+#include "../Utils/str.hpp"
 #include "Shader.hpp"
 
 GLuint Program::activeProgram = 0;
@@ -12,64 +13,64 @@ GLuint Program::activeProgram = 0;
 Program::Program()
     : Logging::Log("Program")
     , program(0)
-    , mFS(nullptr)
-    , mVS(nullptr)
     , isLinked(false)
     , isUsable(false) {}
 
 Program::Program(const std::string& fsvs, bool link)
     : Logging::Log("Program")
     , program(0)
-    , mFS(nullptr)
-    , mVS(nullptr)
     , isLinked(false)
     , isUsable(false) {
   createProgram(fsvs, link);
 }
 
 Program::~Program() {
-  if (mFS != nullptr)
-    delete mFS;
+  if (mShaders.size() > 0) {
+    for(auto& s : mShaders)
+      delete s.second;
 
-  if (mVS != nullptr)
-    delete mVS;
+    mShaders.clear();
+  }
 }
 
 
-bool Program::createProgram(const std::string& fsvs, bool link) {
-  if (fsvs.find(",") == std::string::npos) {
+bool Program::createProgram(const std::string& shaders, bool link) {
+  if (shaders.find(",") == std::string::npos) {
     throw std::runtime_error(
       "Must load program as single string of two shaders");
   }
 
-  std::map<std::string, std::string> srcs = loadDualShaderFilename(fsvs);
+  std::map<Shader::Type, std::string> srcs = loadMultipleShaderFilename(shaders);
 
-  if (mFS != nullptr)
-    delete mFS;
+  if (mShaders.size() > 0) {
+    for(auto& s : mShaders)
+      delete s.second;
 
-  if (mVS != nullptr)
-    delete mVS;
+    mShaders.clear();
+  }
 
-  mFS = new Shader(srcs["FRAGMENT"]);
-  mVS = new Shader(srcs["VERTEX"]);
+  for (auto& s : srcs) {
+    mShaders[s.first] = new Shader(s.second);
+
+    if (mShaders[s.first]->id() == 0) {
+      throw std::runtime_error("Failed to create program due to shader error");
+    }
+  }
 
   if (program != 0)
     glDeleteProgram(program);
 
-  program = 0;
-  filenames.push_back(mFS->filename());
-  filenames.push_back(mVS->filename());
-
   program = glCreateProgram();
 
-  if (program == 0 || mFS->id() == 0 || mVS->id() == 0)
+  if (program == 0)
     throw std::runtime_error("Failed to create program");
 
-  if (!addShader(*mFS))
-    throw std::runtime_error("Failed to create program due to fragment shader");
-
-  if (!addShader(*mVS))
-    throw std::runtime_error("Failed to create program due to vertex shader");
+  for (auto& s : mShaders) {
+    if (!addShader(*s.second)) {
+      throw std::runtime_error("Failed to create program due to " +
+                               Shader::typeToStr(s.first));
+    }
+  }
 
   if (!link)
     return true;
@@ -103,7 +104,7 @@ bool Program::addShader(const Shader& sh) {
   }
 
   glAttachShader(program, sh.id());
-  checkErrors("addShader()", { sh.type() });
+  checkErrors("addShader()");
   return true;
 }
 
@@ -115,25 +116,19 @@ bool Program::link() {
 
   isLinked = true;
   isUsable = checkProgram(program);
-  checkErrors("link()", filenames);
+  checkErrors("link()");
 
-  const Shader::Details& fsDetails = mFS->details();
-  const Shader::Details& vsDetails = mVS->details();
+  // Set the binding layouts if the shader has that.
+  for (auto& s : mShaders) {
+    const Shader::Details& details = s.second->details();
 
-  for (auto& binding : fsDetails.layoutBindings) {
-    mLog->debug("Binding layouts for: {}, {} to {}",
-                mFS->filename(),
-                binding.name,
-                binding.location);
-    setUniform(binding.name, binding.location);
-  }
-
-  for (auto& binding : vsDetails.layoutBindings) {
-    mLog->debug("Binding layouts for: {}, {} to {}",
-                mVS->filename(),
-                binding.name,
-                binding.location);
-    setUniform(binding.name, binding.location);
+    for (auto& binding : details.layoutBindings) {
+      mLog->debug("Binding layouts for: {}, {} to {}",
+                  s.second->filename(),
+                  binding.name,
+                  binding.location);
+      setUniform(binding.name, binding.location);
+    }
   }
 
   return isUsable;
@@ -153,6 +148,7 @@ void Program::bind() {
 GLint Program::getUniformLocation(const std::string& uni) {
   if (program == 0 || !isUsable)
     return -1;
+
   if (uniLocations.count(uni) > 0)
     return uniLocations[uni];
 
@@ -160,13 +156,13 @@ GLint Program::getUniformLocation(const std::string& uni) {
   if (loc != -1)
     uniLocations[uni] = loc;
   else {
-    mLog->warn("{}, {} - {} does not exist in shader",
-               filenames[0],
-               filenames[1],
+    mLog->warn("{} - {} does not exist in shader",
+               mFilename,
                uni);
     return loc;
   }
-  checkErrors("getUniformLocation(): " + uni, filenames);
+
+  checkErrors("getUniformLocation(): " + uni);
   return loc;
 }
 
@@ -175,65 +171,67 @@ GLint Program::getAttribLocation(const std::string& attrib) {
     return -1;
 
   GLint loc = glGetAttribLocation(program, attrib.c_str());
-  checkErrors("getAttribLocation(): " + attrib, filenames);
+  checkErrors("getAttribLocation(): " + attrib);
   return loc;
 }
 
 bool Program::setGLUniform(GLint loc, const bool b) {
   glUniform1i(loc, (int) b);
-  return checkErrors("setGLUniform(bool): ", filenames);
+  return checkErrors("setGLUniform(bool): ");
 }
 
 bool Program::setGLUniform(GLint loc, const int i) {
   glUniform1i(loc, i);
-  return checkErrors("setGLUniform(int): ", filenames);
+  return checkErrors("setGLUniform(int): ");
 }
 
 bool Program::setGLUniform(GLint loc, const int i, const int j) {
   glUniform2i(loc, i, j);
-  return checkErrors("setGLUniform(int, int): ", filenames);
+  return checkErrors("setGLUniform(int, int): ");
 }
 
 bool Program::setGLUniform(GLint loc, const float f) {
   glUniform1f(loc, f);
-  return checkErrors("setGLUniform(float): ", filenames);
+  return checkErrors("setGLUniform(float): ");
 }
 
 bool Program::setGLUniform(GLint loc, const double d) {
   glUniform1f(loc, d);
-  return checkErrors("setGLUniform(double): ", filenames);
+  return checkErrors("setGLUniform(double): ");
 }
 
 bool Program::setGLUniform(GLint loc, const mmm::vec2& v) {
   glUniform2f(loc, v.x, v.y);
-  return checkErrors("setGLUniform(vec2): ", filenames);
+  return checkErrors("setGLUniform(vec2): ");
 }
 
 bool Program::setGLUniform(GLint loc, const mmm::vec3& v) {
   glUniform3f(loc, v.x, v.y, v.z);
-  return checkErrors("setGLUniform(vec3): ", filenames);
+  return checkErrors("setGLUniform(vec3): ");
 }
 
 bool Program::setGLUniform(GLint loc, const mmm::vec4& v) {
   glUniform4f(loc, v.x, v.y, v.z, v.w);
-  return checkErrors("setGLUniform(vec4): ", filenames);
+  return checkErrors("setGLUniform(vec4): ");
 }
 
 bool Program::setGLUniform(GLint loc, const mmm::mat3& m) {
   glUniformMatrix3fv(loc, 1, GL_TRUE, m.rawdata);
-  return checkErrors("setGLUniform(mat3): ", filenames);
+  return checkErrors("setGLUniform(mat3): ");
 }
 
 bool Program::setGLUniform(GLint loc, const mmm::mat4& m) {
   glUniformMatrix4fv(loc, 1, GL_TRUE, m.rawdata);
-  return checkErrors("setGLUniform(mat4): ", filenames);
+  return checkErrors("setGLUniform(mat4): ");
 }
 
 bool Program::bindAttrib(const std::string& attrib, const int index) {
   if (isLinked)
     return false;
+
   glBindAttribLocation(program, (const GLuint) index, attrib.c_str());
-  checkErrors("bindAttrib(): " + attrib, filenames);
+  checkErrors("bindAttrib(): " + attrib);
+
   return true;
 }
 
@@ -241,6 +239,7 @@ bool Program::bindAttribs(const std::vector<std::string>& attribs,
                           const std::vector<int>&         indicies) {
   if (attribs.size() != indicies.size())
     return false;
+
   for (unsigned int i = 0; i < attribs.size(); i++) {
     if (!bindAttrib(attribs[i], indicies[i]))
       return false;
@@ -252,74 +251,63 @@ bool Program::isActive() const {
   return (activeProgram == program);
 }
 
-std::map<std::string, std::string>
-Program::loadDualShaderFilename(const std::string& fsvs) {
-  size_t      commaPos = fsvs.find(",");
-  std::string f1       = fsvs.substr(0, commaPos);
-  std::string f2       = fsvs.substr(commaPos + 1);
+std::map<Shader::Type, std::string>
+Program::loadMultipleShaderFilename(const std::string& files) {
+  std::map<Shader::Type, std::string> filenames;
+  std::vector<std::string> shaders = str::split(files, ',');
 
-  bool f1isVert = f1.find(".vs") != std::string::npos;
-  bool f1isFrag = f1.find(".fs") != std::string::npos;
-
-  bool f2isVert = f2.find(".vs") != std::string::npos;
-  bool f2isFrag = f2.find(".fs") != std::string::npos;
-
-  if (!f1isFrag && !f2isFrag)
-    throw std::runtime_error("Dual filename '" + fsvs +
-                             "' is missing fragment shader");
-
-  if (!f1isVert && !f2isVert)
-    throw std::runtime_error("Dual filename '" + fsvs +
-                             "' is missing vertex shader");
-
-  if (f1isFrag && f2isFrag)
-    throw std::runtime_error("Dual filename '" + fsvs +
-                             "' has two fragment shaders");
-
-  if (f1isVert && f2isVert)
-    throw std::runtime_error("Dual filename '" + fsvs +
-                             "' has two vertex shaders");
-
-  return {
-    { "FRAGMENT", f1isFrag ? f1 : f2 }, { "VERTEX", f1isVert ? f1 : f2 },
-  };
-}
-
-bool Program::checkErrors(const std::string&              place,
-                          const std::vector<std::string>& filenames) {
-  GLenum errorCheck = glGetError();
-  if (errorCheck != GL_NO_ERROR) {
-    std::cout << "Error below in these: ";
-    for (std::string s : filenames)
-      std::cout << s + ", ";
-    std::cout << std::endl;
-    fprintf(stderr, "GL_ERROR @ %s: %i\n", place.c_str(), errorCheck);
-    std::cout << std::endl;
-    error("GLSL error.. Please see error above.");
-    throw std::runtime_error("Program.cpp");
+  for (auto& s : shaders) {
+    filenames[Shader::typeFromFilename(s)] = s;
   }
 
-  return true;
+  if (filenames.count(Shader::Type::Fragment) == 0)
+    throw std::runtime_error("Multiple shaders filename '" + files +
+                             "' is missing fragment shader");
+
+  if (filenames.count(Shader::Type::Vertex) == 0)
+    throw std::runtime_error("Multiple shaders filename '" + files +
+                             "' is missing vertex shader");
+
+  return filenames;
+}
+
+bool Program::checkErrors(const std::string& place) {
+  GLenum errorCheck = glGetError();
+
+  if (errorCheck == GL_NO_ERROR) {
+    return true;
+  }
+
+  std::string message = "Error in these shaders: ";
+  int         size    = mShaders.size();
+  int         index   = 0;
+  for(auto& a : mShaders) {
+    message += a.second->filename() + (index + 1 == size ? "" : ", ");
+  }
+
+  mLog->error(message);
+  mLog->error("OpenGL Error Code: {}", errorCheck);
+
+  return false;
 }
 
 bool Program::checkProgram(const GLuint pro) {
   GLint isLinked = GL_FALSE;
   glGetProgramiv(pro, GL_LINK_STATUS, (int*) &isLinked);
-  if (isLinked == GL_FALSE) {
-    GLint maxLength = 0;
-    glGetProgramiv(pro, GL_INFO_LOG_LENGTH, &maxLength);
 
-    std::vector<GLchar> infoLog(maxLength);
-    glGetProgramInfoLog(pro, maxLength, &maxLength, &infoLog[0]);
+  if (isLinked == GL_TRUE)
+    return true;
 
-    std::string s = "";
-    for (unsigned int i = 0; i < infoLog.size(); i++)
-      s += infoLog[i];
-    error(s);
-    glDeleteProgram(pro);
-    error("GLSL program error. Please see above.");
-    throw std::runtime_error("Program.cpp");
-  }
+  GLint maxLen = 0;
+  glGetProgramiv(pro, GL_INFO_LOG_LENGTH, &maxLen);
 
-  return true;
+  std::vector<GLchar> infoLog(maxLen);
+  glGetProgramInfoLog(pro, maxLen, &maxLen, &infoLog[0]);
+
+  mLog->error("Error in GLSL Program");
+  mLog->error(std::string(infoLog.begin(), infoLog.end()));
+
+  glDeleteProgram(pro);
+
+  return false;
 }
