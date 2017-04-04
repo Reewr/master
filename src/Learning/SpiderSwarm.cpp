@@ -319,6 +319,7 @@ void SpiderSwarm::updateUsingThreads(float deltaTime) {
 #endif
 }
 
+#ifdef BT_NO_PROFILE
 void SpiderSwarm::updateThreadBatches(float deltaTime) {
 
   int size    = mPhenotypes.size();
@@ -341,6 +342,9 @@ void SpiderSwarm::updateThreadBatches(float deltaTime) {
 
   mCurrentDuration += deltaTime;
 }
+#else
+void SpiderSwarm::updateThreadBatches(float) {}
+#endif
 
 /**
  * @brief
