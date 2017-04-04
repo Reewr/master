@@ -2,14 +2,26 @@
 
 #include "../../Utils/Utils.hpp"
 
+static int GLCube::mCubeCounter = 0;
+static GLuint GLCube::mIBO = 0;
+static GLuint GLCube::mVBO = 0;
+static GLuint GLCube::mVAO = 0;
+
 GLCube::GLCube() {
-  setup();
+  if (mCubeCounter == 0)
+    setup();
+
+  mCubeCounter++;
 }
 
 GLCube::~GLCube() {
-  glDeleteBuffers(1, &IBO);
-  glDeleteBuffers(1, &VBO);
-  glDeleteVertexArrays(1, &VAO);
+  mCubeCounter--;
+
+  if (mCubeCounter == 0) {
+    glDeleteBuffers(1, &mIBO);
+    glDeleteBuffers(1, &mVBO);
+    glDeleteVertexArrays(1, &mVAO);
+  }
 }
 
 /**
@@ -19,12 +31,12 @@ GLCube::~GLCube() {
  *   FIXME: Optimize for changes
  */
 void GLCube::setup() {
-  if (IBO == 0)
-    glGenBuffers(1, &IBO);
-  if (VBO == 0)
-    glGenBuffers(1, &VBO);
-  if (VAO == 0)
-    glGenVertexArrays(1, &VAO);
+  if (mIBO == 0)
+    glGenBuffers(1, &mIBO);
+  if (mVBO == 0)
+    glGenBuffers(1, &mVBO);
+  if (mVAO == 0)
+    glGenVertexArrays(1, &mVAO);
 
   // clang-format off
   GLfloat vertices[] = {
@@ -82,8 +94,8 @@ void GLCube::setup() {
   };
   // clang-format on
 
-  glBindVertexArray(VAO);
-  glBindBuffer(GL_ARRAY_BUFFER, VBO);
+  glBindVertexArray(mVAO);
+  glBindBuffer(GL_ARRAY_BUFFER, mVBO);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
   glEnableVertexAttribArray(0);
@@ -97,7 +109,7 @@ void GLCube::setup() {
                         5 * sizeof(GL_FLOAT),
                         (void*) (3 * sizeof(GL_FLOAT)));
 
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIBO);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER,
                sizeof(elements),
                elements,
@@ -111,7 +123,7 @@ void GLCube::setup() {
  *   Draws the cube using the indicies
  */
 void GLCube::draw() {
-  glBindVertexArray(VAO);
+  glBindVertexArray(mVAO);
   glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
   glBindVertexArray(0);
 }
