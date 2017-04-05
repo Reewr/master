@@ -144,10 +144,9 @@ void Phenotype::update(float deltaTime) {
     if (part.second.hinge != nullptr) {
 
       auto currentAngle = part.second.hinge->getHingeAngle();
-      auto pi           = mmm::constants<float>::pi;
       auto targetAngle  = outputs[i] * 4.f * pi - 2.f * pi + part.second.restAngle;
-      auto velocity     = (targetAngle - currentAngle) * 10.0f;
-      part.second.hinge->enableAngularMotor(true, velocity, 1.f);
+      auto velocity     = (targetAngle - currentAngle) * 40.0f;
+      part.second.hinge->enableAngularMotor(true, velocity, 4.f);
 
       i += 1;
 
