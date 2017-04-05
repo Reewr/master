@@ -109,20 +109,32 @@ def printParts():
   print('std::map<std::string, Spider::Part> Spider::SPIDER_PARTS =')
   print(r)
 
+def getInputLegCenterNeurons():
+  xs = []
+
+  for j in ['L','R']:
+    for i in [1,2,3,4]:
+      name = j + str(i) + 'Center'
+      x = bpy.data.objects.get(name).matrix_world.to_translation()
+      print(name, x)
+      xs.append({ name: x })
+
+  return xs;
+
 def getInputNeurons(name):
   xs = []
 
-  impAngX = bpy.data.objects.get(name + 'ImpAngX')
-  if impAngX:
-    xs.append({ name+'ImpAngX': impAngX.matrix_world.to_translation() })
+  # impAngX = bpy.data.objects.get(name + 'ImpAngX')
+  # if impAngX:
+  #   xs.append({ name+'ImpAngX': impAngX.matrix_world.to_translation() })
 
-  impAngY = bpy.data.objects.get(name + 'ImpAngY')
-  if impAngY:
-    xs.append({ name+'ImpAngY': impAngY.matrix_world.to_translation() })
+  # impAngY = bpy.data.objects.get(name + 'ImpAngY')
+  # if impAngY:
+  #   xs.append({ name+'ImpAngY': impAngY.matrix_world.to_translation() })
 
-  impAngZ = bpy.data.objects.get(name + 'ImpAngZ')
-  if impAngZ:
-    xs.append({ name+'ImpAngZ': impAngZ.matrix_world.to_translation() })
+  # impAngZ = bpy.data.objects.get(name + 'ImpAngZ')
+  # if impAngZ:
+  #   xs.append({ name+'ImpAngZ': impAngZ.matrix_world.to_translation() })
 
   impRot  = bpy.data.objects.get(name + 'ImpRot')
   if impRot:
@@ -140,8 +152,13 @@ def getOutputNeurons(name):
   return xs
 
 def printNeuronData():
-  inn = [ getInputNeurons(x) for x in sorted(PARTS) if bpy.data.objects.get(x) ]
-  out = [ getOutputNeurons(x) for x in sorted(PARTS) if bpy.data.objects.get(x) ]
+  inn = []
+  out = []
+
+  inn += [ getInputLegCenterNeurons() ]
+
+  inn += [ getInputNeurons(x) for x in sorted(PARTS) if bpy.data.objects.get(x) ]
+  out += [ getOutputNeurons(x) for x in sorted(PARTS) if bpy.data.objects.get(x) ]
 
   # flatten lists
   inn = [ '    ' + showVector(x) for xs in inn for x in xs if len(xs) > 0 ]
