@@ -175,17 +175,15 @@ float score(float deltaTime, float zeroIsBest, float bias = 0.05f) {
 void Phenotype::updateFitness(float deltaTime) {
   auto& parts = spider->parts();
 
-  { // Stability
-    btRigidBody* sternum  = parts["Sternum"].part->rigidBody();
+  { // Stability - Fail if sternum rotates in any direction above 60 degrees
+    auto q = parts["Sternum"].part->rigidBody()->getOrientation();
+    vec3 r = mmm::degrees(getEulerAngles(q.x(), q.y(), q.z(), q.w()));
+    r.y += 90;
 
-    // height of the sternum
-    // float h = sternum->getCenterOfMassPosition().y() - 0.70f;
-
-    // rotation of the sternum in the xz plane
-    auto q = sternum->getOrientation();
-    vec2 r = getEulerAngles(q.x(), q.y(), q.z(), q.w()).xz;
-
-    fitness[0] *= mmm::product(1.f / (mmm::abs(r) * deltaTime + 1.f));
+    if (mmm::any(mmm::greaterThan(r, 60))) {
+      failed = true;
+      return;
+    }
   }
 
   // { // Angles
