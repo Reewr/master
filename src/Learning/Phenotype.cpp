@@ -89,10 +89,26 @@ void Phenotype::update(float deltaTime) {
   if (failed)
     return;
 
+  auto pi = mmm::constants<float>::pi;
+
   // construct input vector which is known to be exactly 172 elements
   std::vector<double> inputs;
-  inputs.reserve(45);
-  inputs.push_back(mmm::sin(duration));
+  inputs.reserve(52);
+
+  float phase0 = mmm::sin(duration);
+  float phase1 = mmm::sin(duration + pi * 0.5);
+  float phase2 = mmm::sin(duration + pi);
+  float phase3 = mmm::sin(duration + pi * 1.5);
+
+  inputs.push_back(phase0);
+  inputs.push_back(phase1);
+  inputs.push_back(phase2);
+  inputs.push_back(phase3);
+  inputs.push_back(phase2);
+  inputs.push_back(phase3);
+  inputs.push_back(phase0);
+  inputs.push_back(phase1);
+
   duration += deltaTime;
 
   for (auto& part : spider->parts()) {
