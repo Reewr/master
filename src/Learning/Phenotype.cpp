@@ -168,6 +168,10 @@ void Phenotype::update(float deltaTime) {
   ++numUpdates;
 }
 
+float score(float deltaTime, float zeroIsBest, float bias = 0.05f) {
+  return 1.f / (mmm::max(mmm::abs(zeroIsBest) - bias, 0.f) * deltaTime + 1.f);
+};
+
 void Phenotype::updateFitness(float deltaTime) {
   auto& parts = spider->parts();
 
