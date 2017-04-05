@@ -3,6 +3,11 @@
 #include <vector>
 
 #include "../../Utils/Utils.hpp"
+#include "../../GlobalLog.hpp"
+
+using mmm::vec3;
+using mmm::cos;
+using mmm::sin;
 
 int GLSphere::mSphereCounter = 0;
 int GLSphere::mNumQuads = 0;
@@ -31,6 +36,16 @@ GLSphere::~GLSphere() {
   }
 }
 
+GLShape::Vertex GLSphere::genVertex(float u, float v) {
+  static float PI = mmm::constants<float>::pi;
+  float r = sin(PI * v);
+  return {
+    {r * cos(2.0f * PI * u), r * sin(2.0f * PI * u), cos(PI * v)},
+    {u, v},
+    {0, 0, 0}
+  };
+}
+
 /**
  * @brief
  *   Sets up the verticies and indicies used to draw the cube.
@@ -38,47 +53,47 @@ GLSphere::~GLSphere() {
  *   FIXME: Optimize for changes
  */
 void GLSphere::setup() {
+
+  Utils::clearGLError();
+
   if (mIBO == 0)
     glGenBuffers(1, &mIBO);
+
+  Utils::assertGL();
+
   if (mVBO == 0)
     glGenBuffers(1, &mVBO);
+
+  Utils::assertGL();
+
   if (mVAO == 0)
     glGenVertexArrays(1, &mVAO);
 
-  float radius = 1;
+  Utils::assertGL();
+
   int rings = 10;
   int sectors = 10;
   float R  = 1.0 / float(rings - 1);
   float S  = 1.0 / float(sectors - 1);
-  float PI  = mmm::constants<float>::pi;
-  float PI2 = PI / 2.0;
 
   std::vector<GLShape::Vertex> vertices;
-  std::vector<GLushort> indices;
 
-  vertices.reserve(rings * sectors);
-  indices.reserve(rings * sectors * 4);
+  vertices.reserve(rings * sectors * 6);
+  std::cout << rings * sectors * 6 << std::endl;
 
-  for(int r = 0; r < rings; r++) {
-    for(int s = 0; s < sectors; s++) {
+  for(int s = 0; s < sectors; s++) {
+    for(int r = 0; r < rings; r++) {
+      float u0 = r * R;
+      float v0 = s * S;
+      float u1 = (r + 1) * R;
+      float v1 = (s + 1) * S;
 
-      float sPi = 2*PI * s * S;
-      float rPi = PI * r * S;
-
-      float x = cos(sPi) * sin(rPi);
-      float y = sin(-PI2 + PI * r * R);
-      float z = sin(sPi) * sin(rPi);
-
-      vertices.push_back({
-        {x * radius, y * radius, z * radius}, // Position
-        {s * S, r * R}, // Texcoords
-        {x, y, z} // normals
-      });
-
-      indices.push_back(r * sectors + s);
-      indices.push_back(r * sectors + s + 1);
-      indices.push_back((r + 1) * sectors + s + 1);
-      indices.push_back((r + 1) * sectors + s);
+      vertices.push_back(genVertex(u0, v1)); // 0
+      vertices.push_back(genVertex(u1, v1)); // 1
+      vertices.push_back(genVertex(u1, v0)); // 2
+      vertices.push_back(genVertex(u1, v0)); // 2
+      vertices.push_back(genVertex(u0, v0)); // 3
+      vertices.push_back(genVertex(u0, v1)); // 0
     }
   }
 
@@ -86,10 +101,16 @@ void GLSphere::setup() {
   glBindBuffer(GL_ARRAY_BUFFER, mVBO);
   glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
 
+  Utils::assertGL();
+
   glEnableVertexAttribArray(0);
+  glEnableVertexAttribArray(1);
+  glEnableVertexAttribArray(2);
+
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
 
-  glEnableVertexAttribArray(1);
+  Utils::assertGL();
+
   glVertexAttribPointer(1,
                         2,
                         GL_FLOAT,
@@ -97,7 +118,8 @@ void GLSphere::setup() {
                         sizeof(Vertex),
                         (void*) (sizeof(mmm::vec3)));
 
-  glEnableVertexAttribArray(2);
+  Utils::assertGL();
+
   glVertexAttribPointer(2,
                         3,
                         GL_FLOAT,
@@ -105,15 +127,19 @@ void GLSphere::setup() {
                         sizeof(Vertex),
                         (void*) (sizeof(mmm::vec3) + sizeof(mmm::vec2)));
 
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-               sizeof(GLushort) * indices.size(),
-               &indices[0],
-               GL_STATIC_DRAW);
+  Utils::assertGL();
+
+  /* glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIBO); */
+  /* glBufferData(GL_ELEMENT_ARRAY_BUFFER, */
+  /*              sizeof(GLushort) * indices.size(), */
+  /*              &indices[0], */
+  /*              GL_STATIC_DRAW); */
+
+  Utils::assertGL();
 
   glBindVertexArray(0);
 
-  mNumQuads = indices.size() / 4;
+  mNumQuads = vertices.size();
 }
 
 /**
@@ -125,6 +151,7 @@ void GLSphere::draw() {
     return;
 
   glBindVertexArray(mVAO);
-  glDrawElements(GL_QUADS, mNumQuads, GL_UNSIGNED_SHORT, 0);
+  /* glDrawElements(GL_TRIANGLES, mNumQuads, GL_UNSIGNED_SHORT, 0); */
+  glDrawArrays(GL_TRIANGLES, 0, mNumQuads);
   glBindVertexArray(0);
 }

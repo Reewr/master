@@ -14,6 +14,8 @@ public:
 
 private:
 
+  Vertex genVertex(float u, float v);
+
   static int mSphereCounter;
   static int mNumQuads;
   static GLuint mIBO;
