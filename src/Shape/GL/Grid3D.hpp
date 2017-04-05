@@ -6,12 +6,6 @@
 
 class GLGrid3D : public GLGrid {
 public:
-  struct Vertex {
-    mmm::vec3 pos;
-    mmm::vec2 texCoord;
-    mmm::vec3 norm;
-  };
-
   GLGrid3D(const mmm::vec2& size);
   ~GLGrid3D();
 

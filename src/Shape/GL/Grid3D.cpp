@@ -27,7 +27,7 @@ void GLGrid3D::setup() {
   dVector<vec3>  normals(mSize.y, vector<vec3>(mSize.x));
   dVector<vec2>  texCoords(mSize.y, vector<vec2>(mSize.x));
   vector<int>    indices;
-  vector<Vertex> vertexData;
+  vector<GLShape::Vertex> vertexData;
   vertexData.reserve(mSize.x * mSize.y);
   indices.reserve((mSize.y - 1) * (mSize.x * 2) + (mSize.y - 1));
 
@@ -126,7 +126,7 @@ void GLGrid3D::generateNormals(const dVector<vec3>& v, dVector<vec3>& n) {
   // }
 }
 
-void GLGrid3D::setupOpenGLArrays(const vector<Vertex>& v,
+void GLGrid3D::setupOpenGLArrays(const vector<GLShape::Vertex>& v,
                                  const vector<int>&    i) {
   glGenBuffers(1, &VBO);
   glGenBuffers(1, &IBO);
@@ -135,19 +135,19 @@ void GLGrid3D::setupOpenGLArrays(const vector<Vertex>& v,
   glBindVertexArray(VAO);
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
   glBufferData(GL_ARRAY_BUFFER,
-               sizeof(Vertex) * v.size(),
+               sizeof(GLShape::Vertex) * v.size(),
                &v[0],
                GL_STATIC_DRAW);
 
   glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLShape::Vertex), 0);
 
   glEnableVertexAttribArray(1);
   glVertexAttribPointer(1,
                         2,
                         GL_FLOAT,
                         GL_FALSE,
-                        sizeof(Vertex),
+                        sizeof(GLShape::Vertex),
                         (void*) (sizeof(vec3)));
 
   glEnableVertexAttribArray(2);
@@ -155,7 +155,7 @@ void GLGrid3D::setupOpenGLArrays(const vector<Vertex>& v,
                         3,
                         GL_FLOAT,
                         GL_FALSE,
-                        sizeof(Vertex),
+                        sizeof(GLShape::Vertex),
                         (void*) (sizeof(vec3) + sizeof(vec2)));
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
