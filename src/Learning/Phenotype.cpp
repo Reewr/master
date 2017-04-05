@@ -190,7 +190,7 @@ void Phenotype::updateFitness(float deltaTime) {
     vec3 r = mmm::degrees(getEulerAngles(q.x(), q.y(), q.z(), q.w()));
     r.y += 90;
 
-    if (mmm::any(mmm::greaterThan(r, 60))) {
+    if (mmm::any(mmm::greaterThan(mmm::abs(r), 60))) {
       failed = true;
       return;
     }
