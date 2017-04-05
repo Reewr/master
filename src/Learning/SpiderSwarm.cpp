@@ -454,6 +454,9 @@ void SpiderSwarm::updateEpoch() {
 
   mPopulation->Epoch();
   recreatePhenotypes();
+
+  // mLog->info("saving population...");
+  // save("testswarm");
 }
 
 void SpiderSwarm::recreatePhenotypes() {
