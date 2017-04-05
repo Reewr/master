@@ -20,6 +20,7 @@ Sphere::Sphere(const mmm::vec3& position,
     , mTexture(texture) {
       mScale = mmm::scale(size);
       mPosition = position;
+      mRotation = mmm::rotate_x(-90.f);
     }
 
 Sphere::~Sphere() {
