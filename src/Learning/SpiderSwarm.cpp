@@ -536,19 +536,19 @@ void SpiderSwarm::setDefaultParameters() {
   mParameters->AllowClones                             = true;
 
   // GA parameters
-  mParameters->YoungAgeTreshold                        = 3;
+  mParameters->YoungAgeTreshold                        = 5;
   mParameters->YoungAgeFitnessBoost                    = 1.1;
   mParameters->SpeciesMaxStagnation                    = 50;
   mParameters->StagnationDelta                         = 0.0;
-  mParameters->OldAgeTreshold                          = 10;
+  mParameters->OldAgeTreshold                          = 30;
   mParameters->OldAgePenalty                           = 1.0;
   mParameters->DetectCompetetiveCoevolutionStagnation  = false;
-  mParameters->KillWorstSpeciesEach                    = 8;
-  mParameters->KillWorstAge                            = 5;
+  mParameters->KillWorstSpeciesEach                    = 15;
+  mParameters->KillWorstAge                            = 10;
   mParameters->SurvivalRate                            = 0.25;
   mParameters->CrossoverRate                           = 0.7;
   mParameters->OverallMutationRate                     = 0.25;
-  mParameters->InterspeciesCrossoverRate               = 0.01;
+  mParameters->InterspeciesCrossoverRate               = 0.001;
   mParameters->MultipointCrossoverRate                 = 0.75;
   mParameters->RouletteWheelSelection                  = false;
   mParameters->TournamentSize                          = 4;
