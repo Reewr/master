@@ -123,7 +123,7 @@ SpiderSwarm::DrawingMethod SpiderSwarm::drawingMethod() {
  *   original position.
  */
 void SpiderSwarm::update(float deltaTime) {
-  // deltaTime = 1.f / 60.f;
+  deltaTime = 1.f / 60.f;
 
   if (deltaTime > 0.5)
     return;
