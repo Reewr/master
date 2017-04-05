@@ -186,6 +186,7 @@ set(SOURCE_FILES
   ${SRC_DIR}/3D/Spider.cpp
   ${SRC_DIR}/3D/MeshPart.cpp
   ${SRC_DIR}/3D/Terrain.cpp
+  ${SRC_DIR}/3D/Sphere.cpp
   ${SRC_DIR}/3D/World.cpp
 
   # src/Camera
@@ -206,6 +207,7 @@ set(SOURCE_FILES
   ${SRC_DIR}/Learning/SpiderSwarm.cpp
   ${SRC_DIR}/Learning/Substrate.cpp
   ${SRC_DIR}/Learning/Phenotype.cpp
+  ${SRC_DIR}/Learning/DrawablePhenotype.cpp
 
   # src/Lua
   ${SRC_DIR}/Lua/LuaLib.cpp
@@ -239,6 +241,7 @@ set(SOURCE_FILES
   ${SRC_DIR}/Shape/GL/Grid3D.cpp
   ${SRC_DIR}/Shape/GL/Rectangle.cpp
   ${SRC_DIR}/Shape/GL/Shape.cpp
+  ${SRC_DIR}/Shape/GL/Sphere.cpp
   ${SRC_DIR}/Shape/GL/Cube.cpp
 
   # src/Import
@@ -275,6 +278,7 @@ set(HEADER_FILES
 
   # src/3D
   ${SRC_DIR}/3D/Cube.hpp
+  ${SRC_DIR}/3D/Sphere.hpp
   ${SRC_DIR}/3D/MeshPart.cpp
   ${SRC_DIR}/3D/Spider.hpp
   ${SRC_DIR}/3D/Terrain.hpp
@@ -298,6 +302,7 @@ set(HEADER_FILES
   ${SRC_DIR}/Learning/SpiderSwarm.hpp
   ${SRC_DIR}/Learning/Substrate.hpp
   ${SRC_DIR}/Learning/Phenotype.hpp
+  ${SRC_DIR}/Learning/DrawablePhenotype.hpp
 
   # src/Lua
   ${SRC_DIR}/Lua/LuaLib.hpp
@@ -331,6 +336,7 @@ set(HEADER_FILES
   ${SRC_DIR}/Shape/GL/Grid3D.hpp
   ${SRC_DIR}/Shape/GL/Rectangle.hpp
   ${SRC_DIR}/Shape/GL/Shape.hpp
+  ${SRC_DIR}/Shape/GL/Sphere.hpp
   ${SRC_DIR}/Shape/GL/Cube.hpp
 
   # src/Import
