@@ -35,7 +35,7 @@ struct Phenotype : Logging::Log {
   btRigidBody*               planeBody;
   static btStaticPlaneShape* plane;
 
-  mmm::vec<8> fitness;
+  mmm::vec<9> fitness;
   int         numUpdates;
 
   float duration;

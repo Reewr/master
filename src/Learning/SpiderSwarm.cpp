@@ -450,6 +450,7 @@ void SpiderSwarm::updateEpoch() {
   mLog->info("  5: {} %", mPhenotypes[mBestIndex].fitness[5] * 100);
   mLog->info("  6: {} %", mPhenotypes[mBestIndex].fitness[6] * 100);
   mLog->info("  7: {} %", mPhenotypes[mBestIndex].fitness[7] * 100);
+  mLog->info("  8: {} %", mPhenotypes[mBestIndex].fitness[8] * 100);
 
   mPopulation->Epoch();
   recreatePhenotypes();

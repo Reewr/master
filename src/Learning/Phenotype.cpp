@@ -299,7 +299,7 @@ void Phenotype::reset(int speciesId, int individualId) {
 
   duration   = 0;
   numUpdates = 0;
-  fitness    = mmm::vec<8>(1);
+  fitness    = mmm::vec<9>(1);
   speciesIndex = speciesId;
   individualIndex = individualId;
 }
