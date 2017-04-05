@@ -84,7 +84,6 @@ private:
   std::string findNameByPointer(btRigidBody* body);
 
   btBulletWorldImporter* mFileloader;
-  btBulletWorldImporter* mTestloader;
   std::shared_ptr<Mesh>  mMesh;
 
   std::map<std::string, std::vector<btTypedConstraint*>> mConstraints;
