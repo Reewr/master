@@ -5,6 +5,7 @@
 
 namespace Utils {
   bool getGLError(const std::string& place = "");
+  void assertGL();
   void clearGLError();
 
   std::string timeSinceStart();

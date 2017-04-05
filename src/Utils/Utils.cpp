@@ -3,6 +3,7 @@
 
 #include <chrono>
 #include <ctime>
+#include <assert.h>
 
 #include "../OpenGLHeaders.hpp"
 
@@ -39,6 +40,16 @@ bool Utils::getGLError(const std::string& place) {
     return false;
   }
   return true;
+}
+
+void Utils::assertGL() {
+  GLenum glError = glGetError();
+
+  if (glError != GL_NO_ERROR) {
+    error("OpenGL Error: {}", glError);
+  }
+
+  assert(glError == GL_NO_ERROR);
 }
 
 void Utils::clearGLError() {
