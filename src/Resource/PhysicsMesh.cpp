@@ -269,12 +269,18 @@ PhysicsElements* PhysicsMesh::createCopyAll() {
     // TODO fix static +2 up translation
     const btVector3 pos = btVector3(matPos.x, matPos.y + 1, matPos.z);
     btVector3       inertia;
-    shape->calculateLocalInertia(0.1, inertia);
+
+    // auto mass = 2.f;
+    auto mass = mainBody->getInvMass();
+    shape->calculateLocalInertia(mass, inertia);
 
     mat.setFromOpenGLSubMatrix(mmm::transpose(t).rawdata);
-
     btMotionState* motion = new btDefaultMotionState(btTransform(mat, pos));
-    btRigidBody*   body   = new btRigidBody(0.1, motion, shape, inertia);
+
+    auto info = RigidBodyInfo(mass, motion, shape, inertia);
+    info.m_friction = 1.0;
+
+    btRigidBody* body = new btRigidBody(info);
 
     elements.bodies[mesh.first]  = body;
     elements.motions[mesh.first] = motion;

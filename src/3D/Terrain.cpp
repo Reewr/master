@@ -14,6 +14,7 @@
 using mmm::vec2;
 using mmm::vec3;
 using mmm::mat4;
+using RigidBodyInfo = btRigidBody::btRigidBodyConstructionInfo;
 
 Terrain::Terrain() : Logging::Log("Terrain") {
   mGrid   = new GLGrid3D(vec2(128, 128));
@@ -21,10 +22,9 @@ Terrain::Terrain() : Logging::Log("Terrain") {
   mMotion = new btDefaultMotionState(
     btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1, 0)));
 
-  btRigidBody::btRigidBodyConstructionInfo consInfo(0,
-                                                    mMotion,
-                                                    mShape,
-                                                    btVector3(0, 0, 0));
+  RigidBodyInfo consInfo(0, mMotion, mShape, btVector3(0, 0, 0));
+  consInfo.m_friction = 1.0;
+
   mBody    = new btRigidBody(consInfo);
   mTexture = mAsset->rManager()->get<Texture>("Texture::Terrain");
   mTexture->generateMipmaps();
