@@ -38,6 +38,7 @@ struct Phenotype : Logging::Log {
   mmm::vec<9> fitness;
   int         numUpdates;
 
+  bool  failed;
   float duration;
 
   int speciesIndex;

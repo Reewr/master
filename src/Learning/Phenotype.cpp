@@ -55,6 +55,7 @@ Phenotype::Phenotype()
     , planeBody(nullptr)
     , fitness(1)
     , numUpdates(0)
+    , failed(false)
     , duration(0)
     , speciesIndex(-1)
     , individualIndex(-1) {}
@@ -84,6 +85,9 @@ void Phenotype::remove() {
  * @param deltaTime
  */
 void Phenotype::update(float deltaTime) {
+
+  if (failed)
+    return;
 
   // construct input vector which is known to be exactly 172 elements
   std::vector<double> inputs;
@@ -243,6 +247,9 @@ void Phenotype::updateFitness(float deltaTime) {
  * @return
  */
 float Phenotype::finalizeFitness() {
+  if (failed)
+    return 0.f;
+
   // float updates = numUpdates;
   // fitness[0] /= updates;
   // fitness[1] /= updates;
@@ -297,6 +304,7 @@ void Phenotype::reset(int speciesId, int individualId) {
     network->Flush();
   }
 
+  failed     = false;
   duration   = 0;
   numUpdates = 0;
   fitness    = mmm::vec<9>(1);
