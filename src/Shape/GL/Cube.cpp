@@ -2,10 +2,10 @@
 
 #include "../../Utils/Utils.hpp"
 
-static int GLCube::mCubeCounter = 0;
-static GLuint GLCube::mIBO = 0;
-static GLuint GLCube::mVBO = 0;
-static GLuint GLCube::mVAO = 0;
+int GLCube::mCubeCounter = 0;
+GLuint GLCube::mIBO = 0;
+GLuint GLCube::mVBO = 0;
+GLuint GLCube::mVAO = 0;
 
 GLCube::GLCube() {
   if (mCubeCounter == 0)
@@ -21,6 +21,9 @@ GLCube::~GLCube() {
     glDeleteBuffers(1, &mIBO);
     glDeleteBuffers(1, &mVBO);
     glDeleteVertexArrays(1, &mVAO);
+    mIBO = 0;
+    mVBO = 0;
+    mVAO = 0;
   }
 }
 
