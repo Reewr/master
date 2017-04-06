@@ -14,9 +14,10 @@ using mmm::vec3;
 
 Sphere::Sphere(const mmm::vec3& position,
                mmm::vec3 size,
-               std::shared_ptr<Texture> texture)
+               std::shared_ptr<Texture> texture,
+               bool outline)
     : Logging::Log("Sphere")
-    , mSphere(new GLSphere())
+    , mSphere(new GLSphere(outline))
     , mTexture(texture) {
       mScale = mmm::scale(size);
       mPosition = position;

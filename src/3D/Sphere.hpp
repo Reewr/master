@@ -20,7 +20,8 @@ public:
   // The position is where the box will start at
   Sphere(const mmm::vec3& position,
          mmm::vec3 size = mmm::vec3(1.0),
-         std::shared_ptr<Texture> texture = nullptr);
+         std::shared_ptr<Texture> texture = nullptr,
+         bool outline = false);
   ~Sphere();
 
   // Update the element, physics etc
