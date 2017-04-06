@@ -6,11 +6,49 @@
 #include "../Utils/Utils.hpp"
 #include "../Utils/str.hpp"
 
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) || defined(__CYGWIN__)
+#include <windows.h>
+#else
+#include <limits.h>
+#include <stdlib.h>
+#endif
+
 CFG* Shader::mCFG = nullptr;
 
 // this variable contains the seperators that `findFirstSeperator`
 // will look for.
 const std::string SHADER_CFG_SEPARATORS = ";+*/-, ";
+
+/**
+ * @brief
+ *   Queries the system for the absolute path of the file so that
+ *   we can correctly join included files together. This also
+ *   helps in understanding whether a file has been included or not,
+ *   as all paths will be absolute.
+ *
+ * @param filename
+ *
+ * @return
+ */
+std::string getAbsoluteDir(const std::string& filename) {
+// If on windows, use windows absolute path function, otherwise assume
+// we are on a Linux/OSD variant and use realpath
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) || defined(__CYGWIN__)
+  TCHAR fullPath[MAX_PATH];
+  GetFullPathName(_T(filename), MAX_PATH, fullPath, NULL);
+#else
+  char fullPath[PATH_MAX];
+  realpath(filename.c_str(), fullPath);
+#endif
+  std::string absPath = std::string(fullPath);
+  size_t lastSlash    = absPath.find_last_of("/");
+
+  if (lastSlash != std::string::npos) {
+    return absPath.substr(0, lastSlash);
+  }
+
+  return absPath;
+}
 
 /**
  * @brief
@@ -130,6 +168,52 @@ Shader::LayoutBinding replaceLayoutBinding(std::string& line) {
 
 /**
  * @brief
+ *   Assumes that the line has an `include` directive and its job
+ *   is to retrieve the filename in between two tags.
+ *
+ *   The tags that work are "" and <>, any other type of tags
+ *   will cause this function to throw an error.
+ *
+ *   Returns the string that is enclosed in between these two tags.
+ *
+ * @param line
+ *
+ * @return
+ */
+std::string getIncludeFilename(const std::string& line) {
+  bool hasInclude = line.find("#include") != std::string::npos;
+
+  if (!hasInclude)
+    throw std::runtime_error("The line has no include directive");
+
+  size_t firstSign = line.find("<");
+  size_t lastSign  = line.find_last_not_of(">");
+
+  // Handle if the include uses <> tags
+  if (firstSign != std::string::npos) {
+    if (lastSign == std::string::npos)
+      throw std::runtime_error("Line is missing end delimiter '>': " + line);
+
+    return line.substr(firstSign + 1, lastSign - firstSign - 1);
+  }
+
+  size_t firstQuote = line.find("\"");
+  size_t lastQuote = line.find_last_of("\"");
+
+  // Handle if the include uses "" tags
+  if (firstQuote != std::string::npos) {
+    if (lastQuote == std::string::npos)
+      throw std::runtime_error("Line is missing end delimiter '\"': " + line);
+
+    return line.substr(firstQuote + 1, lastQuote - firstQuote - 1);
+  }
+
+  // Throw since we didnt find any valid tags
+  throw std::runtime_error("Include directive uses incorrect symbols");
+}
+
+/**
+ * @brief
  *   Loads the shader from file, handling any special syntax as it detects it.
  *   This function supports two special syntaxes:
  *
@@ -139,6 +223,14 @@ Shader::LayoutBinding replaceLayoutBinding(std::string& line) {
  *   The first, `#include`, will let you include a file from file in its
  *   entirety. Please keep in mind that this is simple replace `include`
  *   with whole file it is referencing.
+ *
+ *   Keep in mind that include does not do anything fancy other than include the
+ *   entire file into the same file. This may cause errors if function names are defined
+ *   multiple times. The parser will try its best to not include a file more than once,
+ *   even if there are multiple include statements.
+ *
+ *   Also keep in mind that when including files, you have to include it in the order it
+ *   is suppose to be used.
  *
  *   The second, `_CFG_`, lets you reference the CFG by properties. For instance
  *   you can say something like:
@@ -153,10 +245,12 @@ Shader::LayoutBinding replaceLayoutBinding(std::string& line) {
  *
  * @return
  */
-Shader::Details loadTextfile(const std::string& filename) {
-  Shader::Details detail;
-  std::ifstream   fs(filename);
-  std::string     line;
+Shader::Details loadTextfile(const std::string& filename,
+                             Shader::Details    detail = Shader::Details()) {
+
+  std::ifstream            fs(filename);
+  std::string              line;
+  std::string              absDir = getAbsoluteDir(filename);
 
   if (!fs.is_open()) {
     throw std::runtime_error("Unable to open file: " + filename);
@@ -164,19 +258,27 @@ Shader::Details loadTextfile(const std::string& filename) {
 
   while (fs.good()) {
     std::getline(fs, line);
-    bool hasInclude       = line.find("#include") != std::string::npos;
+    bool hasInclude       = line.find("#include") == 0;
     bool hasCFGExpression = line.find("_CFG_") != std::string::npos;
     bool hasLayoutBinding = line.find("layout(binding=") != std::string::npos;
 
     if (hasInclude) {
-      unsigned int    first       = line.find("<");
-      unsigned int    length      = line.find(">") - first - 1;
-      std::string     includeFile = line.substr(first, length);
-      Shader::Details included    = loadTextfile(includeFile);
-      detail.layoutBindings.insert(detail.layoutBindings.end(),
-                                   included.layoutBindings.begin(),
-                                   included.layoutBindings.end());
-      detail.source += included.source;
+      // check if the file has already been included
+      std::string includeFile  = str::joinPath(absDir, getIncludeFilename(line));
+      bool hasBeenIncluded = false;
+
+      for(auto& s : detail.includedFiles) {
+        if (s == includeFile) {
+          hasBeenIncluded = true;
+          break;
+        }
+      }
+
+      if (!hasBeenIncluded) {
+        detail.includedFiles.push_back(includeFile);
+        detail = loadTextfile(includeFile, detail);
+      }
+
     } else {
       if (hasCFGExpression)
         replaceCFGExpression(line);
@@ -354,18 +456,26 @@ bool Shader::checkShader() {
   // throw error if it cant compile
   if (isCompiled == GL_FALSE) {
     std::vector<GLchar> infoLog(maxLength);
-    std::string         s = mFilename + ": ";
 
     glGetShaderInfoLog(mId, maxLength, &maxLength, &infoLog[0]);
     glDeleteShader(mId);
 
-    mLog->error("Errors in shader: {} - see below:", mFilename);
-    for (unsigned int i = 0; i < infoLog.size(); i++) {
-      if (infoLog[i] == '\n') {
-        mLog->error(s);
-        s = mFilename + ": ";
-      } else
-        s += infoLog[i];
+    std::string s(infoLog.begin(), infoLog.end());
+    mLog->error("Errors in shader: {} - see below: \n{}", mFilename, s);
+    mLog->info("For dev purposes, source code:");
+
+    auto source = str::split(mDetail.source, '\n');
+
+    int i = 1;
+    for(auto& a : source) {
+      std::string lineNum = std::to_string(i);
+
+      if (lineNum.length() < 4) {
+        lineNum = lineNum + std::string(" ", 4 - lineNum.length());
+      }
+
+      std::cout << "#" << lineNum << "  " << a << std::endl;
+      i++;
     }
 
     return false;

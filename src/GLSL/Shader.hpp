@@ -17,6 +17,7 @@ public:
 
   struct Details {
     std::vector<LayoutBinding> layoutBindings;
+    std::vector<std::string>   includedFiles;
     std::string                source;
   };
 
