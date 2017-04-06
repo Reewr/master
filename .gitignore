@@ -17,3 +17,5 @@ compile_commands.json
 
 # Temporary blender files
 *.blend1
+
+!shaders/lib
