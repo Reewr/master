@@ -15,7 +15,7 @@ GLuint GLSphere::mIBO = 0;
 GLuint GLSphere::mVBO = 0;
 GLuint GLSphere::mVAO = 0;
 
-GLSphere::GLSphere() {
+GLSphere::GLSphere(bool outline) : mOutline(outline) {
   if (mSphereCounter == 0)
     setup();
 
@@ -151,7 +151,14 @@ void GLSphere::draw() {
     return;
 
   glBindVertexArray(mVAO);
-  /* glDrawElements(GL_TRIANGLES, mNumQuads, GL_UNSIGNED_SHORT, 0); */
+
+  if (mOutline)
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
   glDrawArrays(GL_TRIANGLES, 0, mNumQuads);
+
+  if (mOutline)
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
   glBindVertexArray(0);
 }

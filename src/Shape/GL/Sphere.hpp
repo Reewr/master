@@ -6,7 +6,7 @@
 
 class GLSphere : GLShape {
 public:
-  GLSphere();
+  GLSphere(bool outline = false);
   ~GLSphere();
 
   void setup();
@@ -16,6 +16,7 @@ private:
 
   Vertex genVertex(float u, float v);
 
+  bool mOutline;
   static int mSphereCounter;
   static int mNumQuads;
   static GLuint mIBO;
