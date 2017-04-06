@@ -7,7 +7,6 @@ in vec2 texCoord;
 
 uniform vec3 dir;
 
-const int shadowSamples = _CFG_.Graphics.shadow_samples;
 layout(binding=0) uniform sampler2D shadowMap;
 layout(binding=1) uniform sampler2D diffuseMap;
 
