@@ -82,6 +82,72 @@ std::string str::utf8toStr(unsigned int codepoint) {
 
 /**
  * @brief
+ *   Goes throught the given string `s` and replaces every instance of
+ *   `replaceStr` with `replaceWith`.
+ *
+ * @param s
+ * @param replaceStr
+ * @param replaceWith
+ *
+ * @return
+ */
+std::string str::replace(const std::string& s,
+                         const std::string& replaceStr,
+                         const std::string& replaceWith) {
+  size_t pos = s.find(replaceStr);
+
+  // Limit the amount of copying to one if no match
+  if (pos == std::string::npos)
+    return s;
+
+  std::string retStr = s;
+
+  while (pos != std::string::npos) {
+    retStr.replace(pos, replaceStr.size(), replaceWith);
+
+    pos = retStr.find(replaceStr);
+  }
+
+  return retStr;
+}
+
+/**
+ * @brief
+ *   Takes two paths and joins them together correctly, handling any double slahes and
+ *   double dots.
+ *
+ * @param path1
+ * @param path2
+ *
+ * @return
+ */
+std::string str::joinPath(const std::string& path1, const std::string& path2) {
+  std::string fullPath = path1 + "/" + path2;
+
+  // Handle ..
+  std::vector<std::string> folders = str::split(fullPath, '/');
+  std::vector<size_t> dotdots;
+
+  for(size_t i = 0; i < folders.size(); ++i) {
+    if (folders[i] == "..") {
+      dotdots.push_back(i-1);
+      dotdots.push_back(i);
+    }
+  }
+
+  for(auto& i : dotdots) {
+    if (i > 0 && i < folders.size())
+      folders[i] = "";
+  }
+
+  fullPath = str::join(folders, '/');
+
+  // strip double //
+  return str::replace(fullPath, "//", "/");
+}
+
+/**
+ * @brief
  *   Trims the string from the right, which means any trailing whitespace,
  *   such that "  Hello World!   " becomes "  Hello World!"
  *
@@ -153,4 +219,29 @@ std::vector<std::string> str::split(const std::string& s, char delimiter) {
   }
 
   return items;
+}
+
+/**
+ * @brief
+ *  Does the opposite of str::split. Takes a vector of string and joins them
+ *  to one string with the delimiter as what seperates them.
+ *
+ * @param s
+ * @param delimiter
+ *
+ * @return
+ */
+std::string str::join(const std::vector<std::string>& s, char delimiter) {
+  std::string ret = "";
+  size_t size = s.size();
+
+  for(unsigned int i = 0; i < size; ++i) {
+    ret += s[i];
+
+    if (i + 1 != size) {
+      ret += delimiter;
+    }
+  }
+
+  return ret;
 }
