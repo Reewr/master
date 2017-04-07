@@ -6,6 +6,7 @@ in vec4 shadowCoord;
 in vec2 texCoord;
 
 uniform vec3 dir;
+uniform vec4 overrideColor;
 
 layout(binding=0) uniform sampler2D shadowMap;
 layout(binding=1) uniform sampler2D diffuseMap;
@@ -24,7 +25,12 @@ const vec3 ambient_light  = vec3(0.2, 0.2, 0.2);
 void main () {
 
   // phong lighting
-  vec3 texel = vec3(texture(diffuseMap, texCoord));
+  vec3 texel;
+
+  if (overrideColor.x >= 0)
+    texel = vec3(texture(diffuseMap, texCoord));
+  else
+    texel = vec3(overrideColor.xyz);
 
   vec3 ambient = ambient_light * texel;
 
