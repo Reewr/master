@@ -6,6 +6,8 @@
 #include "../3D/Spider.hpp"
 #include "../3D/Terrain.hpp"
 #include "../3D/World.hpp"
+#include "../3D/Sphere.hpp"
+#include "../3D/Line.hpp"
 #include "../Camera/Camera.hpp"
 #include "../Console/Console.hpp"
 #include "../Console/Console.hpp"
@@ -33,15 +35,16 @@ using mmm::vec3;
 Master::Master(Asset* a) : mAsset(a) {
   setLoggerName("Master");
   CFG* c         = a->cfg();
-  vec2 shadowRes = vec2(c->graphics.shadowRes, c->graphics.shadowRes);
+  vec2 shadowRes = vec2(c->graphics.shadowRes);
+  ResourceManager* r = a->rManager();
 
-  a->rManager()->unloadUnnecessary(ResourceScope::Master);
-  a->rManager()->loadRequired(ResourceScope::Master);
+  r->unloadUnnecessary(ResourceScope::Master);
+  r->loadRequired(ResourceScope::Master);
 
   mLua       = a->lua();
   mCamera    = new Camera(a);
   mWorld     = new World(vec3(0, -9.81, 0));
-  mShadowmap = new Framebuffer(a->rManager()->get<Program>("Program::Shadow"),
+  mShadowmap = new Framebuffer(r->get<Program>("Program::Shadow"),
                                shadowRes,
                                true);
 
@@ -76,7 +79,7 @@ Master::Master(Asset* a) : mAsset(a) {
 
   // mLog->info("Initialized successfully");
 
-  // auto test = a->rManager()->get<PhysicsMesh>("PhysicsMesh::Box");
+  // auto test = r->get<PhysicsMesh>("PhysicsMesh::Box");
   // mLog->debug("Logging the names of PhysicsMesh::Box");
 
   // for (auto m : test->names()) {
@@ -169,7 +172,7 @@ void Master::input(const Input::Event& event) {
 void Master::update(float deltaTime) {
   mDeltaTime = deltaTime;
   // mWorld->doPhysics(deltaTime);
-  mSwarm->update(deltaTime);
+  /* mSwarm->update(deltaTime); */
 
   if (mGUIElements.size() == 0 || !mGUIElements.back()->isVisible())
     mCamera->input(deltaTime);
