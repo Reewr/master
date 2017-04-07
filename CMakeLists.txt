@@ -187,6 +187,7 @@ set(SOURCE_FILES
   ${SRC_DIR}/3D/MeshPart.cpp
   ${SRC_DIR}/3D/Terrain.cpp
   ${SRC_DIR}/3D/Sphere.cpp
+  ${SRC_DIR}/3D/Line.cpp
   ${SRC_DIR}/3D/World.cpp
 
   # src/Camera
@@ -243,6 +244,7 @@ set(SOURCE_FILES
   ${SRC_DIR}/Shape/GL/Shape.cpp
   ${SRC_DIR}/Shape/GL/Sphere.cpp
   ${SRC_DIR}/Shape/GL/Cube.cpp
+  ${SRC_DIR}/Shape/GL/Line.cpp
 
   # src/Import
   ${SRC_DIR}/Import/UILoader.cpp
@@ -279,6 +281,7 @@ set(HEADER_FILES
   # src/3D
   ${SRC_DIR}/3D/Cube.hpp
   ${SRC_DIR}/3D/Sphere.hpp
+  ${SRC_DIR}/3D/Line.hpp
   ${SRC_DIR}/3D/MeshPart.cpp
   ${SRC_DIR}/3D/Spider.hpp
   ${SRC_DIR}/3D/Terrain.hpp
@@ -338,6 +341,7 @@ set(HEADER_FILES
   ${SRC_DIR}/Shape/GL/Shape.hpp
   ${SRC_DIR}/Shape/GL/Sphere.hpp
   ${SRC_DIR}/Shape/GL/Cube.hpp
+  ${SRC_DIR}/Shape/GL/Line.hpp
 
   # src/Import
   ${SRC_DIR}/Import/UILoader.hpp
