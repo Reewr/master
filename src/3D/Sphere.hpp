@@ -19,8 +19,13 @@ public:
   // Creates a sphere of a specific size in meters.
   // The position is where the box will start at
   Sphere(const mmm::vec3& position,
-         mmm::vec3 size = mmm::vec3(1.0),
+         float radius = 1,
          std::shared_ptr<Texture> texture = nullptr,
+         bool outline = false);
+
+  Sphere(const mmm::vec3& position,
+         float radius,
+         mmm::vec3 color,
          bool outline = false);
   ~Sphere();
 
@@ -40,4 +45,6 @@ public:
 private:
   GLSphere*                mSphere;
   std::shared_ptr<Texture> mTexture;
+  mmm::vec3 mColor;
+  bool mUsesColor;
 };

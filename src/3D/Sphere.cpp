@@ -13,15 +13,29 @@ using mmm::vec2;
 using mmm::vec3;
 
 Sphere::Sphere(const mmm::vec3& position,
-               mmm::vec3 size,
+               float radius,
                std::shared_ptr<Texture> texture,
                bool outline)
     : Logging::Log("Sphere")
     , mSphere(new GLSphere(outline))
     , mTexture(texture) {
-      mScale = mmm::scale(size);
+      mScale = mmm::scale(mmm::vec3(radius));
       mPosition = position;
       mRotation = mmm::rotate_x(-90.f);
+    }
+
+Sphere::Sphere(const mmm::vec3& position,
+               float radius,
+               mmm::vec3 color,
+               bool outline)
+    : Logging::Log("Sphere")
+    , mSphere(new GLSphere(outline))
+    , mTexture(nullptr) {
+      mScale = mmm::scale(mmm::vec3(radius));
+      mPosition = position;
+      mRotation = mmm::rotate_x(-90.f);
+      mColor = color;
+      mUsesColor = true;
     }
 
 Sphere::~Sphere() {
@@ -62,9 +76,11 @@ void Sphere::draw(std::shared_ptr<Program>& program,
   program->setUniform("model",
                       mmm::translate(mPosition + offset) * mRotation * mScale);
 
+  program->setUniform("overrideColor", mColor);
   if (bindTexture && mTexture != nullptr)
     mTexture->bind(1);
   mSphere->draw();
+  program->setUniform("overrideColor", mmm::vec3(-1));
 }
 
 void Sphere::input(const Input::Event&) {}
