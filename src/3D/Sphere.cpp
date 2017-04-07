@@ -26,7 +26,7 @@ Sphere::Sphere(const mmm::vec3& position,
 
 Sphere::Sphere(const mmm::vec3& position,
                float radius,
-               mmm::vec3 color,
+               mmm::vec4 color,
                bool outline)
     : Logging::Log("Sphere")
     , mSphere(new GLSphere(outline))

@@ -25,7 +25,7 @@ public:
 
   Sphere(const mmm::vec3& position,
          float radius,
-         mmm::vec3 color,
+         mmm::vec4 color,
          bool outline = false);
   ~Sphere();
 
@@ -45,6 +45,6 @@ public:
 private:
   GLSphere*                mSphere;
   std::shared_ptr<Texture> mTexture;
-  mmm::vec3 mColor;
+  mmm::vec4 mColor;
   bool mUsesColor;
 };
