@@ -79,7 +79,7 @@ void Sphere::draw(std::shared_ptr<Program>& program,
   if (mUsesColor)
     program->setUniform("overrideColor", mColor);
   else
-    program->setUniform("overrideColor", mmm::vec3(-1));
+    program->setUniform("overrideColor", mmm::vec4(-1));
 
   if (bindTexture && mTexture != nullptr)
     mTexture->bind(1);
