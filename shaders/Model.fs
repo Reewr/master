@@ -27,7 +27,7 @@ void main () {
   // phong lighting
   vec3 texel;
 
-  if (overrideColor.x >= 0)
+  if (overrideColor.x < 0)
     texel = vec3(texture(diffuseMap, texCoord));
   else
     texel = vec3(overrideColor.xyz);
