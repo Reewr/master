@@ -7,6 +7,9 @@
 #include "../Resource/ResourceManager.hpp"
 #include "../GLSL/Program.hpp"
 
+#include "../3D/Line.hpp"
+#include "../3D/Sphere.hpp"
+
 using mmm::vec2;
 using mmm::vec3;
 using mmm::vec4;
@@ -43,31 +46,56 @@ DrawablePhenotype::~DrawablePhenotype() {
 void DrawablePhenotype::input(const Input::Event&) { }
 void DrawablePhenotype::update(float) { }
 
-void DrawablePhenotype::recreate(const NEAT::NeuralNetwork& network,
-                                 mmm::vec2 size) {
-  double rectDiv          = size.x / 15.0;
-  double magn             = 255.0;
-  double maxLineThickness = 3.0;
-  double neuronRadius     = 15;
+/**
+ * @brief
+ *   Finds the minimum and maximum substrate coordinates for the neural network.
+ *
+ *   Retrieves the min/max x, y. Will also try to retrieve the Z if that exists.
+ *
+ *   The two arguments, maxValues and minValues will be changed by this function
+ *
+ * @param network
+ * @param maxValues
+ * @param minValues
+ */
+void DrawablePhenotype::findSubstrateLimits(const NEAT::NeuralNetwork& network,
+                                vec3& maxValues, vec3& minValues) {
 
-  double maxX = std::numeric_limits<double>::min();
-  double maxY = std::numeric_limits<double>::min();
-  double minX = std::numeric_limits<double>::max();
-  double minY = std::numeric_limits<double>::max();
+  maxValues = vec3(std::numeric_limits<float>::min());
+  minValues = vec3(std::numeric_limits<float>::max());
 
   // Find maximum and minimum substrate coordinates
   for (auto& neuron : network.m_neurons) {
-    if (neuron.m_substrate_coords[0] > maxX)
-      maxX = neuron.m_substrate_coords[0];
-    if (neuron.m_substrate_coords[0] < minX)
-      minX = neuron.m_substrate_coords[0];
+    if (neuron.m_substrate_coords[0] > maxValues.x)
+      maxValues.x = neuron.m_substrate_coords[0];
+    if (neuron.m_substrate_coords[0] < minValues.x)
+      minValues.x = neuron.m_substrate_coords[0];
 
-    if (neuron.m_substrate_coords[1] > maxY)
-      maxY = neuron.m_substrate_coords[1];
-    if (neuron.m_substrate_coords[1] < minY)
-      minY = neuron.m_substrate_coords[1];
+    if (neuron.m_substrate_coords[1] > maxValues.y)
+      maxValues.y = neuron.m_substrate_coords[1];
+    if (neuron.m_substrate_coords[1] < minValues.y)
+      minValues.y = neuron.m_substrate_coords[1];
+
+    if (neuron.m_substrate_coords.size() <= 2)
+      continue;
+
+    if (neuron.m_substrate_coords[2] > maxValues.z)
+      maxValues.z = neuron.m_substrate_coords[2];
+    if (neuron.m_substrate_coords[2] < minValues.z)
+      minValues.z = neuron.m_substrate_coords[2];
   }
+}
 
+/**
+ * @brief
+ *   Goes through all the connections and checks their weight and returns
+ *   the maximum weight of all connections.
+ *
+ * @param network
+ *
+ * @return
+ */
+float DrawablePhenotype::findMaxConnectionWeight(const NEAT::NeuralNetwork& network) {
   double maxWeight = 0;
 
   // Find the max weight of a connection
@@ -79,6 +107,167 @@ void DrawablePhenotype::recreate(const NEAT::NeuralNetwork& network,
         maxWeight = weight;
     }
   }
+
+  return maxWeight;
+}
+
+/**
+ * @brief
+ *   Recreates the elements needed to draw the network in 3D
+ *
+ * @param network
+ * @param size
+ */
+void DrawablePhenotype::recreate(const NEAT::NeuralNetwork& network,
+                          mmm::vec3 size) {
+
+  double rectDiv          = size.x / 15.0;
+  double magn             = 255.0;
+  double maxLineThickness = 3.0;
+  double neuronRadius     = 15;
+
+  vec3 maxValues;
+  vec3 minValues;
+
+  findSubstrateLimits(network, maxValues, minValues);
+
+  float maxWeight = findMaxConnectionWeight(network);
+
+  if (mDrawables.size()) {
+    for(auto& a : mDrawables)
+      delete a;
+    mDrawables.clear();
+  }
+
+  // Use one vector to store all line and circle information so it
+  // can be sent to OpenGL in one batch
+  mDrawables.reserve(
+      network.m_connections.size() + // The number of lines
+      network.m_neurons.size() + // The number of filled circles
+      network.m_neurons.size()   // The number of outline circles
+  );
+
+  // Create a line for each connection, making the color depend on the
+  // connections weight.
+  //
+  // weight < 0 and recur flag is true == green, else all colors
+  // weight < 0 == blue, else red
+  //
+  // Lines go from one neuron to another
+  for (auto& conn : network.m_connections) {
+    // double thickness =
+    //   mmm::clamp(scale(conn.m_weight, 0, maxWeight, 1, maxLineThickness),
+    //              1,
+    //              maxLineThickness);
+
+    double w =
+      mmm::clamp(scale(mmm::abs(conn.m_weight), 0.0, maxWeight, 0.0, 1.0),
+                 0.75,
+                 1.0);
+
+    vec4 color;
+    vec3 start;
+    vec3 end;
+
+    if (conn.m_recur_flag) {
+      color = conn.m_weight < 0 ? vec4(0, magn * w, 0, 1) : vec4(magn * w);
+    } else {
+      color = conn.m_weight < 0 ? vec4(0, 0, magn * w, 1) : vec4(magn * w, 0, 0, 1);
+    }
+
+    color.w  = 1;
+    start = vec3(network.m_neurons[conn.m_source_neuron_idx].m_x,
+                 network.m_neurons[conn.m_source_neuron_idx].m_y,
+                 network.m_neurons[conn.m_source_neuron_idx].m_z);
+
+    end  = vec3(network.m_neurons[conn.m_target_neuron_idx].m_x,
+                network.m_neurons[conn.m_target_neuron_idx].m_y,
+                network.m_neurons[conn.m_target_neuron_idx].m_z);
+
+    mDrawables.push_back(new Line(start, end, color));
+  }
+
+  std::vector<Drawable3D*> filled;
+  filled.resize(network.m_neurons.size());
+  // For each neuron where an outline of the circle indicates the type
+  // of neuron.
+  //
+  // Input = green
+  // Bias  = black
+  // Hidden = gray
+  // output = yellow
+  // NONE = red
+  //
+  // The size of the filled circle and its color is dependent on the activation
+  // of that neuron.
+  for (auto& neuron : network.m_neurons) {
+    float x = scale(neuron.m_substrate_coords[0],
+                       minValues.x,
+                       maxValues.x,
+                       rectDiv,
+                       size.x - rectDiv);
+    float y = scale(neuron.m_substrate_coords[1],
+                    minValues.y,
+                    maxValues.y,
+                    rectDiv,
+                    size.y - rectDiv);
+
+    float z = scale(neuron.m_substrate_coords[2],
+                    minValues.z,
+                    maxValues.z,
+                    rectDiv,
+                    size.z - rectDiv);
+
+    vec3 posFilled  = vec3(x, y, z);
+    vec3 posOutline = vec3(x, y, z);
+    float radiusFilled = 0;
+    float radiusOutline = 0;
+    vec4 colorFilled;
+    vec4 colorOutline;
+
+    if (neuron.m_activation < 0) {
+      colorFilled = vec4(0.3) + vec4(0, 0, 0.7, 1.0) * (-neuron.m_activation);
+    } else {
+      colorFilled = vec4(0.3) + vec4(0.7) * neuron.m_activation;
+    }
+
+    colorFilled.w = 1;
+
+    if (neuron.m_type == NEAT::NeuronType::INPUT)
+      colorOutline = vec4(0, 1, 0, 1);
+    else if (neuron.m_type == NEAT::NeuronType::BIAS)
+      colorOutline = vec4(0, 0, 0, 1);
+    else if (neuron.m_type == NEAT::NeuronType::HIDDEN)
+      colorOutline = vec4(0.5, 0.5, 0.5, 1);
+    else if (neuron.m_type == NEAT::NeuronType::OUTPUT)
+      colorOutline = vec4(1, 1, 0, 1);
+    else if (neuron.m_type == NEAT::NeuronType::NONE)
+      colorOutline = vec4(1, 0, 0, 1);
+
+    radiusOutline = neuronRadius;
+    radiusFilled  = neuronRadius * mmm::clamp(neuron.m_activation, 0.3, 2.0);
+    colorFilled   = mmm::clamp(colorFilled, 0.0, 1.0);
+
+    filled.push_back(new Sphere(posFilled, radiusFilled, colorFilled));
+    mDrawables.push_back(new Sphere(posOutline, radiusOutline, colorOutline, true));
+  }
+
+  mDrawables.insert(mDrawables.end(), filled.begin(), filled.end());
+}
+
+void DrawablePhenotype::recreate(const NEAT::NeuralNetwork& network,
+                                 mmm::vec2 size) {
+  double rectDiv          = size.x / 15.0;
+  double magn             = 255.0;
+  double maxLineThickness = 3.0;
+  double neuronRadius     = 15;
+
+  vec3 maxValues;
+  vec3 minValues;
+
+  findSubstrateLimits(network, maxValues, minValues);
+
+  float maxWeight = findMaxConnectionWeight(network);
 
   // Use one vector to store all line and circle information so it
   // can be sent to OpenGL in one batch
@@ -146,13 +335,13 @@ void DrawablePhenotype::recreate(const NEAT::NeuralNetwork& network,
     Vertex outline;
 
     float x = scale(neuron.m_substrate_coords[0],
-                       minX,
-                       maxX,
+                       minValues.x,
+                       maxValues.x,
                        rectDiv,
                        size.x - rectDiv);
     float y = scale(neuron.m_substrate_coords[1],
-                       minY,
-                       maxY,
+                       minValues.y,
+                       maxValues.y,
                        rectDiv,
                        size.y - rectDiv);
 
@@ -256,4 +445,10 @@ void DrawablePhenotype::draw() {
   glBindVertexArray(0);
 }
 
-void DrawablePhenotype::save(const std::string& filename) {}
+void DrawablePhenotype::draw3D() {
+  for(auto& d : mDrawables) {
+    d->draw(mModelColorProgram);
+  }
+}
+
+void DrawablePhenotype::save(const std::string&) {}

@@ -5,10 +5,12 @@
 
 #include <mmm.hpp>
 #include <memory>
+#include <vector>
 
 class Texture;
 class Phenotype;
 class Program;
+class Drawable3D;
 
 namespace NEAT {
   class NeuralNetwork;
@@ -57,13 +59,20 @@ class DrawablePhenotype : Drawable {
   void update(float deltaTime);
 
   void recreate(const NEAT::NeuralNetwork& network, mmm::vec2 size);
+  void recreate(const NEAT::NeuralNetwork& network, mmm::vec3 size);
 
   void draw();
+  void draw3D();
 
   void save(const std::string& filename);
 
-
 private:
+  void findSubstrateLimits(const NEAT::NeuralNetwork& network,
+                           mmm::vec3& maxValues,
+                           mmm::vec3& minValues);
+
+  float findMaxConnectionWeight(const NEAT::NeuralNetwork& network);
+
   mmm::vec2 mSize;
 
   int mNumLines;
@@ -73,9 +82,12 @@ private:
   GLuint mVBO;
   GLuint mVAO;
 
+  std::vector<Drawable3D*> mDrawables;
+
   std::shared_ptr<Program> mLinesProgram;
   std::shared_ptr<Program> mOutlineCircleProgram;
   std::shared_ptr<Program> mFilledCircleProgram;
+  std::shared_ptr<Program> mModelColorProgram;
 
   Texture* texture;
 };
