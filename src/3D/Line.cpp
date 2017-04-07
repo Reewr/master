@@ -10,9 +10,12 @@
 using mmm::vec2;
 using mmm::vec3;
 
-Line::Line(const mmm::vec3& start, const mmm::vec3& end)
+Line::Line(const mmm::vec3& start, const mmm::vec3& end, const mmm::vec4& color)
     : Logging::Log("Line") , mLine(new GLLine()){
   mTexture = mAsset->rManager()->get<Texture>("Texture::Line");
+  mColor = color;
+
+  mUsesColor = color.x != -1;
 
   vec3 diffS = vec3(0,0,0) - start;
   vec3 diffE = vec3(1,0,0) - end;
@@ -69,6 +72,11 @@ void Line::draw(std::shared_ptr<Program>& program,
   program->bind();
   program->setUniform("model",
                       mmm::translate(mPosition + offset) * mRotation * mScale);
+
+  if (mUsesColor)
+    program->setUniform("overrideColor", mColor);
+  else
+    program->setUniform("overrideColor", mmm::vec4(-1));
 
   if (bindTexture)
     mTexture->bind(1);

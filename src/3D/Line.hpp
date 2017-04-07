@@ -24,8 +24,9 @@ public:
   //     8m^3 (2,2,2) cube weighs 8000kg
   //
   // The position is where the box will start at
-  Line(const mmm::vec3& start = mmm::vec3(0, 0, 0),
-       const mmm::vec3& end   = mmm::vec3(0, 0, 0));
+  Line(const mmm::vec3& start,
+       const mmm::vec3& end,
+       const mmm::vec4& color = mmm::vec4(-1));
   ~Line();
 
   // Update the element, physics etc
@@ -44,4 +45,6 @@ public:
 private:
   GLLine*                  mLine;
   std::shared_ptr<Texture> mTexture;
+  bool mUsesColor;
+  mmm::vec4 mColor;
 };
