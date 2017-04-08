@@ -102,23 +102,23 @@ void Phenotype::update(float deltaTime) {
 
   for (auto& part : spider->parts()) {
 
-    // vec3  ang = part.second.part->angularVelocity();
-    // inputs.push_back(ang.x);
-    // inputs.push_back(ang.y);
-    // inputs.push_back(ang.z);
+    vec3  ang = part.second.part->angularVelocity();
+    inputs.push_back(ang.x);
+    inputs.push_back(ang.y);
+    inputs.push_back(ang.z);
 
     // auto ypos = part.second.part->rigidBody()->getCenterOfMassPosition().y();
     // inputs.push_back(ypos);
 
-    if (part.second.hinge != nullptr) {
+    // if (part.second.hinge != nullptr) {
 
-      float rot = part.second.hinge->getHingeAngle();
-      inputs.push_back(rot - part.second.restAngle);
+    //   float rot = part.second.hinge->getHingeAngle();
+    //   inputs.push_back(rot); // - part.second.restAngle);
 
-    } else if (part.second.dof != nullptr) {
+    // } else if (part.second.dof != nullptr) {
 
-      // TODO
-    }
+    //   // TODO
+    // }
   }
 
   // activate network to retrieve output vector
