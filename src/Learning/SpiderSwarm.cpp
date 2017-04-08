@@ -561,75 +561,78 @@ void SpiderSwarm::setDefaultParameters() {
   mParameters->AllowClones                             = true;
 
   // GA parameters
-  mParameters->YoungAgeTreshold                        = 5;
+  mParameters->YoungAgeTreshold                        = 15;
   mParameters->YoungAgeFitnessBoost                    = 1.1;
-  mParameters->SpeciesMaxStagnation                    = 50;
+  mParameters->SpeciesMaxStagnation                    = 15;
   mParameters->StagnationDelta                         = 0.0;
-  mParameters->OldAgeTreshold                          = 30;
+  mParameters->OldAgeTreshold                          = 35;
   mParameters->OldAgePenalty                           = 1.0;
   mParameters->DetectCompetetiveCoevolutionStagnation  = false;
   mParameters->KillWorstSpeciesEach                    = 15;
   mParameters->KillWorstAge                            = 10;
-  mParameters->SurvivalRate                            = 0.25;
-  mParameters->CrossoverRate                           = 0.7;
-  mParameters->OverallMutationRate                     = 0.25;
+  mParameters->SurvivalRate                            = 0.2;
+  mParameters->CrossoverRate                           = 0.75;
+  mParameters->OverallMutationRate                     = 0.2;
   mParameters->InterspeciesCrossoverRate               = 0.001;
-  mParameters->MultipointCrossoverRate                 = 0.75;
+  mParameters->MultipointCrossoverRate                 = 0.4;
   mParameters->RouletteWheelSelection                  = false;
   mParameters->TournamentSize                          = 4;
   mParameters->EliteFraction                           = 0.15;
 
   // Mutation parameters
-  mParameters->MutateAddNeuronProb                     = 0.01;
+  mParameters->MutateAddNeuronProb                     = 0.1;
   mParameters->SplitRecurrent                          = true;
   mParameters->SplitLoopedRecurrent                    = true;
-  mParameters->MutateAddLinkProb                       = 0.08;
+  mParameters->MutateAddLinkProb                       = 0.2;
   mParameters->MutateAddLinkFromBiasProb               = 0.0;
-  mParameters->MutateRemLinkProb                       = 0.2;
+  mParameters->MutateRemLinkProb                       = 0.0;
   mParameters->MutateRemSimpleNeuronProb               = 0.0;
   mParameters->LinkTries                               = 32;
-  mParameters->RecurrentProb                           = 0.25;
+  mParameters->RecurrentProb                           = 0.50;
   mParameters->RecurrentLoopProb                       = 0.25;
 
   // Parameter mutation parameters
-  mParameters->MutateWeightsProb                       = 0.90;
-  mParameters->MutateWeightsSevereProb                 = 0.25;
-  mParameters->WeightMutationRate                      = 1.0;
-  mParameters->WeightMutationMaxPower                  = 0.2;
+  mParameters->MutateWeightsProb                       = 0.8;
+  mParameters->MutateWeightsSevereProb                 = 0.5;
+  mParameters->WeightMutationRate                      = 0.25;
+  mParameters->WeightMutationMaxPower                  = 0.5;
   mParameters->WeightReplacementMaxPower               = 1.0;
   mParameters->MaxWeight                               = 8.0;
   mParameters->MutateActivationAProb                   = 0.0;
   mParameters->MutateActivationBProb                   = 0.0;
-  mParameters->ActivationAMutationMaxPower             = 0.0;
+  mParameters->ActivationAMutationMaxPower             = 0.5;
   mParameters->ActivationBMutationMaxPower             = 0.0;
-  mParameters->MinActivationA                          = 0.05;
-  mParameters->MaxActivationA                          = 6.0;
+  mParameters->MinActivationA                          = 1.1;
+  mParameters->MaxActivationA                          = 6.9;
   mParameters->MinActivationB                          = 0.0;
   mParameters->MaxActivationB                          = 0.0;
-  mParameters->TimeConstantMutationMaxPower            = 0.0;
+  mParameters->TimeConstantMutationMaxPower            = 0.1;
   mParameters->MutateNeuronTimeConstantsProb           = 0.0;
-  mParameters->MutateNeuronBiasesProb                  = 0.0;
-  mParameters->MinNeuronTimeConstant                   = 0.0;
-  mParameters->MaxNeuronTimeConstant                   = 0.0;
-  mParameters->MinNeuronBias                           = 0.0;
-  mParameters->MaxNeuronBias                           = 0.0;
+  mParameters->MutateNeuronBiasesProb                  = 0.1;
+  mParameters->MinNeuronTimeConstant                   = 0.04;
+  mParameters->MaxNeuronTimeConstant                   = 0.24;
+  mParameters->MinNeuronBias                           = -8.0;
+  mParameters->MaxNeuronBias                           = 8.0;
 
   // Activation function parameters
-  mParameters->MutateNeuronActivationTypeProb          = 0.03;
-  mParameters->ActivationFunction_SignedSigmoid_Prob   = 1.0;
+  mParameters->MutateNeuronActivationTypeProb          = 0.0;
+  mParameters->ActivationFunction_SignedSigmoid_Prob   = 0.0;
   mParameters->ActivationFunction_UnsignedSigmoid_Prob = 0.0;
   mParameters->ActivationFunction_Tanh_Prob            = 1.0;
   mParameters->ActivationFunction_TanhCubic_Prob       = 0.0;
-  mParameters->ActivationFunction_SignedStep_Prob      = 1.0;
+  mParameters->ActivationFunction_SignedStep_Prob      = 0.0;
   mParameters->ActivationFunction_UnsignedStep_Prob    = 0.0;
-  mParameters->ActivationFunction_SignedGauss_Prob     = 1.0;
+  mParameters->ActivationFunction_SignedGauss_Prob     = 0.0;
   mParameters->ActivationFunction_UnsignedGauss_Prob   = 0.0;
   mParameters->ActivationFunction_Abs_Prob             = 0.0;
-  mParameters->ActivationFunction_SignedSine_Prob      = 1.0;
+  mParameters->ActivationFunction_SignedSine_Prob      = 0.0;
   mParameters->ActivationFunction_UnsignedSine_Prob    = 0.0;
-  mParameters->ActivationFunction_Linear_Prob          = 1.0;
+  mParameters->ActivationFunction_Linear_Prob          = 0.0;
   mParameters->ActivationFunction_Relu_Prob            = 0.0;
   mParameters->ActivationFunction_Softplus_Prob        = 0.0;
+
+
+  mParameters->BiasMutationMaxPower = 0.5;
 
   // Genome properties parameters
   // mParameters->DontUseBiasNeuron                       = false;
@@ -638,7 +641,7 @@ void SpiderSwarm::setDefaultParameters() {
   // Speciation parameters
   mParameters->DisjointCoeff                           = 1.0;
   mParameters->ExcessCoeff                             = 1.0;
-  mParameters->WeightDiffCoeff                         = 0.5;
+  mParameters->WeightDiffCoeff                         = 1.0;
   mParameters->ActivationADiffCoeff                    = 0.0;
   mParameters->ActivationBDiffCoeff                    = 0.0;
   mParameters->TimeConstantDiffCoeff                   = 0.0;
@@ -729,26 +732,26 @@ void SpiderSwarm::setDefaultSubstrate() {
 
   mSubstrate = new Substrate(inputs, hidden, outputs);
 
-  mSubstrate->m_allow_input_hidden_links  = true;
-  mSubstrate->m_allow_input_output_links  = true;
-  mSubstrate->m_allow_hidden_hidden_links = true;
-  mSubstrate->m_allow_hidden_output_links = true;
-  mSubstrate->m_allow_output_hidden_links = true;
-  mSubstrate->m_allow_output_output_links = true;
+  mSubstrate->m_allow_input_hidden_links  = false;
+  mSubstrate->m_allow_input_output_links  = false;
+  mSubstrate->m_allow_hidden_hidden_links = false;
+  mSubstrate->m_allow_hidden_output_links = false;
+  mSubstrate->m_allow_output_hidden_links = false;
+  mSubstrate->m_allow_output_output_links = false;
   mSubstrate->m_allow_looped_hidden_links = false;
   mSubstrate->m_allow_looped_output_links = false;
 
-  // mSubstrate->m_allow_input_hidden_links  = true;
-  // mSubstrate->m_allow_input_output_links  = false;
-  // mSubstrate->m_allow_hidden_output_links = true;
-  // mSubstrate->m_allow_hidden_hidden_links = false;
+  mSubstrate->m_allow_input_hidden_links  = true;
+  mSubstrate->m_allow_input_output_links  = false;
+  mSubstrate->m_allow_hidden_output_links = true;
+  mSubstrate->m_allow_hidden_hidden_links = false;
 
   mSubstrate->m_hidden_nodes_activation =
     NEAT::ActivationFunction::SIGNED_SIGMOID;
   mSubstrate->m_output_nodes_activation =
     NEAT::ActivationFunction::UNSIGNED_SIGMOID;
 
-  mSubstrate->m_with_distance = false;
+  mSubstrate->m_with_distance = true;
 
   mSubstrate->m_max_weight_and_bias = 8.0;
 }
