@@ -59,6 +59,10 @@ struct Phenotype : Logging::Log {
   // Deletes the memory allocated in reset
   void remove();
 
+  // Checks if a spider part is resting / colliding with the terrain
+  bool collidesWithTerrain(btRigidBody* spiderPart);
+  bool collidesWithTerrain(Drawable3D* spiderPart);
+
   // Resets the phenotype back into its original state
   void reset(int speciesId, int individualId);
 

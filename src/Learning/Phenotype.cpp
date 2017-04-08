@@ -14,6 +14,38 @@ using mmm::vec3;
 
 /**
  * @brief
+ *   This structure allows you to check whether two objects
+ *   collide with each other. If this detects a collision,
+ *   it will set a boolean flag to true that can be retrieved
+ *   through the `collided` function.
+ */
+struct SpiderPartContactResultCallback
+  : public btCollisionWorld::ContactResultCallback {
+  SpiderPartContactResultCallback() {}
+
+  btScalar addSingleResult(btManifoldPoint&,
+                           const btCollisionObjectWrapper*,
+                           int,
+                           int,
+                           const btCollisionObjectWrapper*,
+                           int,
+                           int) {
+    mHasCollided = true;
+    return 0;
+  }
+
+  bool collided() const {return mHasCollided;}
+
+  void reset() {
+    mHasCollided = false;
+  }
+
+private:
+  bool mHasCollided;
+};
+
+/**
+ * @brief
  *   Returns the Euler angles of a Quaternion
  *
  * @param v
@@ -75,6 +107,43 @@ void Phenotype::remove() {
   delete network;
   delete planeMotion;
   delete planeBody;
+}
+
+/**
+ * @brief
+ *   Checks if the given spider part is either resting against or colliding
+ *   against the static terrain.
+ *
+ *   Returns true if there is a collision
+ *
+ * @param spiderPart
+ *
+ * @return
+ */
+bool Phenotype::collidesWithTerrain(btRigidBody* spiderPart) {
+  SpiderPartContactResultCallback callback;
+
+  if (world == nullptr || spiderPart == nullptr || planeBody == nullptr)
+    return false;
+
+  world->world()->contactPairTest(planeBody, spiderPart, callback);
+
+  return callback.collided();
+}
+
+/**
+ * @brief
+ *   Checks if the given spider part is either resting against or colliding
+ *   against the static terrain.
+ *
+ *   Returns true if there is a collision
+ *
+ * @param spiderPart
+ *
+ * @return
+ */
+bool Phenotype::collidesWithTerrain(Drawable3D* spiderPart) {
+  return collidesWithTerrain(spiderPart->rigidBody());
 }
 
 /**
