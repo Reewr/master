@@ -227,6 +227,18 @@ bool Drawable3D::hasPhysics() const {
 
 /**
  * @brief
+ *   Returns the const pointer to the rigid body used with the object.
+ *
+ *   Keep in mind that this may be a nullptr.
+ *
+ * @return
+ */
+const btRigidBody* Drawable3D::rigidBody() const {
+  return mBody;
+}
+
+/**
+ * @brief
  *   Returns the pointer to the rigid body used with the object.
  *
  *   Keep in mind that this may be a nullptr.

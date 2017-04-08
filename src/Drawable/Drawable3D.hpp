@@ -68,6 +68,9 @@ public:
   void rotate(const mmm::vec3& axis, float angle);
 
   // Returns the rigidBody associated with the object
+  const btRigidBody* rigidBody() const;
+
+  // Returns a non-const pointer to rigid body
   btRigidBody* rigidBody();
 
   // Returns the objects weight in total, including its children
