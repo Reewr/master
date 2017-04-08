@@ -3,6 +3,7 @@
 #include "../3D/Spider.hpp"
 #include "../3D/World.hpp"
 #include "Substrate.hpp"
+#include "DrawablePhenotype.hpp"
 
 #include <btBulletDynamicsCommon.h>
 #include <thread>
@@ -172,6 +173,9 @@ void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
         if (a < numPhenotypes && gridIndex < gridSize) {
           mPhenotypes[a].spider->enableUpdatingFromPhysics();
           mPhenotypes[a].spider->draw(prog, grid[gridIndex], bindTexture);
+
+          if (bindTexture)
+            mPhenotypes[a].drawablePhenotype->draw3D(grid[gridIndex] + mmm::vec3(0, 5, 0));
         }
 
         gridIndex++;
@@ -183,6 +187,8 @@ void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
       if (mBestIndex < numPhenotypes) {
         mPhenotypes[mBestIndex].spider->enableUpdatingFromPhysics();
         mPhenotypes[mBestIndex].spider->draw(prog, bindTexture);
+        if (bindTexture)
+         mPhenotypes[mBestIndex].drawablePhenotype->draw3D(grid[gridIndex] + mmm::vec3(0, 5, 0));
       }
       break;
     case DrawingMethod::DrawAll:
@@ -190,6 +196,9 @@ void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
         if (gridIndex < gridSize) {
           p.spider->enableUpdatingFromPhysics();
           p.spider->draw(prog, grid[gridIndex], bindTexture);
+          if (bindTexture) {
+            p.drawablePhenotype->draw3D(grid[gridIndex] + mmm::vec3(0, 5, 0));
+          }
         }
         gridIndex++;
       }
@@ -527,6 +536,10 @@ void SpiderSwarm::recreatePhenotypes() {
     i.join();
 
 #endif
+
+  for(auto& i : mPhenotypes) {
+    i.drawablePhenotype->recreate(*i.network, mmm::vec3(1.0, 1.0, 1.0));
+  }
 
   mLog->debug("Created {} spiders", mPhenotypes.size());
 }
