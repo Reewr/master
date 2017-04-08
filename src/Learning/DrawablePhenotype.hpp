@@ -31,6 +31,7 @@ namespace NEAT {
  */
 class DrawablePhenotype : Drawable {
 
+public:
   // For speed efficiency, both circles and lines use the same structure but
   // the variables mean different things.
   //
@@ -62,7 +63,7 @@ class DrawablePhenotype : Drawable {
   void recreate(const NEAT::NeuralNetwork& network, mmm::vec3 size);
 
   void draw();
-  void draw3D();
+  void draw3D(mmm::vec3 offset = mmm::vec3(0));
 
   void save(const std::string& filename);
 
@@ -75,12 +76,16 @@ private:
 
   mmm::vec2 mSize;
 
+  int mNum3DLines;
   int mNumLines;
   int mNumFilledCircles;
   int mNumOutlineCircles;
 
   GLuint mVBO;
   GLuint mVAO;
+
+  GLuint mVBO3D;
+  GLuint mVAO3D;
 
   std::vector<Drawable3D*> mDrawables;
 

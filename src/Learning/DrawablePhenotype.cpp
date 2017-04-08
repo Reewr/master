@@ -4,11 +4,13 @@
 #include <NeuralNetwork.h>
 
 #include "../Utils/Asset.hpp"
+#include "../Utils/Utils.hpp"
 #include "../Resource/ResourceManager.hpp"
 #include "../GLSL/Program.hpp"
 
 #include "../3D/Line.hpp"
 #include "../3D/Sphere.hpp"
+#include "../Shape/GL/Shape.hpp"
 
 using mmm::vec2;
 using mmm::vec3;
@@ -30,17 +32,29 @@ float scale(double coord,
   return domainMin + tr * relA;
 }
 
-DrawablePhenotype::DrawablePhenotype() {
+DrawablePhenotype::DrawablePhenotype()
+  : mNum3DLines(0)
+  , mNumLines(0)
+  , mNumFilledCircles(0)
+  , mNumOutlineCircles(0)
+  , mVBO(0)
+  , mVAO(0)
+  , mVBO3D(0)
+  , mVAO3D(0)
+  , texture(nullptr) {
   ResourceManager* r = mAsset->rManager();
 
-  mLinesProgram         = r->get<Program>("Program::Lines");
-  mOutlineCircleProgram = r->get<Program>("Program::CircleOutline");
-  mFilledCircleProgram  = r->get<Program>("Program::CircleFilled");
+  mModelColorProgram    = r->get<Program>("Program::Model");
+  /* mLinesProgram         = r->get<Program>("Program::Lines"); */
+  /* mOutlineCircleProgram = r->get<Program>("Program::CircleOutline"); */
+  /* mFilledCircleProgram  = r->get<Program>("Program::CircleFilled"); */
 }
 
 DrawablePhenotype::~DrawablePhenotype() {
   glDeleteBuffers(1, &mVBO);
   glDeleteVertexArrays(1, &mVAO);
+  glDeleteBuffers(1, &mVBO3D);
+  glDeleteVertexArrays(1, &mVAO3D);
 }
 
 void DrawablePhenotype::input(const Input::Event&) { }
@@ -124,7 +138,7 @@ void DrawablePhenotype::recreate(const NEAT::NeuralNetwork& network,
   double rectDiv          = size.x / 15.0;
   double magn             = 255.0;
   double maxLineThickness = 3.0;
-  double neuronRadius     = 15;
+  double neuronRadius     = size.x / 15;
 
   vec3 maxValues;
   vec3 minValues;
@@ -139,14 +153,7 @@ void DrawablePhenotype::recreate(const NEAT::NeuralNetwork& network,
     mDrawables.clear();
   }
 
-  // Use one vector to store all line and circle information so it
-  // can be sent to OpenGL in one batch
-  mDrawables.reserve(
-      network.m_connections.size() + // The number of lines
-      network.m_neurons.size() + // The number of filled circles
-      network.m_neurons.size()   // The number of outline circles
-  );
-
+  std::vector<GLShape::Vertex> lines;
   // Create a line for each connection, making the color depend on the
   // connections weight.
   //
@@ -155,6 +162,8 @@ void DrawablePhenotype::recreate(const NEAT::NeuralNetwork& network,
   //
   // Lines go from one neuron to another
   for (auto& conn : network.m_connections) {
+    const NEAT::Neuron& source = network.m_neurons[conn.m_source_neuron_idx];
+    const NEAT::Neuron& target = network.m_neurons[conn.m_target_neuron_idx];
     // double thickness =
     //   mmm::clamp(scale(conn.m_weight, 0, maxWeight, 1, maxLineThickness),
     //              1,
@@ -166,8 +175,8 @@ void DrawablePhenotype::recreate(const NEAT::NeuralNetwork& network,
                  1.0);
 
     vec4 color;
-    vec3 start;
-    vec3 end;
+    vec3 start = vec3(source.m_substrate_coords[0], source.m_substrate_coords[2], source.m_substrate_coords[1]);
+    vec3 end   = vec3(target.m_substrate_coords[0], target.m_substrate_coords[2], target.m_substrate_coords[1]);
 
     if (conn.m_recur_flag) {
       color = conn.m_weight < 0 ? vec4(0, magn * w, 0, 1) : vec4(magn * w);
@@ -175,20 +184,48 @@ void DrawablePhenotype::recreate(const NEAT::NeuralNetwork& network,
       color = conn.m_weight < 0 ? vec4(0, 0, magn * w, 1) : vec4(magn * w, 0, 0, 1);
     }
 
+    lines.push_back({ start, {0,0}, color.xyz });
+    lines.push_back({ end, {0,0}, color.xyz });
+
     color.w  = 1;
-    start = vec3(network.m_neurons[conn.m_source_neuron_idx].m_x,
-                 network.m_neurons[conn.m_source_neuron_idx].m_y,
-                 network.m_neurons[conn.m_source_neuron_idx].m_z);
-
-    end  = vec3(network.m_neurons[conn.m_target_neuron_idx].m_x,
-                network.m_neurons[conn.m_target_neuron_idx].m_y,
-                network.m_neurons[conn.m_target_neuron_idx].m_z);
-
-    mDrawables.push_back(new Line(start, end, color));
   }
 
+  mNum3DLines = lines.size();
+
+  Utils::assertGL();
+
+  if (mVBO3D != 0)
+    glDeleteBuffers(1, &mVBO3D);
+
+  if (mVAO3D != 0)
+    glDeleteVertexArrays(1, &mVAO3D);
+
+  glGenBuffers(1, &mVBO3D);
+  glGenVertexArrays(1, &mVAO3D);
+
+  glBindVertexArray(mVAO3D);
+
+  Utils::assertGL();
+  glBindBuffer(GL_ARRAY_BUFFER, mVBO3D);
+  glBufferData(GL_ARRAY_BUFFER,
+               sizeof(GLShape::Vertex) * lines.size(),
+               &lines[0],
+               GL_STATIC_DRAW);
+  Utils::assertGL();
+
+  glEnableVertexAttribArray(0);
+  glEnableVertexAttribArray(1);
+  glEnableVertexAttribArray(2);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLShape::Vertex), 0);
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(GLShape::Vertex), (void*) (sizeof(mmm::vec3)));
+  glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(GLShape::Vertex), (void*) (sizeof(mmm::vec3) + sizeof(mmm::vec2)));
+  Utils::assertGL();
+
+  glBindVertexArray(0);
+  Utils::assertGL();
+
   std::vector<Drawable3D*> filled;
-  filled.resize(network.m_neurons.size());
+  /* filled.resize(network.m_neurons.size()); */
   // For each neuron where an outline of the circle indicates the type
   // of neuron.
   //
@@ -201,25 +238,10 @@ void DrawablePhenotype::recreate(const NEAT::NeuralNetwork& network,
   // The size of the filled circle and its color is dependent on the activation
   // of that neuron.
   for (auto& neuron : network.m_neurons) {
-    float x = scale(neuron.m_substrate_coords[0],
-                       minValues.x,
-                       maxValues.x,
-                       rectDiv,
-                       size.x - rectDiv);
-    float y = scale(neuron.m_substrate_coords[1],
-                    minValues.y,
-                    maxValues.y,
-                    rectDiv,
-                    size.y - rectDiv);
+    vec3 pos = vec3(neuron.m_substrate_coords[0],
+                    neuron.m_substrate_coords[2],
+                    neuron.m_substrate_coords[1]);
 
-    float z = scale(neuron.m_substrate_coords[2],
-                    minValues.z,
-                    maxValues.z,
-                    rectDiv,
-                    size.z - rectDiv);
-
-    vec3 posFilled  = vec3(x, y, z);
-    vec3 posOutline = vec3(x, y, z);
     float radiusFilled = 0;
     float radiusOutline = 0;
     vec4 colorFilled;
@@ -248,8 +270,8 @@ void DrawablePhenotype::recreate(const NEAT::NeuralNetwork& network,
     radiusFilled  = neuronRadius * mmm::clamp(neuron.m_activation, 0.3, 2.0);
     colorFilled   = mmm::clamp(colorFilled, 0.0, 1.0);
 
-    filled.push_back(new Sphere(posFilled, radiusFilled, colorFilled));
-    mDrawables.push_back(new Sphere(posOutline, radiusOutline, colorOutline, true));
+    filled.push_back(new Sphere(pos, radiusFilled, colorFilled));
+    mDrawables.push_back(new Sphere(pos, radiusOutline, colorOutline, true));
   }
 
   mDrawables.insert(mDrawables.end(), filled.begin(), filled.end());
@@ -337,13 +359,13 @@ void DrawablePhenotype::recreate(const NEAT::NeuralNetwork& network,
     float x = scale(neuron.m_substrate_coords[0],
                        minValues.x,
                        maxValues.x,
-                       rectDiv,
-                       size.x - rectDiv);
+                       0,
+                       size.x - 0);
     float y = scale(neuron.m_substrate_coords[1],
                        minValues.y,
                        maxValues.y,
-                       rectDiv,
-                       size.y - rectDiv);
+                       0,
+                       size.y - 0);
 
     filled.point  = vec4(x, y, 0.0, 0.0);
     outline.point = vec4(x, y, 0.0, 0.0);
@@ -445,10 +467,29 @@ void DrawablePhenotype::draw() {
   glBindVertexArray(0);
 }
 
-void DrawablePhenotype::draw3D() {
+void DrawablePhenotype::draw3D(mmm::vec3 offset) {
+  if (mVAO3D == 0)
+    return;
+
   for(auto& d : mDrawables) {
-    d->draw(mModelColorProgram);
+    if (d == nullptr)
+      std::cout << "nullptr" << std::endl;
+    else
+      d->draw(mModelColorProgram, offset, true);
   }
+
+  mModelColorProgram->bind();
+  mModelColorProgram->setUniform("model", mmm::translate(offset));
+  mModelColorProgram->setUniform("useNormalsAsColors", true);
+
+  glBindVertexArray(mVAO3D);
+
+  glDrawArrays(GL_LINES, 0, mNum3DLines);
+
+  glBindVertexArray(0);
+
+  mModelColorProgram->setUniform("useNormalsAsColors", false);
+
 }
 
 void DrawablePhenotype::save(const std::string&) {}
