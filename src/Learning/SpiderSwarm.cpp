@@ -371,7 +371,7 @@ void SpiderSwarm::updateThreadBatches(float) {}
  * @param deltaTime
  */
 void SpiderSwarm::updateNormal(float deltaTime) {
-  for (size_t i = mBatchStart; i < mBatchEnd; ++i) {
+  for (size_t i = mBatchStart; i < mBatchEnd && i < mPhenotypes.size(); ++i) {
     mPhenotypes[i].update(deltaTime);
   }
   mCurrentDuration += deltaTime;
