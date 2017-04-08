@@ -7,6 +7,8 @@
 #include "../3D/Spider.hpp"
 #include "../3D/World.hpp"
 
+#include "DrawablePhenotype.hpp"
+
 using mmm::vec2;
 using mmm::vec3;
 
@@ -53,6 +55,7 @@ Phenotype::Phenotype()
     , network(nullptr)
     , planeMotion(nullptr)
     , planeBody(nullptr)
+    , drawablePhenotype(nullptr)
     , fitness(1)
     , numUpdates(0)
     , failed(false)
@@ -219,6 +222,9 @@ void Phenotype::reset(int speciesId, int individualId) {
     world = new World(mmm::vec3(0, -9.81, 0));
   else
     world->reset();
+
+  if (drawablePhenotype == nullptr)
+    drawablePhenotype = new DrawablePhenotype();
 
   if (planeBody == nullptr) {
     planeMotion = new btDefaultMotionState(
