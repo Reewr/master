@@ -6,7 +6,8 @@ in vec4 shadowCoord;
 in vec2 texCoord;
 
 uniform vec3 dir;
-uniform vec4 overrideColor;
+uniform vec4 overrideColor = vec4(-1);
+uniform bool useNormalsAsColors = false;
 
 layout(binding=0) uniform sampler2D shadowMap;
 layout(binding=1) uniform sampler2D diffuseMap;
@@ -27,7 +28,9 @@ void main () {
   // phong lighting
   vec3 texel;
 
-  if (overrideColor.x < 0)
+  if (useNormalsAsColors)
+    texel = normal;
+  else if (overrideColor.x < 0)
     texel = vec3(texture(diffuseMap, texCoord));
   else
     texel = vec3(overrideColor.xyz);

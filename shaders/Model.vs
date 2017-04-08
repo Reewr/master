@@ -4,6 +4,8 @@ layout(location=0) in vec3 vertexPosition;
 layout(location=1) in vec2 vertexTexCoord;
 layout(location=2) in vec3 vertexNormal;
 
+uniform bool useNormalsAsColors = false;
+
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 proj;
@@ -23,8 +25,12 @@ out vec2 texCoord;
 
 void main () {
 
+  if (useNormalsAsColors)
+    normal = vertexNormal;
+  else
+    normal = normalize (vec3(view * model * vec4(vertexNormal, 0.0)));
+
   position = vec3(view * model * vec4(vertexPosition, 1.0));
-  normal   = normalize (vec3(view * model * vec4(vertexNormal, 0.0)));
   texCoord = vertexTexCoord;
 
   gl_Position = proj * vec4(position, 1.0);
