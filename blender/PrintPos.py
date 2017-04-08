@@ -124,21 +124,21 @@ def getInputLegCenterNeurons():
 def getInputNeurons(name):
   xs = []
 
-  # impAngX = bpy.data.objects.get(name + 'ImpAngX')
-  # if impAngX:
-  #   xs.append({ name+'ImpAngX': impAngX.matrix_world.to_translation() })
+  impAngX = bpy.data.objects.get(name + 'ImpAngX')
+  if impAngX:
+    xs.append({ name+'ImpAngX': impAngX.matrix_world.to_translation() })
 
-  # impAngY = bpy.data.objects.get(name + 'ImpAngY')
-  # if impAngY:
-  #   xs.append({ name+'ImpAngY': impAngY.matrix_world.to_translation() })
+  impAngY = bpy.data.objects.get(name + 'ImpAngY')
+  if impAngY:
+    xs.append({ name+'ImpAngY': impAngY.matrix_world.to_translation() })
 
-  # impAngZ = bpy.data.objects.get(name + 'ImpAngZ')
-  # if impAngZ:
-  #   xs.append({ name+'ImpAngZ': impAngZ.matrix_world.to_translation() })
+  impAngZ = bpy.data.objects.get(name + 'ImpAngZ')
+  if impAngZ:
+    xs.append({ name+'ImpAngZ': impAngZ.matrix_world.to_translation() })
 
-  impRot  = bpy.data.objects.get(name + 'ImpRot')
-  if impRot:
-    xs.append({ name+'ImpRot': impRot.matrix_world.to_translation() })
+  # impRot  = bpy.data.objects.get(name + 'ImpRot')
+  # if impRot:
+  #   xs.append({ name+'ImpRot': impRot.matrix_world.to_translation() })
 
   return xs;
 
@@ -155,7 +155,7 @@ def printNeuronData():
   inn = []
   out = []
 
-  inn += [ getInputLegCenterNeurons() ]
+  # inn += [ getInputLegCenterNeurons() ]
 
   inn += [ getInputNeurons(x) for x in sorted(PARTS) if bpy.data.objects.get(x) ]
   out += [ getOutputNeurons(x) for x in sorted(PARTS) if bpy.data.objects.get(x) ]
