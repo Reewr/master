@@ -68,6 +68,9 @@ SpiderSwarm::SpiderSwarm()
   };
 #endif
 
+  NEAT::RNG rng;
+  rng.TimeSeed();
+
   setDefaultParameters();
   setDefaultSubstrate();
   setDefaultPopulation();
