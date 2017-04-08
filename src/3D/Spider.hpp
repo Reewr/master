@@ -18,10 +18,11 @@ class Spider : public Drawable3D, public Logging::Log {
 public:
   struct Part {
     Part();
-    Part(unsigned short group, unsigned short mask, float angle);
+    Part(unsigned short group, unsigned short mask, float angle, bool active);
     unsigned short                 collisionGroup;
     unsigned short                 collisionMask;
     float                          restAngle;
+    bool                           active;
     Drawable3D*                    part;
     btHingeConstraint*             hinge;
     btGeneric6DofSpringConstraint* dof;

@@ -18,14 +18,19 @@ Spider::Part::Part()
     : collisionGroup(1)
     , collisionMask(-1)
     , restAngle(0)
+    , active(false)
     , part(nullptr)
     , hinge(nullptr)
     , dof(nullptr) {}
 
-Spider::Part::Part(unsigned short group, unsigned short mask, float angle)
+Spider::Part::Part(unsigned short group,
+                   unsigned short mask,
+                   float          angle,
+                   bool           active)
     : collisionGroup(group)
     , collisionMask(mask)
     , restAngle(angle)
+    , active(active)
     , part(nullptr)
     , hinge(nullptr)
     , dof(nullptr) {}
@@ -195,50 +200,49 @@ Spider* Spider::upcast(Drawable3D* drawable) {
 }
 
 std::map<std::string, btTransform>  Spider::SPIDER_POSITIONS = {};
-std::map<std::string, Spider::Part> Spider::SPIDER_PARTS     = {
-  { "Abdomin", { 0b1000000000000000, 0b1011111111111111, radians(0) } },
-  { "Eye", { 0b1000000000000000, 0b1011111111111111, radians(0) } },
-  { "FemurL1", { 0b0010100000000000, 0b1001011111111111, radians(35) } },
-  { "FemurL2", { 0b0010010000000000, 0b1001101111111111, radians(35) } },
-  { "FemurL3", { 0b0010001000000000, 0b1001110111111111, radians(35) } },
-  { "FemurL4", { 0b0010000100000000, 0b1001111011111111, radians(35) } },
-  { "FemurR1", { 0b0001100000000000, 0b1010011111111111, radians(35) } },
-  { "FemurR2", { 0b0001010000000000, 0b1010101111111111, radians(35) } },
-  { "FemurR3", { 0b0001001000000000, 0b1010110111111111, radians(35) } },
-  { "FemurR4", { 0b0001000100000000, 0b1010111011111111, radians(35) } },
-  { "Hip", { 0b0100000000000000, 0b0011111111111111, radians(15) } },
-  { "Neck", { 0b0100000000000000, 0b0011111111111111, radians(0) } },
-  { "PatellaL1", { 0b0010100000000000, 0b1101011111111111, radians(-45) } },
-  { "PatellaL2", { 0b0010010000000000, 0b1101101111111111, radians(-45) } },
-  { "PatellaL3", { 0b0010001000000000, 0b1101110111111111, radians(-45) } },
-  { "PatellaL4", { 0b0010000100000000, 0b1101111011111111, radians(-45) } },
-  { "PatellaR1", { 0b0001100000000000, 0b1110011111111111, radians(-45) } },
-  { "PatellaR2", { 0b0001010000000000, 0b1110101111111111, radians(-45) } },
-  { "PatellaR3", { 0b0001001000000000, 0b1110110111111111, radians(-45) } },
-  { "PatellaR4", { 0b0001000100000000, 0b1110111011111111, radians(-45) } },
-  { "Sternum", { 0b0100000000000000, 0b1011111111111111, radians(0) } },
-  { "TarsusL1", { 0b0010100000000000, 0b1101011111111111, radians(-20) } },
-  { "TarsusL2", { 0b0010010000000000, 0b1101101111111111, radians(-20) } },
-  { "TarsusL3", { 0b0010001000000000, 0b1101110111111111, radians(-20) } },
-  { "TarsusL4", { 0b0010000100000000, 0b1101111011111111, radians(-20) } },
-  { "TarsusR1", { 0b0001100000000000, 0b1110011111111111, radians(-20) } },
-  { "TarsusR2", { 0b0001010000000000, 0b1110101111111111, radians(-20) } },
-  { "TarsusR3", { 0b0001001000000000, 0b1110110111111111, radians(-20) } },
-  { "TarsusR4", { 0b0001000100000000, 0b1110111011111111, radians(-20) } },
-  { "TibiaL1", { 0b0010100000000000, 0b1101011111111111, radians(-45) } },
-  { "TibiaL2", { 0b0010010000000000, 0b1101101111111111, radians(-45) } },
-  { "TibiaL3", { 0b0010001000000000, 0b1101110111111111, radians(-45) } },
-  { "TibiaL4", { 0b0010000100000000, 0b1101111011111111, radians(-45) } },
-  { "TibiaR1", { 0b0001100000000000, 0b1110011111111111, radians(-45) } },
-  { "TibiaR2", { 0b0001010000000000, 0b1110101111111111, radians(-45) } },
-  { "TibiaR3", { 0b0001001000000000, 0b1110110111111111, radians(-45) } },
-  { "TibiaR4", { 0b0001000100000000, 0b1110111011111111, radians(-45) } },
-  { "TrochanterL1", { 0b0010100000000000, 0b1001011111111111, radians(30) } },
-  { "TrochanterL2", { 0b0010010000000000, 0b1001101111111111, radians(10) } },
-  { "TrochanterL3", { 0b0010001000000000, 0b1001110111111111, radians(-15) } },
-  { "TrochanterL4", { 0b0010000100000000, 0b1001111011111111, radians(-40) } },
-  { "TrochanterR1", { 0b0001100000000000, 0b1010011111111111, radians(30) } },
-  { "TrochanterR2", { 0b0001010000000000, 0b1010101111111111, radians(10) } },
-  { "TrochanterR3", { 0b0001001000000000, 0b1010110111111111, radians(-15) } },
-  { "TrochanterR4", { 0b0001000100000000, 0b1010111011111111, radians(-40) } }
-};
+std::map<std::string, Spider::Part> Spider::SPIDER_PARTS =
+  { { "Abdomin", { 0b1000000000000000, 0b1011111111111111, radians(0), false } },
+    { "Eye", { 0b1000000000000000, 0b1011111111111111, radians(0), false } },
+    { "FemurL1", { 0b0010100000000000, 0b1001011111111111, radians(35), true } },
+    { "FemurL2", { 0b0010010000000000, 0b1001101111111111, radians(35), true } },
+    { "FemurL3", { 0b0010001000000000, 0b1001110111111111, radians(35), true } },
+    { "FemurL4", { 0b0010000100000000, 0b1001111011111111, radians(35), true } },
+    { "FemurR1", { 0b0001100000000000, 0b1010011111111111, radians(35), true } },
+    { "FemurR2", { 0b0001010000000000, 0b1010101111111111, radians(35), true } },
+    { "FemurR3", { 0b0001001000000000, 0b1010110111111111, radians(35), true } },
+    { "FemurR4", { 0b0001000100000000, 0b1010111011111111, radians(35), true } },
+    { "Hip", { 0b0100000000000000, 0b0011111111111111, radians(0), false } },
+    { "Neck", { 0b0100000000000000, 0b0011111111111111, radians(0), false } },
+    { "PatellaL1", { 0b0010100000000000, 0b1101011111111111, radians(-45), true } },
+    { "PatellaL2", { 0b0010010000000000, 0b1101101111111111, radians(-45), true } },
+    { "PatellaL3", { 0b0010001000000000, 0b1101110111111111, radians(-45), true } },
+    { "PatellaL4", { 0b0010000100000000, 0b1101111011111111, radians(-45), true } },
+    { "PatellaR1", { 0b0001100000000000, 0b1110011111111111, radians(-45), true } },
+    { "PatellaR2", { 0b0001010000000000, 0b1110101111111111, radians(-45), true } },
+    { "PatellaR3", { 0b0001001000000000, 0b1110110111111111, radians(-45), true } },
+    { "PatellaR4", { 0b0001000100000000, 0b1110111011111111, radians(-45), true } },
+    { "Sternum", { 0b0100000000000000, 0b1011111111111111, radians(0), false } },
+    { "TarsusL1", { 0b0010100000000000, 0b1101011111111111, radians(-20), false } },
+    { "TarsusL2", { 0b0010010000000000, 0b1101101111111111, radians(-20), false } },
+    { "TarsusL3", { 0b0010001000000000, 0b1101110111111111, radians(-20), false } },
+    { "TarsusL4", { 0b0010000100000000, 0b1101111011111111, radians(-20), false } },
+    { "TarsusR1", { 0b0001100000000000, 0b1110011111111111, radians(-20), false } },
+    { "TarsusR2", { 0b0001010000000000, 0b1110101111111111, radians(-20), false } },
+    { "TarsusR3", { 0b0001001000000000, 0b1110110111111111, radians(-20), false } },
+    { "TarsusR4", { 0b0001000100000000, 0b1110111011111111, radians(-20), false } },
+    { "TibiaL1", { 0b0010100000000000, 0b1101011111111111, radians(-45), true } },
+    { "TibiaL2", { 0b0010010000000000, 0b1101101111111111, radians(-45), true } },
+    { "TibiaL3", { 0b0010001000000000, 0b1101110111111111, radians(-45), true } },
+    { "TibiaL4", { 0b0010000100000000, 0b1101111011111111, radians(-45), true } },
+    { "TibiaR1", { 0b0001100000000000, 0b1110011111111111, radians(-45), true } },
+    { "TibiaR2", { 0b0001010000000000, 0b1110101111111111, radians(-45), true } },
+    { "TibiaR3", { 0b0001001000000000, 0b1110110111111111, radians(-45), true } },
+    { "TibiaR4", { 0b0001000100000000, 0b1110111011111111, radians(-45), true } },
+    { "TrochanterL1", { 0b0010100000000000, 0b1001011111111111, radians(30), true } },
+    { "TrochanterL2", { 0b0010010000000000, 0b1001101111111111, radians(10), true } },
+    { "TrochanterL3", { 0b0010001000000000, 0b1001110111111111, radians(-15), true } },
+    { "TrochanterL4", { 0b0010000100000000, 0b1001111011111111, radians(-40), true } },
+    { "TrochanterR1", { 0b0001100000000000, 0b1010011111111111, radians(30), true } },
+    { "TrochanterR2", { 0b0001010000000000, 0b1010101111111111, radians(10), true } },
+    { "TrochanterR3", { 0b0001001000000000, 0b1010110111111111, radians(-15), true } },
+    { "TrochanterR4", { 0b0001000100000000, 0b1010111011111111, radians(-40), true } } };
