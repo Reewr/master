@@ -176,12 +176,6 @@ void Phenotype::updateFitness(float deltaTime) {
   //   s.runFinalize(parts, fitness[index], 1);
   // }
 
-  { // Stability - Fail if sternum rotates in any direction above 60 degrees
-    auto q = parts["Sternum"].part->rigidBody()->getOrientation();
-    vec3 r = mmm::degrees(getEulerAngles(q.x(), q.y(), q.z(), q.w()));
-    r.y += 90;
-  }
-
   { // Movement
     if (duration > 2.f && duration < 5.f) {
       auto t = sternum->getCenterOfMassPosition();
