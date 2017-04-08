@@ -209,6 +209,7 @@ set(SOURCE_FILES
   ${SRC_DIR}/Learning/Substrate.cpp
   ${SRC_DIR}/Learning/Phenotype.cpp
   ${SRC_DIR}/Learning/DrawablePhenotype.cpp
+  ${SRC_DIR}/Learning/Fitness.cpp
 
   # src/Lua
   ${SRC_DIR}/Lua/LuaLib.cpp
@@ -306,6 +307,7 @@ set(HEADER_FILES
   ${SRC_DIR}/Learning/Substrate.hpp
   ${SRC_DIR}/Learning/Phenotype.hpp
   ${SRC_DIR}/Learning/DrawablePhenotype.hpp
+  ${SRC_DIR}/Learning/Fitness.hpp
 
   # src/Lua
   ${SRC_DIR}/Lua/LuaLib.hpp
