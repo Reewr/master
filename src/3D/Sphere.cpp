@@ -78,12 +78,13 @@ void Sphere::draw(std::shared_ptr<Program>& program,
 
   if (mUsesColor && bindTexture)
     program->setUniform("overrideColor", mColor);
-  else if (bindTexture)
-    program->setUniform("overrideColor", mmm::vec4(-1));
 
   if (bindTexture && mTexture != nullptr)
     mTexture->bind(1);
   mSphere->draw();
+
+  if (mUsesColor && bindTexture)
+    program->setUniform("overrideColor", mmm::vec4(-1));
 }
 
 void Sphere::input(const Input::Event&) {}

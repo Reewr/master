@@ -12,7 +12,7 @@ using mmm::vec3;
 
 Line::Line(const mmm::vec3& start, const mmm::vec3& end, const mmm::vec4& color)
     : Logging::Log("Line") , mLine(new GLLine()){
-  mTexture = mAsset->rManager()->get<Texture>("Texture::Line");
+  mTexture = nullptr;
   mColor = color;
 
   mUsesColor = color.x != -1;
@@ -32,7 +32,6 @@ Line::Line(const mmm::vec3& start, const mmm::vec3& end, const mmm::vec4& color)
     scale.z = 1;
   }
 
-  mLog->debug("Test: {}", scale);
   mPosition = vec3(start + end) / 2.0;
   mScale    = mmm::scale(mmm::abs(scale));
 }
@@ -75,12 +74,13 @@ void Line::draw(std::shared_ptr<Program>& program,
 
   if (mUsesColor && bindTexture)
     program->setUniform("overrideColor", mColor);
-  else if (bindTexture)
-    program->setUniform("overrideColor", mmm::vec4(-1));
 
-  if (bindTexture)
+  if (bindTexture && mTexture != nullptr)
     mTexture->bind(1);
   mLine->draw();
+
+  if (mUsesColor && bindTexture)
+    program->setUniform("overrideColor", mmm::vec4(-1));
 }
 
 void Line::input(const Input::Event&) {}
