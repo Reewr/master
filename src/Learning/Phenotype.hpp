@@ -3,6 +3,7 @@
 #include <mmm.hpp>
 
 #include "../Log.hpp"
+#include "Fitness.hpp"
 
 struct btDefaultMotionState;
 class btRigidBody;
@@ -63,4 +64,6 @@ struct Phenotype : Logging::Log {
 
   // Performs the update of the phenotype
   void update(float deltaTime);
+
+  static std::vector<Fitness> FITNESS_HANDLERS;
 };

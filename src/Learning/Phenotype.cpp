@@ -178,6 +178,13 @@ float score(float deltaTime, float zeroIsBest, float bias = 0.05f) {
 void Phenotype::updateFitness(float deltaTime) {
   auto& parts = spider->parts();
 
+//  const std::map<std::string, Spider::Part>& parts = spider->parts();
+//
+//  int index = 0;
+//  for(const auto& s : Phenotype::FITNESS_HANDLERS) {
+//    s.runFinalize(parts, fitness[index], 1);
+//  }
+
   { // Stability - Fail if sternum rotates in any direction above 60 degrees
     auto q = parts["Sternum"].part->rigidBody()->getOrientation();
     vec3 r = mmm::degrees(getEulerAngles(q.x(), q.y(), q.z(), q.w()));
@@ -200,6 +207,12 @@ void Phenotype::updateFitness(float deltaTime) {
 float Phenotype::finalizeFitness() {
   if (failed)
     return 0.f;
+
+  //const std::map<std::string, Spider::Part>& parts = spider->parts();
+  //int index = 0;
+  //for(const auto& s : Phenotype::FITNESS_HANDLERS) {
+  //  s.runFinalize(parts, fitness[index], 1);
+  //}
 
   // length walked
   // btRigidBody* sternum = spider->parts()["Sternum"].part->rigidBody();
@@ -262,3 +275,15 @@ void Phenotype::reset(int speciesId, int individualId) {
 
 btStaticPlaneShape* Phenotype::plane =
   new btStaticPlaneShape(btVector3(0, 1, 0), 1);
+
+// Below here is where all the fitness handlers are defined
+
+std::vector<Fitness> Phenotype::FITNESS_HANDLERS = {
+  Fitness("01",
+          R"(
+            This is where you can write a longer description of the
+            fitness value, documenting it using the new multiline strings
+            in C++11
+          )",
+          [](const std::map<std::string, Spider::Part>&, float, float) -> float{})
+};
