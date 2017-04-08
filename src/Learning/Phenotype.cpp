@@ -166,23 +166,29 @@ float score(float deltaTime, float zeroIsBest, float bias = 0.05f) {
 };
 
 void Phenotype::updateFitness(float deltaTime) {
-  auto& parts = spider->parts();
+  auto& parts   = spider->parts();
+  auto* sternum = parts["Sternum"].part->rigidBody();
 
-//  const std::map<std::string, Spider::Part>& parts = spider->parts();
-//
-//  int index = 0;
-//  for(const auto& s : Phenotype::FITNESS_HANDLERS) {
-//    s.runFinalize(parts, fitness[index], 1);
-//  }
+  // const std::map<std::string, Spider::Part>& parts = spider->parts();
+  //
+  // int index = 0;
+  // for(const auto& s : Phenotype::FITNESS_HANDLERS) {
+  //   s.runFinalize(parts, fitness[index], 1);
+  // }
 
   { // Stability - Fail if sternum rotates in any direction above 60 degrees
     auto q = parts["Sternum"].part->rigidBody()->getOrientation();
     vec3 r = mmm::degrees(getEulerAngles(q.x(), q.y(), q.z(), q.w()));
     r.y += 90;
+  }
 
-    if (mmm::any(mmm::greaterThan(mmm::abs(r), 60))) {
-      failed = true;
-      return;
+  { // Movement
+    if (duration > 2.f && duration < 5.f) {
+      auto t = sternum->getCenterOfMassPosition();
+      fitness[0] *= score(deltaTime, mmm::clamp(t.y(), 0.f, 0.5f) - 0.5f, 0);
+
+
+      fitness[8] = mmm::max(fitness[8], t.z() + 1.f);
     }
   }
 }
@@ -195,8 +201,8 @@ void Phenotype::updateFitness(float deltaTime) {
  * @return
  */
 float Phenotype::finalizeFitness() {
-  if (failed)
-    return 0.f;
+  // if (failed)
+  //   return 0.f;
 
   //const std::map<std::string, Spider::Part>& parts = spider->parts();
   //int index = 0;
@@ -207,7 +213,7 @@ float Phenotype::finalizeFitness() {
   // length walked
   // btRigidBody* sternum = spider->parts()["Sternum"].part->rigidBody();
   // auto z = sternum->getCenterOfMassPosition().z();
-  // fitness[8] = z;
+  fitness[8] /= 100.f;
 
   return mmm::product(fitness);
 }
