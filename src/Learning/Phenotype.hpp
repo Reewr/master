@@ -42,8 +42,8 @@ struct Phenotype : Logging::Log {
   mmm::vec<9> fitness;
   int         numUpdates;
 
-  bool  failed;
-  float duration;
+  mutable bool failed;
+  float        duration;
 
   int speciesIndex;
   int individualIndex;
@@ -52,6 +52,7 @@ struct Phenotype : Logging::Log {
   ~Phenotype();
 
   void updateFitness(float deltaTime);
+  void kill() const;
 
   // Returns the final fitness of the Phenotype
   float finalizeFitness();
@@ -60,8 +61,8 @@ struct Phenotype : Logging::Log {
   void remove();
 
   // Checks if a spider part is resting / colliding with the terrain
-  bool collidesWithTerrain(btRigidBody* spiderPart);
-  bool collidesWithTerrain(Drawable3D* spiderPart);
+  bool collidesWithTerrain(btRigidBody* spiderPart) const;
+  bool collidesWithTerrain(Drawable3D* spiderPart) const;
 
   // Resets the phenotype back into its original state
   void reset(int speciesId, int individualId);
