@@ -73,6 +73,8 @@ private:
   float mIterationDuration;
   float mBestPossibleFitness;
 
+  bool mDrawDebugNetworks;
+
   // Drawing settings
   DrawingMethod mDrawingMethod;
 

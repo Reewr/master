@@ -39,6 +39,7 @@ SpiderSwarm::SpiderSwarm()
     , mCurrentDuration(0)
     , mIterationDuration(10)
     , mBestPossibleFitness(0)
+    , mDrawDebugNetworks(false)
     , mDrawingMethod(SpiderSwarm::DrawingMethod::Species1)
     , mBestIndex(0)
     , mParameters(nullptr)
@@ -191,7 +192,7 @@ void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
           mPhenotypes[a].spider->enableUpdatingFromPhysics();
           mPhenotypes[a].spider->draw(prog, grid[gridIndex], bindTexture);
 
-          if (bindTexture)
+          if (bindTexture && mDrawDebugNetworks)
             mPhenotypes[a].drawablePhenotype->draw3D(grid[gridIndex] +
                                                      mmm::vec3(0, 5, 0));
         }
@@ -205,7 +206,7 @@ void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
       if (mBestIndex < numPhenotypes) {
         mPhenotypes[mBestIndex].spider->enableUpdatingFromPhysics();
         mPhenotypes[mBestIndex].spider->draw(prog, bindTexture);
-        if (bindTexture)
+        if (bindTexture && mDrawDebugNetworks)
           mPhenotypes[mBestIndex].drawablePhenotype->draw3D(grid[gridIndex] +
                                                             mmm::vec3(0, 5, 0));
       }
@@ -215,7 +216,7 @@ void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
         if (gridIndex < gridSize) {
           p.spider->enableUpdatingFromPhysics();
           p.spider->draw(prog, grid[gridIndex], bindTexture);
-          if (bindTexture) {
+          if (bindTexture && mDrawDebugNetworks) {
             p.drawablePhenotype->draw3D(grid[gridIndex] + mmm::vec3(0, 5, 0));
           }
         }
@@ -556,8 +557,10 @@ void SpiderSwarm::recreatePhenotypes() {
 
 #endif
 
-  for (auto& i : mPhenotypes) {
-    i.drawablePhenotype->recreate(*i.network, mmm::vec3(1.0, 1.0, 1.0));
+  if (mDrawDebugNetworks) {
+    for (auto& i : mPhenotypes) {
+      i.drawablePhenotype->recreate(*i.network, mmm::vec3(1.0, 1.0, 1.0));
+    }
   }
 
   mLog->debug("Created {} spiders", mPhenotypes.size());
