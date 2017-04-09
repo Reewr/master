@@ -95,7 +95,7 @@ def showVector(vec):
   for k,v in vec.items():
     if not v:
       return ''
-    return '{ %f, %f, %f }' % (v.x, v.y, v.z)
+    return '{ %f, %f, %f }, // %s' % (v.x, v.y, v.z, k)
 
 
 def showPart(name):
@@ -116,7 +116,17 @@ def getInputLegCenterNeurons():
     for i in [1,2,3,4]:
       name = j + str(i) + 'Center'
       x = bpy.data.objects.get(name).matrix_world.to_translation()
-      print(name, x)
+      xs.append({ name: x })
+
+  return xs;
+
+def getInputLegTipNeurons():
+  xs = []
+
+  for j in ['L','R']:
+    for i in [1,2,3,4]:
+      name = j + str(i) + 'Tip'
+      x = bpy.data.objects.get(name).matrix_world.to_translation()
       xs.append({ name: x })
 
   return xs;
@@ -136,18 +146,18 @@ def getInputNeurons(name):
   if impAngZ:
     xs.append({ name+'ImpAngZ': impAngZ.matrix_world.to_translation() })
 
-  # impRot  = bpy.data.objects.get(name + 'ImpRot')
-  # if impRot:
-  #   xs.append({ name+'ImpRot': impRot.matrix_world.to_translation() })
+  impRot  = bpy.data.objects.get(name + 'ImpRot')
+  if impRot:
+    xs.append({ name+'ImpRot': impRot.matrix_world.to_translation() })
 
   return xs;
 
 def getOutputNeurons(name):
   xs = []
 
-  output  = bpy.data.objects.get(name + 'Output')
+  output  = bpy.data.objects.get(name + 'ImpRot')
   if output:
-    xs.append({ name+'Output': output.matrix_world.to_translation() })
+    xs.append({ name+'ImpRot': output.matrix_world.to_translation() })
 
   return xs
 
@@ -156,6 +166,7 @@ def printNeuronData():
   out = []
 
   # inn += [ getInputLegCenterNeurons() ]
+  inn += [ getInputLegTipNeurons() ]
 
   inn += [ getInputNeurons(x) for x in sorted(PARTS) if bpy.data.objects.get(x) ]
   out += [ getOutputNeurons(x) for x in sorted(PARTS) if bpy.data.objects.get(x) ]
@@ -165,11 +176,11 @@ def printNeuronData():
   out = [ '    ' + showVector(x) for xs in out for x in xs if len(xs) > 0 ]
 
   print('  std::vector<std::vector<double>> inputs{')
-  print(',\n'.join(inn))
+  print('\n'.join(inn))
   print('  };')
   print('  std::vector<std::vector<double>> hidden{};')
   print('  std::vector<std::vector<double>> outputs{')
-  print(',\n'.join(out))
+  print('\n'.join(out))
   print('  };')
 
 errorCheck()
