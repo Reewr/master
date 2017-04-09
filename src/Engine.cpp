@@ -7,20 +7,16 @@
 #include "GLSL/Shader.hpp"
 #include "GUI/GUI.hpp"
 #include "Graphical/Framebuffer.hpp"
+#include "Input/Event.hpp"
+#include "Input/Input.hpp"
 #include "Lua/Lua.hpp"
+#include "Resource/ResourceManager.hpp"
 #include "State/MainMenu.hpp"
 #include "State/Master.hpp"
 #include "Utils/Asset.hpp"
 #include "Utils/CFG.hpp"
 #include "Utils/Utils.hpp"
 #include "Utils/str.hpp"
-/* #include <3D/Spider.hpp> */
-/* #include <3D/Model.hpp> */
-#include "Input/Event.hpp"
-#include "Input/Input.hpp"
-#include "Resource/ResourceManager.hpp"
-
-using mmm::vec2;
 
 // These functions are because of GLFW's callback. They call engine functions
 static void placementKeyboardCB(GLFWwindow* w, int k, int, int a, int m) {
@@ -31,7 +27,7 @@ static void placementKeyboardCB(GLFWwindow* w, int k, int, int a, int m) {
 
 static void placementMouseMovementCB(GLFWwindow* w, double x, double y) {
   Engine*      e = static_cast<Engine*>(glfwGetWindowUserPointer(w));
-  Input::Event event(e->input(), vec2(x, y));
+  Input::Event event(e->input(), mmm::vec2(x, y));
   e->sendEvent(event);
 }
 
@@ -41,7 +37,7 @@ static void placementMouseButtonCB(GLFWwindow* w, int b, int a, int m) {
   double x, y;
   glfwGetCursorPos(w, &x, &y);
 
-  Input::Event event(e->input(), vec2(x, y), b, a, m);
+  Input::Event event(e->input(), mmm::vec2(x, y), b, a, m);
   e->sendEvent(event);
 }
 
@@ -49,7 +45,7 @@ static void placementMouseScrollCB(GLFWwindow* w, double ox, double oy) {
   Engine* e = static_cast<Engine*>(glfwGetWindowUserPointer(w));
   double  x, y;
   glfwGetCursorPos(w, &x, &y);
-  Input::Event event(e->input(), vec2(x, y), vec2(ox, oy));
+  Input::Event event(e->input(), mmm::vec2(x, y), mmm::vec2(ox, oy));
   e->sendEvent(event);
 }
 
@@ -338,7 +334,7 @@ GLFWmonitor* Engine::getMonitor() {
 
     // since its fullscreen, we get the resolution of the monitor
     videoMode          = glfwGetVideoMode(monitor);
-    mCFG->graphics.res = vec2(videoMode->width, videoMode->height);
+    mCFG->graphics.res = mmm::vec2(videoMode->width, videoMode->height);
   }
 
   return monitor;
