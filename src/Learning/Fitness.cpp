@@ -15,17 +15,17 @@ Fitness::Fitness(const std::string& name,
  *  Runs the function associated with this fitness value,
  *  returns the new fitness value
  *
- * @param s
+ * @param phenotype
  * @param fitness
  * @param deltaValue
  *
  * @return
  */
-float Fitness::runCalculation(const std::map<std::string, Spider::Part>& s,
-                              float fitness,
-                              float deltaValue) const {
+float Fitness::runCalculation(const Phenotype& phenotype,
+                              float            fitness,
+                              float            deltaValue) const {
   if (mContinuousCalculation)
-    return mContinuousCalculation(s, fitness, deltaValue);
+    return mContinuousCalculation(phenotype, fitness, deltaValue);
   return fitness;
 }
 
@@ -37,17 +37,17 @@ float Fitness::runCalculation(const std::map<std::string, Spider::Part>& s,
  *   If no function has been defined for calculating the final
  *   value, the fitness given is returned.
  *
- * @param s
+ * @param phenotype
  * @param fitness
  * @param deltaValue
  *
  * @return
  */
-float Fitness::runFinalize(const std::map<std::string, Spider::Part>& s,
-                           float fitness,
-                           float deltaValue) const {
+float Fitness::runFinalize(const Phenotype& phenotype,
+                           float            fitness,
+                           float            deltaValue) const {
   if (mFinalize)
-    return mFinalize(s, fitness, deltaValue);
+    return mFinalize(phenotype, fitness, deltaValue);
   return fitness;
 }
 
