@@ -39,14 +39,14 @@ struct Phenotype : Logging::Log {
 
   DrawablePhenotype* drawablePhenotype;
 
-  mmm::vec<9> fitness;
-  int         numUpdates;
+  mmm::vec<9>  fitness;
+  unsigned int numUpdates;
 
   mutable bool failed;
   float        duration;
 
-  int speciesIndex;
-  int individualIndex;
+  unsigned int speciesIndex;
+  unsigned int individualIndex;
 
   Phenotype();
   ~Phenotype();
