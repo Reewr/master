@@ -162,33 +162,47 @@ void Phenotype::update(float deltaTime) {
   if (failed)
     return;
 
-  auto pi = mmm::constants<float>::pi;
+  auto  pi    = mmm::constants<float>::pi;
+  auto& parts = spider->parts();
 
   // construct input vector which is known to be exactly 172 elements
   std::vector<double> inputs;
-  inputs.reserve(136);
+  inputs.reserve(53);
   inputs.push_back(mmm::sin(duration));
   duration += deltaTime;
 
-  for (auto& part : spider->parts()) {
+  inputs.push_back(collidesWithTerrain(parts["TarsusL1"].part) ? 1.0 : 0.0);
+  inputs.push_back(collidesWithTerrain(parts["TarsusL2"].part) ? 1.0 : 0.0);
+  inputs.push_back(collidesWithTerrain(parts["TarsusL3"].part) ? 1.0 : 0.0);
+  inputs.push_back(collidesWithTerrain(parts["TarsusL4"].part) ? 1.0 : 0.0);
+  inputs.push_back(collidesWithTerrain(parts["TarsusR1"].part) ? 1.0 : 0.0);
+  inputs.push_back(collidesWithTerrain(parts["TarsusR2"].part) ? 1.0 : 0.0);
+  inputs.push_back(collidesWithTerrain(parts["TarsusR3"].part) ? 1.0 : 0.0);
+  inputs.push_back(collidesWithTerrain(parts["TarsusR4"].part) ? 1.0 : 0.0);
 
-    vec3 ang = part.second.part->angularVelocity();
-    inputs.push_back(ang.x);
-    inputs.push_back(ang.y);
-    inputs.push_back(ang.z);
 
-    // auto ypos = part.second.part->rigidBody()->getCenterOfMassPosition().y();
-    // inputs.push_back(ypos);
+  for (auto& part : parts) {
 
-    // if (part.second.hinge != nullptr) {
+    // vec3 ang = part.second.part->angularVelocity();
+    // inputs.push_back(ang.x);
+    // inputs.push_back(ang.y);
+    // inputs.push_back(ang.z);
 
-    //   float rot = part.second.hinge->getHingeAngle();
-    //   inputs.push_back(rot); // - part.second.restAngle);
+    // auto v = part.second.part->rigidBody()->getLinearVelocity();
+    // inputs.push_back(v.x());
+    // inputs.push_back(v.z());
+    // inputs.push_back(v.y());
 
-    // } else if (part.second.dof != nullptr) {
 
-    //   // TODO
-    // }
+    if (part.second.hinge != nullptr) {
+
+      float rot = part.second.hinge->getHingeAngle();
+      inputs.push_back(rot - part.second.restAngle);
+
+    } else if (part.second.dof != nullptr) {
+
+      // TODO
+    }
   }
 
   // activate network to retrieve output vector
@@ -199,7 +213,7 @@ void Phenotype::update(float deltaTime) {
 
   // set hinge motor targets based on network output
   size_t i = 0;
-  for (auto& part : spider->parts()) {
+  for (auto& part : parts) {
     if (part.second.hinge != nullptr) {
 
       auto currentAngle = part.second.hinge->getHingeAngle();
@@ -245,6 +259,8 @@ void Phenotype::updateFitness(float deltaTime) {
   // for(const auto& s : Phenotype::FITNESS_HANDLERS) {
   //   s.runFinalize(parts, fitness[index], 1);
   // }
+
+
 
   { // Movement
     if (duration > 2.f && duration < 5.f) {
