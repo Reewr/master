@@ -8,9 +8,9 @@
 #include <vector>
 
 class Texture;
-class Phenotype;
 class Program;
 class Drawable3D;
+struct Phenotype;
 
 namespace NEAT {
   class NeuralNetwork;
