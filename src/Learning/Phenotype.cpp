@@ -265,12 +265,32 @@ void Phenotype::updateFitness(float deltaTime) {
   { // Movement
     if (duration > 2.f && duration < 5.f) {
       auto t = sternum->getCenterOfMassPosition();
-      fitness[0] *= score(deltaTime, mmm::clamp(t.y(), 0.f, 0.5f) - 0.5f, 0);
-
-
       fitness[8] = mmm::max(fitness[8], t.z() + 1.f);
     }
   }
+
+  { // Stability
+    if (collidesWithTerrain(sternum)) {
+      fitness[0] += deltaTime;
+      if (fitness[0] > 1.f)
+        failed = true;
+    }
+
+    if (collidesWithTerrain(parts["Eye"].part)) {
+      fitness[1] += deltaTime;
+      if (fitness[1] > 1.f)
+        failed = true;
+    }
+
+    if (collidesWithTerrain(parts["Abdomin"].part)) {
+      fitness[2] += deltaTime;
+      if (fitness[2] > 2.f)
+        failed = true;
+    }
+  }
+
+  if (failed)
+    mLog->debug("Killed spider");
 }
 
 /**
@@ -283,6 +303,11 @@ void Phenotype::updateFitness(float deltaTime) {
 float Phenotype::finalizeFitness() {
   // if (failed)
   //   return 0.f;
+
+  fitness[0] = score(1.f, mmm::clamp(fitness[0] - 1.f, -1.f, 0.f), 0);
+  fitness[1] = score(1.f, mmm::clamp(fitness[1] - 1.f, -1.f, 0.f), 0);
+  fitness[2] = score(1.f, mmm::clamp(fitness[2] - 2.f, -2.f, 0.f), 0);
+
 
   // const std::map<std::string, Spider::Part>& parts = spider->parts();
   // int index = 0;
