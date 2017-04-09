@@ -234,7 +234,7 @@ void World::removeObject(Drawable3D* element, bool removeChildren) {
  * @param deltaTime
  */
 void World::doPhysics(float deltaTime) {
-  mWorld->stepSimulation(deltaTime, 2);
+  mWorld->stepSimulation(1.f/60.f, 3, 1.f/120.f);
 
   for (auto a : mElements)
     a->updateFromPhysics();
