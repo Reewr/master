@@ -39,7 +39,7 @@ SpiderSwarm::SpiderSwarm()
     , mCurrentDuration(0)
     , mIterationDuration(10)
     , mBestPossibleFitness(0)
-    , mDrawingMethod(SpiderSwarm::DrawingMethod::SpeciesLeaders)
+    , mDrawingMethod(SpiderSwarm::DrawingMethod::Species1)
     , mBestIndex(0)
     , mParameters(nullptr)
     , mSubstrate(nullptr)
@@ -171,6 +171,20 @@ void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
   size_t gridSize      = grid.size();
 
   switch (mDrawingMethod) {
+    case DrawingMethod::Species1: {
+      for (auto& a : mPhenotypes) {
+        if (a.speciesIndex == gridIndex && gridIndex < gridSize) {
+          a.spider->enableUpdatingFromPhysics();
+          a.spider->draw(prog, grid[gridIndex], bindTexture);
+
+          if (bindTexture && mDrawDebugNetworks)
+            a.drawablePhenotype->draw3D(grid[gridIndex] + mmm::vec3(0, 5, 0));
+          gridIndex++;
+        }
+      }
+
+      break;
+    }
     case DrawingMethod::SpeciesLeaders: {
       for (auto& a : mSpeciesLeaders) {
         if (a < numPhenotypes && gridIndex < gridSize) {
