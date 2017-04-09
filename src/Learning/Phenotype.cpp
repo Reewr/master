@@ -250,8 +250,6 @@ float score(float deltaTime, float zeroIsBest, float bias = 0.05f) {
 };
 
 void Phenotype::updateFitness(float deltaTime) {
-  const std::map<std::string, Spider::Part>& parts = spider->parts();
-
   int index = 0;
   for(const auto& s : Phenotype::FITNESS_HANDLERS) {
     fitness[index] = s.runCalculation(*this, fitness[index], deltaTime);
@@ -277,7 +275,6 @@ void Phenotype::kill() const {
  * @return
  */
 float Phenotype::finalizeFitness() {
-  const std::map<std::string, Spider::Part>& parts = spider->parts();
   int index = 0;
   for(const auto& s : Phenotype::FITNESS_HANDLERS) {
     fitness[index] = s.runFinalize(*this, fitness[index], 1.f);
@@ -347,7 +344,7 @@ std::vector<Fitness> Phenotype::FITNESS_HANDLERS = {
   Fitness(
     "Movement (0)",
     "Fitness based on movement is positive z direction.",
-    [](const auto& phenotype, float current, float deltaTime) -> float {
+    [](const auto& phenotype, float current, float) -> float {
       auto t = phenotype.spider->parts().at("Sternum").part->rigidBody()->getCenterOfMassPosition();
       return mmm::max(current, t.z() + 1.f);
     },
@@ -375,7 +372,7 @@ std::vector<Fitness> Phenotype::FITNESS_HANDLERS = {
 
       return current;
     },
-    [](const auto&, float current, float) -> float {
+    [](const auto&, float, float) -> float {
       return 1.f;
     }
   )
