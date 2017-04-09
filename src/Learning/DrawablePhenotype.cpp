@@ -40,8 +40,7 @@ DrawablePhenotype::DrawablePhenotype()
     , mVBO(0)
     , mVAO(0)
     , mVBO3D(0)
-    , mVAO3D(0)
-    , texture(nullptr) {
+    , mVAO3D(0) {
   ResourceManager* r = mAsset->rManager();
 
   mModelColorProgram = r->get<Program>("Program::Model");
@@ -137,9 +136,9 @@ float DrawablePhenotype::findMaxConnectionWeight(
 void DrawablePhenotype::recreate(const NEAT::NeuralNetwork& network,
                                  mmm::vec3                  size) {
 
-  double rectDiv          = size.x / 15.0;
+  // double rectDiv          = size.x / 15.0;
+  // double maxLineThickness = 3.0;
   double magn             = 255.0;
-  double maxLineThickness = 3.0;
   double neuronRadius     = size.x / 15;
 
   vec3 maxValues;
@@ -296,9 +295,9 @@ void DrawablePhenotype::recreate(const NEAT::NeuralNetwork& network,
 
 void DrawablePhenotype::recreate(const NEAT::NeuralNetwork& network,
                                  mmm::vec2                  size) {
-  double rectDiv          = size.x / 15.0;
+  // double rectDiv          = size.x / 15.0;
+  // double maxLineThickness = 3.0;
   double magn             = 255.0;
-  double maxLineThickness = 3.0;
   double neuronRadius     = 15;
 
   vec3 maxValues;

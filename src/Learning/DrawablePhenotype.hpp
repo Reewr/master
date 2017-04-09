@@ -93,6 +93,4 @@ private:
   std::shared_ptr<Program> mOutlineCircleProgram;
   std::shared_ptr<Program> mFilledCircleProgram;
   std::shared_ptr<Program> mModelColorProgram;
-
-  Texture* texture;
 };
