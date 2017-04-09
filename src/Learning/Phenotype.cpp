@@ -44,6 +44,23 @@ private:
 
 /**
  * @brief
+ *   Calculates a score based on on the `zeroIsBest` value.
+ *   deltaTime is multiplied with it to make sure that it doesnt
+ *   affect the rest of the simulations too much.
+ *
+ * @param deltaTime
+ * @param zeroIsBest
+ * @param bias
+ *
+ * @return
+ */
+float score(float deltaTime, float zeroIsBest, float bias = 0.05f) {
+  return 1.f / (mmm::max(mmm::abs(zeroIsBest) - bias, 0.f) * deltaTime + 1.f);
+};
+
+
+/**
+ * @brief
  *   Returns the Euler angles of a Quaternion
  *
  * @param x
@@ -158,7 +175,6 @@ bool Phenotype::collidesWithTerrain(Drawable3D* spiderPart) const {
  * @param deltaTime
  */
 void Phenotype::update(float deltaTime) {
-
   if (failed)
     return;
 
@@ -245,10 +261,13 @@ void Phenotype::update(float deltaTime) {
   ++numUpdates;
 }
 
-float score(float deltaTime, float zeroIsBest, float bias = 0.05f) {
-  return 1.f / (mmm::max(mmm::abs(zeroIsBest) - bias, 0.f) * deltaTime + 1.f);
-};
-
+/**
+ * @brief
+ *   Runs through the fitness calculations and executes
+ *   each and everyone of them.
+ *
+ * @param deltaTime
+ */
 void Phenotype::updateFitness(float deltaTime) {
   int index = 0;
   for(const auto& s : Phenotype::FITNESS_HANDLERS) {
@@ -260,6 +279,12 @@ void Phenotype::updateFitness(float deltaTime) {
     mLog->debug("Killed spider");
 }
 
+/**
+ * @brief
+ *   If the spider does something that we recognize as something
+ *   that should never be done, we can use this function to stop
+ *   all further simulation.
+ */
 void Phenotype::kill() const {
   if (failed)
     return;
