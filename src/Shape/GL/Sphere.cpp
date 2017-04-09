@@ -79,7 +79,6 @@ void GLSphere::setup() {
   std::vector<GLShape::Vertex> vertices;
 
   vertices.reserve(rings * sectors * 6);
-  std::cout << rings * sectors * 6 << std::endl;
 
   for(int s = 0; s < sectors; s++) {
     for(int r = 0; r < rings; r++) {
@@ -126,14 +125,6 @@ void GLSphere::setup() {
                         GL_FALSE,
                         sizeof(Vertex),
                         (void*) (sizeof(mmm::vec3) + sizeof(mmm::vec2)));
-
-  Utils::assertGL();
-
-  /* glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIBO); */
-  /* glBufferData(GL_ELEMENT_ARRAY_BUFFER, */
-  /*              sizeof(GLushort) * indices.size(), */
-  /*              &indices[0], */
-  /*              GL_STATIC_DRAW); */
 
   Utils::assertGL();
 
