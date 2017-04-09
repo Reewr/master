@@ -5,17 +5,7 @@
 #include "../../GlobalLog.hpp"
 #include "../../Utils/Utils.hpp"
 
-using mmm::vec2;
-using mmm::vec3;
-using mmm::vec4;
-
-template <typename T>
-using dVector = std::vector<std::vector<T>>;
-
-template <typename T>
-using vector = std::vector<T>;
-
-GLGrid3D::GLGrid3D(const vec2& size) {
+GLGrid3D::GLGrid3D(const mmm::vec2& size) {
   mSize = size;
   setup();
 }
@@ -23,11 +13,15 @@ GLGrid3D::GLGrid3D(const vec2& size) {
 GLGrid3D::~GLGrid3D() {}
 
 void GLGrid3D::setup() {
-  dVector<vec3>  vertices(mSize.y, vector<vec3>(mSize.x));
-  dVector<vec3>  normals(mSize.y, vector<vec3>(mSize.x));
-  dVector<vec2>  texCoords(mSize.y, vector<vec2>(mSize.x));
-  vector<int>    indices;
-  vector<GLShape::Vertex> vertexData;
+  std::vector<std::vector<mmm::vec3>> vertices(mSize.y,
+                                               std::vector<mmm::vec3>(mSize.x));
+  std::vector<std::vector<mmm::vec3>> normals(mSize.y,
+                                              std::vector<mmm::vec3>(mSize.x));
+  std::vector<std::vector<mmm::vec2>> texCoords(mSize.y,
+                                                std::vector<mmm::vec2>(
+                                                  mSize.x));
+  std::vector<int>             indices;
+  std::vector<GLShape::Vertex> vertexData;
   vertexData.reserve(mSize.x * mSize.y);
   indices.reserve((mSize.y - 1) * (mSize.x * 2) + (mSize.y - 1));
 
@@ -44,16 +38,17 @@ void GLGrid3D::setup() {
   setupOpenGLArrays(vertexData, indices);
 }
 
-void GLGrid3D::generateVertices(dVector<vec3>& v, dVector<vec2>& t) {
+void GLGrid3D::generateVertices(std::vector<std::vector<mmm::vec3>>& v,
+                                std::vector<std::vector<mmm::vec2>>& t) {
   /* Noise::Simplex simp(5, 0.65, 4.0/size.x, 2); */
   for (int y = 0; y < mSize.y - 1; y++) {
 
-    vec2 s = vec2(0, y / (mSize.y - 1));
+    mmm::vec2 s = mmm::vec2(0, y / (mSize.y - 1));
 
     for (int x = 0; x < mSize.x - 1; x++) {
 
       s.x       = x / (mSize.x - 1);
-      v[y][x]   = vec3(-0.5 + s.x, 0, -0.5 + s.y);
+      v[y][x]   = mmm::vec3(-0.5 + s.x, 0, -0.5 + s.y);
       t[y][x]   = s;
       v[y][x].y = 0;
     }
@@ -64,14 +59,19 @@ void GLGrid3D::generateVertices(dVector<vec3>& v, dVector<vec2>& t) {
  * @brief
  *   Generate the normals for the terrain
  *
- *   @TODO FIX NORMALS
+ *   \todo FIX NORMALS
  *
  * @param v
  * @param n
  */
-void GLGrid3D::generateNormals(const dVector<vec3>& v, dVector<vec3>& n) {
-  dVector<vec3> normals1(mSize.y - 1, vector<vec3>(mSize.x - 1));
-  dVector<vec3> normals2(mSize.y - 1, vector<vec3>(mSize.x - 1));
+void GLGrid3D::generateNormals(const std::vector<std::vector<mmm::vec3>>& v,
+                               std::vector<std::vector<mmm::vec3>>&       n) {
+  std::vector<std::vector<mmm::vec3>> normals1(mSize.y - 1,
+                                               std::vector<mmm::vec3>(mSize.x -
+                                                                      1));
+  std::vector<std::vector<mmm::vec3>> normals2(mSize.y - 1,
+                                               std::vector<mmm::vec3>(mSize.x -
+                                                                      1));
 
   auto height = [&v](unsigned int y, unsigned int x) -> float {
     if (y >= v.size())
@@ -90,11 +90,11 @@ void GLGrid3D::generateNormals(const dVector<vec3>& v, dVector<vec3>& n) {
       float hD = height(y - 1, x - 1);
       float hU = height(y + 1, x + 1);
 
-      vec3 normal = normalize(vec3(hL - hR, hD - hU, 2.0));
-      n[y][x]     = normal;
-      // vec3 triangleNorm0 =
+      mmm::vec3 normal = normalize(mmm::vec3(hL - hR, hD - hU, 2.0));
+      n[y][x]          = normal;
+      // mmm::vec3 triangleNorm0 =
       //   cross(v[y][x] - v[y + 1][x], v[y + 1][x] - v[y + 1][x + 1]);
-      // vec3 triangleNorm1 =
+      // mmm::vec3 triangleNorm1 =
       //   cross(v[y + 1][x + 1] - v[y][x + 1], v[y][x + 1] - v[y][x]);
       // normals1[y][x] = normalize(triangleNorm0);
       // normals2[y][x] = normalize(triangleNorm1);
@@ -103,7 +103,7 @@ void GLGrid3D::generateNormals(const dVector<vec3>& v, dVector<vec3>& n) {
 
   // for (int i = 0; i < mSize.y; i++) {
   //   for (int j = 0; j < mSize.x; j++) {
-  //     vec3 finNormal = vec3(0, 0, 0);
+  //     mmm::vec3 finNormal = mmm::vec3(0, 0, 0);
 
   //     if (j != 0 && i != 0) {
   //       finNormal += normals1[i - 1][j - 1];
@@ -126,8 +126,8 @@ void GLGrid3D::generateNormals(const dVector<vec3>& v, dVector<vec3>& n) {
   // }
 }
 
-void GLGrid3D::setupOpenGLArrays(const vector<GLShape::Vertex>& v,
-                                 const vector<int>&    i) {
+void GLGrid3D::setupOpenGLArrays(const std::vector<GLShape::Vertex>& v,
+                                 const std::vector<int>&             i) {
   glGenBuffers(1, &VBO);
   glGenBuffers(1, &IBO);
   glGenVertexArrays(1, &VAO);
@@ -148,7 +148,7 @@ void GLGrid3D::setupOpenGLArrays(const vector<GLShape::Vertex>& v,
                         GL_FLOAT,
                         GL_FALSE,
                         sizeof(GLShape::Vertex),
-                        (void*) (sizeof(vec3)));
+                        (void*) (sizeof(mmm::vec3)));
 
   glEnableVertexAttribArray(2);
   glVertexAttribPointer(2,
@@ -156,7 +156,7 @@ void GLGrid3D::setupOpenGLArrays(const vector<GLShape::Vertex>& v,
                         GL_FLOAT,
                         GL_FALSE,
                         sizeof(GLShape::Vertex),
-                        (void*) (sizeof(vec3) + sizeof(vec2)));
+                        (void*) (sizeof(mmm::vec3) + sizeof(mmm::vec2)));
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER,

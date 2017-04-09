@@ -40,8 +40,8 @@ std::string getAbsoluteDir(const std::string& filename) {
   char fullPath[PATH_MAX];
   realpath(filename.c_str(), fullPath);
 #endif
-  std::string absPath = std::string(fullPath);
-  size_t lastSlash    = absPath.find_last_of("/");
+  std::string absPath   = std::string(fullPath);
+  size_t      lastSlash = absPath.find_last_of("/");
 
   if (lastSlash != std::string::npos) {
     return absPath.substr(0, lastSlash);
@@ -84,7 +84,6 @@ size_t findFirstSeperator(std::string& line, size_t startPos = 0) {
  *   from the config file is needed.
  *
  * @param line the line to parse
- * @param cfg a reference to the CFG
  *
  * @return
  */
@@ -198,7 +197,7 @@ std::string getIncludeFilename(const std::string& line) {
   }
 
   size_t firstQuote = line.find("\"");
-  size_t lastQuote = line.find_last_of("\"");
+  size_t lastQuote  = line.find_last_of("\"");
 
   // Handle if the include uses "" tags
   if (firstQuote != std::string::npos) {
@@ -217,19 +216,22 @@ std::string getIncludeFilename(const std::string& line) {
  *   Loads the shader from file, handling any special syntax as it detects it.
  *   This function supports two special syntaxes:
  *
- *   1. #include
- *   2. _CFG_
+ *   1. "#include"
+ *   2. "_CFG_"
  *
  *   The first, `#include`, will let you include a file from file in its
  *   entirety. Please keep in mind that this is simple replace `include`
  *   with whole file it is referencing.
  *
  *   Keep in mind that include does not do anything fancy other than include the
- *   entire file into the same file. This may cause errors if function names are defined
- *   multiple times. The parser will try its best to not include a file more than once,
+ *   entire file into the same file. This may cause errors if function names are
+ * defined
+ *   multiple times. The parser will try its best to not include a file more
+ * than once,
  *   even if there are multiple include statements.
  *
- *   Also keep in mind that when including files, you have to include it in the order it
+ *   Also keep in mind that when including files, you have to include it in the
+ * order it
  *   is suppose to be used.
  *
  *   The second, `_CFG_`, lets you reference the CFG by properties. For instance
@@ -242,15 +244,16 @@ std::string getIncludeFilename(const std::string& line) {
  *   file.
  *
  * @param filename
+ * @param detail
  *
  * @return
  */
 Shader::Details loadTextfile(const std::string& filename,
                              Shader::Details    detail = Shader::Details()) {
 
-  std::ifstream            fs(filename);
-  std::string              line;
-  std::string              absDir = getAbsoluteDir(filename);
+  std::ifstream fs(filename);
+  std::string   line;
+  std::string   absDir = getAbsoluteDir(filename);
 
   if (!fs.is_open()) {
     throw std::runtime_error("Unable to open file: " + filename);
@@ -264,10 +267,10 @@ Shader::Details loadTextfile(const std::string& filename,
 
     if (hasInclude) {
       // check if the file has already been included
-      std::string includeFile  = str::joinPath(absDir, getIncludeFilename(line));
-      bool hasBeenIncluded = false;
+      std::string includeFile = str::joinPath(absDir, getIncludeFilename(line));
+      bool        hasBeenIncluded = false;
 
-      for(auto& s : detail.includedFiles) {
+      for (auto& s : detail.includedFiles) {
         if (s == includeFile) {
           hasBeenIncluded = true;
           break;
@@ -343,14 +346,21 @@ Shader::Type Shader::typeFromFilename(const std::string& filename) {
  * @return
  */
 std::string Shader::typeToStr(Shader::Type t) {
-  switch(t) {
-    case Shader::Type::Fragment:     return "Fragment";
-    case Shader::Type::Vertex:       return "Vertex";
-    case Shader::Type::Geometry:     return "Geometry";
-    case Shader::Type::Tessellation: return "Tessellation";
-    case Shader::Type::Evaluation:   return "Evaluation";
-    case Shader::Type::Compute:      return "Compute";
-    case Shader::Type::None:         return "None";
+  switch (t) {
+    case Shader::Type::Fragment:
+      return "Fragment";
+    case Shader::Type::Vertex:
+      return "Vertex";
+    case Shader::Type::Geometry:
+      return "Geometry";
+    case Shader::Type::Tessellation:
+      return "Tessellation";
+    case Shader::Type::Evaluation:
+      return "Evaluation";
+    case Shader::Type::Compute:
+      return "Compute";
+    case Shader::Type::None:
+      return "None";
   }
 }
 
@@ -363,14 +373,21 @@ std::string Shader::typeToStr(Shader::Type t) {
  * @return
  */
 GLuint Shader::typeToGLType(Type t) {
-  switch(t) {
-    case Shader::Type::Fragment:     return GL_FRAGMENT_SHADER;
-    case Shader::Type::Vertex:       return GL_VERTEX_SHADER;
-    case Shader::Type::Geometry:     return GL_GEOMETRY_SHADER;
-    case Shader::Type::Tessellation: return 0; // GL_TESS_CONTROL_SHADER;
-    case Shader::Type::Evaluation:   return 0; // GL_TESS_EVALUATION_SHADER;
-    case Shader::Type::Compute:      return 0; // GL_COMPUTE_SHADER;
-    case Shader::Type::None:         return 0;
+  switch (t) {
+    case Shader::Type::Fragment:
+      return GL_FRAGMENT_SHADER;
+    case Shader::Type::Vertex:
+      return GL_VERTEX_SHADER;
+    case Shader::Type::Geometry:
+      return GL_GEOMETRY_SHADER;
+    case Shader::Type::Tessellation:
+      return 0; // GL_TESS_CONTROL_SHADER;
+    case Shader::Type::Evaluation:
+      return 0; // GL_TESS_EVALUATION_SHADER;
+    case Shader::Type::Compute:
+      return 0; // GL_COMPUTE_SHADER;
+    case Shader::Type::None:
+      return 0;
   }
 }
 
@@ -389,6 +406,7 @@ Shader::Shader() : Logging::Log("Shader"), mId(0), mFilename("Unknown") {}
  *   fs = fragment shader
  *
  * @param filename
+ * @param type
  */
 Shader::Shader(const std::string& filename, Shader::Type type)
     : Logging::Log("Shader"), mFilename(filename) {
@@ -429,9 +447,9 @@ GLuint Shader::loadShader(const std::string& filename, Shader::Type type) {
   }
 
   GLuint shaderType = Shader::typeToGLType(type);
-  mType   = type;
-  mId     = glCreateShader(shaderType);
-  mDetail = loadTextfile(filename);
+  mType             = type;
+  mId               = glCreateShader(shaderType);
+  mDetail           = loadTextfile(filename);
 
   const char* source = mDetail.source.c_str();
 
@@ -467,7 +485,7 @@ bool Shader::checkShader() {
     auto source = str::split(mDetail.source, '\n');
 
     int i = 1;
-    for(auto& a : source) {
+    for (auto& a : source) {
       std::string lineNum = std::to_string(i);
 
       if (lineNum.length() < 4) {

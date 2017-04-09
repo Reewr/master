@@ -2,18 +2,18 @@
 
 #include <vector>
 
-#include "../../Utils/Utils.hpp"
 #include "../../GlobalLog.hpp"
+#include "../../Utils/Utils.hpp"
 
 using mmm::vec3;
 using mmm::cos;
 using mmm::sin;
 
-int GLSphere::mSphereCounter = 0;
-int GLSphere::mNumQuads = 0;
-GLuint GLSphere::mIBO = 0;
-GLuint GLSphere::mVBO = 0;
-GLuint GLSphere::mVAO = 0;
+int    GLSphere::mSphereCounter = 0;
+int    GLSphere::mNumQuads      = 0;
+GLuint GLSphere::mIBO           = 0;
+GLuint GLSphere::mVBO           = 0;
+GLuint GLSphere::mVAO           = 0;
 
 GLSphere::GLSphere(bool outline) : mOutline(outline) {
   if (mSphereCounter == 0)
@@ -30,20 +30,18 @@ GLSphere::~GLSphere() {
     glDeleteBuffers(1, &mVBO);
     glDeleteVertexArrays(1, &mVAO);
     mNumQuads = 0;
-    mIBO = 0;
-    mVBO = 0;
-    mVAO = 0;
+    mIBO      = 0;
+    mVBO      = 0;
+    mVAO      = 0;
   }
 }
 
 GLShape::Vertex GLSphere::genVertex(float u, float v) {
   static float PI = mmm::constants<float>::pi;
-  float r = sin(PI * v);
-  return {
-    {r * cos(2.0f * PI * u), r * sin(2.0f * PI * u), cos(PI * v)},
-    {u, v},
-    {0, 0, 0}
-  };
+  float        r  = sin(PI * v);
+  return { { r * cos(2.0f * PI * u), r * sin(2.0f * PI * u), cos(PI * v) },
+           { u, v },
+           { 0, 0, 0 } };
 }
 
 /**
@@ -71,17 +69,17 @@ void GLSphere::setup() {
 
   Utils::assertGL();
 
-  int rings = 10;
-  int sectors = 10;
-  float R  = 1.0 / float(rings - 1);
-  float S  = 1.0 / float(sectors - 1);
+  int   rings   = 10;
+  int   sectors = 10;
+  float R       = 1.0 / float(rings - 1);
+  float S       = 1.0 / float(sectors - 1);
 
   std::vector<GLShape::Vertex> vertices;
 
   vertices.reserve(rings * sectors * 6);
 
-  for(int s = 0; s < sectors; s++) {
-    for(int r = 0; r < rings; r++) {
+  for (int s = 0; s < sectors; s++) {
+    for (int r = 0; r < rings; r++) {
       float u0 = r * R;
       float v0 = s * S;
       float u1 = (r + 1) * R;
@@ -98,7 +96,10 @@ void GLSphere::setup() {
 
   glBindVertexArray(mVAO);
   glBindBuffer(GL_ARRAY_BUFFER, mVBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER,
+               sizeof(Vertex) * vertices.size(),
+               &vertices[0],
+               GL_STATIC_DRAW);
 
   Utils::assertGL();
 

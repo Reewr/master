@@ -17,7 +17,7 @@ namespace Logging {
    *
    *   Should you come into the following case:
    *
-   *   ```
+   * @example
    *   class A : public Logging::Log {
    *   public:
    *     A() : Logging::Log("A") {}
@@ -36,6 +36,7 @@ namespace Logging {
    *       setLoggerName("B");
    *     }
    *   }
+   *
    */
   class Log {
   public:
@@ -53,22 +54,21 @@ namespace Logging {
     std::shared_ptr<spdlog::logger> mLog;
   };
 
-  // The formatter is used to format the output of
-  // logging
+  //! The formatter is used to format the output of logging
   class Formatter : public spdlog::formatter {
   public:
     Formatter();
     void format(spdlog::details::log_msg& msg);
   };
 
-  // The global logger is used in cases (through GlobalLog.hpp)
-  // where you normally don't have a logger
+  //! The global logger is used in cases (through GlobalLog.hpp)
+  //! where you normally don't have a logger
   extern std::shared_ptr<spdlog::logger> GLOBAL_LOGGER;
   extern unsigned int                    loggerNameSize;
 
-  // initializes the loggers, setting the minimum logging level and
-  // possibly the format. If the format is not specified, it defaults
-  // to using Formatter
+  //! initializes the loggers, setting the minimum logging level and
+  //! possibly the format. If the format is not specified, it defaults
+  //! to using Formatter
   void init(spdlog::level::level_enum level  = spdlog::level::trace,
             const std::string&        format = "");
 }

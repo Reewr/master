@@ -3,16 +3,13 @@
 
 #include <vector>
 
-using mmm::vec2;
-using mmm::vec4;
-
 GLRectangle::GLRectangle() {}
 
 GLRectangle::GLRectangle(const Rectangle& r, bool isCCW) : mTexture(nullptr) {
   change(r, isCCW);
 }
 
-GLRectangle::GLRectangle(const vec2& p, const vec2& s, bool isCCW)
+GLRectangle::GLRectangle(const mmm::vec2& p, const mmm::vec2& s, bool isCCW)
     : mTexture(nullptr) {
   change(Rectangle(p, s), isCCW);
 }
@@ -57,8 +54,10 @@ void GLRectangle::change(const Rectangle& rect, bool isCCW) {
  * @param isCCW
  *   Whether or not this should utilize counter-clockwise rendering
  */
-void GLRectangle::change(const vec2& p, const vec2& s, bool isCCW) {
-  change(Rectangle(p, s), isCCW);
+void GLRectangle::change(const mmm::vec2& position,
+                         const mmm::vec2& size,
+                         bool             isCCW) {
+  change(Rectangle(position, size), isCCW);
 }
 
 /**
@@ -88,14 +87,14 @@ void GLRectangle::setup() {
   if (VAO != 0)
     glDeleteVertexArrays(1, &VAO);
 
-  std::vector<vec4> coords;
+  std::vector<mmm::vec4> coords;
 
   if (mIsCCW) {
-    coords.push_back(vec4(0, 0, 1, 0));
-    coords.push_back(vec4(1, 1, 0, 1));
+    coords.push_back(mmm::vec4(0, 0, 1, 0));
+    coords.push_back(mmm::vec4(1, 1, 0, 1));
   } else {
-    coords.push_back(vec4(0, 1, 1, 1));
-    coords.push_back(vec4(1, 0, 0, 0));
+    coords.push_back(mmm::vec4(0, 1, 1, 1));
+    coords.push_back(mmm::vec4(1, 0, 0, 0));
   }
 
   GLfloat vertices[] = { mRect.topleft.x,       mRect.bottomright().y,

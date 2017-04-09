@@ -12,31 +12,31 @@
 using mmm::vec2;
 using mmm::vec3;
 
-Sphere::Sphere(const mmm::vec3& position,
-               float radius,
+Sphere::Sphere(const mmm::vec3&         position,
+               float                    radius,
                std::shared_ptr<Texture> texture,
-               bool outline)
+               bool                     outline)
     : Logging::Log("Sphere")
     , mSphere(new GLSphere(outline))
     , mTexture(texture) {
-      mScale = mmm::scale(mmm::vec3(radius));
-      mPosition = position;
-      mRotation = mmm::rotate_x(-90.f);
-    }
+  mScale    = mmm::scale(mmm::vec3(radius));
+  mPosition = position;
+  mRotation = mmm::rotate_x(-90.f);
+}
 
 Sphere::Sphere(const mmm::vec3& position,
-               float radius,
-               mmm::vec4 color,
-               bool outline)
+               float            radius,
+               mmm::vec4        color,
+               bool             outline)
     : Logging::Log("Sphere")
     , mSphere(new GLSphere(outline))
     , mTexture(nullptr) {
-      mScale = mmm::scale(mmm::vec3(radius));
-      mPosition = position;
-      mRotation = mmm::rotate_x(-90.f);
-      mColor = color;
-      mUsesColor = true;
-    }
+  mScale     = mmm::scale(mmm::vec3(radius));
+  mPosition  = position;
+  mRotation  = mmm::rotate_x(-90.f);
+  mColor     = color;
+  mUsesColor = true;
+}
 
 Sphere::~Sphere() {
   delete mSphere;
@@ -46,8 +46,6 @@ Sphere::~Sphere() {
  * @brief
  *   The update handler is reversed for things that do not have
  *   anything to do with drawing but should be updated every loop.
- *
- * @param float
  */
 void Sphere::update(float) {}
 
@@ -56,7 +54,8 @@ void Sphere::update(float) {}
  *   Draw the sphere by binding the program and setting the required
  *   uniforms.
  *
- * @param c
+ * @param program
+ * @param bindTexture
  */
 void Sphere::draw(std::shared_ptr<Program>& program, bool bindTexture) {
   draw(program, mmm::vec3(0), bindTexture);
@@ -67,11 +66,13 @@ void Sphere::draw(std::shared_ptr<Program>& program, bool bindTexture) {
  *   Draw the sphere by binding the program and setting the required
  *   uniforms.
  *
- * @param c
+ * @param program
+ * @param offset
+ * @param bindTexture
  */
 void Sphere::draw(std::shared_ptr<Program>& program,
-                mmm::vec3                 offset,
-                bool                      bindTexture) {
+                  mmm::vec3                 offset,
+                  bool                      bindTexture) {
   program->bind();
   program->setUniform("model",
                       mmm::translate(mPosition + offset) * mRotation * mScale);

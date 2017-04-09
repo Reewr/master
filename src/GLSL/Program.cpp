@@ -11,22 +11,16 @@
 GLuint Program::activeProgram = 0;
 
 Program::Program()
-    : Logging::Log("Program")
-    , program(0)
-    , isLinked(false)
-    , isUsable(false) {}
+    : Logging::Log("Program"), program(0), isLinked(false), isUsable(false) {}
 
 Program::Program(const std::string& fsvs, bool link)
-    : Logging::Log("Program")
-    , program(0)
-    , isLinked(false)
-    , isUsable(false) {
+    : Logging::Log("Program"), program(0), isLinked(false), isUsable(false) {
   createProgram(fsvs, link);
 }
 
 Program::~Program() {
   if (mShaders.size() > 0) {
-    for(auto& s : mShaders)
+    for (auto& s : mShaders)
       delete s.second;
 
     mShaders.clear();
@@ -40,10 +34,11 @@ bool Program::createProgram(const std::string& shaders, bool link) {
       "Must load program as single string of two shaders");
   }
 
-  std::map<Shader::Type, std::string> srcs = loadMultipleShaderFilename(shaders);
+  std::map<Shader::Type, std::string> srcs =
+    loadMultipleShaderFilename(shaders);
 
   if (mShaders.size() > 0) {
-    for(auto& s : mShaders)
+    for (auto& s : mShaders)
       delete s.second;
 
     mShaders.clear();
@@ -156,9 +151,7 @@ GLint Program::getUniformLocation(const std::string& uni) {
   if (loc != -1)
     uniLocations[uni] = loc;
   else {
-    mLog->warn("{} - {} does not exist in shader",
-               mFilename,
-               uni);
+    mLog->warn("{} - {} does not exist in shader", mFilename, uni);
     return loc;
   }
 
@@ -281,7 +274,7 @@ bool Program::checkErrors(const std::string& place) {
   std::string message = "Error in these shaders: ";
   int         size    = mShaders.size();
   int         index   = 0;
-  for(auto& a : mShaders) {
+  for (auto& a : mShaders) {
     message += a.second->filename() + (index + 1 == size ? "" : ", ");
   }
 

@@ -24,22 +24,17 @@ namespace NEAT {
  * The SpiderSwarm is a class that holds a population of spiders that are used
  * to train a ESHyperNEAT network.
  *
- * @TODO Add more documentation
+ * \todo Add more documentation
  */
 class SpiderSwarm : Logging::Log {
 public:
-
   // This describes the different drawing methods
   //
   // - SpeciesLeaders will draw the best of the species
   // - BestFitness will only draw the best spider
   // - DrawAll will draw all spiders
   //
-  enum class DrawingMethod {
-    SpeciesLeaders,
-    BestFitness,
-    DrawAll
-  };
+  enum class DrawingMethod { SpeciesLeaders, BestFitness, DrawAll };
 
   SpiderSwarm();
   ~SpiderSwarm();
@@ -74,15 +69,15 @@ private:
   size_t mBatchSize;
   size_t mGeneration;
 
-  float  mCurrentDuration;
-  float  mIterationDuration;
-  float  mBestPossibleFitness;
+  float mCurrentDuration;
+  float mIterationDuration;
+  float mBestPossibleFitness;
 
   // Drawing settings
   DrawingMethod mDrawingMethod;
 
   std::vector<size_t> mSpeciesLeaders;
-  size_t mBestIndex;
+  size_t              mBestIndex;
 
 // Save some memory if bullet has profiling on and therefore
 // does not allow for threading
@@ -119,7 +114,7 @@ private:
 
   // NEAT stuff
   NEAT::Parameters* mParameters;
-  Substrate*  mSubstrate;
+  Substrate*        mSubstrate;
   NEAT::Population* mPopulation;
 
   void setDefaultParameters();

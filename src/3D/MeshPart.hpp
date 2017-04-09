@@ -20,7 +20,9 @@ public:
 
   void draw(std::shared_ptr<Program>& program, bool bindTexture = false);
   // Draw it. Keep it separate from update
-  void draw(std::shared_ptr<Program>& program, mmm::vec3 offset, bool bindTexture = false);
+  void draw(std::shared_ptr<Program>& program,
+            mmm::vec3                 offset,
+            bool                      bindTexture = false);
 
   void input(const Input::Event& event);
 

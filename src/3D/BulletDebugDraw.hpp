@@ -2,8 +2,8 @@
 
 #include <btBulletDynamicsCommon.h>
 #include <memory>
-#include <vector>
 #include <mmm.hpp>
+#include <vector>
 
 #include "../OpenGLHeaders.hpp"
 
@@ -26,8 +26,8 @@ class BulletDebugDraw : public btIDebugDraw {
   void reset();
 
 private:
-  std::vector<Vertex> vertices;
-  GLuint mVBO;
-  GLuint mVAO;
+  std::vector<Vertex>      vertices;
+  GLuint                   mVBO;
+  GLuint                   mVAO;
   std::shared_ptr<Program> mLineProgram;
 };

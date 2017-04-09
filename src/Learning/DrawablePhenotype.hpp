@@ -3,8 +3,8 @@
 #include "../Drawable/Drawable.hpp"
 #include "../OpenGLHeaders.hpp"
 
-#include <mmm.hpp>
 #include <memory>
+#include <mmm.hpp>
 #include <vector>
 
 class Texture;
@@ -69,8 +69,8 @@ public:
 
 private:
   void findSubstrateLimits(const NEAT::NeuralNetwork& network,
-                           mmm::vec3& maxValues,
-                           mmm::vec3& minValues);
+                           mmm::vec3&                 maxValues,
+                           mmm::vec3&                 minValues);
 
   float findMaxConnectionWeight(const NEAT::NeuralNetwork& network);
 

@@ -3,11 +3,11 @@
 #include "../OpenGLHeaders.hpp"
 
 #include "../3D/Cube.hpp"
+#include "../3D/Line.hpp"
+#include "../3D/Sphere.hpp"
 #include "../3D/Spider.hpp"
 #include "../3D/Terrain.hpp"
 #include "../3D/World.hpp"
-#include "../3D/Sphere.hpp"
-#include "../3D/Line.hpp"
 #include "../Camera/Camera.hpp"
 #include "../Console/Console.hpp"
 #include "../Console/Console.hpp"
@@ -34,19 +34,18 @@ using mmm::vec3;
 
 Master::Master(Asset* a) : mAsset(a) {
   setLoggerName("Master");
-  CFG* c         = a->cfg();
-  vec2 shadowRes = vec2(c->graphics.shadowRes);
-  ResourceManager* r = a->rManager();
+  CFG*             c         = a->cfg();
+  vec2             shadowRes = vec2(c->graphics.shadowRes);
+  ResourceManager* r         = a->rManager();
 
   r->unloadUnnecessary(ResourceScope::Master);
   r->loadRequired(ResourceScope::Master);
 
-  mLua       = a->lua();
-  mCamera    = new Camera(a);
-  mWorld     = new World(vec3(0, -9.81, 0));
-  mShadowmap = new Framebuffer(r->get<Program>("Program::Shadow"),
-                               shadowRes,
-                               true);
+  mLua    = a->lua();
+  mCamera = new Camera(a);
+  mWorld  = new World(vec3(0, -9.81, 0));
+  mShadowmap =
+    new Framebuffer(r->get<Program>("Program::Shadow"), shadowRes, true);
 
   mDrawable3D = { new Terrain() };
   mSwarm      = new SpiderSwarm();
@@ -62,15 +61,13 @@ Master::Master(Asset* a) : mAsset(a) {
   mLua->engine.set_function("enablePhysics",
                             [&]() { mWorld->enablePhysics(); });
 
-  mLua->engine.set_function("saveSwarm",
-                            [&](const std::string& filename) {
-                              mSwarm->save(filename);
-                            });
+  mLua->engine.set_function("saveSwarm", [&](const std::string& filename) {
+    mSwarm->save(filename);
+  });
 
-  mLua->engine.set_function("loadSwarm",
-                            [&](const std::string& filename) {
-                              mSwarm->load(filename);
-                            });
+  mLua->engine.set_function("loadSwarm", [&](const std::string& filename) {
+    mSwarm->load(filename);
+  });
 
   // add CFG is enabled
   if (a->cfg()->console.enabled) {

@@ -1,8 +1,8 @@
 #include "Substrate.hpp"
 
-#include <mmm.hpp>
 #include <fstream>
 #include <map>
+#include <mmm.hpp>
 
 #include "../Utils/str.hpp"
 
@@ -80,10 +80,10 @@ void Substrate::load(const std::string& filename) {
 
   std::map<std::string, std::string> entries;
   std::string line;
-  size_t lineNum = 0;
+  size_t      lineNum = 0;
 
   // Expect each line to contain the name and the value separated by space
-  while(fs.good()) {
+  while (fs.good()) {
     std::getline(fs, line);
 
     if (line == "")
@@ -168,6 +168,7 @@ void Substrate::loadValue(const std::string& value, double& t) {
   t = std::stod(value);
 }
 
-void Substrate::loadValue(const std::string& value, NEAT::ActivationFunction& t) {
-  t = (NEAT::ActivationFunction)std::stoi(value);
+void Substrate::loadValue(const std::string&        value,
+                          NEAT::ActivationFunction& t) {
+  t = (NEAT::ActivationFunction) std::stoi(value);
 }

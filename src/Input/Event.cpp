@@ -6,8 +6,6 @@
 #include "../Utils/Utils.hpp"
 #include "Input.hpp"
 
-using mmm::vec2;
-
 namespace Input {
   /**
    * @brief
@@ -16,6 +14,8 @@ namespace Input {
    *
    *   This constructor will make the Event class a Key event of
    *   either KeyPress or KeyRelease.
+   *
+   * @param i
    *
    * @param key
    *   The integer representation of the key. This uses the GLFW_KEY_*
@@ -52,6 +52,7 @@ namespace Input {
    *   This constructor will make the Event class a Mouse event of
    *   either MousePress or MouseRelease
    *
+   * @param i
    * @param mousePosition
    *   The position of the mouse at the time of the click
    *
@@ -66,11 +67,11 @@ namespace Input {
    *   The mods active at the time of the event indicated
    *   by GLFW_MODIFIER_ALT etc.
    */
-  Event::Event(Input*      i,
-               const vec2& mousePosition,
-               int         key,
-               int         action,
-               int         mods)
+  Event::Event(Input*           i,
+               const mmm::vec2& mousePosition,
+               int              key,
+               int              action,
+               int              mods)
       : mKeyCode(key)
       , mMods(mods)
       , mPosition(mousePosition)
@@ -91,6 +92,7 @@ namespace Input {
    *
    *   This constructor will make the Event class a MouseScroll event
    *
+   * @param i
    * @param mousePosition
    *   Where the mouse was located when the scroll happened
    *
@@ -101,7 +103,9 @@ namespace Input {
    *
    *   All other values for X and Y are ignored.
    */
-  Event::Event(Input* i, const vec2& mousePosition, const vec2& scrollOffset)
+  Event::Event(Input*           i,
+               const mmm::vec2& mousePosition,
+               const mmm::vec2& scrollOffset)
       : mKeyCode(-1)
       , mMods(0)
       , mCharacter("")
@@ -118,10 +122,11 @@ namespace Input {
    *
    *   This constructor will make the Event class a MouseMovement event
    *
+   * @param i
    * @param mousePosition
    *   Where the mouse moved to.
    */
-  Event::Event(Input* i, const vec2& mousePosition)
+  Event::Event(Input* i, const mmm::vec2& mousePosition)
       : mKeyCode(-1)
       , mMods(0)
       , mCharacter("")
@@ -138,6 +143,7 @@ namespace Input {
    *
    *   This constructor will make the Event a CharacterInput
    *
+   * @param i
    * @param s
    *   The character inputted
    */
@@ -383,11 +389,11 @@ namespace Input {
    *   This function only makes sense to use when you know its a mouse
    *   type event.
    *
-   *   The vec2 will default to 0 when it is not a mouse event.
+   *   The mmm::vec2 will default to 0 when it is not a mouse event.
    *
    * @return
    */
-  const vec2& Event::position() const { return mPosition; }
+  const mmm::vec2& Event::position() const { return mPosition; }
 
 
   /**
@@ -401,7 +407,7 @@ namespace Input {
    *
    * @return
    */
-  vec2 Event::currentMousePosition() const {
+  mmm::vec2 Event::currentMousePosition() const {
     if (mInput == nullptr)
       throw std::runtime_error("Invalid input manager");
 

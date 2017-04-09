@@ -12,8 +12,7 @@ namespace str {
   std::string replace(const std::string& s,
                       const std::string& replaceStr,
                       const std::string& replaceWith);
-  std::string joinPath(const std::string& path1,
-                       const std::string& path2);
+  std::string joinPath(const std::string& path1, const std::string& path2);
 
   void rTrim(std::string& s);
   void lTrim(std::string& s);

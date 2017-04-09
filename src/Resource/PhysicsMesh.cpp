@@ -277,7 +277,7 @@ PhysicsElements* PhysicsMesh::createCopyAll() {
     mat.setFromOpenGLSubMatrix(mmm::transpose(t).rawdata);
     btMotionState* motion = new btDefaultMotionState(btTransform(mat, pos));
 
-    auto info = RigidBodyInfo(mass, motion, shape, inertia);
+    auto info       = RigidBodyInfo(mass, motion, shape, inertia);
     info.m_friction = 1.0;
 
     btRigidBody* body = new btRigidBody(info);

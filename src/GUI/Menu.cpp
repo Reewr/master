@@ -10,8 +10,6 @@
 
 #include <limits>
 
-using mmm::vec2;
-
 Menu::MenuSettings::MenuSettings(float size, float offset, int ori, int color) {
   this->size   = size;
   this->offset = offset;
@@ -43,7 +41,9 @@ Menu::Menu() : Logging::Log("Menu") {
  * @param m
  *   The settings for the menu item
  */
-Menu::Menu(const std::string& text, const vec2& position, const MenuSettings& m)
+Menu::Menu(const std::string&  text,
+           const mmm::vec2&    position,
+           const MenuSettings& m)
     : Logging::Log("Menu") {
   mActiveMenu = -1;
   isVisible(true);
@@ -55,7 +55,7 @@ Menu::Menu(const std::string& text, const vec2& position, const MenuSettings& m)
  *   Initializes a menu with several items. Uses all
  *   the settings of the MenuSettings
  *
- * @param text
+ * @param names
  *   Text to display
  *
  * @param startPosition
@@ -67,7 +67,7 @@ Menu::Menu(const std::string& text, const vec2& position, const MenuSettings& m)
  *   The settings for the menu items
  */
 Menu::Menu(const std::vector<std::string>& names,
-           const vec2&                     startPosition,
+           const mmm::vec2&                startPosition,
            const MenuSettings&             m)
     : Logging::Log("Menu") {
   mActiveMenu = -1;
@@ -81,12 +81,14 @@ Menu::Menu(const std::vector<std::string>& names,
  *
  *   Syntax:
  *
+ * ```
  *   <guimenu name="Graphics" x="55" y="35" size="15" ori="1" offset="0"
  * color="1">
  *     <item name="Resolution x="55" y="35"/>
  *     <item name="Vsync x="225" y="35"/>
  *     <item name="Display Mode x="575" y="35"/>
  *   </guimenu>
+ * ```
  *
  * @param element
  *
@@ -98,8 +100,8 @@ Menu* Menu::fromXML(tinyxml2::XMLElement* element) {
   }
 
   // retrieve the position from the XML element
-  auto getPosition = [](tinyxml2::XMLElement* innerElement) -> vec2 {
-    vec2 position;
+  auto getPosition = [](tinyxml2::XMLElement* innerElement) -> mmm::vec2 {
+    mmm::vec2 position;
 
     if (innerElement->QueryFloatAttribute("x", &position.x) != 0) {
       throw std::runtime_error("XMLElement has no float attribute 'x'");
@@ -139,7 +141,7 @@ Menu* Menu::fromXML(tinyxml2::XMLElement* element) {
 
   // Menu settings
   MenuSettings mainMs       = getMenuSettings(element);
-  vec2         mainPosition = getPosition(element);
+  mmm::vec2    mainPosition = getPosition(element);
   const char*  name         = element->Attribute("name");
 
   if (name == nullptr) {
@@ -155,7 +157,7 @@ Menu* Menu::fromXML(tinyxml2::XMLElement* element) {
        childElement = childElement->NextSiblingElement()) {
     MenuSettings ms       = getMenuSettings(childElement);
     const char*  chName   = childElement->Attribute("name");
-    vec2         position = getPosition(childElement);
+    mmm::vec2    position = getPosition(childElement);
 
     if (chName == nullptr) {
       throw std::runtime_error("XMLElement has no attribute 'name'");
@@ -220,7 +222,7 @@ void Menu::defaultInputHandler(const Input::Event& event) {
  *   The menu settings to use
  */
 void Menu::addMenuItem(const std::string&  text,
-                       const vec2&         position,
+                       const mmm::vec2&    position,
                        const MenuSettings& m) {
   if (mMenuItems.size() == 0)
     mBoundingBox.topleft = position;
@@ -241,22 +243,22 @@ void Menu::addMenuItem(const std::string&  text,
  * @param texts
  *   elements to add
  *
- * @param position
+ * @param startPosition
  *   The screen position to use
  *
  * @param m
  *   The menu settings to use
  */
 void Menu::addMenuItems(const std::vector<std::string>& texts,
-                        const vec2&                     startPosition,
+                        const mmm::vec2&                startPosition,
                         const MenuSettings&             m) {
   for (unsigned int i = 0; i < texts.size(); i++) {
     float newX = startPosition.x;
     float newY = startPosition.y;
 
     if (mMenuItems.size() >= 1) {
-      Text* lastElement = mMenuItems.back();
-      vec2  bottomRight = lastElement->box().bottomright();
+      Text*     lastElement = mMenuItems.back();
+      mmm::vec2 bottomRight = lastElement->box().bottomright();
 
       if (i > 0 && m.ori == VERTICAL)
         newY = bottomRight.y + m.offset / 2;
@@ -267,14 +269,14 @@ void Menu::addMenuItems(const std::vector<std::string>& texts,
     addMenuItem(texts[i], { newX, newY }, m);
   }
 
-  vec2 bottomright = { 0, 0 };
-  vec2 topleft     = { std::numeric_limits<float>::max(),
-                   std::numeric_limits<float>::max() };
+  mmm::vec2 bottomright = { 0, 0 };
+  mmm::vec2 topleft     = { std::numeric_limits<float>::max(),
+                        std::numeric_limits<float>::max() };
 
   // Update the size of the menu element.
   for (auto a : mMenuItems) {
     const Rectangle& r      = a->box();
-    vec2             textBR = r.bottomright();
+    mmm::vec2        textBR = r.bottomright();
 
     if (r.topleft.x < topleft.x)
       topleft.x = r.topleft.x;
@@ -313,12 +315,11 @@ void Menu::clearMenuItems() {
  *   it is inside, -1 if no match or if the menu isnt
  *   visible
  *
- * @param position
- *   screen position
+ * @param position screen position
  *
  * @return index
  */
-int Menu::isInsideMenuElement(const vec2& position) const {
+int Menu::isInsideMenuElement(const mmm::vec2& position) const {
   if (!isVisible())
     return -1;
 
@@ -395,7 +396,7 @@ bool Menu::setActiveMenuKeyboard(const int key) {
  *
  * @param offset
  */
-void Menu::setOffset(const vec2& offset) {
+void Menu::setOffset(const mmm::vec2& offset) {
   mOffset = offset;
 
   for (unsigned int i = 0; i < mMenuItems.size(); i++)
@@ -428,8 +429,6 @@ const Text* Menu::getActiveMenuItem() const {
 /**
  * @brief
  *   Draws the menu and all its sub elements
- *
- * @param float
  */
 void Menu::draw() {
   if (!isVisible())

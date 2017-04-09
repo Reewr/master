@@ -457,10 +457,9 @@ void Engine::runLoop() {
  *   Refreshes the state by checking the new configuration that might have been
  *   added and sets those.
  *
- * @param isWinRefresh
- *   When true, it means that some changes to the configuration was made so
- *   that a normal refresh isnt good enough. If true, it will unload all
- *   resources before reloading them.
+ * @param refreshType
+ *   The type of refresh. If it is equal to States::WinRefresh, it will
+ *   deinitialize the entire engine before reinitializing it again.
  */
 void Engine::refreshState(int refreshType) {
   deinitialize(refreshType == States::WinRefresh);
@@ -469,6 +468,7 @@ void Engine::refreshState(int refreshType) {
     throw std::runtime_error("Engine failed to refresh!");
   }
 }
+
 /**
  * @brief
  *   Changes the state to a new state specified by `newState`.

@@ -34,11 +34,9 @@ struct SpiderPartContactResultCallback
     return 0;
   }
 
-  bool collided() const {return mHasCollided;}
+  bool collided() const { return mHasCollided; }
 
-  void reset() {
-    mHasCollided = false;
-  }
+  void reset() { mHasCollided = false; }
 
 private:
   bool mHasCollided;
@@ -48,7 +46,10 @@ private:
  * @brief
  *   Returns the Euler angles of a Quaternion
  *
- * @param v
+ * @param x
+ * @param y
+ * @param z
+ * @param w
  *
  * @return
  */
@@ -171,7 +172,7 @@ void Phenotype::update(float deltaTime) {
 
   for (auto& part : spider->parts()) {
 
-    vec3  ang = part.second.part->angularVelocity();
+    vec3 ang = part.second.part->angularVelocity();
     inputs.push_back(ang.x);
     inputs.push_back(ang.y);
     inputs.push_back(ang.z);
@@ -203,9 +204,9 @@ void Phenotype::update(float deltaTime) {
 
       auto currentAngle = part.second.hinge->getHingeAngle();
       auto targetAngle =
-        (part.second.active)
-          ? outputs[i] * 4.f * pi - 2.f * pi + part.second.restAngle
-          : part.second.restAngle;
+        (part.second.active) ?
+          outputs[i] * 4.f * pi - 2.f * pi + part.second.restAngle :
+          part.second.restAngle;
 
       auto velocity = (targetAngle - currentAngle) * 40.0f;
       part.second.hinge->enableAngularMotor(true, velocity, 4.f);
@@ -267,9 +268,9 @@ float Phenotype::finalizeFitness() {
   // if (failed)
   //   return 0.f;
 
-  //const std::map<std::string, Spider::Part>& parts = spider->parts();
-  //int index = 0;
-  //for(const auto& s : Phenotype::FITNESS_HANDLERS) {
+  // const std::map<std::string, Spider::Part>& parts = spider->parts();
+  // int index = 0;
+  // for(const auto& s : Phenotype::FITNESS_HANDLERS) {
   //  s.runFinalize(parts, fitness[index], 1);
   //}
 
@@ -324,11 +325,11 @@ void Phenotype::reset(int speciesId, int individualId) {
     network->Flush();
   }
 
-  failed     = false;
-  duration   = 0;
-  numUpdates = 0;
-  fitness    = mmm::vec<9>(1);
-  speciesIndex = speciesId;
+  failed          = false;
+  duration        = 0;
+  numUpdates      = 0;
+  fitness         = mmm::vec<9>(1);
+  speciesIndex    = speciesId;
   individualIndex = individualId;
 }
 
@@ -344,5 +345,6 @@ std::vector<Fitness> Phenotype::FITNESS_HANDLERS = {
             fitness value, documenting it using the new multiline strings
             in C++11
           )",
-          [](const std::map<std::string, Spider::Part>&, float, float) -> float{})
+          [](const std::map<std::string, Spider::Part>&, float, float)
+            -> float {})
 };

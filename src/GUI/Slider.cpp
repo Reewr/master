@@ -82,7 +82,7 @@ Slider::~Slider() {
  *  The input handler set through this function can also
  *  call the default input handler, if the context is avaible.
  *
- * @param event
+ * @param e
  *
  * @return
  */
@@ -176,8 +176,6 @@ float Slider::value() const {
 /**
  * @brief
  *   Draws the elements
- *
- * @param float
  */
 void Slider::draw() {
   if (!mIsVisible)

@@ -45,7 +45,9 @@ void MeshPart::draw(std::shared_ptr<Program>& program, bool bindTexture) {
  *   mesh, it expects a couple of things. Firstly, it expects most of the
  *   program variables to be set. It will only set the model variable.
  *
- * @param c
+ * @param program
+ * @param offset
+ * @param bindTexture
  */
 void MeshPart::draw(std::shared_ptr<Program>& program,
                     mmm::vec3                 offset,

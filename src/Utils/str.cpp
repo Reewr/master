@@ -1,7 +1,7 @@
 #include "str.hpp"
 #include <algorithm>
-#include <sstream>
 #include <map>
+#include <sstream>
 
 static std::map<unsigned int, std::string> utf8Characters = {};
 
@@ -10,7 +10,7 @@ static std::map<unsigned int, std::string> utf8Characters = {};
  *   Turns the string `s` to lowercase, ie. "aAa" becomes
  *   "aaa".
  *
- * @param s
+ * @param st
  *   The string to lowercase.
  *
  * @return
@@ -27,7 +27,7 @@ std::string str::toLower(const std::string& st) {
  *   Turns the string `s` to uppercase, ie. "aAa" becomes
  *   "AAA".
  *
- * @param s
+ * @param st
  *   The string to upper case.
  *
  * @return
@@ -113,7 +113,8 @@ std::string str::replace(const std::string& s,
 
 /**
  * @brief
- *   Takes two paths and joins them together correctly, handling any double slahes and
+ *   Takes two paths and joins them together correctly, handling any double
+ * slahes and
  *   double dots.
  *
  * @param path1
@@ -126,16 +127,16 @@ std::string str::joinPath(const std::string& path1, const std::string& path2) {
 
   // Handle ..
   std::vector<std::string> folders = str::split(fullPath, '/');
-  std::vector<size_t> dotdots;
+  std::vector<size_t>      dotdots;
 
-  for(size_t i = 0; i < folders.size(); ++i) {
+  for (size_t i = 0; i < folders.size(); ++i) {
     if (folders[i] == "..") {
-      dotdots.push_back(i-1);
+      dotdots.push_back(i - 1);
       dotdots.push_back(i);
     }
   }
 
-  for(auto& i : dotdots) {
+  for (auto& i : dotdots) {
     if (i > 0 && i < folders.size())
       folders[i] = "";
   }
@@ -209,12 +210,12 @@ void str::trim(std::string& s) {
  * @return
  */
 std::vector<std::string> str::split(const std::string& s, char delimiter) {
-  std::stringstream ss;
-  std::string item;
+  std::stringstream        ss;
+  std::string              item;
   std::vector<std::string> items;
   ss.str(s);
 
-  while(std::getline(ss, item, delimiter)) {
+  while (std::getline(ss, item, delimiter)) {
     items.push_back(item);
   }
 
@@ -232,10 +233,10 @@ std::vector<std::string> str::split(const std::string& s, char delimiter) {
  * @return
  */
 std::string str::join(const std::vector<std::string>& s, char delimiter) {
-  std::string ret = "";
-  size_t size = s.size();
+  std::string ret  = "";
+  size_t      size = s.size();
 
-  for(unsigned int i = 0; i < size; ++i) {
+  for (unsigned int i = 0; i < size; ++i) {
     ret += s[i];
 
     if (i + 1 != size) {

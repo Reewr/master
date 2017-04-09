@@ -94,12 +94,12 @@ private:
 
   static GLuint activeProgram;
 
-  std::map<std::string, int> uniLocations;
+  std::map<std::string, int>      uniLocations;
   std::map<Shader::Type, Shader*> mShaders;
 
   GLuint program;
-  bool isLinked;
-  bool isUsable;
+  bool   isLinked;
+  bool   isUsable;
 };
 
 // ----------------------------------------------------------

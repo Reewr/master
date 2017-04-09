@@ -5,11 +5,11 @@
 // We dont want this to happen on build though, so a define is made to make
 // this possible.
 #ifdef USE_OPENGL_RAW_HEADERS_AUTCOMPLETE
-  #define GL_GLEXT_PROTOTYPES
-  #include <GL/gl.h>
-  #include <GL/glext.h>
+#define GL_GLEXT_PROTOTYPES
+#include <GL/gl.h>
+#include <GL/glext.h>
 #else
-  #include <OGL/OGL-3-3.hpp>
+#include <OGL/OGL-3-3.hpp>
 #endif
 
 // OGL must always be first. Add line break so that clang-format doesnt

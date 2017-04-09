@@ -163,12 +163,10 @@ unsigned int Mesh::findMeshByName(const std::string& name) {
 
 /**
  * @brief
- *   Searches through the meshes for a mesh with the given name,
- *   if one is found, a pointer to that mesh is returned.
+ *   Retrieves the mesh of the given index, throwing
+ *   range_error if the index is out of range
  *
- *   If no mesh can be found, it returns a nullptr
- *
- * @param name
+ * @param index
  *
  * @return
  */
@@ -178,7 +176,6 @@ const SubMesh& Mesh::getMeshByIndex(unsigned int index) {
 
   return mSubMeshes[index];
 }
-
 
 /**
  * @brief
@@ -274,6 +271,7 @@ SubMesh::SubMesh()
  * @param manager
  * @param scene
  * @param node
+ * @param transform
  */
 SubMesh::SubMesh(Mesh*            model,
                  ResourceManager* manager,

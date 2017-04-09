@@ -38,7 +38,7 @@ public:
   int isInsideDropItem(const mmm::vec2& position) const;
 
   //! Turns the color of text to yellow.
-  void setMouseOverItem(int i);
+  void setMouseOverItem(const int index);
 
   //! Sets active item based on position
   //! Returns true if something changed

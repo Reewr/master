@@ -12,32 +12,31 @@
 #include "../Utils/CFG.hpp"
 #include "Text.hpp"
 
-using mmm::vec2;
-
 Inputbox::Inputbox(const Rectangle& r, const std::string text)
     : Logging::Log("Inputbox") {
   mTextBox  = new GLRectangle();
   mInputBox = new GLRectangle();
 
-  mInputBoxRect = Rectangle(vec2(mAsset->cfg()->graphics.res.x * 0.50 - 200,
-                                 mAsset->cfg()->graphics.res.y * 0.50 - 25),
-                            vec2(400, 50));
+  mInputBoxRect =
+    Rectangle(mmm::vec2(mAsset->cfg()->graphics.res.x * 0.50 - 200,
+                        mAsset->cfg()->graphics.res.y * 0.50 - 25),
+              mmm::vec2(400, 50));
   mBoundingBox = r;
 
   mText = new Text("Font::Dejavu", text, { 0, 0 }, 15);
   mText->setColor(Text::WHITE);
 
-  vec2 textPos(mBoundingBox.middle().x - mText->box().middle().x,
-               mBoundingBox.middle().y - mText->box().middle().y);
+  mmm::vec2 textPos(mBoundingBox.middle().x - mText->box().middle().x,
+                    mBoundingBox.middle().y - mText->box().middle().y);
 
   mText->setPosition(textPos);
 
   mInputBoxText =
-    new Text("Font::Dejavu", "Please input keybinding", vec2(0, 0), 15);
+    new Text("Font::Dejavu", "Please input keybinding", mmm::vec2(0, 0), 15);
   mInputBoxText->setColor(Text::WHITE);
   textPos =
-    vec2(mInputBoxRect.topleft.x + 200 - mInputBoxText->box().middle().x,
-         mInputBoxRect.topleft.y);
+    mmm::vec2(mInputBoxRect.topleft.x + 200 - mInputBoxText->box().middle().x,
+              mInputBoxRect.topleft.y);
 
   mInputBoxText->setPosition(textPos);
 
@@ -55,7 +54,9 @@ Inputbox::Inputbox(const Rectangle& r, const std::string text)
  *
  *   Syntax:
  *
+ * ```
  *   <inputbox text="Some text" x1="50" y1="50" x2="100" y2="100"/>
+ * ```
  *
  * @param element
  *
@@ -116,11 +117,11 @@ bool Inputbox::changeText(const std::string text, const bool forceChange) {
   if (mText->getText() != text)
     hasChanged(true);
 
-  mText->setPosition(vec2(0, 0));
+  mText->setPosition(mmm::vec2(0, 0));
   mText->setText(text);
   mText->setPosition(
-    vec2(mBoundingBox.middle().x - mText->box().bottomright().x / 2,
-         mBoundingBox.middle().y - mText->box().bottomright().y / 2));
+    mmm::vec2(mBoundingBox.middle().x - mText->box().bottomright().x / 2,
+              mBoundingBox.middle().y - mText->box().bottomright().y / 2));
 
   mInputIsVisible = false;
   return true;
@@ -175,7 +176,7 @@ std::string Inputbox::text() const {
  *
  * @param position
  */
-bool Inputbox::showInputbox(const vec2& position) {
+bool Inputbox::showInputbox(const mmm::vec2& position) {
   mInputIsVisible = isInside(position);
 
   return mInputIsVisible;
@@ -188,7 +189,7 @@ bool Inputbox::showInputbox(const vec2& position) {
  *
  * @param offset
  */
-void Inputbox::setOffset(const vec2& offset) {
+void Inputbox::setOffset(const mmm::vec2& offset) {
   mOffset = offset;
   mText->setOffset(offset);
   mInputBoxText->setOffset(offset);
@@ -197,8 +198,6 @@ void Inputbox::setOffset(const vec2& offset) {
 /**
  * @brief
  *   Draws the input box and the other sub elements
- *
- * @param float
  */
 void Inputbox::draw() {
   mGUIProgram->bind();

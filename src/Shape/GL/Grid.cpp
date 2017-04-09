@@ -6,16 +6,13 @@
 #include "../../OpenGLHeaders.hpp"
 #include "../../Utils/Utils.hpp"
 
-using mmm::vec2;
-using mmm::vec4;
-
 GLGrid::GLGrid() {
   IBO = 0;
   VBO = 0;
   VAO = 0;
 }
 
-GLGrid::GLGrid(const vec2& size) {
+GLGrid::GLGrid(const mmm::vec2& size) {
   IBO = 0;
   VBO = 0;
   VAO = 0;
@@ -28,14 +25,14 @@ GLGrid::~GLGrid() {
   glDeleteVertexArrays(1, &VAO);
 }
 
-void GLGrid::change(const vec2& size) {
+void GLGrid::change(const mmm::vec2& size) {
   mSize = size;
   setup();
 }
 
 void GLGrid::setup() {
-  std::vector<vec4> vertices;
-  std::vector<int>  indices;
+  std::vector<mmm::vec4> vertices;
+  std::vector<int>       indices;
   vertices.reserve(mSize.x * mSize.y);
   indices.reserve((mSize.y - 1) * (mSize.x * 2) + (mSize.y - 1));
   // indices.reserve((size.y-1)*(size.x-1)*6);
@@ -44,8 +41,8 @@ void GLGrid::setup() {
   setupOpenGLArrays(vertices, indices);
 }
 
-void GLGrid::setupOpenGLArrays(const std::vector<vec4>& vertex,
-                               const std::vector<int>&  ind) {
+void GLGrid::setupOpenGLArrays(const std::vector<mmm::vec4>& vertex,
+                               const std::vector<int>&       ind) {
   glGenBuffers(1, &VBO);
   glGenBuffers(1, &IBO);
   glGenVertexArrays(1, &VAO);
@@ -53,7 +50,7 @@ void GLGrid::setupOpenGLArrays(const std::vector<vec4>& vertex,
   glBindVertexArray(VAO);
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
   glBufferData(GL_ARRAY_BUFFER,
-               sizeof(vec4) * vertex.size(),
+               sizeof(mmm::vec4) * vertex.size(),
                &vertex[0],
                GL_STATIC_DRAW);
 
@@ -68,12 +65,12 @@ void GLGrid::setupOpenGLArrays(const std::vector<vec4>& vertex,
   glBindVertexArray(0);
 }
 
-void GLGrid::generateVertices(std::vector<vec4>& vertices) {
+void GLGrid::generateVertices(std::vector<mmm::vec4>& vertices) {
   for (int y = 0; y < mSize.y; y++) {
-    vec2 s = vec2(0, y / (mSize.y - 1));
+    mmm::vec2 s = mmm::vec2(0, y / (mSize.y - 1));
     for (int x = 0; x < mSize.x; x++) {
       s.x = x / (mSize.x - 1);
-      vertices.push_back(vec4(s - 0.5f, s));
+      vertices.push_back(mmm::vec4(s - 0.5f, s));
     }
   }
 }

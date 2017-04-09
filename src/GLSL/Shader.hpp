@@ -35,31 +35,31 @@ public:
   //! Default Constructor
   Shader();
 
-  // Constructor with path to file, calls loadShader()
-  // It will use the type given if it is not None. If it is None, it will
-  // retrieve the type from the filename. Valid file-extensions are:
-  //
-  // - ".fs" for Fragment Shader
-  // - ".vs" for Vertex Shader
-  // - ".gs" for Geometry Shader
-  // - ".ts" for Tesselation Control Shader
-  // - ".es" for Tesselation Evaluation Shader
-  // - ".cs" for Compute Shader
+  //! Constructor with path to file, calls loadShader()
+  //! It will use the type given if it is not None. If it is None, it will
+  //! retrieve the type from the filename. Valid file-extensions are:
+  //!
+  //! - ".fs" for Fragment Shader
+  //! - ".vs" for Vertex Shader
+  //! - ".gs" for Geometry Shader
+  //! - ".ts" for Tesselation Control Shader
+  //! - ".es" for Tesselation Evaluation Shader
+  //! - ".cs" for Compute Shader
   Shader(const std::string& filename, Type type = Type::None);
 
   //! Deconstructor that deletes the GLSL-Shader if in memory
   ~Shader();
 
-  // Loads shader from file.
-  // It will use the type given if it is not None. If it is None, it will
-  // retrieve the type from the filename. Valid file-extensions are:
-  //
-  // - ".fs" for Fragment Shader
-  // - ".vs" for Vertex Shader
-  // - ".gs" for Geometry Shader
-  // - ".ts" for Tesselation Control Shader
-  // - ".es" for Tesselation Evaluation Shader
-  // - ".cs" for Compute Shader
+  //! Loads shader from file.
+  //! It will use the type given if it is not None. If it is None, it will
+  //! retrieve the type from the filename. Valid file-extensions are:
+  //!
+  //! - ".fs" for Fragment Shader
+  //! - ".vs" for Vertex Shader
+  //! - ".gs" for Geometry Shader
+  //! - ".ts" for Tesselation Control Shader
+  //! - ".es" for Tesselation Evaluation Shader
+  //! - ".cs" for Compute Shader
   GLuint loadShader(const std::string& filename, Type type = Type::None);
 
   const Details& details() const;

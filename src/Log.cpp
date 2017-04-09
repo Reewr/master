@@ -4,8 +4,15 @@
 
 #include "Utils/Utils.hpp"
 
-unsigned int                    Logging::loggerNameSize = 10;
-std::shared_ptr<spdlog::logger> Logging::GLOBAL_LOGGER  = nullptr;
+//! Sets the maximum length of a logger name. When things are logged,
+//! the names of the logger gets padded to a certain length, this is
+//! that length.
+unsigned int Logging::loggerNameSize = 10;
+
+//! Since not all functions that needs to log are within a class that
+//! can inherit from the logger, there also exists a global logger
+//! stored here.
+std::shared_ptr<spdlog::logger> Logging::GLOBAL_LOGGER = nullptr;
 
 Logging::Formatter::Formatter() {}
 

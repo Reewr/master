@@ -22,8 +22,8 @@ Fitness::Fitness(const std::string& name,
  * @return
  */
 float Fitness::runCalculation(const std::map<std::string, Spider::Part>& s,
-                              float               fitness,
-                              float               deltaValue) const {
+                              float fitness,
+                              float deltaValue) const {
   if (mContinuousCalculation)
     return mContinuousCalculation(s, fitness, deltaValue);
   return fitness;
@@ -44,8 +44,8 @@ float Fitness::runCalculation(const std::map<std::string, Spider::Part>& s,
  * @return
  */
 float Fitness::runFinalize(const std::map<std::string, Spider::Part>& s,
-                           float               fitness,
-                           float               deltaValue) const {
+                           float fitness,
+                           float deltaValue) const {
   if (mFinalize)
     return mFinalize(s, fitness, deltaValue);
   return fitness;

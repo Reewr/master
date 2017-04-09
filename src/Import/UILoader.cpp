@@ -3,12 +3,19 @@
 #include "../GUI/Menu.hpp"
 #include "../GUI/Window.hpp"
 
-using mmm::vec2;
-
 Import::UILoader::UILoader() {
   errorID = 0;
 }
 
+/**
+ * @brief
+ *   Loads an XML file into memory, throwing a runtime_error
+ *   if it fails to load the file.
+ *
+ * @param filepath
+ *
+ * @return
+ */
 bool Import::UILoader::loadXML(std::string filepath) {
   xml.LoadFile(filepath.c_str());
   errorID = xml.ErrorID();
@@ -21,6 +28,17 @@ bool Import::UILoader::loadXML(std::string filepath) {
   return true;
 }
 
+/**
+ * @brief
+ *   Loads XML settings from an XML file, choosing
+ *   a specific setting and applying them to the window given.
+ *
+ * @param filepath
+ * @param settings
+ * @param win
+ *
+ * @return
+ */
 bool Import::UILoader::loadXMLSettings(std::string filepath,
                                        std::string settings,
                                        Window*     win) {
@@ -53,7 +71,7 @@ void Import::UILoader::getAttrib(tinyxml2::XMLElement* e,
 void Import::UILoader::getAttrib(tinyxml2::XMLElement* e,
                                  const char*           a,
                                  const char*           b,
-                                 vec2&                 v) {
+                                 mmm::vec2&            v) {
   getAttrib(e, a, &v.x);
   getAttrib(e, b, &v.y);
 }
@@ -106,7 +124,7 @@ void Import::UILoader::handleWindowElement(tinyxml2::XMLElement* winElem,
 
   for (; menuElem != NULL; menuElem = menuElem->NextSiblingElement()) {
     Menu::MenuSettings ms;
-    vec2               pos;
+    mmm::vec2          pos;
     std::string        winName  = std::string(winElem->Attribute("name"));
     std::string        menuName = std::string(menuElem->Attribute("name"));
     getAttrib(menuElem, "size", &ms.size);
@@ -130,7 +148,7 @@ void Import::UILoader::handleMenuElement(tinyxml2::XMLElement* elem,
   tinyxml2::XMLElement* itemElem = elem->FirstChildElement();
   for (; itemElem != NULL; itemElem = itemElem->NextSiblingElement()) {
     Menu::MenuSettings ms;
-    vec2               pos;
+    mmm::vec2          pos;
     std::string        mName =
       std::string(itemElem->Parent()->ToElement()->Attribute("name"));
     std::string text = std::string(itemElem->Attribute("name"));
@@ -159,7 +177,7 @@ void Import::UILoader::handleMenuItemElement(tinyxml2::XMLElement* elem,
 
 void Import::UILoader::handleDropdownElement(tinyxml2::XMLElement* e,
                                              Window*               w) {
-  vec2                     pos;
+  mmm::vec2                pos;
   std::vector<std::string> opts;
   std::string              name = std::string(e->Attribute("name"));
   getAttrib(e, "x", "y", pos);
@@ -171,7 +189,7 @@ void Import::UILoader::handleDropdownElement(tinyxml2::XMLElement* e,
 
 void Import::UILoader::handleSliderElement(tinyxml2::XMLElement* e, Window* w) {
   std::string name = std::string(e->Attribute("name"));
-  vec2        pos;
+  mmm::vec2   pos;
   float       scale = 0.25;
   getAttrib(e, "x", "y", pos);
   getAttrib(e, "scale", &scale);
@@ -181,7 +199,7 @@ void Import::UILoader::handleSliderElement(tinyxml2::XMLElement* e, Window* w) {
 void Import::UILoader::handleCheckboxElement(tinyxml2::XMLElement* e,
                                              Window*               w) {
   std::string name = std::string(e->Attribute("name"));
-  vec2        pos;
+  mmm::vec2   pos;
   getAttrib(e, "x", "y", pos);
   w->addCheckbox(name, pos);
 }

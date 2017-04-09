@@ -296,7 +296,7 @@ namespace Input {
   /**
    * @brief
    *   Initializes the entire key set.
-   *   @TODO
+   *   \todo
    *     this should possibly be moved to the states,
    *     or the engine if the given options are global
    */

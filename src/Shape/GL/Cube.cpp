@@ -2,10 +2,10 @@
 
 #include "../../Utils/Utils.hpp"
 
-int GLCube::mCubeCounter = 0;
-GLuint GLCube::mIBO = 0;
-GLuint GLCube::mVBO = 0;
-GLuint GLCube::mVAO = 0;
+int    GLCube::mCubeCounter = 0;
+GLuint GLCube::mIBO         = 0;
+GLuint GLCube::mVBO         = 0;
+GLuint GLCube::mVAO         = 0;
 
 GLCube::GLCube() {
   if (mCubeCounter == 0)

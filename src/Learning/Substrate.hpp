@@ -1,8 +1,8 @@
 #pragma once
 
 #include <Substrate.h>
-#include <vector>
 #include <string>
+#include <vector>
 
 #include "../Utils/str.hpp"
 
@@ -21,7 +21,7 @@
 class Substrate : public NEAT::Substrate {
 public:
   typedef std::vector<std::vector<double>> Double2D;
-  typedef std::vector<std::vector<int>> Int2D;
+  typedef std::vector<std::vector<int>>    Int2D;
 
   Substrate();
   Substrate(Double2D& inputs, Double2D& hidden, Double2D& ouputs);
@@ -34,17 +34,17 @@ public:
 
 private:
   // Converts a generic value to string
-  template<typename T>
+  template <typename T>
   std::string saveValue(const std::string& name, T val);
 
   // Converts a 2D array of a generic value to string.
   // Currently only supports float, double and int
-  template<typename T>
+  template <typename T>
   std::string saveValue(const std::string& name, std::vector<std::vector<T>>&);
 
   // Loads a generic 2D array from a given string value,
   // Currently only supports float, double and int
-  template<typename T>
+  template <typename T>
   std::vector<std::vector<T>> loadArrayValue(const std::string& value);
 
   // Loads a generic value from string
@@ -58,7 +58,7 @@ private:
 // Below follow template definitons of saveValue
 // --------------------------------------------
 
-template<typename T>
+template <typename T>
 std::string Substrate::saveValue(const std::string& name, T val) {
   return name + " " + std::to_string(val);
 }
@@ -77,15 +77,15 @@ std::string Substrate::saveValue(const std::string& name, T val) {
  *
  * @return
  */
-template<typename T>
-std::string Substrate::saveValue(const std::string& name,
+template <typename T>
+std::string Substrate::saveValue(const std::string&           name,
                                  std::vector<std::vector<T>>& d) {
   std::string final = name + " [";
 
   for (auto& vec : d) {
     final += "[";
 
-    for(unsigned int i = 0; i < vec.size(); i++) {
+    for (unsigned int i = 0; i < vec.size(); i++) {
       if (i + 1 == vec.size())
         final += std::to_string(vec[i]);
       else
@@ -111,11 +111,12 @@ std::string Substrate::saveValue(const std::string& name,
  *
  * @return
  */
-template<typename T>
-std::vector<std::vector<T>> Substrate::loadArrayValue(const std::string& value) {
-  std::string val = value;
-  size_t firstSquare = val.find_first_of("[");
-  size_t lastSquare  = val.find_last_of("]");
+template <typename T>
+std::vector<std::vector<T>>
+Substrate::loadArrayValue(const std::string& value) {
+  std::string val         = value;
+  size_t      firstSquare = val.find_first_of("[");
+  size_t      lastSquare  = val.find_last_of("]");
 
   if (firstSquare == std::string::npos || lastSquare == std::string::npos) {
     throw std::runtime_error("Invalid format");
@@ -124,12 +125,12 @@ std::vector<std::vector<T>> Substrate::loadArrayValue(const std::string& value) 
   val = val.substr(firstSquare + 1, firstSquare + lastSquare - 1);
 
   if (val.find_first_of("1234567890") == std::string::npos) {
-    return {{}};
+    return { {} };
   }
 
   std::vector<std::string> arrays;
-  size_t startBrace = val.find_first_of("[");
-  size_t endBrace   = val.find_first_of("]");
+  size_t                   startBrace = val.find_first_of("[");
+  size_t                   endBrace   = val.find_first_of("]");
   while (startBrace != std::string::npos && endBrace != std::string::npos) {
     std::string item = val.substr(startBrace + 1, startBrace + endBrace - 1);
 
@@ -137,16 +138,16 @@ std::vector<std::vector<T>> Substrate::loadArrayValue(const std::string& value) 
       arrays.push_back(item);
     }
 
-    val = val.substr(startBrace + endBrace);
+    val        = val.substr(startBrace + endBrace);
     startBrace = val.find_first_of("[");
     endBrace   = val.find_first_of("]");
   }
 
   std::vector<std::vector<T>> values;
 
-  for(auto& s : arrays) {
+  for (auto& s : arrays) {
     std::vector<T> numbers;
-    for(auto& d : str::split(s, ',')) {
+    for (auto& d : str::split(s, ',')) {
       if (std::is_same<int, T>())
         numbers.push_back(std::stoi(d));
       else

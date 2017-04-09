@@ -341,15 +341,15 @@ vec3 Camera::screenPointToRay(const vec2& mp) {
  *   Takes a 3D position and returns the equivalent 2D position
  *   on the screen
  *
- * @param mousePosition
+ * @param position
  *
  * @return
  */
 vec3 Camera::project(const vec3& position) {
   vec4 tmp      = vec4(position, 1.0);
   vec4 viewport = vec4(0, 0, mAsset->cfg()->graphics.res);
-  tmp = mModel * tmp;
-  tmp = mProjection * tmp;
+  tmp           = mModel * tmp;
+  tmp           = mProjection * tmp;
 
   tmp /= tmp.w;
   tmp = tmp * 0.5f + 0.5f;

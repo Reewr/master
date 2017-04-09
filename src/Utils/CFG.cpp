@@ -10,8 +10,6 @@
 #include "Utils.hpp"
 #include "str.hpp"
 
-using mmm::vec2;
-
 ActB::ActB(int k1, int k2) {
   key1 = k1;
   key2 = k2;
@@ -75,7 +73,7 @@ CFG::Wrapper::Wrapper(float& f) {
   show   = [&f]() { return std::to_string(f); };
   asType = [&f]() { return std::to_string(f); };
 }
-CFG::Wrapper::Wrapper(vec2& v) : args(2) {
+CFG::Wrapper::Wrapper(mmm::vec2& v) : args(2) {
   valid_params = " number number";
 
   parse = [&v](const Prop& p, const Params& ps) {

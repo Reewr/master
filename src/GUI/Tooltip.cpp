@@ -8,12 +8,10 @@
 #include "../Utils/CFG.hpp"
 #include "Text.hpp"
 
-using mmm::vec2;
-
 Tooltip::Tooltip() : Logging::Log("Tooltip") {
   mCFG         = mAsset->cfg();
   mBoundingBox = Rectangle(0, 0, 100, 60);
-  mOffset      = vec2(0, 0);
+  mOffset      = mmm::vec2(0, 0);
   mBackground  = new GLRectangle(mBoundingBox);
   mActiveText  = new Text("Font::Dejavu",
                          "",
@@ -34,11 +32,11 @@ Tooltip::Tooltip() : Logging::Log("Tooltip") {
  * @param text
  * @param pos
  */
-void Tooltip::show(std::string text, const vec2& pos) {
+void Tooltip::show(std::string text, const mmm::vec2& pos) {
   if (text == "")
     return;
 
-  vec2 newPos = pos;
+  mmm::vec2 newPos = pos;
 
   int resX      = mCFG->graphics.res.x;
   int resY      = mCFG->graphics.res.y;
@@ -67,7 +65,7 @@ void Tooltip::show(std::string text, const vec2& pos) {
  *
  * @param offset
  */
-void Tooltip::setOffset(const vec2& offset) {
+void Tooltip::setOffset(const mmm::vec2& offset) {
   mOffset = offset;
   mActiveText->setOffset(offset);
 }
@@ -75,8 +73,6 @@ void Tooltip::setOffset(const vec2& offset) {
 /**
  * @brief
  *   Draws the elements
- *
- * @param float
  */
 void Tooltip::draw() {
   mGUIProgram->bind();

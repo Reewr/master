@@ -501,14 +501,6 @@ void Console::deleteWord(int whichKey) {
   }
 }
 
-/**
- * @brief
- *   Updates the console. This only does one thing
- *   at the moment which is count down the time
- *   it should display the error, if it is displayed
- *
- * @param deltaTime
- */
 void Console::update(float) {}
 
 /**

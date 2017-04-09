@@ -13,8 +13,7 @@ public:
   void draw();
 
 private:
-
-  static int mCubeCounter;
+  static int    mCubeCounter;
   static GLuint mIBO;
   static GLuint mVBO;
   static GLuint mVAO;

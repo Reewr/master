@@ -18,15 +18,15 @@ class Sphere : public Drawable3D, public Logging::Log {
 public:
   // Creates a sphere of a specific size in meters.
   // The position is where the box will start at
-  Sphere(const mmm::vec3& position,
-         float radius = 1,
+  Sphere(const mmm::vec3&         position,
+         float                    radius  = 1,
          std::shared_ptr<Texture> texture = nullptr,
-         bool outline = false);
+         bool                     outline = false);
 
   Sphere(const mmm::vec3& position,
-         float radius,
-         mmm::vec4 color,
-         bool outline = false);
+         float            radius,
+         mmm::vec4        color,
+         bool             outline = false);
   ~Sphere();
 
   // Update the element, physics etc
@@ -45,6 +45,6 @@ public:
 private:
   GLSphere*                mSphere;
   std::shared_ptr<Texture> mTexture;
-  mmm::vec4 mColor;
-  bool mUsesColor;
+  mmm::vec4                mColor;
+  bool                     mUsesColor;
 };

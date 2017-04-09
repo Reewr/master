@@ -13,12 +13,11 @@ public:
   void draw();
 
 private:
-
   Vertex genVertex(float u, float v);
 
-  bool mOutline;
-  static int mSphereCounter;
-  static int mNumQuads;
+  bool          mOutline;
+  static int    mSphereCounter;
+  static int    mNumQuads;
   static GLuint mIBO;
   static GLuint mVBO;
   static GLuint mVAO;

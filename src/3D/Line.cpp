@@ -7,20 +7,17 @@
 #include "../Shape/GL/Line.hpp"
 #include "../Utils/Asset.hpp"
 
-using mmm::vec2;
-using mmm::vec3;
-
 Line::Line(const mmm::vec3& start, const mmm::vec3& end, const mmm::vec4& color)
-    : Logging::Log("Line") , mLine(new GLLine()){
+    : Logging::Log("Line"), mLine(new GLLine()) {
   mTexture = nullptr;
-  mColor = color;
+  mColor   = color;
 
   mUsesColor = color.x != -1;
 
-  vec3 diffS = vec3(0,0,0) - start;
-  vec3 diffE = vec3(1,0,0) - end;
+  mmm::vec3 diffS = mmm::vec3(0, 0, 0) - start;
+  mmm::vec3 diffE = mmm::vec3(1, 0, 0) - end;
   // find needed rotation and scale to match start and end point
-  vec3 scale = diffE - diffS;
+  mmm::vec3 scale = diffE - diffS;
   if (scale.x == 0) {
     scale.x = 1;
   }
@@ -32,7 +29,7 @@ Line::Line(const mmm::vec3& start, const mmm::vec3& end, const mmm::vec4& color)
     scale.z = 1;
   }
 
-  mPosition = vec3(start + end) / 2.0;
+  mPosition = mmm::vec3(start + end) / 2.0;
   mScale    = mmm::scale(mmm::abs(scale));
 }
 
@@ -42,8 +39,6 @@ Line::~Line() {}
  * @brief
  *   The update handler is reversed for things that do not have
  *   anything to do with drawing but should be updated every loop.
- *
- * @param float
  */
 void Line::update(float) {}
 
@@ -52,7 +47,8 @@ void Line::update(float) {}
  *   Draw the cube by binding the program and setting the required
  *   uniforms.
  *
- * @param c
+ * @param program
+ * @param bindTexture
  */
 void Line::draw(std::shared_ptr<Program>& program, bool bindTexture) {
   draw(program, mmm::vec3(0), bindTexture);
@@ -63,7 +59,9 @@ void Line::draw(std::shared_ptr<Program>& program, bool bindTexture) {
  *   Draw the cube by binding the program and setting the required
  *   uniforms.
  *
- * @param c
+ * @param program
+ * @param offset
+ * @param bindTexture
  */
 void Line::draw(std::shared_ptr<Program>& program,
                 mmm::vec3                 offset,

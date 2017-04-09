@@ -1,9 +1,9 @@
 #include "Utils.hpp"
 #include "../GlobalLog.hpp"
 
+#include <assert.h>
 #include <chrono>
 #include <ctime>
-#include <assert.h>
 
 #include "../OpenGLHeaders.hpp"
 

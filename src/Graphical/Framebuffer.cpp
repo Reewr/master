@@ -14,13 +14,9 @@ CFG*        Framebuffer::cfg   = NULL;
 std::string Framebuffer::ssLoc = "";
 int         Framebuffer::numSS = 0;
 
-using mmm::vec2;
-
 Framebuffer::Framebuffer()
     : Logging::Log("Framebuffer")
     , mIsDepth(false)
-    // , mIsOwnProgram(false)
-    // , mNeedsDrawing(false)
     , mIsBound(false)
     , mFrameSize(0, 0)
     , mQuad(nullptr)
@@ -33,8 +29,6 @@ Framebuffer::Framebuffer(std::shared_ptr<Program> program,
                          bool                     depth)
     : Logging::Log("Framebuffer")
     , mIsDepth(depth)
-    // , mIsOwnProgram(false)
-    // , mNeedsDrawing(false)
     , mIsBound(false)
     , mFrameSize(size)
     , mQuad(nullptr)
@@ -64,7 +58,7 @@ Framebuffer::~Framebuffer() {
  */
 void Framebuffer::setup() {
   mTexture = new Texture();
-  mQuad    = new GLRectangle(vec2(), mFrameSize);
+  mQuad    = new GLRectangle(mmm::vec2(), mFrameSize);
 
   GLenum type          = mIsDepth ? GL_DEPTH_COMPONENT : GL_RGBA32F;
   GLenum buffer        = mIsDepth ? GL_NONE : GL_COLOR_ATTACHMENT0;
@@ -130,26 +124,12 @@ GLRectangle* Framebuffer::quad() {
   return mQuad;
 }
 
-///**
-// * @brief
-// *   Readies the Framebuffer for drawing by setting
-// *   the position and figuring out how much of the texture
-// *   to draw.
-// *
-// *   This does not bind the texture
-// *
-// * @param position
-// */
-// void Framebuffer::activateDraw(const vec2& position) {
+// void Framebuffer::activateDraw(const mmm::vec2& position) {
 //  failCheck();
 //  mTexture->recalculateGeometry(Rectangle(position, mFrameSize));
 //  mNeedsDrawing = true;
 //}
 //
-///**
-// * @brief
-// *   Binds the drawing program and draws the texture
-// */
 // void Framebuffer::draw() {
 //  failCheck();
 //  if (!mNeedsDrawing)
@@ -238,7 +218,7 @@ void Framebuffer::nonClearBind(bool bindProgram) {
  *   boolean telling it whether to bind the stored program,
  *   this function takes a program that it should bind
  *
- * @param bindProgram
+ * @param program
  */
 void Framebuffer::nonClearBind(std::shared_ptr<Program> program) {
   if (program == nullptr)
@@ -397,8 +377,8 @@ std::vector<float> Framebuffer::getPixels(const Rectangle& r, GLenum type) {
   return data;
 }
 
-float Framebuffer::getPixel(const vec2& pos, GLenum type) {
-  return getPixels(Rectangle(pos, vec2(1, 1)), type)[0];
+float Framebuffer::getPixel(const mmm::vec2& pos, GLenum type) {
+  return getPixels(Rectangle(pos, mmm::vec2(1, 1)), type)[0];
 }
 
 void Framebuffer::printPixels(const Rectangle& r,
@@ -458,8 +438,8 @@ void Framebuffer::init(CFG* c, std::string screenshotLoc) {
  *   - `Y` is the resolution in the Y axis
  */
 void Framebuffer::takeScreenshot() {
-  int  i   = 0;
-  vec2 res = cfg->graphics.res;
+  int       i   = 0;
+  mmm::vec2 res = cfg->graphics.res;
 
   std::string filename = "";
   std::string endStr =

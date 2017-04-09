@@ -10,13 +10,11 @@
 #include "../Utils/Asset.hpp"
 #include "Text.hpp"
 
-using mmm::vec2;
-
-Checkbox::Checkbox(const vec2& pos)
+Checkbox::Checkbox(const mmm::vec2& pos)
     : Logging::Log("Checkbox"), mIsTicked(false) {
-  mBoundingBox = Rectangle(pos, vec2(21, 21));
+  mBoundingBox = Rectangle(pos, mmm::vec2(21, 21));
   mSquare      = new GLRectangle();
-  mTick        = new Text("Font::Dejavu", "", vec2(pos.x, pos.y - 3), 20);
+  mTick        = new Text("Font::Dejavu", "", mmm::vec2(pos.x, pos.y - 3), 20);
 
   mTick->setColor(Text::WHITE);
   mSquare->setTexture(mAsset->rManager()->get<Texture>("Texture::Checkbox"));
@@ -27,6 +25,7 @@ Checkbox::Checkbox(const vec2& pos)
  * @brief
  *   This loads the checkbox from XML. The syntax for the xml is:
  *
+ * ```
  *   <checkbox x="50" y="20"/>
  *
  *   It can also be within menues:
@@ -36,6 +35,7 @@ Checkbox::Checkbox(const vec2& pos)
  *       <checkbox x="50" y="20"/>
  *     </item>
  *   </guimenu>
+ * ```
  *
  * @param element
  *
@@ -43,7 +43,7 @@ Checkbox::Checkbox(const vec2& pos)
  */
 Checkbox* Checkbox::fromXML(tinyxml2::XMLElement* element) {
 
-  vec2 position;
+  mmm::vec2 position;
 
   if (element->QueryFloatAttribute("x", &position.x) != 0) {
     throw std::runtime_error("XMLElement has no float attribute 'x'");
@@ -70,7 +70,7 @@ Checkbox::~Checkbox() {
  * @param position
  *   screen position
  */
-bool Checkbox::setSelected(const vec2& position) {
+bool Checkbox::setSelected(const mmm::vec2& position) {
   bool inside = isInside(position);
 
   if (inside) {
@@ -88,7 +88,7 @@ bool Checkbox::setSelected(const vec2& position) {
  *
  * @param offset
  */
-void Checkbox::setOffset(const vec2& offset) {
+void Checkbox::setOffset(const mmm::vec2& offset) {
   mOffset = offset;
   mTick->setOffset(offset);
 }
@@ -118,8 +118,6 @@ void Checkbox::defaultInputHandler(const Input::Event& event) {
 /**
  * @brief
  *   Draws the checkbox and all its elements
- *
- * @param float
  */
 void Checkbox::draw() {
   mGUIProgram->bind();

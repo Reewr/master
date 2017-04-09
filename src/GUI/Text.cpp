@@ -14,10 +14,6 @@
 #include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
 
-using mmm::vec2;
-using mmm::vec3;
-using mmm::vec4;
-
 enum ColorState {
   START,
   ESCAPED,
@@ -69,7 +65,7 @@ enum ColorState {
  */
 void parseColor(const std::string&           parsing,
                 std::string::const_iterator& current,
-                vec4&                        color,
+                mmm::vec4&                   color,
                 char                         sep) {
   std::vector<std::string> colorStrs  = { "", "", "", "" };
   int                      colorCount = 0;
@@ -117,10 +113,10 @@ void parseColor(const std::string&           parsing,
 
 Text::Text(const std::string& font,
            const std::string& text,
-           const vec2&        position,
+           const mmm::vec2&   position,
            int                size,
            int                color,
-           const vec2&        limit)
+           const mmm::vec2&   limit)
     : Logging::Log("Text")
     , mNumVertices(0)
     , mCharacterSize(size)
@@ -136,7 +132,7 @@ Text::Text(const std::string& font,
   mTextFont    = mAsset->rManager()->get<Font>(font);
   mFontProgram = mAsset->rManager()->get<Program>("Program::Font");
   mIsLimitOn   = limit.x != 0 || limit.y != 0;
-  mColor       = { vec3(), vec3(), 0, 0 };
+  mColor       = { mmm::vec3(), mmm::vec3(), 0, 0 };
 
   // try to load text colors from the text, if it fails, ignore
   // it and use default colors
@@ -149,7 +145,8 @@ Text::Text(const std::string& font,
         break;
       }
   } catch (const std::runtime_error& r) {
-    mFormattedText = { { { vec4(1, 1, 1, 1), vec4(0, 0, 0, 0) }, mText } };
+    mFormattedText = { { { mmm::vec4(1, 1, 1, 1), mmm::vec4(0, 0, 0, 0) },
+                         mText } };
   }
 
   mBoundingBox.topleft = position;
@@ -192,7 +189,7 @@ void Text::setStyle(int style) {
  *
  * @param limit
  */
-void Text::setLimit(const vec2& limit) {
+void Text::setLimit(const mmm::vec2& limit) {
   mLimit     = limit;
   mIsLimitOn = limit.x != 0 && limit.y != 0;
   recalculateGeometry();
@@ -218,7 +215,8 @@ void Text::setText(const std::string& text) {
         break;
       }
   } catch (const std::runtime_error& r) {
-    mFormattedText = { { { vec4(1, 1, 1, 1), vec4(0, 0, 0, 0) }, mText } };
+    mFormattedText = { { { mmm::vec4(1, 1, 1, 1), mmm::vec4(0, 0, 0, 0) },
+                         mText } };
   }
   recalculateGeometry();
 }
@@ -244,7 +242,7 @@ void Text::setTextSize(int charSize) {
  *
  * @param position
  */
-void Text::setPosition(const vec2& position) {
+void Text::setPosition(const mmm::vec2& position) {
   mBoundingBox.topleft = position;
   recalculateGeometry();
 }
@@ -318,22 +316,19 @@ int Text::getCharSize() {
  * @param s
  *   The string to parse
  *
- * @param defaultForeground
- *   You guessed it. Default foreground color.
- *
- * @param defaultBackground
- *   Can you guess this too?
+ * @param defaultForeground You guessed it. Default foreground color.
+ * @param defaultBackground Can you guess this too?
  */
 std::vector<Text::TextBlock> Text::parseString(const std::string& s,
-                                               vec4 defaultForeground,
-                                               vec4 defaultBackround) {
+                                               mmm::vec4 defaultForeground,
+                                               mmm::vec4 defaultBackground) {
   std::stack<ConsoleColor>     st;
   std::vector<Text::TextBlock> colors = {};
-  Text::TextBlock current = { { defaultForeground, defaultBackround }, "" };
+  Text::TextBlock current = { { defaultForeground, defaultBackground }, "" };
   int             state   = 0;
   char            lastChar;
 
-  st.push({ defaultForeground, defaultBackround });
+  st.push({ defaultForeground, defaultBackground });
 
   for (auto c = s.begin(); c != s.end(); ++c) {
     switch (state) {
@@ -440,29 +435,29 @@ void Text::setColor(int color) {
   if (color == mColor.currentEnumColor)
     return;
 
-  vec3 newColor;
+  mmm::vec3 newColor;
 
   switch (color) {
     case BLACK:
-      newColor = vec3(0.0, 0.0, 0.0);
+      newColor = mmm::vec3(0.0, 0.0, 0.0);
       break;
     case WHITE:
-      newColor = vec3(1.0, 1.0, 1.0);
+      newColor = mmm::vec3(1.0, 1.0, 1.0);
       break;
     case RED:
-      newColor = vec3(1.0, 0.0, 0.0);
+      newColor = mmm::vec3(1.0, 0.0, 0.0);
       break;
     case GREEN:
-      newColor = vec3(0.0, 1.0, 0.0);
+      newColor = mmm::vec3(0.0, 1.0, 0.0);
       break;
     case BLUE:
-      newColor = vec3(0.0, 0.0, 1.0);
+      newColor = mmm::vec3(0.0, 0.0, 1.0);
       break;
     case YELLOW:
-      newColor = vec3(1.0, 1.0, 0.0);
+      newColor = mmm::vec3(1.0, 1.0, 0.0);
       break;
     default:
-      newColor = vec3(1.0, 1.0, 1.0);
+      newColor = mmm::vec3(1.0, 1.0, 1.0);
       break;
   }
 
@@ -495,8 +490,8 @@ void Text::setColor(const mmm::vec3& color) {
  *   Or when the text is being highlighted due to mouse movements.
  */
 void Text::setPrevColor() {
-  int  icur               = mColor.currentEnumColor;
-  vec3 vcur               = mColor.current;
+  int       icur          = mColor.currentEnumColor;
+  mmm::vec3 vcur          = mColor.current;
   mColor.current          = mColor.previous;
   mColor.currentEnumColor = mColor.prevEnumColor;
   mColor.prevEnumColor    = icur;
@@ -516,18 +511,18 @@ void Text::recalculateGeometry() {
   std::vector<mmm::vec<8>> coordinates;
   std::vector<mmm::vec<8>> bkCords;
 
-  float      scale   = 1;
-  const vec2 texSize = mTextFont->getTexture(mCharacterSize)->getSize();
-  const vec2 metrics = mTextFont->getMetrics(mCharacterSize);
-  vec2       tempPos = mBoundingBox.topleft + vec2(0, mCharacterSize);
-  vec2       size    = vec2();
+  float           scale   = 1;
+  const mmm::vec2 texSize = mTextFont->getTexture(mCharacterSize)->getSize();
+  const mmm::vec2 metrics = mTextFont->getMetrics(mCharacterSize);
+  mmm::vec2       tempPos = mBoundingBox.topleft + mmm::vec2(0, mCharacterSize);
+  mmm::vec2       size    = mmm::vec2();
 
   // Go through each text block, creating the quads
   // needed to render the text, together with the color of the quads
   for (auto textBlock : mFormattedText) {
 
-    vec4& fColor = textBlock.color.foreground;
-    vec4& bColor = textBlock.color.background;
+    mmm::vec4& fColor = textBlock.color.foreground;
+    mmm::vec4& bColor = textBlock.color.background;
 
     float x0;
     float xLast;

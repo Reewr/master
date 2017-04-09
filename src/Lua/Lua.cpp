@@ -197,7 +197,7 @@ namespace Lua {
    *   Loads all the libraries that have been specified in
    *   the bitcode sent to the function
    *
-   * @param nativeLib
+   * @param enginelib
    */
   void Lua::openLibraries(Lib::Engine enginelib) {
     if (hasFlag(Lib::Engine::Console, enginelib)) {
@@ -439,7 +439,7 @@ namespace Lua {
    * @brief
    *   Adds a handler for a specific event.
    *
-   * @param name the name of the event to handle
+   * @param eventName the name of the event to handle
    * @param e the function that should be called when the event happens.
    */
   void Lua::on(const std::string& eventName, EventHandler&& e) {

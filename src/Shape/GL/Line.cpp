@@ -7,10 +7,10 @@ using mmm::vec3;
 using mmm::cos;
 using mmm::sin;
 
-int GLLine::mLineCounter = 0;
-GLuint GLLine::mIBO = 0;
-GLuint GLLine::mVBO = 0;
-GLuint GLLine::mVAO = 0;
+int    GLLine::mLineCounter = 0;
+GLuint GLLine::mIBO         = 0;
+GLuint GLLine::mVBO         = 0;
+GLuint GLLine::mVAO         = 0;
 
 GLLine::GLLine() {
   if (mLineCounter == 0)
@@ -57,14 +57,16 @@ void GLLine::setup() {
 
   Utils::assertGL();
 
-  std::vector<Vertex> vertices{
-    {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}},
-    {{1.0f, 0.0f, 0.0f}, {1.0f, 1.0f}, {0.0f, 0.0f, 0.0f}}
-  };
+  std::vector<Vertex>
+    vertices{ { { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } },
+              { { 1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 0.0f, 0.0f } } };
 
   glBindVertexArray(mVAO);
   glBindBuffer(GL_ARRAY_BUFFER, mVBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER,
+               sizeof(Vertex) * vertices.size(),
+               &vertices[0],
+               GL_STATIC_DRAW);
 
   Utils::assertGL();
 

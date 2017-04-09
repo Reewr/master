@@ -11,8 +11,7 @@ public:
   void draw();
 
 private:
-
-  static int mLineCounter;
+  static int    mLineCounter;
   static GLuint mIBO;
   static GLuint mVBO;
   static GLuint mVAO;

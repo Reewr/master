@@ -19,6 +19,8 @@ using mmm::vec3;
  *   Creates a new physics world with the specified gravity
  *
  * @param gravity
+ * @param solver
+ * @param phase
  */
 World::World(const vec3& gravity, World::Solver solver, World::Broadphase phase)
     : Logging::Log("World")
@@ -183,6 +185,9 @@ void World::reset() {
  *   remove all elements that are nullptrs
  *
  * @param element the drawable element to remove
+ * @param removeChildren
+ *   if this is true, which it defaults to, it will remove
+ *   children as well.
  */
 void World::removeObject(Drawable3D* element, bool removeChildren) {
   if (element == nullptr)
@@ -276,6 +281,7 @@ void World::setCollisionFilter(btOverlapFilterCallback* callback) {
  *   Handles the input events. Currently it will only handle the event
  *   where the user tries to pickup an object and nove it around.
  *
+ * @param camera
  * @param event
  */
 void World::input(Camera* camera, const Input::Event& event) {
@@ -369,12 +375,21 @@ bool World::pickBody(const mmm::vec3& rayFromWorld,
   return true;
 }
 
+/**
+ * @brief
+ *   Disables physics on every element within the world
+ */
 void World::disablePhysics() {
   for (auto& e : mElements) {
     if (e->hasPhysics())
       e->rigidBody()->forceActivationState(WANTS_DEACTIVATION);
   }
 }
+
+/**
+ * @brief
+ *   Enables physics on every element within the world
+ */
 void World::enablePhysics() {
   for (auto& e : mElements) {
     if (e->hasPhysics())

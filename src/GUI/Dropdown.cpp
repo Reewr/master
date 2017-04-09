@@ -12,8 +12,6 @@
 #include "../Utils/str.hpp"
 #include "Text.hpp"
 
-using mmm::vec2;
-
 /**
  * @brief
  *   Creates a dropdown that has the given options
@@ -26,14 +24,14 @@ using mmm::vec2;
  *   Dropdown position
  */
 Dropdown::Dropdown(const std::vector<std::string>& options,
-                   const vec2&                     position)
+                   const mmm::vec2&                position)
     : Logging::Log("Dropdown") {
   mBox                  = new GLRectangle();
   mOptionsList          = new GLRectangle();
   mIsVisible            = true;
   mIsOptionsListVisible = false;
   mMouseOption          = -1;
-  mBoundingBox          = Rectangle(position, vec2(0, 25));
+  mBoundingBox          = Rectangle(position, mmm::vec2(0, 25));
 
   // Padding on the top
   addOption("-----");
@@ -47,8 +45,9 @@ Dropdown::Dropdown(const std::vector<std::string>& options,
   mActiveOption = options.size() > 1 ? 1 : 0;
 
   // Add sizes together, assuming each element is ~25px
-  mBigBoxRect = Rectangle(mBoundingBox.topleft,
-                          mBoundingBox.size + vec2(0, mOptions.size() * 25));
+  mBigBoxRect =
+    Rectangle(mBoundingBox.topleft,
+              mBoundingBox.size + mmm::vec2(0, mOptions.size() * 25));
 
   mBox->change(mBoundingBox);
   mBox->setTexture(mAsset->rManager()->get<Texture>("Texture::Dropdown"));
@@ -62,6 +61,7 @@ Dropdown::Dropdown(const std::vector<std::string>& options,
  * @brief
  *   Creates a dropdown from an XML document.
  *
+ * ```
  *   The xml element looks like:
  *
  *   <guidropdown x="400" y="35">
@@ -69,6 +69,7 @@ Dropdown::Dropdown(const std::vector<std::string>& options,
  *     <item name="Borderless">
  *     <item name="Fullscreen">
  *   </guidropdown>
+ * ```
  *
  * @param element
  *
@@ -80,7 +81,7 @@ Dropdown* Dropdown::fromXML(tinyxml2::XMLElement* element) {
     throw std::runtime_error("XMLElement is null");
   }
 
-  vec2 position;
+  mmm::vec2 position;
 
   // retrieve the positions of the dropdown
   if (element->QueryFloatAttribute("x", &position.x) != 0) {
@@ -161,10 +162,10 @@ void Dropdown::defaultInputHandler(const Input::Event& event) {
  * @param text the text to show on the option
  */
 void Dropdown::addOption(const std::string text) {
-  float height    = (mOptions.size() + 1) * 25;
-  vec2  optionPos = vec2(5, height);
-  Text* option    = new Text("Font::Dejavu", text, vec2(0, 0), 15);
-  vec2  size      = option->size();
+  float     height    = (mOptions.size() + 1) * 25;
+  mmm::vec2 optionPos = mmm::vec2(5, height);
+  Text*     option    = new Text("Font::Dejavu", text, mmm::vec2(0, 0), 15);
+  mmm::vec2 size      = option->size();
 
   mBoundingBox.size.x = mmm::max(mBoundingBox.size.x, size.x);
   mBoundingBox.size.y = mmm::max(mBoundingBox.size.y, size.y);
@@ -186,7 +187,7 @@ void Dropdown::addOption(const std::string text) {
  * @return
  *   true if inside
  */
-bool Dropdown::isInsideOptionsList(const vec2& position) const {
+bool Dropdown::isInsideOptionsList(const mmm::vec2& position) const {
   return mBigBoxRect.contains(position);
 }
 
@@ -203,7 +204,7 @@ bool Dropdown::isInsideOptionsList(const vec2& position) const {
  * @return
  *   index, -1 if no match
  */
-int Dropdown::isInsideDropItem(const vec2& position) const {
+int Dropdown::isInsideDropItem(const mmm::vec2& position) const {
   // if the dropbox isnt open, we always return -1
   if (!mIsOptionsListVisible || !isInsideOptionsList(position)) {
     return -1;
@@ -227,8 +228,7 @@ int Dropdown::isInsideDropItem(const vec2& position) const {
  *   moused over. What this does, is it sets
  *   the color of the option to yellow.
  *
- * @param index
- *   The index to use or -1 to deselect all
+ * @param index The index to use or -1 to deselect all
  */
 void Dropdown::setMouseOverItem(const int index) {
   if (!mIsOptionsListVisible && index != -1)
@@ -260,10 +260,9 @@ void Dropdown::setMouseOverItem(const int index) {
  *   to see whether it is inside any of the given options,
  *   if so, they're selected.
  *
- * @param position
- *   screen position
+ * @param position screen position
  */
-bool Dropdown::setActiveItem(const vec2& position) {
+bool Dropdown::setActiveItem(const mmm::vec2& position) {
   // Close the dropdown if inside the button and its open,
   // else open it
   if (isInside(position)) {
@@ -374,7 +373,7 @@ void Dropdown::setActiveOptionPosition() {
 
   Text* selected = mOptions[mActiveOption];
   int   y        = mBoundingBox.topleft.y + mOffset.y - selected->position().y;
-  mActiveOptionPosition = vec2(selected->offset().x, y);
+  mActiveOptionPosition = mmm::vec2(selected->offset().x, y);
 }
 
 /**
@@ -384,9 +383,9 @@ void Dropdown::setActiveOptionPosition() {
  *
  * @param position
  */
-void Dropdown::setPosition(const vec2& position) {
+void Dropdown::setPosition(const mmm::vec2& position) {
   for (auto option : mOptions) {
-    vec2 actualPosition = mBoundingBox.topleft - option->position();
+    mmm::vec2 actualPosition = mBoundingBox.topleft - option->position();
     option->setPosition(position + actualPosition);
   }
 
@@ -401,7 +400,7 @@ void Dropdown::setPosition(const vec2& position) {
  *
  * @param offset
  */
-void Dropdown::setOffset(const vec2& offset) {
+void Dropdown::setOffset(const mmm::vec2& offset) {
   mOffset = offset;
 
   for (unsigned int i = 0; i < mOptions.size(); i++)
@@ -415,8 +414,6 @@ void Dropdown::setOffset(const vec2& offset) {
  *   Draws the dropdown element if it is visible. Also
  *   draws the options and the optionList if they
  *   are visible
- *
- * @param float delta time, not used in this case
  */
 void Dropdown::draw() {
   if (!isVisible())
@@ -438,7 +435,7 @@ void Dropdown::draw() {
   // since option list isnt visible, we just draw
   // the active one, but we have to move it temporarily
   // to where the dropdown button is
-  vec2 tempOffset = mOptions[mActiveOption]->offset();
+  mmm::vec2 tempOffset = mOptions[mActiveOption]->offset();
   mOptions[mActiveOption]->setOffset(mActiveOptionPosition);
   mOptions[mActiveOption]->draw();
   mOptions[mActiveOption]->setOffset(tempOffset);

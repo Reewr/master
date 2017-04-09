@@ -28,7 +28,7 @@ class GLRectangle;
  *   This represents a Console that can be used together with Lua
  *   to interact with the engine itself.
  *
- *   @TODO:
+ *   \todo:
  *     - Add tab completion
  *     - Add scroll in history
  *     - Add movement by word, left and right
@@ -36,7 +36,6 @@ class GLRectangle;
  *     - History size in config
  *     - Lua help (help someFunction to indication of arguments)
  *       - help help!
- *
  *     - Add aliases (quit, :q, exit)
  */
 class Console : public GUI, public Logging::Log {

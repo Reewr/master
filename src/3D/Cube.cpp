@@ -10,9 +10,6 @@
 #include "../Shape/GL/Cube.hpp"
 #include "../Utils/Asset.hpp"
 
-using mmm::vec2;
-using mmm::vec3;
-
 Cube::Cube(const mmm::vec3& size, int weight, const mmm::vec3& position)
     : Logging::Log("Cube") {
   btVector3 btSize = btVector3(size.x / 2.0f, size.y / 2.0f, size.z / 2.0f);
@@ -52,8 +49,6 @@ Cube::~Cube() {
  * @brief
  *   The update handler is reversed for things that do not have
  *   anything to do with drawing but should be updated every loop.
- *
- * @param float
  */
 void Cube::update(float) {}
 
@@ -62,7 +57,8 @@ void Cube::update(float) {}
  *   Draw the cube by binding the program and setting the required
  *   uniforms.
  *
- * @param c
+ * @param program
+ * @param bindTexture
  */
 void Cube::draw(std::shared_ptr<Program>& program, bool bindTexture) {
   draw(program, mmm::vec3(0), bindTexture);
@@ -73,7 +69,9 @@ void Cube::draw(std::shared_ptr<Program>& program, bool bindTexture) {
  *   Draw the cube by binding the program and setting the required
  *   uniforms.
  *
- * @param c
+ * @param program
+ * @param offset
+ * @param bindTexture
  */
 void Cube::draw(std::shared_ptr<Program>& program,
                 mmm::vec3                 offset,

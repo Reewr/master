@@ -45,6 +45,6 @@ public:
 private:
   GLLine*                  mLine;
   std::shared_ptr<Texture> mTexture;
-  bool mUsesColor;
-  mmm::vec4 mColor;
+  bool                     mUsesColor;
+  mmm::vec4                mColor;
 };

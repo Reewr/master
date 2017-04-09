@@ -4,14 +4,14 @@
 #include "../Resource/Texture.hpp"
 #include "../Utils/Utils.hpp"
 
-using mmm::vec2;
-
 int        Font::numFonts = 0;
 FT_Library Font::fontLib;
 
 Font::Glyph::Glyph() {}
 
-Font::Glyph::Glyph(FT_GlyphSlot& gs, const vec2& offset, const vec2& size) {
+Font::Glyph::Glyph(FT_GlyphSlot&    gs,
+                   const mmm::vec2& offset,
+                   const mmm::vec2& size) {
 
   advance.x = gs->advance.x >> 6;
   advance.y = gs->advance.y >> 6;
@@ -161,7 +161,7 @@ bool Font::load(int size) {
   // Creates a texture with the size that was found out
   // in the previous loop
   Utils::getGLError();
-  page.texture->createTexture(vec2(w, h), 0, GL_RED, GL_RED);
+  page.texture->createTexture(mmm::vec2(w, h), 0, GL_RED, GL_RED);
   page.texture->setFilename(filename() + ":" + std::to_string(size));
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
   page.texture->clampToEdge();
@@ -193,11 +193,12 @@ bool Font::load(int size) {
       offsetX = 0;
     }
 
-    page.texture->changeSubTex(vec2(offsetX, offsetY),
-                               vec2(g->bitmap.width, g->bitmap.rows),
+    page.texture->changeSubTex(mmm::vec2(offsetX, offsetY),
+                               mmm::vec2(g->bitmap.width, g->bitmap.rows),
                                g->bitmap.buffer);
 
-    page.glyphs[charCode] = Font::Glyph(g, vec2(offsetX, offsetY), vec2(w, h));
+    page.glyphs[charCode] =
+      Font::Glyph(g, mmm::vec2(offsetX, offsetY), mmm::vec2(w, h));
     maxWidth = mmm::max(page.glyphs[charCode].bitmapSize.x, maxWidth);
 
     rowH = mmm::max(rowH, g->bitmap.rows);
@@ -206,7 +207,7 @@ bool Font::load(int size) {
     charCode = FT_Get_Next_Char(mFace, charCode, &glyphIndex);
   }
 
-  page.metrics = vec2(maxWidth, mFace->size->metrics.height >> 6);
+  page.metrics = mmm::vec2(maxWidth, mFace->size->metrics.height >> 6);
   FT_Done_Face(mFace);
   return true;
 }
@@ -237,7 +238,7 @@ const Font::Glyph& Font::getGlyph(unsigned int c, int size) {
  *
  * @return
  */
-const vec2& Font::getMetrics(int size) {
+const mmm::vec2& Font::getMetrics(int size) {
   if (mPages.count(size) == 0)
     load(size);
 
