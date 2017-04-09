@@ -166,6 +166,32 @@ bool Phenotype::collidesWithTerrain(Drawable3D* spiderPart) const {
 
 /**
  * @brief
+ *   Checks if the given spider part is either resting against or colliding
+ *   against the static terrain.
+ *
+ *   Just like the other collides with terrain but allows the use
+ *   of the name.
+ *
+ *   Returns true if there is a collision
+ *
+ * @param spiderPart
+ *
+ * @return
+ */
+bool Phenotype::collidesWithTerrain(const std::string& str) const {
+  if (spider == nullptr)
+    return false;
+
+  const auto& parts = spider->parts();
+
+  if (parts.count(str))
+    return collidesWithTerrain(parts.at(str).part->rigidBody());
+
+  return false;
+}
+
+/**
+ * @brief
  *   Activates the network associated with the spider by using
  *   positions, velocity etc from each of the components of the spider,
  *   generating a value as torque.

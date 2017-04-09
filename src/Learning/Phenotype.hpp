@@ -63,6 +63,7 @@ struct Phenotype : Logging::Log {
   // Checks if a spider part is resting / colliding with the terrain
   bool collidesWithTerrain(btRigidBody* spiderPart) const;
   bool collidesWithTerrain(Drawable3D* spiderPart) const;
+  bool collidesWithTerrain(const std::string& name) const;
 
   // Resets the phenotype back into its original state
   void reset(int speciesId, int individualId);
