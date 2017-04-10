@@ -34,7 +34,14 @@ public:
   // - BestFitness will only draw the best spider
   // - DrawAll will draw all spiders
   //
-  enum class DrawingMethod { Species1, SpeciesLeaders, BestFitness, DrawAll };
+  enum class DrawingMethod {
+    DrawSingleInBatch,
+    DrawAllInBatch,
+    Species1,
+    SpeciesLeaders,
+    BestFitness,
+    DrawAll
+  };
 
   SpiderSwarm();
   ~SpiderSwarm();
