@@ -39,7 +39,7 @@ struct SpiderPartContactResultCallback
   void reset() { mHasCollided = false; }
 
 private:
-  bool mHasCollided;
+  bool mHasCollided = false;
 };
 
 /**
@@ -317,6 +317,17 @@ void Phenotype::kill() const {
 
   failed = true;
 };
+
+/**
+ * @brief
+ *   Returns whether or not the spider has been killed due to
+ *   incompetence.
+ *
+ * @return
+ */
+bool Phenotype::hasBeenKilled() const {
+  return failed;
+}
 
 /**
  * @brief

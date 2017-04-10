@@ -54,6 +54,8 @@ struct Phenotype : Logging::Log {
   void updateFitness(float deltaTime);
   void kill() const;
 
+  bool hasBeenKilled() const;
+
   // Returns the final fitness of the Phenotype
   float finalizeFitness();
 
