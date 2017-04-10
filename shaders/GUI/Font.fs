@@ -8,7 +8,7 @@ out vec4 outColor;
 uniform sampler2D inTexture;
 uniform bool isBackground;
 
-uniform bool isColorOverriden;
+uniform bool isColorOverriden = false;
 uniform vec3 overrideColor;
 
 void main() {
