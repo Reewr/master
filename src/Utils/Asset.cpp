@@ -1,6 +1,7 @@
 #include "Asset.hpp"
 
 #include "../Input/Input.hpp"
+#include "../Camera/Camera.hpp"
 #include "../Lua/Lua.hpp"
 #include "../Resource/ResourceManager.hpp"
 #include "../State/State.hpp"
@@ -33,6 +34,12 @@ ResourceManager* Asset::rManager() {
   return mResourceManager;
 }
 
+Camera* Asset::camera() {
+  if (mCamera == nullptr)
+    throw std::runtime_error("Tried to access Camera when nullptr");
+  return mCamera;
+}
+
 void Asset::setCFG(CFG* c) {
   mCFG = c;
 }
@@ -47,4 +54,8 @@ void Asset::setLua(Lua::Lua* l) {
 
 void Asset::setResourceManager(ResourceManager* r) {
   mResourceManager = r;
+}
+
+void Asset::setCamera(Camera* c) {
+  mCamera = c;
 }
