@@ -97,9 +97,8 @@ public:
 
   static std::string stripColorsFromStr(const std::string& s);
 
-private:
+protected:
   void recalculateGeometry();
-
 
   struct {
     mmm::vec3 current;
