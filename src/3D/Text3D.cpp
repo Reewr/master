@@ -69,7 +69,7 @@ void Text3D::draw(mmm::vec3 offset) {
     glBindVertexArray(0);
   }
 
-  mTextFont->getTexture(mCharacterSize)->bind(0);
+  mTextFont->getTexture(mCharacterSize)->bind(1);
   mFont3DProgram->setUniform("isBackground", false);
 
   glBindVertexArray(mVAO);
