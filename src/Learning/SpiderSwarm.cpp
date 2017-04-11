@@ -118,8 +118,18 @@ SpiderSwarm::DrawingMethod SpiderSwarm::drawingMethod() {
   return mDrawingMethod;
 }
 
+/**
+ * @brief
+ *   Toggles the drawing of the neural networks
+ */
 void SpiderSwarm::toggleDrawDebugNetworks() {
   mDrawDebugNetworks = !mDrawDebugNetworks;
+
+  if (mDrawDebugNetworks) {
+    for (auto& i : mPhenotypes) {
+      i.drawablePhenotype->recreate(*i.network, mmm::vec3(1.0, 1.0, 1.0));
+    }
+  }
 }
 
 /**
