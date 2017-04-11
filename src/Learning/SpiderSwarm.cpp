@@ -131,6 +131,10 @@ void SpiderSwarm::toggleDrawDebugNetworks() {
  *   When a batch is complete, the next one is chosen. Once all batches are
  *   complete, the next epoch is started, resetting all the spiders to their
  *   original position.
+ *
+ *   If the restart flag is active, it will delete and clear everything before
+ *   recreating the Phenotypes and returning, waiting until next update
+ *   to start again.
  */
 void SpiderSwarm::update(float deltaTime) {
   if (mRestartOnNextUpdate) {
@@ -182,8 +186,14 @@ void SpiderSwarm::update(float deltaTime) {
 
 /**
  * @brief
- *   Draws a set number of spiders from the current batch being processed. This
- *   is set by the DrawLimit.
+ *   Draws the spiders depending on the DrawingMethod used. See the documentation
+ *   of DrawingMethod for information about how things are drawn.
+ *
+ *   You can change DrawingMethod by using `setDrawingMethod`
+ *
+ *   When drawing more than one spider, they are placed in a grid like structure.
+ *   They all really have position 0,0,0, but are offset slightly to make it
+ *   easier to identify each one of them.
  *
  * @param prog
  * @param bindTexture
@@ -194,6 +204,7 @@ void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
   size_t gridSize      = grid.size();
 
   switch (mDrawingMethod) {
+    // Draw only the first spider of the current batch
     case DrawingMethod::DrawSingleInBatch: {
       if (mBatchStart < mPhenotypes.size()) {
         mPhenotypes[mBatchStart].draw(prog, grid[0], bindTexture);
@@ -203,6 +214,8 @@ void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
       }
       break;
     }
+
+    // Draw all in current batch
     case DrawingMethod::DrawAllInBatch: {
       for (unsigned int i = mBatchStart;
            i < mBatchEnd && i < mPhenotypes.size() && i < gridSize;
@@ -216,6 +229,8 @@ void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
       }
       break;
     }
+
+    // Draw the first of each species
     case DrawingMethod::Species1: {
       for (auto& a : mPhenotypes) {
         if (a.speciesIndex == gridIndex && gridIndex < gridSize) {
@@ -229,6 +244,8 @@ void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
 
       break;
     }
+
+    // Draw the leaders of the species
     case DrawingMethod::SpeciesLeaders: {
       for (auto& a : mSpeciesLeaders) {
         if (a < numPhenotypes && gridIndex < gridSize) {
@@ -244,6 +261,8 @@ void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
 
       break;
     }
+
+    // Draw the one with the best fitness in the last generation
     case DrawingMethod::BestFitness:
       if (mBestIndex < numPhenotypes) {
         mPhenotypes[mBestIndex].draw(prog, mmm::vec3(0,0,0), bindTexture);
@@ -252,6 +271,8 @@ void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
                                                             mmm::vec3(0, 5, 0));
       }
       break;
+
+    // Draw all spiders
     case DrawingMethod::DrawAll:
       for (auto& p : mPhenotypes) {
         if (gridIndex < gridSize) {
@@ -338,6 +359,15 @@ void SpiderSwarm::load(const std::string& filename) {
 
   recreatePhenotypes();
 }
+
+/**
+ * @brief
+ *   Like `load`, but only loads the population from file. The population
+ *   does actually contain its stored parameters, so it also loads that
+ *   from file.
+ *
+ * @param filename
+ */
 void SpiderSwarm::loadPopulation(const std::string& filename) {
   std::string popFilename   = filename + ".population";
 
@@ -354,6 +384,14 @@ void SpiderSwarm::loadPopulation(const std::string& filename) {
 
   recreatePhenotypes();
 }
+
+/**
+ * @brief
+ *   Like `load` but only loads the parameters from file. Like
+ *   the other load functions, it basically resets everything.
+ *
+ * @param filename
+ */
 void SpiderSwarm::loadParameters(const std::string& filename) {
   std::string paramFilename = filename + ".parameters";
 
@@ -367,6 +405,14 @@ void SpiderSwarm::loadParameters(const std::string& filename) {
 
   recreatePhenotypes();
 }
+
+/**
+ * @brief
+ *   Like `load` but only loads the substrate from file. Like
+ *   the other load functions, it basically resets everything.
+ *
+ * @param filename
+ */
 void SpiderSwarm::loadSubstrate(const std::string& filename) {
   std::string subFilename   = filename + ".substrate";
 
@@ -428,6 +474,19 @@ void SpiderSwarm::updateUsingThreads(float deltaTime) {
 #endif
 }
 
+/**
+ * @brief
+ *   If BT_NO_PROFILE is defined, it will assume that we are to use
+ *   multithreading. Unlike `updateUsingThreads` it does not split the current
+ *   batch into several smaller pieces, but instead splits the entire number
+ *   of Phenotypes into smaller batches.
+ *
+ *   For instance, if you have 4 threads and a population size of 50, it will
+ *   split 12 Phenotypes to 3 of the threads and the last one will have work
+ *   with the remaining 14.
+ *
+ * @param deltaTime
+ */
 #ifdef BT_NO_PROFILE
 void SpiderSwarm::updateThreadBatches(float deltaTime) {
 
@@ -571,6 +630,23 @@ void SpiderSwarm::updateEpoch() {
   // save("testswarm");
 }
 
+/**
+ * @brief
+ *   After an Epoch has been completed, the Phenotypes have to be reset and
+ *   each Neural Network has to be rebuilt.
+ *
+ *   This function goes through all species and individuals and resets
+ *   the Phenotype that represents each individual. If there are more
+ *   individuals than the amount of Phenotypes, additional Phenotypes
+ *   are added.
+ *
+ *   Similarly, if there are less individuals than the number of
+ *   Phenotypes, Phenotypes are removed.
+ *
+ *   If BT_NO_PROFILE is true, it will generated the ESHyperNEAT phenotypes
+ *   using multithreading, splitting up the workload much like
+ *   `updateThreadBatches`
+ */
 void SpiderSwarm::recreatePhenotypes() {
   mLog->debug("Recreating {} phenotypes...", mParameters->PopulationSize);
   mLog->debug("We have {} species", mPopulation->m_Species.size());
@@ -594,6 +670,8 @@ void SpiderSwarm::recreatePhenotypes() {
       mPhenotypes[index].reset(i, j);
       mPhenotypes[index].spider->disableUpdatingFromPhysics();
 
+      // If we are using single-threaded mode, create the neural
+      // networks, otherwise wait until later
 #ifndef BT_NO_PROFILE
       auto& individual = species.m_Individuals[j];
       individual.BuildESHyperNEATPhenotype(*mPhenotypes[index].network,
@@ -604,12 +682,15 @@ void SpiderSwarm::recreatePhenotypes() {
     }
   }
 
+  // Remove the excess phenotypes
   while (index < mPhenotypes.size()) {
     mPhenotypes.back().remove();
     mPhenotypes.pop_back();
     mLog->debug("Removing spider due to decrease in population");
   }
 
+  // If using multithreaded more, generated the ESHyperNEAT neural
+  // networks in paralell
 #ifdef BT_NO_PROFILE
   int size    = mPhenotypes.size();
   int nThread = mmm::min(std::thread::hardware_concurrency(), size);
@@ -640,6 +721,8 @@ void SpiderSwarm::recreatePhenotypes() {
 
 #endif
 
+  // If we want to see the Networks, create those
+  // after the networks have been added
   if (mDrawDebugNetworks) {
     for (auto& i : mPhenotypes) {
       i.drawablePhenotype->recreate(*i.network, mmm::vec3(1.0, 1.0, 1.0));
@@ -659,6 +742,11 @@ NEAT::Parameters& SpiderSwarm::parameters() {
   return *mParameters;
 }
 
+/**
+ * @brief
+ *   Sets the restart flag on, which will
+ *   restart the SpiderSwarm at the next update
+ */
 void SpiderSwarm::restart() {
   mRestartOnNextUpdate = true;
 }

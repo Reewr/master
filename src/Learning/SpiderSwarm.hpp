@@ -28,12 +28,17 @@ namespace NEAT {
  */
 class SpiderSwarm : Logging::Log {
 public:
-  // This describes the different drawing methods
-  //
-  // - SpeciesLeaders will draw the best of the species
-  // - BestFitness will only draw the best spider
-  // - DrawAll will draw all spiders
-  //
+
+  //! This describes the different drawing methods
+  //!
+  //! - DrawSingleInBatch: Draw first one of the current batch
+  //! - DrwaAllInBatch   : Draw all of the current batch
+  //! - Species1         : Draw the first of each species
+  //! - SpeciesLeaders   : Draw the best of each species
+  //! - SpeciesLeaders   : Draw the best of the species
+  //! - BestFitness      : Draw the best spider
+  //! - DrawAll          : Draw all spiders
+  //!
   enum class DrawingMethod {
     DrawSingleInBatch,
     DrawAllInBatch,
@@ -52,6 +57,7 @@ public:
   // Returns the current drawing method
   DrawingMethod drawingMethod();
 
+  // Toggles the drawing of the neural network for each spider
   void toggleDrawDebugNetworks();
 
   // Updates the SpiderSwarm which will either run a normal update
@@ -69,6 +75,7 @@ public:
   // from file
   void load(const std::string& filename);
 
+  // Individual load functions
   void loadPopulation(const std::string& filename);
   void loadParameters(const std::string& filename);
   void loadSubstrate(const std::string& filename);
