@@ -251,9 +251,12 @@ void Phenotype::update(float deltaTime) {
   }
 
   // activate network to retrieve output vector
-  // network->Flush();
+  network->Flush();
   network->Input(inputs);
-  network->Activate();
+
+  for (unsigned int i = 0; i < 3; ++i)
+    network->Activate();
+
   std::vector<double> outputs = network->Output();
 
   // set hinge motor targets based on network output
