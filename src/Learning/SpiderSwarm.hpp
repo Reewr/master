@@ -18,6 +18,7 @@ class Substrate;
 namespace NEAT {
   class Parameters;
   class Population;
+  class Substrate;
 }
 
 /**
@@ -81,6 +82,9 @@ public:
 
   // Returns a reference to the parameter
   NEAT::Parameters& parameters();
+
+  // Returns a reference to the substrate
+  NEAT::Substrate& substrate();
 
   // Restarts the simulation
   void restart();

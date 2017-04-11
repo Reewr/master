@@ -728,6 +728,16 @@ NEAT::Parameters& SpiderSwarm::parameters() {
 
 /**
  * @brief
+ *   Returns a reference to the substrate
+ *
+ * @return
+ */
+NEAT::Substrate& SpiderSwarm::substrate() {
+  return *mSubstrate;
+}
+
+/**
+ * @brief
  *   Sets the restart flag on, which will
  *   restart the SpiderSwarm at the next update
  */
