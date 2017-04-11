@@ -40,6 +40,7 @@ SpiderSwarm::SpiderSwarm()
     , mIterationDuration(10)
     , mBestPossibleFitness(0)
     , mDrawDebugNetworks(false)
+    , mRestartOnNextUpdate(false)
     , mDrawingMethod(SpiderSwarm::DrawingMethod::Species1)
     , mBestIndex(0)
     , mParameters(nullptr)
@@ -128,6 +129,23 @@ SpiderSwarm::DrawingMethod SpiderSwarm::drawingMethod() {
  *   original position.
  */
 void SpiderSwarm::update(float deltaTime) {
+  if (mRestartOnNextUpdate) {
+    for (auto& p : mPhenotypes)
+      p.remove();
+
+    mPhenotypes.clear();
+    mBatchStart = 0;
+    mBatchEnd = mBatchSize;
+    mCurrentBatch = 0;
+    mCurrentDuration = 0;
+    mRestartOnNextUpdate = false;
+    mSpeciesLeaders.clear();
+    mBestIndex = 0;
+
+    recreatePhenotypes();
+    return;
+  }
+
   deltaTime = 1.f / 60.f;
 
   if (deltaTime > 0.5)
@@ -580,6 +598,10 @@ void SpiderSwarm::recreatePhenotypes() {
   }
 
   mLog->debug("Created {} spiders", mPhenotypes.size());
+}
+
+void SpiderSwarm::restart() {
+  mRestartOnNextUpdate = true;
 }
 
 void SpiderSwarm::setDefaultParameters() {

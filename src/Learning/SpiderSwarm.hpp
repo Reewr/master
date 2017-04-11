@@ -67,6 +67,9 @@ public:
   // from file
   void load(const std::string& filename);
 
+  // Restarts the simulation
+  void restart();
+
 private:
   std::vector<Phenotype> mPhenotypes;
 
@@ -81,6 +84,7 @@ private:
   float mBestPossibleFitness;
 
   bool mDrawDebugNetworks;
+  bool mRestartOnNextUpdate;
 
   // Drawing settings
   DrawingMethod mDrawingMethod;
