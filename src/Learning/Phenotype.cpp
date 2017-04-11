@@ -436,38 +436,60 @@ btStaticPlaneShape* Phenotype::plane =
 
 std::vector<Fitness> Phenotype::FITNESS_HANDLERS = {
   Fitness(
-    "Movement (0)",
+    "Movement  ",
     "Fitness based on movement is positive z direction.",
     [](const auto& phenotype, float current, float) -> float {
-      auto t = phenotype.spider->parts().at("Sternum").part->rigidBody()->getCenterOfMassPosition();
+      const auto& parts = phenotype.spider->parts();
+      auto t = parts.at("Sternum").part->rigidBody()->getCenterOfMassPosition();
       return mmm::max(current, t.z() + 1.f);
     },
     [](const auto&, float current, float) -> float {
-      return current / 100.f;
+      return (current - 1.f) / 100.f;
     }
   ),
   Fitness(
-    "Stability (1)",
-    "Fitness based on ground contact.",
+    "Contact   ",
+    "Fitness based on sternum ground contact.",
     [](const auto& phenotype, float current, float deltaTime) -> float {
       const auto& parts = phenotype.spider->parts();
 
-      if (phenotype.collidesWithTerrain(parts.at("Abdomin").part))
-        current += deltaTime;
+      // if (phenotype.collidesWithTerrain(parts.at("Abdomin").part))
+      //   current += deltaTime;
 
-      else if (phenotype.collidesWithTerrain(parts.at("Eye").part))
-        current += deltaTime;
+      // else if (phenotype.collidesWithTerrain(parts.at("Eye").part))
+      //   current += deltaTime;
 
-      else if (phenotype.collidesWithTerrain(parts.at("Sternum").part))
+      if (phenotype.collidesWithTerrain(parts.at("Sternum").part))
         current += deltaTime;
-
-      if (current > 4.f)
-        phenotype.kill();
 
       return current;
     },
-    [](const auto&, float, float) -> float {
-      return 1.f;
+    [](const auto&, float current, float) -> float {
+      return score(10.f, current - 1.f, 0.f);
+    }
+  ),
+  Fitness(
+    "Stability ",
+    "Fitness based on sternum rotation and height.",
+    [](const auto& phenotype, float current, float deltaTime) -> float {
+      const auto& parts = phenotype.spider->parts();
+
+      auto* sternum = parts.at("Sternum").part->rigidBody();
+      auto  t       = sternum->getCenterOfMassPosition();
+      auto  q       = sternum->getOrientation();
+
+      // position
+      current *= score(deltaTime, t.y() - 0.8f, 0.3f); // height
+
+      // rotation
+      vec3 r = getEulerAngles(q.x(), q.y(), q.z(), q.w());
+      r.y += mmm::radians(90.f);
+
+      current *= score(deltaTime, r.x, mmm::radians(15.f));
+      current *= score(deltaTime, r.y, mmm::radians(30.f));
+      current *= score(deltaTime, r.z, mmm::radians(15.f));
+
+      return current;
     }
   )
 };
