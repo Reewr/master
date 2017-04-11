@@ -59,9 +59,12 @@ void Text3D::draw(mmm::vec3 offset) {
   mFont3DProgram->setUniform("MVP", proj * view * mmm::mat4::identity);
   mFont3DProgram->setUniform("cameraRight", cameraRight);
   mFont3DProgram->setUniform("cameraUp", cameraUp);
-  mFont3DProgram->setUniform("worldPosition", mPosition + offset);
 
   if (mHasBackgroundColor) {
+    // Background needs a slight offset depending on the inverse of camera viewpoint
+    // since it needs to be behind the text
+    mmm::vec3 backgroundOffset = (camera->target() - camera->position()) * 0.01;
+    mFont3DProgram->setUniform("worldPosition", mPosition + offset + backgroundOffset);
     mFont3DProgram->setUniform("isBackground", true);
 
     glBindVertexArray(mVAOBackground);
@@ -69,6 +72,7 @@ void Text3D::draw(mmm::vec3 offset) {
     glBindVertexArray(0);
   }
 
+  mFont3DProgram->setUniform("worldPosition", mPosition + offset);
   mTextFont->getTexture(mCharacterSize)->bind(1);
   mFont3DProgram->setUniform("isBackground", false);
 
