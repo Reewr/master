@@ -70,6 +70,8 @@ Master::Master(Asset* a) : mAsset(a) {
     mSwarm->load(filename);
   });
 
+  mLua->engine["swarm"] = mSwarm;
+
   // add CFG is enabled
   if (a->cfg()->console.enabled) {
     mGUIElements.push_back(new Console(a));
