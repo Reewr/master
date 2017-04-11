@@ -189,6 +189,7 @@ set(SOURCE_FILES
   ${SRC_DIR}/3D/Sphere.cpp
   ${SRC_DIR}/3D/Line.cpp
   ${SRC_DIR}/3D/World.cpp
+  ${SRC_DIR}/3D/Text3D.cpp
 
   # src/Camera
   ${SRC_DIR}/Camera/Camera.cpp
@@ -287,6 +288,7 @@ set(HEADER_FILES
   ${SRC_DIR}/3D/Spider.hpp
   ${SRC_DIR}/3D/Terrain.hpp
   ${SRC_DIR}/3D/World.hpp
+  ${SRC_DIR}/3D/Text3D.hpp
 
   # src/Camera
   ${SRC_DIR}/Camera/Camera.hpp
