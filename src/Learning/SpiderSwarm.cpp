@@ -670,10 +670,10 @@ void SpiderSwarm::setDefaultParameters() {
   mParameters = new NEAT::Parameters();
 
   // Basic parameters
-  mParameters->PopulationSize       = 50;
+  mParameters->PopulationSize       = 128;
   mParameters->DynamicCompatibility = true;
-  mParameters->MinSpecies           = 5;
-  mParameters->MaxSpecies           = 10;
+  mParameters->MinSpecies           = 8;
+  mParameters->MaxSpecies           = 32;
   mParameters->AllowClones          = true;
 
   // GA parameters
@@ -732,20 +732,20 @@ void SpiderSwarm::setDefaultParameters() {
 
   // Activation function parameters
   mParameters->MutateNeuronActivationTypeProb          = 0.0;
-  mParameters->ActivationFunction_SignedSigmoid_Prob   = 0.0;
+  mParameters->ActivationFunction_SignedSigmoid_Prob   = 1.0;
   mParameters->ActivationFunction_UnsignedSigmoid_Prob = 0.0;
   mParameters->ActivationFunction_Tanh_Prob            = 1.0;
   mParameters->ActivationFunction_TanhCubic_Prob       = 0.0;
-  mParameters->ActivationFunction_SignedStep_Prob      = 0.0;
+  mParameters->ActivationFunction_SignedStep_Prob      = 1.0;
   mParameters->ActivationFunction_UnsignedStep_Prob    = 0.0;
-  mParameters->ActivationFunction_SignedGauss_Prob     = 0.0;
+  mParameters->ActivationFunction_SignedGauss_Prob     = 1.0;
   mParameters->ActivationFunction_UnsignedGauss_Prob   = 0.0;
-  mParameters->ActivationFunction_Abs_Prob             = 0.0;
-  mParameters->ActivationFunction_SignedSine_Prob      = 0.0;
+  mParameters->ActivationFunction_Abs_Prob             = 1.0;
+  mParameters->ActivationFunction_SignedSine_Prob      = 1.0;
   mParameters->ActivationFunction_UnsignedSine_Prob    = 0.0;
-  mParameters->ActivationFunction_Linear_Prob          = 0.0;
-  mParameters->ActivationFunction_Relu_Prob            = 0.0;
-  mParameters->ActivationFunction_Softplus_Prob        = 0.0;
+  mParameters->ActivationFunction_Linear_Prob          = 1.0;
+  mParameters->ActivationFunction_Relu_Prob            = 1.0;
+  mParameters->ActivationFunction_Softplus_Prob        = 1.0;
 
 
   mParameters->BiasMutationMaxPower = 0.5;
@@ -1044,7 +1044,7 @@ void SpiderSwarm::setDefaultSubstrate() {
   mSubstrate->m_allow_input_hidden_links  = true;
   mSubstrate->m_allow_input_output_links  = false;
   mSubstrate->m_allow_hidden_output_links = true;
-  mSubstrate->m_allow_hidden_hidden_links = false;
+  mSubstrate->m_allow_hidden_hidden_links = true;
 
   mSubstrate->m_hidden_nodes_activation =
     NEAT::ActivationFunction::SIGNED_SIGMOID;
