@@ -155,12 +155,12 @@ void Framebuffer::bind(bool bindProgram) {
   glBindFramebuffer(GL_FRAMEBUFFER, mFrameBuffer);
   glViewport(0, 0, mFrameSize.x, mFrameSize.y);
 
+  glClearColor(0.0, 0.0, 0.0, 1.0);
+
   if (mIsDepth)
     glClear(GL_DEPTH_BUFFER_BIT);
   else
     glClear(GL_COLOR_BUFFER_BIT);
-
-  glClearColor(0.0, 0.0, 0.0, 1.0);
 
   if (bindProgram)
     mProgram->bind();

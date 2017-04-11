@@ -428,8 +428,9 @@ void Engine::runLoop() {
     mCurrent->update(deltaTime);
 
     // Clear everything
+    // glClearColor(0, 0.4, 0.7, 1);
+    glClearColor(0.15, 0.15, 0.18, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glClearColor(0, 0.4, 0.7, 1);
 
     mCurrent->draw(deltaTime);
 
