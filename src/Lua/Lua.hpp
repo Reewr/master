@@ -58,7 +58,8 @@ namespace Lua {
       State    = 64,
       Drawable = 128,
       Util     = 256,
-      All      = 511
+      Learning = 512,
+      All      = 1023
     };
   }
 

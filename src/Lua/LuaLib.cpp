@@ -18,6 +18,8 @@
 #include "../State/State.hpp"
 #include "../Utils/CFG.hpp"
 
+#include "../Learning/SpiderSwarm.hpp"
+
 /**
  * @brief
  *   Exposes the console and its available functions to Lua.
@@ -1169,4 +1171,30 @@ sol::table LuaLib::Util::openUtil(sol::this_state state) {
                       });
 
   return module;
+}
+
+sol::table LuaLib::Learning::openLearning(sol::this_state state) {
+  sol::state_view lua(state);
+  sol::table      module = lua.create_table();
+
+  module["SpiderSwarm"] = openSpiderSwarm(state);
+
+  return module;
+}
+
+sol::table LuaLib::Learning::openSpiderSwarm(sol::this_state state) {
+  sol::state_view lua(state);
+  sol::table      module = lua.create_table();
+
+  sol::constructors<> ctor;
+
+  sol::usertype<SpiderSwarm> type(ctor,
+    "save", &SpiderSwarm::save,
+    "load", &SpiderSwarm::load,
+    "parameters", &SpiderSwarm::parameters,
+    "restart", &SpiderSwarm::restart);
+
+  module.set_usertype("SpiderSwarm", type);
+
+  return module["SpiderSwarm"];
 }

@@ -354,6 +354,18 @@ namespace Lua {
                                  &LuaLib::Util::openUtil>,
                      false);
     }
+
+    if (hasFlag(Lib::Engine::Learning, enginelib)) {
+      mLog->debug("Loading Engine :: Learning");
+      engine.require("Learning",
+                     sol::c_call<decltype(&LuaLib::Learning::openLearning),
+                                 &LuaLib::Learning::openLearning>,
+                     false);
+      engine.require("SpiderSwarm",
+                     sol::c_call<decltype(&LuaLib::Learning::openSpiderSwarm),
+                                 &LuaLib::Learning::openSpiderSwarm>,
+                     false);
+    }
   }
 
   /**

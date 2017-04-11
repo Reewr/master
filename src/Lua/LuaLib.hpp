@@ -120,4 +120,9 @@ namespace LuaLib {
     // that helps working with Lua and C++
     sol::table openUtil(sol::this_state state);
   }
+
+  namespace Learning {
+    sol::table openLearning(sol::this_state state);
+    sol::table openSpiderSwarm(sol::this_state state);
+  }
 }
