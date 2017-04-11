@@ -731,8 +731,8 @@ void SpiderSwarm::setDefaultParameters() {
   mParameters->MaxDepth          = 4;
   mParameters->IterationLevel    = 1;
   mParameters->CPPN_Bias         = 1.0;
-  mParameters->Width             = 2.0;
-  mParameters->Height            = 2.0;
+  mParameters->Width             = 3.2;
+  mParameters->Height            = 3.2;
   mParameters->Qtree_X           = 0.0;
   mParameters->Qtree_Y           = 0.0;
   mParameters->Leo               = false;
