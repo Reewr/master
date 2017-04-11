@@ -124,6 +124,7 @@ namespace LuaLib {
   namespace Learning {
     sol::table openLearning(sol::this_state state);
     sol::table openSpiderSwarm(sol::this_state state);
+    sol::table openNEATSubstrate(sol::this_state state);
     sol::table openNEATParameters(sol::this_state state);
   }
 }

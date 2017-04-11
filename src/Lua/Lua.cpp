@@ -369,6 +369,10 @@ namespace Lua {
                      sol::c_call<decltype(&LuaLib::Learning::openNEATParameters),
                                  &LuaLib::Learning::openNEATParameters>,
                      false);
+      engine.require("NEATSubstrate",
+                     sol::c_call<decltype(&LuaLib::Learning::openNEATSubstrate),
+                                 &LuaLib::Learning::openNEATSubstrate>,
+                     false);
     }
   }
 

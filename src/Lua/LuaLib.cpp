@@ -20,6 +20,7 @@
 
 #include "../Learning/SpiderSwarm.hpp"
 #include <Parameters.h>
+#include <Substrate.h>
 
 /**
  * @brief
@@ -1180,6 +1181,7 @@ sol::table LuaLib::Learning::openLearning(sol::this_state state) {
 
   module["SpiderSwarm"] = openSpiderSwarm(state);
   module["NEATParameters"] = openNEATParameters(state);
+  module["openNEATSubstrate"] = openNEATSubstrate(state);
 
   return module;
 }
@@ -1202,6 +1204,34 @@ sol::table LuaLib::Learning::openSpiderSwarm(sol::this_state state) {
   module.set_usertype("SpiderSwarm", type);
 
   return module["SpiderSwarm"];
+}
+
+sol::table LuaLib::Learning::openNEATSubstrate(sol::this_state state) {
+  sol::state_view lua(state);
+  sol::table      module = lua.create_table();
+
+  sol::constructors<> ctor;
+
+  sol::usertype<NEAT::Substrate> type(ctor,
+    "m_leaky", &NEAT::Substrate::m_leaky,
+    "m_allow_input_hidden_links", &NEAT::Substrate::m_allow_input_hidden_links,
+    "m_allow_input_output_links", &NEAT::Substrate::m_allow_input_output_links,
+    "m_allow_hidden_hidden_links", &NEAT::Substrate::m_allow_hidden_hidden_links,
+    "m_allow_hidden_output_links", &NEAT::Substrate::m_allow_hidden_output_links,
+    "m_allow_output_hidden_links", &NEAT::Substrate::m_allow_output_hidden_links,
+    "m_allow_output_output_links", &NEAT::Substrate::m_allow_output_output_links,
+    "m_allow_looped_hidden_links", &NEAT::Substrate::m_allow_looped_hidden_links,
+    "m_allow_looped_output_links", &NEAT::Substrate::m_allow_looped_output_links,
+    "m_query_weights_only", &NEAT::Substrate::m_query_weights_only,
+    "m_hidden_nodes_activation", &NEAT::Substrate::m_hidden_nodes_activation,
+    "m_output_nodes_activation", &NEAT::Substrate::m_output_nodes_activation,
+    "m_max_weight_and_bias", &NEAT::Substrate::m_max_weight_and_bias,
+    "m_min_time_const", &NEAT::Substrate::m_min_time_const,
+    "m_max_time_const", &NEAT::Substrate::m_max_time_const);
+
+  module.set_usertype("NEATSubstrate", type);
+
+  return module["NEATSubstrate"];
 }
 
 sol::table LuaLib::Learning::openNEATParameters(sol::this_state state) {
