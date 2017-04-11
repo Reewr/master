@@ -6,6 +6,7 @@
 
 #include "../3D/Spider.hpp"
 #include "../3D/World.hpp"
+#include "../3D/Text3D.hpp"
 
 #include "DrawablePhenotype.hpp"
 
@@ -106,6 +107,7 @@ Phenotype::Phenotype()
     , planeMotion(nullptr)
     , planeBody(nullptr)
     , drawablePhenotype(nullptr)
+    , hoverText(nullptr)
     , fitness(1)
     , numUpdates(0)
     , failed(false)
@@ -125,6 +127,7 @@ void Phenotype::remove() {
   delete network;
   delete planeMotion;
   delete planeBody;
+  delete hoverText;
 }
 
 /**
@@ -372,6 +375,15 @@ void Phenotype::reset(int speciesId, int individualId) {
                                                       btVector3(0, 0, 0));
     planeBody = new btRigidBody(consInfo);
     world->world()->addRigidBody(planeBody);
+  }
+
+  std::string textOverHead =
+    std::to_string(speciesId) + ":" + std::to_string(individualId);
+
+  if (hoverText == nullptr) {
+    hoverText = new Text3D("Font::Dejavu", textOverHead, mmm::vec3(0, 0, 0));
+  } else {
+    hoverText->setText(textOverHead);
   }
 
   if (spider == nullptr) {

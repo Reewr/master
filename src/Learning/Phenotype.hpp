@@ -12,6 +12,7 @@ class btStaticPlaneShape;
 class World;
 class Spider;
 class DrawablePhenotype;
+class Text3D;
 
 namespace NEAT {
   class NeuralNetwork;
@@ -38,6 +39,7 @@ struct Phenotype : Logging::Log {
   static btStaticPlaneShape* plane;
 
   DrawablePhenotype* drawablePhenotype;
+  Text3D* hoverText;
 
   mmm::vec<9>  fitness;
   unsigned int numUpdates;
