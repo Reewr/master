@@ -212,7 +212,7 @@ void Phenotype::update(float deltaTime) {
 
   // construct input vector which is known to be exactly 172 elements
   std::vector<double> inputs;
-  inputs.reserve(53);
+  inputs.reserve(188);
   inputs.push_back(mmm::sin(duration));
   duration += deltaTime;
 
@@ -232,10 +232,10 @@ void Phenotype::update(float deltaTime) {
     // inputs.push_back(ang.y);
     // inputs.push_back(ang.z);
 
-    // auto v = part.second.part->rigidBody()->getLinearVelocity();
-    // inputs.push_back(v.x());
-    // inputs.push_back(v.z());
-    // inputs.push_back(v.y());
+    auto v = part.second.part->rigidBody()->getLinearVelocity();
+    inputs.push_back(v.x());
+    inputs.push_back(v.z());
+    inputs.push_back(v.y());
 
 
     if (part.second.hinge != nullptr) {
