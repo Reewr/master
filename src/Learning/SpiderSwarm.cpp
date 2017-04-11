@@ -600,6 +600,16 @@ void SpiderSwarm::recreatePhenotypes() {
   mLog->debug("Created {} spiders", mPhenotypes.size());
 }
 
+/**
+ * @brief
+ *   Returns a reference to the parameters
+ *
+ * @return
+ */
+NEAT::Parameters& SpiderSwarm::parameters() {
+  return *mParameters;
+}
+
 void SpiderSwarm::restart() {
   mRestartOnNextUpdate = true;
 }

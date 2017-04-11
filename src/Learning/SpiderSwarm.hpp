@@ -67,6 +67,9 @@ public:
   // from file
   void load(const std::string& filename);
 
+  // Returns a reference to the parameter
+  NEAT::Parameters& parameters();
+
   // Restarts the simulation
   void restart();
 
