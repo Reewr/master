@@ -300,6 +300,9 @@ void Engine::initGL() {
   glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
   glFrontFace(GL_CCW);
+
+  if (mCFG->graphics.aliasing != 0)
+    glEnable(GL_MULTISAMPLE);
 }
 
 /**
