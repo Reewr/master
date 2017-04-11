@@ -5,8 +5,9 @@
 #include <btBulletDynamicsCommon.h>
 
 #include "../3D/Spider.hpp"
-#include "../3D/World.hpp"
 #include "../3D/Text3D.hpp"
+#include "../3D/World.hpp"
+#include "../GlobalLog.hpp"
 
 #include "DrawablePhenotype.hpp"
 
