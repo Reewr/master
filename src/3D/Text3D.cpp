@@ -12,9 +12,9 @@
 Text3D::Text3D(const std::string& font,
        const std::string& text,
        const mmm::vec3&   position)
-  : Text(font, text, mmm::vec2(0), 300)
-  , mPosition(position) {
+  : Text(font, text, mmm::vec2(0), 300) {
     mFont3DProgram = mAsset->rManager()->get<Program>("Program::Font3D");
+    setPosition(position);
   }
 
 /**
@@ -34,9 +34,20 @@ mmm::vec2 Text3D::getNormalizedSize() {
 
 /**
  * @brief
+ *   Sets the position but adjusts it so that the text is aligned
+ *   to the middle of the coordinate.
+ *
+ * @param position
+ */
+void Text3D::setPosition(const mmm::vec3& position) {
+  mPosition = mmm::vec3(position.xy - getNormalizedSize() / 2, position.z);
+}
+
+/**
+ * @brief
  *   Draws the 3D text
  */
-void Text3D::draw() {
+void Text3D::draw(mmm::vec3 offset) {
   Camera* camera        = mAsset->camera();
   const mmm::mat4& proj = camera->projection();
   const mmm::mat4& view = camera->view();
@@ -44,42 +55,24 @@ void Text3D::draw() {
   mmm::vec3 cameraRight = {view[0][0], view[0][1], view[0][2]};
   mmm::vec3 cameraUp    = {view[1][0], view[1][1], view[1][2]};
 
-  Utils::assertGL();
   mFont3DProgram->bind();
-  Utils::assertGL();
   mFont3DProgram->setUniform("MVP", proj * view * mmm::mat4::identity);
-  Utils::assertGL();
   mFont3DProgram->setUniform("cameraRight", cameraRight);
-  Utils::assertGL();
   mFont3DProgram->setUniform("cameraUp", cameraUp);
-  Utils::assertGL();
-  mFont3DProgram->setUniform("worldPosition", mPosition);
-  // mFont3DProgram->setUniform("size", getNormalizedSize());
+  mFont3DProgram->setUniform("worldPosition", mPosition + offset);
 
-  Utils::assertGL();
   if (mHasBackgroundColor) {
     mFont3DProgram->setUniform("isBackground", true);
 
-  Utils::assertGL();
     glBindVertexArray(mVAOBackground);
-  Utils::assertGL();
     glDrawArrays(GL_TRIANGLES, 0, mNumVerticesBackground);
-  Utils::assertGL();
     glBindVertexArray(0);
-  Utils::assertGL();
   }
 
-  Utils::assertGL();
   mTextFont->getTexture(mCharacterSize)->bind(0);
-  Utils::assertGL();
   mFont3DProgram->setUniform("isBackground", false);
-  Utils::assertGL();
 
-  Utils::assertGL();
   glBindVertexArray(mVAO);
-  Utils::assertGL();
   glDrawArrays(GL_TRIANGLES, 0, mNumVertices);
-  Utils::assertGL();
   glBindVertexArray(0);
-  Utils::assertGL();
 }

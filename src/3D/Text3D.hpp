@@ -11,9 +11,12 @@ public:
          const std::string& text,
          const mmm::vec3&   position);
 
-  void draw();
-
+  // Returns the normalized size of the text (between -1 and 1)
   mmm::vec2 getNormalizedSize();
+
+  void setPosition(const mmm::vec3& position);
+
+  void draw(mmm::vec3 offset = mmm::vec3(0,0,0));
 
 private:
   std::shared_ptr<Program> mFont3DProgram;
