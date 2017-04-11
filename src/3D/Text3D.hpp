@@ -6,6 +6,9 @@ class Camera;
 
 class Text3D : public Text {
 public:
+  // Fixes warning about hiding functions
+  using Text::setPosition;
+  using GUI::draw;
 
   Text3D(const std::string& font,
          const std::string& text,
