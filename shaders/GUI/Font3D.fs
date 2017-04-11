@@ -13,7 +13,16 @@ uniform bool isColorOverriden = false;
 uniform vec3 overrideColor;
 
 void main() {
-  vec4 texColor = texture(fontTexture, Texcoord);
-  vec4 usedColors = isColorOverriden ? vec4(overrideColor, 1.0) : Colors;
-  outColor = isBackground ? Colors : texColor.r * usedColors;
+  // If we are currently rending the background of the text,
+  // just return the colors
+  //
+  // If we are instead rending the text and the color has been
+  // overriden, ignore the color and just set the color
+  // and sample from the texture to get the font
+  if (isBackground)
+    outColor = Colors;
+  else {
+    outColor  = isColorOverriden ? vec4(overrideColor, 1.0) : Colors;
+    outColor *= texture(fontTexture, Texcoord).r;
+  }
 }
