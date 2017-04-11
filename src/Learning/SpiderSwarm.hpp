@@ -52,6 +52,8 @@ public:
   // Returns the current drawing method
   DrawingMethod drawingMethod();
 
+  void toggleDrawDebugNetworks();
+
   // Updates the SpiderSwarm which will either run a normal update
   // on the current batch or figure out which batch is next
   void update(float deltaTime);

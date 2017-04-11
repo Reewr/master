@@ -118,6 +118,10 @@ SpiderSwarm::DrawingMethod SpiderSwarm::drawingMethod() {
   return mDrawingMethod;
 }
 
+void SpiderSwarm::toggleDrawDebugNetworks() {
+  mDrawDebugNetworks = !mDrawDebugNetworks;
+}
+
 /**
  * @brief
  *   This is the main update function that controls what to do next.
