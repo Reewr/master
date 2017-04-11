@@ -397,8 +397,8 @@ void Phenotype::reset(int speciesId, int individualId) {
     world->world()->addRigidBody(planeBody);
   }
 
-  std::string textOverHead =
-    std::to_string(speciesId) + ":" + std::to_string(individualId);
+  std::string textOverHead = "\\<255,255,255,255:0,0,0,255>" + std::to_string(speciesId) +
+                             ":" + std::to_string(individualId) + "\\</>";
 
   if (hoverText == nullptr) {
     hoverText = new Text3D("Font::Dejavu", textOverHead, mmm::vec3(0, 0, 0));
