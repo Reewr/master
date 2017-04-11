@@ -58,6 +58,9 @@ addResource("Program::GUI", "shaders/GUI/GUI.vs,shaders/GUI/GUI.fs",
 addResource("Program::Font", "shaders/GUI/Font.vs,shaders/GUI/Font.fs",
             ResourceType.Program, ResourceScope.All)
 
+addResource("Program::Font3D", "shaders/GUI/Font3D.vs,shaders/GUI/Font.fs",
+            ResourceType.Program, ResourceScope.All)
+
 addResource("Program::ColorRect", "shaders/ColorRect.vs,shaders/ColorRect.fs",
             ResourceType.Program, ResourceScope.All)
 
