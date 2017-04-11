@@ -54,6 +54,7 @@ Master::Master(Asset* a) : mAsset(a) {
   for (auto d : mDrawable3D)
     mWorld->addObject(d);
 
+  a->setCamera(mCamera);
   mLua->reInitialize();
   mLua->engine.set_function("disablePhysics",
                             [&]() { mWorld->disablePhysics(); });
