@@ -107,9 +107,6 @@ World::World(const vec3& gravity, World::Solver solver, World::Broadphase phase)
 World::~World() {
   removePickingConstraint();
 
-  for (auto element : mElements)
-    removeObject(element, false);
-
   delete mWorld;
   delete mSolver;
   delete mSolverInterface;
@@ -189,39 +186,6 @@ void World::reset() {
  *   if this is true, which it defaults to, it will remove
  *   children as well.
  */
-void World::removeObject(Drawable3D* element, bool removeChildren) {
-  if (element == nullptr)
-    return;
-
-  // remove them from the world first
-  for (auto a : mElements) {
-    if (a == element && element != nullptr) {
-
-      if (a->hasPhysics()) {
-        mWorld->removeRigidBody(a->rigidBody());
-
-        for (auto& c : a->constraints()) {
-          if (&c->getRigidBodyA() == a->rigidBody()) {
-            mWorld->removeConstraint(c);
-          }
-        }
-      }
-
-      if (removeChildren) {
-        for (auto& child : a->children())
-          removeObject(child);
-      }
-    }
-  }
-
-  // then remove them from the list
-  mElements.erase(std::remove_if(mElements.begin(),
-                                 mElements.end(),
-                                 [element](Drawable* e) {
-                                   return e == element;
-                                 }),
-                  mElements.end());
-}
 
 /**
  * @brief
