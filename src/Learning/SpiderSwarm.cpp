@@ -502,18 +502,21 @@ void SpiderSwarm::updateEpoch() {
   mLog->info("Best of current generation {} %, Best of all: {} %",
              best * 100,
              mBestPossibleFitness * 100);
-  mLog->info("The index being drawn is now: {}", mBestIndex);
 
-  mLog->info("Breakdown of fitness:");
-  mLog->info("  0: {} %", mPhenotypes[mBestIndex].fitness[0] * 100);
-  mLog->info("  1: {} %", mPhenotypes[mBestIndex].fitness[1] * 100);
-  mLog->info("  2: {} %", mPhenotypes[mBestIndex].fitness[2] * 100);
-  mLog->info("  3: {} %", mPhenotypes[mBestIndex].fitness[3] * 100);
-  mLog->info("  4: {} %", mPhenotypes[mBestIndex].fitness[4] * 100);
-  mLog->info("  5: {} %", mPhenotypes[mBestIndex].fitness[5] * 100);
-  mLog->info("  6: {} %", mPhenotypes[mBestIndex].fitness[6] * 100);
-  mLog->info("  7: {} %", mPhenotypes[mBestIndex].fitness[7] * 100);
-  mLog->info("  8: {} %", mPhenotypes[mBestIndex].fitness[8] * 100);
+  for (auto i : mSpeciesLeaders) {
+    mLog->info("-------------------------------------");
+    mLog->info("The best in species: {}-{} >>= {} %{}",
+               mPhenotypes[i].speciesIndex,
+               mPhenotypes[i].individualIndex,
+               mmm::product(mPhenotypes[i].fitness) * 100.f,
+               i == mBestIndex ? " (best)" : "");
+
+    size_t j = 0;
+    for (auto& f : Phenotype::FITNESS_HANDLERS) {
+      mLog->info("  {}: {} %", f.name(), mPhenotypes[i].fitness[j] * 100.f);
+      j += 1;
+    }
+  }
 
   mPopulation->Epoch();
   recreatePhenotypes();
