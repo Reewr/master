@@ -1198,6 +1198,7 @@ sol::table LuaLib::Learning::openSpiderSwarm(sol::this_state state) {
     "loadPopulation", &SpiderSwarm::loadPopulation,
     "loadSubstrate", &SpiderSwarm::loadSubstrate,
     "parameters", &SpiderSwarm::parameters,
+    "substrate", &SpiderSwarm::substrate,
     "restart", &SpiderSwarm::restart,
     "toggleDrawDebugNetworks", &SpiderSwarm::toggleDrawDebugNetworks);
 
