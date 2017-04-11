@@ -75,5 +75,7 @@ struct Phenotype : Logging::Log {
   // Performs the update of the phenotype
   void update(float deltaTime);
 
+  void draw(std::shared_ptr<Program>& prog, mmm::vec3 offset, bool bindTexture);
+
   static std::vector<Fitness> FITNESS_HANDLERS;
 };

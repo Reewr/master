@@ -290,6 +290,22 @@ void Phenotype::update(float deltaTime) {
   ++numUpdates;
 }
 
+void Phenotype::draw(std::shared_ptr<Program>& prog,
+                     mmm::vec3                 offset,
+                     bool                      bindTexture) {
+
+  if (spider == nullptr)
+    return;
+
+  spider->enableUpdatingFromPhysics();
+  spider->draw(prog, offset, bindTexture);
+
+  if (bindTexture && hoverText != nullptr) {
+    auto& pos = spider->parts().at("Sternum").part->position();
+    hoverText->draw(pos + mmm::vec3(0, 3, 0) + offset);
+  }
+}
+
 /**
  * @brief
  *   Runs through the fitness calculations and executes
