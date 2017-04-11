@@ -338,6 +338,48 @@ void SpiderSwarm::load(const std::string& filename) {
 
   recreatePhenotypes();
 }
+void SpiderSwarm::loadPopulation(const std::string& filename) {
+  std::string popFilename   = filename + ".population";
+
+  if (mPopulation != nullptr)
+    delete mPopulation;
+
+  mPopulation = new NEAT::Population(popFilename.c_str());
+
+  mCurrentBatch        = 0;
+  mBestIndex           = 0;
+  mGeneration          = mPopulation->m_Generation;
+  mCurrentDuration     = 0;
+  mBestPossibleFitness = 0;
+
+  recreatePhenotypes();
+}
+void SpiderSwarm::loadParameters(const std::string& filename) {
+  std::string paramFilename = filename + ".parameters";
+
+  mParameters->Load(paramFilename.c_str());
+
+  mCurrentBatch        = 0;
+  mBestIndex           = 0;
+  mGeneration          = mPopulation->m_Generation;
+  mCurrentDuration     = 0;
+  mBestPossibleFitness = 0;
+
+  recreatePhenotypes();
+}
+void SpiderSwarm::loadSubstrate(const std::string& filename) {
+  std::string subFilename   = filename + ".substrate";
+
+  mSubstrate->load(subFilename);
+
+  mCurrentBatch        = 0;
+  mBestIndex           = 0;
+  mGeneration          = mPopulation->m_Generation;
+  mCurrentDuration     = 0;
+  mBestPossibleFitness = 0;
+
+  recreatePhenotypes();
+}
 
 /**
  * @brief

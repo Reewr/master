@@ -69,6 +69,10 @@ public:
   // from file
   void load(const std::string& filename);
 
+  void loadPopulation(const std::string& filename);
+  void loadParameters(const std::string& filename);
+  void loadSubstrate(const std::string& filename);
+
   // Returns a reference to the parameter
   NEAT::Parameters& parameters();
 
