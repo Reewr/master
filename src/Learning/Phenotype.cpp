@@ -469,27 +469,88 @@ std::vector<Fitness> Phenotype::FITNESS_HANDLERS = {
     }
   ),
   Fitness(
+    "Height    ",
+    "Fitness based on sternum height.",
+    [](const auto& phenotype, float current, float deltaTime) -> float {
+      const auto& parts   = phenotype.spider->parts();
+      auto*       sternum = parts.at("Sternum").part->rigidBody();
+      auto        t       = sternum->getCenterOfMassPosition();
+
+      return current * score(deltaTime, t.y() - 0.8f, 0.2f);
+    }
+  ),
+  Fitness(
     "Stability ",
-    "Fitness based on sternum rotation and height.",
+    "Fitness based on sternum rotation.",
     [](const auto& phenotype, float current, float deltaTime) -> float {
       const auto& parts = phenotype.spider->parts();
 
       auto* sternum = parts.at("Sternum").part->rigidBody();
-      auto  t       = sternum->getCenterOfMassPosition();
       auto  q       = sternum->getOrientation();
-
-      // position
-      current *= score(deltaTime, t.y() - 0.8f, 0.3f); // height
-
-      // rotation
-      vec3 r = getEulerAngles(q.x(), q.y(), q.z(), q.w());
+      vec3  r       = getEulerAngles(q.x(), q.y(), q.z(), q.w());
       r.y += mmm::radians(90.f);
 
-      current *= score(deltaTime, r.x, mmm::radians(15.f));
-      current *= score(deltaTime, r.y, mmm::radians(30.f));
-      current *= score(deltaTime, r.z, mmm::radians(15.f));
+      current *= score(deltaTime, r.x, mmm::radians(5.f));
+      current *= score(deltaTime, r.y, mmm::radians(10.f));
+      current *= score(deltaTime, r.z, mmm::radians(5.f));
 
       return current;
     }
+  ),
+  Fitness(
+    "Legs      ",
+    "Fitness based on leg height.",
+    [](const auto& phenotype, float current, float) -> float {
+      if (phenotype.duration < 2.f)
+        return current;
+
+      const auto& parts = phenotype.spider->parts();
+
+      float x;
+
+      x = parts.at("TarsusL1").part->rigidBody()->getCenterOfMassPosition().y();
+      x = mmm::min(x, parts.at("TarsusL2").part->rigidBody()->getCenterOfMassPosition().y());
+      x = mmm::min(x, parts.at("TarsusL3").part->rigidBody()->getCenterOfMassPosition().y());
+      x = mmm::min(x, parts.at("TarsusL4").part->rigidBody()->getCenterOfMassPosition().y());
+      x = mmm::min(x, parts.at("TarsusR1").part->rigidBody()->getCenterOfMassPosition().y());
+      x = mmm::min(x, parts.at("TarsusR2").part->rigidBody()->getCenterOfMassPosition().y());
+      x = mmm::min(x, parts.at("TarsusR3").part->rigidBody()->getCenterOfMassPosition().y());
+      x = mmm::min(x, parts.at("TarsusR4").part->rigidBody()->getCenterOfMassPosition().y());
+
+      current = mmm::max(current, x + 1.f);
+
+      // if (phenotype.duration > 4 && current < 1.4f) {
+      //   phenotype.kill();
+      //   return 0.f;
+      // }
+
+      return current;
+    },
+    [](const auto&, float current, float) -> float {
+      if (current == 0.f)
+        return 0.f;
+
+      return score(1.f, 1.f / mmm::clamp(current - 1.35f, 0.00001f, 1.f), 0.f);
+    }
   )
+  // Fitness(
+  //   "Symmetry  ",
+  //   "Fitness based on leg ground contact symmetry.",
+  //   [](const auto& phenotype, float current, float deltaTime) -> float {
+  //     // const auto& parts = phenotype.spider->parts();
+
+  //     float x = 0.f;
+
+  //     x += phenotype.collidesWithTerrain("TarsusL1");
+  //     x += phenotype.collidesWithTerrain("TarsusL2");
+  //     x += phenotype.collidesWithTerrain("TarsusL3");
+  //     x += phenotype.collidesWithTerrain("TarsusL4");
+  //     x += phenotype.collidesWithTerrain("TarsusR1");
+  //     x += phenotype.collidesWithTerrain("TarsusR2");
+  //     x += phenotype.collidesWithTerrain("TarsusR3");
+  //     x += phenotype.collidesWithTerrain("TarsusR4");
+
+  //     return current * score(deltaTime * 0.05, 4.f - x, 0.f);
+  //   }
+  // )
 };
