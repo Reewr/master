@@ -43,7 +43,6 @@ SpiderSwarm::SpiderSwarm()
     , mRestartOnNextUpdate(false)
     , mDrawingMethod(SpiderSwarm::DrawingMethod::Species1)
     , mBestIndex(0)
-    , mParameters(nullptr)
     , mSubstrate(nullptr)
     , mPopulation(nullptr) {
 
@@ -73,11 +72,10 @@ SpiderSwarm::SpiderSwarm()
   NEAT::RNG rng;
   rng.TimeSeed();
 
-  setDefaultParameters();
   setDefaultSubstrate();
   setDefaultPopulation();
 
-  mPhenotypes.reserve(mParameters->PopulationSize);
+  mPhenotypes.reserve(mPopulation->m_Parameters.PopulationSize);
 
   recreatePhenotypes();
 }
@@ -92,7 +90,6 @@ SpiderSwarm::~SpiderSwarm() {
     p.remove();
 
   mPhenotypes.clear();
-  delete mParameters;
   delete mSubstrate;
   delete mPopulation;
 }
@@ -320,7 +317,6 @@ void SpiderSwarm::save(const std::string& filename) {
   std::string subFilename   = filename + ".substrate";
 
   mPopulation->Save(popFilename.c_str());
-  mParameters->Save(paramFilename.c_str());
   mSubstrate->save(subFilename);
 }
 
@@ -358,7 +354,6 @@ void SpiderSwarm::load(const std::string& filename) {
     delete mPopulation;
 
   mPopulation = new NEAT::Population(popFilename.c_str());
-  mParameters->Load(paramFilename.c_str());
   mSubstrate->load(subFilename);
 
   mCurrentBatch        = 0;
@@ -385,27 +380,6 @@ void SpiderSwarm::loadPopulation(const std::string& filename) {
     delete mPopulation;
 
   mPopulation = new NEAT::Population(popFilename.c_str());
-
-  mCurrentBatch        = 0;
-  mBestIndex           = 0;
-  mGeneration          = mPopulation->m_Generation;
-  mCurrentDuration     = 0;
-  mBestPossibleFitness = 0;
-
-  recreatePhenotypes();
-}
-
-/**
- * @brief
- *   Like `load` but only loads the parameters from file. Like
- *   the other load functions, it basically resets everything.
- *
- * @param filename
- */
-void SpiderSwarm::loadParameters(const std::string& filename) {
-  std::string paramFilename = filename + ".parameters";
-
-  mParameters->Load(paramFilename.c_str());
 
   mCurrentBatch        = 0;
   mBestIndex           = 0;
@@ -658,7 +632,7 @@ void SpiderSwarm::updateEpoch() {
  *   `updateThreadBatches`
  */
 void SpiderSwarm::recreatePhenotypes() {
-  mLog->debug("Recreating {} phenotypes...", mParameters->PopulationSize);
+  mLog->debug("Recreating {} phenotypes...", mPopulation->m_Parameters.PopulationSize);
   mLog->debug("We have {} species", mPopulation->m_Species.size());
 
   size_t index      = 0;
@@ -686,7 +660,7 @@ void SpiderSwarm::recreatePhenotypes() {
       auto& individual = species.m_Individuals[j];
       individual.BuildESHyperNEATPhenotype(*mPhenotypes[index].network,
                                            *mSubstrate,
-                                           *mParameters);
+                                           mPopulation->m_Parameters);
 #endif
       ++index;
     }
@@ -715,7 +689,7 @@ void SpiderSwarm::recreatePhenotypes() {
                       workIter + grainSize,
                       std::ref(*mPopulation),
                       std::ref(*mSubstrate),
-                      std::ref(*mParameters));
+                      std::ref(mPopulation->m_Parameters));
     workIter += grainSize;
   }
 
@@ -724,7 +698,7 @@ void SpiderSwarm::recreatePhenotypes() {
                                std::end(mPhenotypes),
                                std::ref(*mPopulation),
                                std::ref(*mSubstrate),
-                               std::ref(*mParameters));
+                               std::ref(mPopulation->m_Parameters));
 
   for (auto&& i : threads)
     i.join();
@@ -749,7 +723,7 @@ void SpiderSwarm::recreatePhenotypes() {
  * @return
  */
 NEAT::Parameters& SpiderSwarm::parameters() {
-  return *mParameters;
+  return mPopulation->m_Parameters;
 }
 
 /**
@@ -761,129 +735,6 @@ void SpiderSwarm::restart() {
   mRestartOnNextUpdate = true;
 }
 
-void SpiderSwarm::setDefaultParameters() {
-  if (mParameters != nullptr)
-    delete mParameters;
-
-  mParameters = new NEAT::Parameters();
-
-  // Basic parameters
-  mParameters->PopulationSize       = 128;
-  mParameters->DynamicCompatibility = true;
-  mParameters->MinSpecies           = 8;
-  mParameters->MaxSpecies           = 32;
-  mParameters->AllowClones          = true;
-
-  // GA parameters
-  mParameters->YoungAgeTreshold                       = 15;
-  mParameters->YoungAgeFitnessBoost                   = 1.1;
-  mParameters->SpeciesMaxStagnation                   = 15;
-  mParameters->StagnationDelta                        = 0.0;
-  mParameters->OldAgeTreshold                         = 35;
-  mParameters->OldAgePenalty                          = 1.0;
-  mParameters->DetectCompetetiveCoevolutionStagnation = false;
-  mParameters->KillWorstSpeciesEach                   = 15;
-  mParameters->KillWorstAge                           = 10;
-  mParameters->SurvivalRate                           = 0.2;
-  mParameters->CrossoverRate                          = 0.75;
-  mParameters->OverallMutationRate                    = 0.2;
-  mParameters->InterspeciesCrossoverRate              = 0.001;
-  mParameters->MultipointCrossoverRate                = 0.4;
-  mParameters->RouletteWheelSelection                 = false;
-  mParameters->TournamentSize                         = 4;
-  mParameters->EliteFraction                          = 0.15;
-
-  // Mutation parameters
-  mParameters->MutateAddNeuronProb       = 0.1;
-  mParameters->SplitRecurrent            = true;
-  mParameters->SplitLoopedRecurrent      = true;
-  mParameters->MutateAddLinkProb         = 0.2;
-  mParameters->MutateAddLinkFromBiasProb = 0.0;
-  mParameters->MutateRemLinkProb         = 0.0;
-  mParameters->MutateRemSimpleNeuronProb = 0.0;
-  mParameters->LinkTries                 = 32;
-  mParameters->RecurrentProb             = 0.50;
-  mParameters->RecurrentLoopProb         = 0.25;
-
-  // Parameter mutation parameters
-  mParameters->MutateWeightsProb             = 0.8;
-  mParameters->MutateWeightsSevereProb       = 0.5;
-  mParameters->WeightMutationRate            = 0.25;
-  mParameters->WeightMutationMaxPower        = 0.5;
-  mParameters->WeightReplacementMaxPower     = 1.0;
-  mParameters->MaxWeight                     = 8.0;
-  mParameters->MutateActivationAProb         = 0.0;
-  mParameters->MutateActivationBProb         = 0.0;
-  mParameters->ActivationAMutationMaxPower   = 0.5;
-  mParameters->ActivationBMutationMaxPower   = 0.0;
-  mParameters->MinActivationA                = 1.1;
-  mParameters->MaxActivationA                = 6.9;
-  mParameters->MinActivationB                = 0.0;
-  mParameters->MaxActivationB                = 0.0;
-  mParameters->TimeConstantMutationMaxPower  = 0.1;
-  mParameters->MutateNeuronTimeConstantsProb = 0.0;
-  mParameters->MutateNeuronBiasesProb        = 0.1;
-  mParameters->MinNeuronTimeConstant         = 0.04;
-  mParameters->MaxNeuronTimeConstant         = 0.24;
-  mParameters->MinNeuronBias                 = -8.0;
-  mParameters->MaxNeuronBias                 = 8.0;
-
-  // Activation function parameters
-  mParameters->MutateNeuronActivationTypeProb          = 0.0;
-  mParameters->ActivationFunction_SignedSigmoid_Prob   = 1.0;
-  mParameters->ActivationFunction_UnsignedSigmoid_Prob = 0.0;
-  mParameters->ActivationFunction_Tanh_Prob            = 1.0;
-  mParameters->ActivationFunction_TanhCubic_Prob       = 0.0;
-  mParameters->ActivationFunction_SignedStep_Prob      = 1.0;
-  mParameters->ActivationFunction_UnsignedStep_Prob    = 0.0;
-  mParameters->ActivationFunction_SignedGauss_Prob     = 1.0;
-  mParameters->ActivationFunction_UnsignedGauss_Prob   = 0.0;
-  mParameters->ActivationFunction_Abs_Prob             = 1.0;
-  mParameters->ActivationFunction_SignedSine_Prob      = 1.0;
-  mParameters->ActivationFunction_UnsignedSine_Prob    = 0.0;
-  mParameters->ActivationFunction_Linear_Prob          = 1.0;
-  mParameters->ActivationFunction_Relu_Prob            = 1.0;
-  mParameters->ActivationFunction_Softplus_Prob        = 1.0;
-
-
-  mParameters->BiasMutationMaxPower = 0.5;
-
-  // Genome properties parameters
-  // mParameters->DontUseBiasNeuron                       = false;
-  // mParameters->AllowLoops                              = true;
-
-  // Speciation parameters
-  mParameters->DisjointCoeff                         = 1.0;
-  mParameters->ExcessCoeff                           = 1.0;
-  mParameters->WeightDiffCoeff                       = 1.0;
-  mParameters->ActivationADiffCoeff                  = 0.0;
-  mParameters->ActivationBDiffCoeff                  = 0.0;
-  mParameters->TimeConstantDiffCoeff                 = 0.0;
-  mParameters->BiasDiffCoeff                         = 0.0;
-  mParameters->ActivationFunctionDiffCoeff           = 0.0;
-  mParameters->CompatTreshold                        = 2.0;
-  mParameters->MinCompatTreshold                     = 0.2;
-  mParameters->CompatTresholdModifier                = 0.3;
-  mParameters->CompatTreshChangeInterval_Generations = 1;
-  mParameters->CompatTreshChangeInterval_Evaluations = 10;
-
-  // ES-HyperNEAT parameters
-  mParameters->DivisionThreshold = 0.03;
-  mParameters->VarianceThreshold = 0.03;
-  mParameters->BandThreshold     = 0.3;
-  mParameters->InitialDepth      = 3;
-  mParameters->MaxDepth          = 4;
-  mParameters->IterationLevel    = 1;
-  mParameters->CPPN_Bias         = 1.0;
-  mParameters->Width             = 3.2;
-  mParameters->Height            = 3.2;
-  mParameters->Qtree_X           = 0.0;
-  mParameters->Qtree_Y           = 0.0;
-  mParameters->Leo               = false;
-  mParameters->LeoThreshold      = 0.3;
-  mParameters->LeoSeed           = false;
-  mParameters->GeometrySeed      = false;
-}
 void SpiderSwarm::setDefaultSubstrate() {
   if (mSubstrate != nullptr)
     delete mSubstrate;
@@ -1153,15 +1004,133 @@ void SpiderSwarm::setDefaultSubstrate() {
 
   mSubstrate->m_max_weight_and_bias = 8.0;
 }
+
 void SpiderSwarm::setDefaultPopulation() {
 
   // sanity checking
-  if (mParameters == nullptr)
-    throw std::runtime_error("Parameters is not set");
   if (mSubstrate == nullptr)
     throw std::runtime_error("Substrate is not set");
   if (mPopulation != nullptr)
     delete mPopulation;
+
+  NEAT::Parameters params;
+
+  // Basic parameters
+  params.PopulationSize       = 128;
+  params.DynamicCompatibility = true;
+  params.MinSpecies           = 8;
+  params.MaxSpecies           = 32;
+  params.AllowClones          = true;
+
+  // GA parameters
+  params.YoungAgeTreshold                       = 15;
+  params.YoungAgeFitnessBoost                   = 1.1;
+  params.SpeciesMaxStagnation                   = 15;
+  params.StagnationDelta                        = 0.0;
+  params.OldAgeTreshold                         = 35;
+  params.OldAgePenalty                          = 1.0;
+  params.DetectCompetetiveCoevolutionStagnation = false;
+  params.KillWorstSpeciesEach                   = 15;
+  params.KillWorstAge                           = 10;
+  params.SurvivalRate                           = 0.2;
+  params.CrossoverRate                          = 0.75;
+  params.OverallMutationRate                    = 0.2;
+  params.InterspeciesCrossoverRate              = 0.001;
+  params.MultipointCrossoverRate                = 0.4;
+  params.RouletteWheelSelection                 = false;
+  params.TournamentSize                         = 4;
+  params.EliteFraction                          = 0.15;
+
+  // Mutation parameters
+  params.MutateAddNeuronProb       = 0.1;
+  params.SplitRecurrent            = true;
+  params.SplitLoopedRecurrent      = true;
+  params.MutateAddLinkProb         = 0.2;
+  params.MutateAddLinkFromBiasProb = 0.0;
+  params.MutateRemLinkProb         = 0.0;
+  params.MutateRemSimpleNeuronProb = 0.0;
+  params.LinkTries                 = 32;
+  params.RecurrentProb             = 0.50;
+  params.RecurrentLoopProb         = 0.25;
+
+  // Parameter mutation parameters
+  params.MutateWeightsProb             = 0.8;
+  params.MutateWeightsSevereProb       = 0.5;
+  params.WeightMutationRate            = 0.25;
+  params.WeightMutationMaxPower        = 0.5;
+  params.WeightReplacementMaxPower     = 1.0;
+  params.MaxWeight                     = 8.0;
+  params.MutateActivationAProb         = 0.0;
+  params.MutateActivationBProb         = 0.0;
+  params.ActivationAMutationMaxPower   = 0.5;
+  params.ActivationBMutationMaxPower   = 0.0;
+  params.MinActivationA                = 1.1;
+  params.MaxActivationA                = 6.9;
+  params.MinActivationB                = 0.0;
+  params.MaxActivationB                = 0.0;
+  params.TimeConstantMutationMaxPower  = 0.1;
+  params.MutateNeuronTimeConstantsProb = 0.0;
+  params.MutateNeuronBiasesProb        = 0.1;
+  params.MinNeuronTimeConstant         = 0.04;
+  params.MaxNeuronTimeConstant         = 0.24;
+  params.MinNeuronBias                 = -8.0;
+  params.MaxNeuronBias                 = 8.0;
+
+  // Activation function parameters
+  params.MutateNeuronActivationTypeProb          = 0.0;
+  params.ActivationFunction_SignedSigmoid_Prob   = 1.0;
+  params.ActivationFunction_UnsignedSigmoid_Prob = 0.0;
+  params.ActivationFunction_Tanh_Prob            = 1.0;
+  params.ActivationFunction_TanhCubic_Prob       = 0.0;
+  params.ActivationFunction_SignedStep_Prob      = 1.0;
+  params.ActivationFunction_UnsignedStep_Prob    = 0.0;
+  params.ActivationFunction_SignedGauss_Prob     = 1.0;
+  params.ActivationFunction_UnsignedGauss_Prob   = 0.0;
+  params.ActivationFunction_Abs_Prob             = 1.0;
+  params.ActivationFunction_SignedSine_Prob      = 1.0;
+  params.ActivationFunction_UnsignedSine_Prob    = 0.0;
+  params.ActivationFunction_Linear_Prob          = 1.0;
+  params.ActivationFunction_Relu_Prob            = 1.0;
+  params.ActivationFunction_Softplus_Prob        = 1.0;
+
+
+  params.BiasMutationMaxPower = 0.5;
+
+  // Genome properties parameters
+  // params.DontUseBiasNeuron                       = false;
+  // params.AllowLoops                              = true;
+
+  // Speciation parameters
+  params.DisjointCoeff                         = 1.0;
+  params.ExcessCoeff                           = 1.0;
+  params.WeightDiffCoeff                       = 1.0;
+  params.ActivationADiffCoeff                  = 0.0;
+  params.ActivationBDiffCoeff                  = 0.0;
+  params.TimeConstantDiffCoeff                 = 0.0;
+  params.BiasDiffCoeff                         = 0.0;
+  params.ActivationFunctionDiffCoeff           = 0.0;
+  params.CompatTreshold                        = 2.0;
+  params.MinCompatTreshold                     = 0.2;
+  params.CompatTresholdModifier                = 0.3;
+  params.CompatTreshChangeInterval_Generations = 1;
+  params.CompatTreshChangeInterval_Evaluations = 10;
+
+  // ES-HyperNEAT parameters
+  params.DivisionThreshold = 0.03;
+  params.VarianceThreshold = 0.03;
+  params.BandThreshold     = 0.3;
+  params.InitialDepth      = 3;
+  params.MaxDepth          = 4;
+  params.IterationLevel    = 1;
+  params.CPPN_Bias         = 1.0;
+  params.Width             = 3.2;
+  params.Height            = 3.2;
+  params.Qtree_X           = 0.0;
+  params.Qtree_Y           = 0.0;
+  params.Leo               = false;
+  params.LeoThreshold      = 0.3;
+  params.LeoSeed           = false;
+  params.GeometrySeed      = false;
 
   NEAT::Genome genome(0,
                       mSubstrate->GetMinCPPNInputs(),
@@ -1171,7 +1140,7 @@ void SpiderSwarm::setDefaultPopulation() {
                       NEAT::ActivationFunction::TANH,
                       NEAT::ActivationFunction::TANH,
                       0,
-                      *mParameters);
+                      params);
 
-  mPopulation = new NEAT::Population(genome, *mParameters, true, 1.0, time(0));
+  mPopulation = new NEAT::Population(genome, params, true, 1.0, time(0));
 }

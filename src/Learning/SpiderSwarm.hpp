@@ -77,7 +77,6 @@ public:
 
   // Individual load functions
   void loadPopulation(const std::string& filename);
-  void loadParameters(const std::string& filename);
   void loadSubstrate(const std::string& filename);
 
   // Returns a reference to the parameter
@@ -142,11 +141,9 @@ private:
   void recreatePhenotypes();
 
   // NEAT stuff
-  NEAT::Parameters* mParameters;
   Substrate*        mSubstrate;
   NEAT::Population* mPopulation;
 
-  void setDefaultParameters();
   void setDefaultSubstrate();
   void setDefaultPopulation();
 };
