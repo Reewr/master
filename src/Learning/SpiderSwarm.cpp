@@ -174,8 +174,7 @@ void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
   switch (mDrawingMethod) {
     case DrawingMethod::DrawSingleInBatch: {
       if (mBatchStart < mPhenotypes.size()) {
-        mPhenotypes[mBatchStart].spider->enableUpdatingFromPhysics();
-        mPhenotypes[mBatchStart].spider->draw(prog, grid[0], bindTexture);
+        mPhenotypes[mBatchStart].draw(prog, grid[0], bindTexture);
 
         if (bindTexture && mDrawDebugNetworks)
           mPhenotypes[mBatchStart].drawablePhenotype->draw3D(grid[gridIndex] + mmm::vec3(0, 5, 0));
@@ -187,8 +186,7 @@ void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
            i < mBatchEnd && i < mPhenotypes.size() && i < gridSize;
            i++) {
 
-        mPhenotypes[i].spider->enableUpdatingFromPhysics();
-        mPhenotypes[i].spider->draw(prog, grid[0], bindTexture);
+        mPhenotypes[i].draw(prog, grid[0], bindTexture);
 
         if (bindTexture && mDrawDebugNetworks)
           mPhenotypes[i].drawablePhenotype->draw3D(grid[gridIndex] +
@@ -199,8 +197,7 @@ void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
     case DrawingMethod::Species1: {
       for (auto& a : mPhenotypes) {
         if (a.speciesIndex == gridIndex && gridIndex < gridSize) {
-          a.spider->enableUpdatingFromPhysics();
-          a.spider->draw(prog, grid[gridIndex], bindTexture);
+          a.draw(prog, grid[gridIndex], bindTexture);
 
           if (bindTexture && mDrawDebugNetworks)
             a.drawablePhenotype->draw3D(grid[gridIndex] + mmm::vec3(0, 5, 0));
@@ -213,8 +210,7 @@ void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
     case DrawingMethod::SpeciesLeaders: {
       for (auto& a : mSpeciesLeaders) {
         if (a < numPhenotypes && gridIndex < gridSize) {
-          mPhenotypes[a].spider->enableUpdatingFromPhysics();
-          mPhenotypes[a].spider->draw(prog, grid[gridIndex], bindTexture);
+          mPhenotypes[a].draw(prog, grid[gridIndex], bindTexture);
 
           if (bindTexture && mDrawDebugNetworks)
             mPhenotypes[a].drawablePhenotype->draw3D(grid[gridIndex] +
@@ -228,8 +224,7 @@ void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
     }
     case DrawingMethod::BestFitness:
       if (mBestIndex < numPhenotypes) {
-        mPhenotypes[mBestIndex].spider->enableUpdatingFromPhysics();
-        mPhenotypes[mBestIndex].spider->draw(prog, bindTexture);
+        mPhenotypes[mBestIndex].draw(prog, mmm::vec3(0,0,0), bindTexture);
         if (bindTexture && mDrawDebugNetworks)
           mPhenotypes[mBestIndex].drawablePhenotype->draw3D(grid[gridIndex] +
                                                             mmm::vec3(0, 5, 0));
@@ -238,8 +233,7 @@ void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
     case DrawingMethod::DrawAll:
       for (auto& p : mPhenotypes) {
         if (gridIndex < gridSize) {
-          p.spider->enableUpdatingFromPhysics();
-          p.spider->draw(prog, grid[gridIndex], bindTexture);
+          p.draw(prog, grid[gridIndex], bindTexture);
           if (bindTexture && mDrawDebugNetworks) {
             p.drawablePhenotype->draw3D(grid[gridIndex] + mmm::vec3(0, 5, 0));
           }
