@@ -19,6 +19,7 @@
 #include "../Utils/CFG.hpp"
 
 #include "../Learning/SpiderSwarm.hpp"
+#include <Parameters.h>
 
 /**
  * @brief
@@ -1178,6 +1179,7 @@ sol::table LuaLib::Learning::openLearning(sol::this_state state) {
   sol::table      module = lua.create_table();
 
   module["SpiderSwarm"] = openSpiderSwarm(state);
+  module["NEATParameters"] = openNEATParameters(state);
 
   return module;
 }
@@ -1197,4 +1199,130 @@ sol::table LuaLib::Learning::openSpiderSwarm(sol::this_state state) {
   module.set_usertype("SpiderSwarm", type);
 
   return module["SpiderSwarm"];
+}
+
+sol::table LuaLib::Learning::openNEATParameters(sol::this_state state) {
+  sol::state_view lua(state);
+  sol::table      module = lua.create_table();
+
+  sol::constructors<> ctor;
+
+  sol::usertype<NEAT::Parameters> type(ctor,
+    "PopulationSize", &NEAT::Parameters::PopulationSize,
+    "DynamicCompatibility", &NEAT::Parameters::DynamicCompatibility,
+    "MinSpecies", &NEAT::Parameters::MinSpecies,
+    "MaxSpecies", &NEAT::Parameters::MaxSpecies,
+    "InnovationsForever", &NEAT::Parameters::InnovationsForever,
+    "AllowClones", &NEAT::Parameters::AllowClones,
+    "YoungAgeTreshold", &NEAT::Parameters::YoungAgeTreshold,
+    "YoungAgeFitnessBoost", &NEAT::Parameters::YoungAgeFitnessBoost,
+    "SpeciesMaxStagnation", &NEAT::Parameters::SpeciesMaxStagnation,
+    "StagnationDelta", &NEAT::Parameters::StagnationDelta,
+    "OldAgeTreshold", &NEAT::Parameters::OldAgeTreshold,
+    "OldAgePenalty", &NEAT::Parameters::OldAgePenalty,
+    "DetectCompetetiveCoevolutionStagnation", &NEAT::Parameters::DetectCompetetiveCoevolutionStagnation,
+    "KillWorstSpeciesEach", &NEAT::Parameters::KillWorstSpeciesEach,
+    "KillWorstAge", &NEAT::Parameters::KillWorstAge,
+    "SurvivalRate", &NEAT::Parameters::SurvivalRate,
+    "CrossoverRate", &NEAT::Parameters::CrossoverRate,
+    "OverallMutationRate", &NEAT::Parameters::OverallMutationRate,
+    "InterspeciesCrossoverRate", &NEAT::Parameters::InterspeciesCrossoverRate,
+    "MultipointCrossoverRate", &NEAT::Parameters::MultipointCrossoverRate,
+    "RouletteWheelSelection", &NEAT::Parameters::RouletteWheelSelection,
+    "TournamentSize", &NEAT::Parameters::TournamentSize,
+    "EliteFraction", &NEAT::Parameters::EliteFraction,
+    "PhasedSearching", &NEAT::Parameters::PhasedSearching,
+    "DeltaCoding", &NEAT::Parameters::DeltaCoding,
+    "SimplifyingPhaseMPCTreshold", &NEAT::Parameters::SimplifyingPhaseMPCTreshold,
+    "SimplifyingPhaseStagnationTreshold", &NEAT::Parameters::SimplifyingPhaseStagnationTreshold,
+    "ComplexityFloorGenerations", &NEAT::Parameters::ComplexityFloorGenerations,
+    "NoveltySearch_K", &NEAT::Parameters::NoveltySearch_K,
+    "NoveltySearch_P_min", &NEAT::Parameters::NoveltySearch_P_min,
+    "NoveltySearch_Dynamic_Pmin", &NEAT::Parameters::NoveltySearch_Dynamic_Pmin,
+    "NoveltySearch_No_Archiving_Stagnation_Treshold", &NEAT::Parameters::NoveltySearch_No_Archiving_Stagnation_Treshold,
+    "NoveltySearch_Pmin_lowering_multiplier", &NEAT::Parameters::NoveltySearch_Pmin_lowering_multiplier,
+    "NoveltySearch_Pmin_min", &NEAT::Parameters::NoveltySearch_Pmin_min,
+    "NoveltySearch_Quick_Archiving_Min_Evaluations", &NEAT::Parameters::NoveltySearch_Quick_Archiving_Min_Evaluations,
+    "NoveltySearch_Pmin_raising_multiplier", &NEAT::Parameters::NoveltySearch_Pmin_raising_multiplier,
+    "NoveltySearch_Recompute_Sparseness_Each", &NEAT::Parameters::NoveltySearch_Recompute_Sparseness_Each,
+    "MutateAddNeuronProb", &NEAT::Parameters::MutateAddNeuronProb,
+    "SplitRecurrent", &NEAT::Parameters::SplitRecurrent,
+    "SplitLoopedRecurrent", &NEAT::Parameters::SplitLoopedRecurrent,
+    "NeuronTries", &NEAT::Parameters::NeuronTries,
+    "MutateAddLinkProb", &NEAT::Parameters::MutateAddLinkProb,
+    "MutateAddLinkFromBiasProb", &NEAT::Parameters::MutateAddLinkFromBiasProb,
+    "MutateRemLinkProb", &NEAT::Parameters::MutateRemLinkProb,
+    "MutateRemSimpleNeuronProb", &NEAT::Parameters::MutateRemSimpleNeuronProb,
+    "LinkTries", &NEAT::Parameters::LinkTries,
+    "RecurrentProb", &NEAT::Parameters::RecurrentProb,
+    "RecurrentLoopProb", &NEAT::Parameters::RecurrentLoopProb,
+    "MutateWeightsProb", &NEAT::Parameters::MutateWeightsProb,
+    "MutateWeightsSevereProb", &NEAT::Parameters::MutateWeightsSevereProb,
+    "WeightMutationRate", &NEAT::Parameters::WeightMutationRate,
+    "WeightMutationMaxPower", &NEAT::Parameters::WeightMutationMaxPower,
+    "WeightReplacementMaxPower", &NEAT::Parameters::WeightReplacementMaxPower,
+    "MaxWeight", &NEAT::Parameters::MaxWeight,
+    "MutateActivationAProb", &NEAT::Parameters::MutateActivationAProb,
+    "MutateActivationBProb", &NEAT::Parameters::MutateActivationBProb,
+    "ActivationAMutationMaxPower", &NEAT::Parameters::ActivationAMutationMaxPower,
+    "ActivationBMutationMaxPower", &NEAT::Parameters::ActivationBMutationMaxPower,
+    "TimeConstantMutationMaxPower", &NEAT::Parameters::TimeConstantMutationMaxPower,
+    "BiasMutationMaxPower", &NEAT::Parameters::BiasMutationMaxPower,
+    "MinActivationA", &NEAT::Parameters::MinActivationA,
+    "MaxActivationA", &NEAT::Parameters::MaxActivationA,
+    "MinActivationB", &NEAT::Parameters::MinActivationB,
+    "MaxActivationB", &NEAT::Parameters::MaxActivationB,
+    "MutateNeuronActivationTypeProb", &NEAT::Parameters::MutateNeuronActivationTypeProb,
+    "ActivationFunction_SignedSigmoid_Prob", &NEAT::Parameters::ActivationFunction_SignedSigmoid_Prob,
+    "ActivationFunction_UnsignedSigmoid_Prob", &NEAT::Parameters::ActivationFunction_UnsignedSigmoid_Prob,
+    "ActivationFunction_Tanh_Prob", &NEAT::Parameters::ActivationFunction_Tanh_Prob,
+    "ActivationFunction_TanhCubic_Prob", &NEAT::Parameters::ActivationFunction_TanhCubic_Prob,
+    "ActivationFunction_SignedStep_Prob", &NEAT::Parameters::ActivationFunction_SignedStep_Prob,
+    "ActivationFunction_UnsignedStep_Prob", &NEAT::Parameters::ActivationFunction_UnsignedStep_Prob,
+    "ActivationFunction_SignedGauss_Prob", &NEAT::Parameters::ActivationFunction_SignedGauss_Prob,
+    "ActivationFunction_UnsignedGauss_Prob", &NEAT::Parameters::ActivationFunction_UnsignedGauss_Prob,
+    "ActivationFunction_Abs_Prob", &NEAT::Parameters::ActivationFunction_Abs_Prob,
+    "ActivationFunction_SignedSine_Prob", &NEAT::Parameters::ActivationFunction_SignedSine_Prob,
+    "ActivationFunction_UnsignedSine_Prob", &NEAT::Parameters::ActivationFunction_UnsignedSine_Prob,
+    "ActivationFunction_Linear_Prob", &NEAT::Parameters::ActivationFunction_Linear_Prob,
+    "ActivationFunction_Relu_Prob", &NEAT::Parameters::ActivationFunction_Relu_Prob,
+    "ActivationFunction_Softplus_Prob", &NEAT::Parameters::ActivationFunction_Softplus_Prob,
+    "MutateNeuronTimeConstantsProb", &NEAT::Parameters::MutateNeuronTimeConstantsProb,
+    "MutateNeuronBiasesProb", &NEAT::Parameters::MutateNeuronBiasesProb,
+    "MinNeuronTimeConstant", &NEAT::Parameters::MinNeuronTimeConstant,
+    "MaxNeuronTimeConstant", &NEAT::Parameters::MaxNeuronTimeConstant,
+    "MinNeuronBias", &NEAT::Parameters::MinNeuronBias,
+    "MaxNeuronBias", &NEAT::Parameters::MaxNeuronBias,
+    "DisjointCoeff", &NEAT::Parameters::DisjointCoeff,
+    "ExcessCoeff", &NEAT::Parameters::ExcessCoeff,
+    "ActivationADiffCoeff", &NEAT::Parameters::ActivationADiffCoeff,
+    "ActivationBDiffCoeff", &NEAT::Parameters::ActivationBDiffCoeff,
+    "WeightDiffCoeff", &NEAT::Parameters::WeightDiffCoeff,
+    "TimeConstantDiffCoeff", &NEAT::Parameters::TimeConstantDiffCoeff,
+    "BiasDiffCoeff", &NEAT::Parameters::BiasDiffCoeff,
+    "ActivationFunctionDiffCoeff", &NEAT::Parameters::ActivationFunctionDiffCoeff,
+    "CompatTreshold", &NEAT::Parameters::CompatTreshold,
+    "MinCompatTreshold", &NEAT::Parameters::MinCompatTreshold,
+    "CompatTresholdModifier", &NEAT::Parameters::CompatTresholdModifier,
+    "CompatTreshChangeInterval_Generations", &NEAT::Parameters::CompatTreshChangeInterval_Generations,
+    "CompatTreshChangeInterval_Evaluations", &NEAT::Parameters::CompatTreshChangeInterval_Evaluations,
+    "DivisionThreshold", &NEAT::Parameters::DivisionThreshold,
+    "VarianceThreshold", &NEAT::Parameters::VarianceThreshold,
+    "BandThreshold", &NEAT::Parameters::BandThreshold,
+    "InitialDepth", &NEAT::Parameters::InitialDepth,
+    "MaxDepth", &NEAT::Parameters::MaxDepth,
+    "IterationLevel", &NEAT::Parameters::IterationLevel,
+    "CPPN_Bias", &NEAT::Parameters::CPPN_Bias,
+    "Width", &NEAT::Parameters::Width,
+    "Height", &NEAT::Parameters::Height,
+    "Qtree_X", &NEAT::Parameters::Qtree_X,
+    "Qtree_Y", &NEAT::Parameters::Qtree_Y,
+    "Leo", &NEAT::Parameters::Leo,
+    "LeoThreshold", &NEAT::Parameters::LeoThreshold,
+    "LeoSeed", &NEAT::Parameters::LeoSeed,
+    "GeometrySeed", &NEAT::Parameters::GeometrySeed);
+
+  module.set_usertype("NEATParameters", type);
+
+  return module["NEATParameters"];
 }
