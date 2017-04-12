@@ -555,7 +555,7 @@ void SpiderSwarm::updateEpoch() {
 
   size_t index = 0;
   for (size_t i = 0; i < mPopulation->m_Species.size(); ++i) {
-    float  bestOfSpecies = 0;
+    float  bestOfSpecies = -1.0;
     size_t leaderIndex   = 0;
 
     for (size_t j = 0; j < mPopulation->m_Species[i].m_Individuals.size();
