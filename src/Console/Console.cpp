@@ -344,6 +344,9 @@ void Console::input(const Input::Event& event) {
     return event.stopPropgation();
   }
 
+  if (!isVisible())
+    return;
+
   if (event == Input::Event::Type::KeyPress) {
     switch (event.key()) {
       // Escape means close console
