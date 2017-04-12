@@ -8,5 +8,5 @@ namespace Utils {
   void assertGL();
   void clearGLError();
 
-  std::string timeSinceStart();
+  std::string timeSinceStart(bool includeMicro = false);
 }
