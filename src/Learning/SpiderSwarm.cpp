@@ -1003,12 +1003,12 @@ void SpiderSwarm::setDefaultSubstrate() {
   mSubstrate->m_allow_input_hidden_links  = true;
   mSubstrate->m_allow_input_output_links  = false;
   mSubstrate->m_allow_hidden_output_links = true;
-  mSubstrate->m_allow_hidden_hidden_links = true;
+  mSubstrate->m_allow_hidden_hidden_links = false;
 
   mSubstrate->m_hidden_nodes_activation =
     NEAT::ActivationFunction::SIGNED_SIGMOID;
   mSubstrate->m_output_nodes_activation =
-    NEAT::ActivationFunction::UNSIGNED_SIGMOID;
+    NEAT::ActivationFunction::SIGNED_SIGMOID;
 
   mSubstrate->m_with_distance = true;
 
@@ -1026,7 +1026,7 @@ void SpiderSwarm::setDefaultPopulation() {
   NEAT::Parameters params;
 
   // Basic parameters
-  params.PopulationSize       = 128;
+  params.PopulationSize       = 50;
   params.DynamicCompatibility = true;
   params.MinSpecies           = 8;
   params.MaxSpecies           = 32;
@@ -1099,9 +1099,9 @@ void SpiderSwarm::setDefaultPopulation() {
   params.ActivationFunction_Abs_Prob             = 1.0;
   params.ActivationFunction_SignedSine_Prob      = 1.0;
   params.ActivationFunction_UnsignedSine_Prob    = 0.0;
-  params.ActivationFunction_Linear_Prob          = 1.0;
-  params.ActivationFunction_Relu_Prob            = 1.0;
-  params.ActivationFunction_Softplus_Prob        = 1.0;
+  params.ActivationFunction_Linear_Prob          = 0.0;
+  params.ActivationFunction_Relu_Prob            = 0.0;
+  params.ActivationFunction_Softplus_Prob        = 0.0;
 
 
   params.BiasMutationMaxPower = 0.5;
@@ -1131,7 +1131,7 @@ void SpiderSwarm::setDefaultPopulation() {
   params.BandThreshold     = 0.3;
   params.InitialDepth      = 3;
   params.MaxDepth          = 4;
-  params.IterationLevel    = 1;
+  params.IterationLevel    = 2;
   params.CPPN_Bias         = 1.0;
   params.Width             = 3.2;
   params.Height            = 3.2;
