@@ -192,12 +192,13 @@ void Console::setCommandFromHistory() {
  */
 void Console::doCommand(const Input::Event& event) {
   try {
-    mLog->debug("> " + mCurrentText);
+    log("> " + mCurrentText);
     mCommandHistory.push_back(mCurrentText);
     mCommandHistoryIndex                  = mCommandHistory.size();
     mAsset->lua()->engine["currentEvent"] = &event;
     mAsset->lua()->engine.script(mCurrentText);
   } catch (const sol::error& e) {
+    error("> " + mCurrentText + " - Failed");
     error(e.what());
   }
 
