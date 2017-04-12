@@ -111,6 +111,7 @@ Phenotype::Phenotype()
     , hoverText(nullptr)
     , fitness(1)
     , numUpdates(0)
+    , variance(0)
     , failed(false)
     , duration(0)
     , speciesIndex(-1)
@@ -301,6 +302,14 @@ void Phenotype::update(float deltaTime) {
   // update physics
   world->doPhysics(deltaTime);
 
+  // hack fitness
+  float prev = variance;
+  float next = 0.f;
+  for (auto x : outputs)
+    next += mmm::abs(x - 0.5);
+  fitness[0] = next == prev ? fitness[0] - deltaTime * 0.5 : 1.f;
+  variance = next;
+
   // judge fitness, if we can
   updateFitness(deltaTime);
 
@@ -449,6 +458,31 @@ btStaticPlaneShape* Phenotype::plane =
 // Below here is where all the fitness handlers are defined
 
 std::vector<Fitness> Phenotype::FITNESS_HANDLERS = {
+
+  Fitness(
+    "Laziness  ",
+    "Fitness based on variance of network outputs.",
+    [](const auto& phenotype, float current, float) -> float {
+
+      // This is a hack, as the actual variance is calculated within the
+      // `update` function... This is also why this fitness absolutely has to be
+      // the first fitness value in the handler array. Should fix this as some-
+      // point...
+
+      if (current <= 0.f) {
+        phenotype.kill();
+        return -1.f;
+      }
+
+      return current;
+    },
+    [](const auto&, float current, float) -> float {
+      if (current <= 0.f)
+        return 0.f;
+      return 1.f;
+    }
+  ),
+
   Fitness(
     "Movement  ",
     "Fitness based on movement is positive z direction.",
@@ -459,27 +493,6 @@ std::vector<Fitness> Phenotype::FITNESS_HANDLERS = {
     },
     [](const auto&, float current, float) -> float {
       return (current - 1.f) / 100.f;
-    }
-  ),
-  Fitness(
-    "Contact   ",
-    "Fitness based on sternum ground contact.",
-    [](const auto& phenotype, float current, float deltaTime) -> float {
-      const auto& parts = phenotype.spider->parts();
-
-      // if (phenotype.collidesWithTerrain(parts.at("Abdomin").part))
-      //   current += deltaTime;
-
-      // else if (phenotype.collidesWithTerrain(parts.at("Eye").part))
-      //   current += deltaTime;
-
-      if (phenotype.collidesWithTerrain(parts.at("Sternum").part))
-        current += deltaTime;
-
-      return current;
-    },
-    [](const auto&, float current, float) -> float {
-      return score(10.f, current - 1.f, 0.f);
     }
   ),
   Fitness(
@@ -511,6 +524,7 @@ std::vector<Fitness> Phenotype::FITNESS_HANDLERS = {
       return current;
     }
   ),
+
   Fitness(
     "Legs      ",
     "Fitness based on leg height.",
