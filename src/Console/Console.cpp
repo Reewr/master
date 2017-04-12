@@ -330,18 +330,18 @@ void Console::setAutoComplete() {
  * @return
  */
 void Console::input(const Input::Event& event) {
-  if (!isVisible() && event.isAction(Input::Action::Console)) {
-    mPrevInputOpened = true;
-    isVisible(true);
-    return event.stopPropgation();
-  }
-
   // Ignore all other events
   bool acceptedEvent = event == Input::Event::Type::KeyPress ||
                        event == Input::Event::Type::CharacterInput ||
                        event == Input::Event::Type::KeyRepeat;
-  if (!isVisible() || !acceptedEvent) {
+  if (!acceptedEvent) {
     return;
+  }
+
+  if (event.isAction(Input::Action::Console)) {
+    mPrevInputOpened = true;
+    isVisible(!isVisible());
+    return event.stopPropgation();
   }
 
   if (event == Input::Event::Type::KeyPress) {
