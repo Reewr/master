@@ -195,6 +195,25 @@ bool Phenotype::collidesWithTerrain(const std::string& str) const {
   return false;
 }
 
+
+float normalizeHingeAngle(float angle, float low, float up, float rest) {
+  if (angle < low)
+    angle += 2.f * mmm::constants<float>::pi;
+  if (angle > up)
+    angle -= 2.f * mmm::constants<float>::pi;
+
+  if (angle - rest == 0.f)
+    return 0.f;
+
+  return angle < rest ? -(angle - rest) / (low - rest)
+                      : (angle - rest) / (up - rest);
+};
+float denormalizeHingeAngle(float p, float low, float up, float rest) {
+  return p < 0 ? p * mmm::abs(low - rest) + rest
+               : p * mmm::abs(up - rest) + rest;
+};
+
+
 /**
  * @brief
  *   Activates the network associated with the spider by using
@@ -257,7 +276,16 @@ void Phenotype::update(float deltaTime) {
     if (part.second.hinge != nullptr) {
 
       float rot = part.second.hinge->getHingeAngle();
-      inputs.push_back(rot - part.second.restAngle);
+
+      if (part.second.hinge->hasLimit()) {
+        float low = part.second.hinge->getLowerLimit();
+        float up  = part.second.hinge->getUpperLimit();
+        rot = normalizeHingeAngle(rot, low, up, 0.f);
+      } else {
+        rot = normalizeHingeAngle(rot, -pi, pi, 0.f);
+      }
+
+      inputs.push_back(rot);
 
     } else if (part.second.dof != nullptr) {
 
@@ -281,12 +309,23 @@ void Phenotype::update(float deltaTime) {
 
       auto currentAngle = part.second.hinge->getHingeAngle();
       // auto targetAngle = part.second.restAngle;
-      auto targetAngle =
-        (part.second.active) ?
-          outputs[i] * 4.f * pi - 2.f * pi + part.second.restAngle :
-          part.second.restAngle;
+      // auto targetAngle =
+      //   (part.second.active) ?
+      //     outputs[i] * 4.f * pi - 2.f * pi + part.second.restAngle :
+      //     part.second.restAngle;
 
-      auto velocity = mmm::clamp(targetAngle - currentAngle, -0.1f, 0.1f) * 16.f;
+      float targetAngle;
+      float rot = part.second.active ? outputs[i] : 0.f;
+
+      if (part.second.hinge->hasLimit()) {
+        float low = part.second.hinge->getLowerLimit();
+        float up  = part.second.hinge->getUpperLimit();
+        targetAngle = denormalizeHingeAngle(rot, low, up, 0.f);
+      } else {
+        targetAngle = denormalizeHingeAngle(rot, -pi, pi, 0.f);
+      }
+
+      float velocity = mmm::clamp(targetAngle - currentAngle, -0.1f, 0.1f) * 16.f;
       part.second.hinge->enableAngularMotor(true, velocity, 2.f);
 
       i += (part.second.active) ? 1 : 0;
