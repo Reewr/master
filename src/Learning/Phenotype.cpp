@@ -345,7 +345,7 @@ void Phenotype::update(float deltaTime) {
   float prev = variance;
   float next = 0.f;
   for (auto x : outputs)
-    next += mmm::abs(x - 0.5);
+    next += mmm::abs(x);
   fitness[0] = next == prev ? fitness[0] - deltaTime * 0.5 : 1.f;
   variance = next;
 
