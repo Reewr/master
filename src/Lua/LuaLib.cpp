@@ -1200,7 +1200,8 @@ sol::table LuaLib::Learning::openSpiderSwarm(sol::this_state state) {
     "parameters", &SpiderSwarm::parameters,
     "substrate", &SpiderSwarm::substrate,
     "restart", &SpiderSwarm::restart,
-    "toggleDrawDebugNetworks", &SpiderSwarm::toggleDrawDebugNetworks);
+    "toggleDrawDebugNetworks", &SpiderSwarm::toggleDrawDebugNetworks,
+    "setIterationDuration", &SpiderSwarm::setIterationDuration);
 
   module.set_usertype("SpiderSwarm", type);
 

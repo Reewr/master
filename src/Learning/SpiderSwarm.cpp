@@ -412,6 +412,10 @@ void SpiderSwarm::loadSubstrate(const std::string& filename) {
   recreatePhenotypes();
 }
 
+void SpiderSwarm::setIterationDuration(float x) {
+  mIterationDuration = x;
+}
+
 /**
  * @brief
  *   Works exactly like `updateNormal` but instead of performing everything in
