@@ -32,7 +32,8 @@ local StateType = require 'State.Type'
 _print = print
 state  = require 'console/state'
 hud    = {
-  fps = require 'debug/fps'
+  fps = require 'debug/fps',
+  sd  = require 'debug/sd'
 }
 
 -- Override print so that it prints
