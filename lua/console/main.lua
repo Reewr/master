@@ -25,9 +25,10 @@
 
   @class module
 ]]
+
 local StateType = require 'State.Type'
--- These are the global values that the console
--- exposes
+
+-- These are the global values that the console exposes
 _print = print
 state  = require 'console/state'
 hud    = {
@@ -45,10 +46,12 @@ function print(...)
 
   local s = ''
 
+  -- Turn things to strings
   for i, v in ipairs({...}) do
     s = s .. tostring(v) .. ' '
   end
 
+  -- Print to console if active, else just print to stdout
   if console == nil then
     _print(s)
   else
@@ -57,7 +60,6 @@ function print(...)
 end
 
 --[[
-
   Exists the entire game by sending a state change
   to the Engine. Will stop everything and close the engine
 
@@ -72,7 +74,6 @@ function exit()
 end
 
 --[[
-
   As with `exit()`, thus function just exits the game.
   It is also only available if `cfg.console.enabled` is true.
 
@@ -83,4 +84,5 @@ function quit()
   exit()
 end
 
+-- Shows the FPS
 hud.fps.show()

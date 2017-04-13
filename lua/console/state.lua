@@ -1,9 +1,6 @@
 local StateType = require 'State.Type'
 local state = {}
 
--- Goes back a state. If the state is the current
--- state in the last, it will quit.
-
 --[[
   When called, tells the engine that it should
   go back the previous state. If the current
