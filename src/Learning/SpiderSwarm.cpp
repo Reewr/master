@@ -1013,16 +1013,16 @@ void SpiderSwarm::setDefaultSubstrate() {
   mSubstrate->m_allow_looped_output_links = false;
 
   mSubstrate->m_allow_input_hidden_links  = true;
-  mSubstrate->m_allow_input_output_links  = false;
+  mSubstrate->m_allow_input_output_links  = true;
   mSubstrate->m_allow_hidden_output_links = true;
-  mSubstrate->m_allow_hidden_hidden_links = false;
+  mSubstrate->m_allow_hidden_hidden_links = true;
 
   mSubstrate->m_hidden_nodes_activation =
     NEAT::ActivationFunction::SIGNED_SIGMOID;
   mSubstrate->m_output_nodes_activation =
     NEAT::ActivationFunction::SIGNED_SIGMOID;
 
-  mSubstrate->m_with_distance = true;
+  mSubstrate->m_with_distance = false;
 
   mSubstrate->m_max_weight_and_bias = 8.0;
 }
@@ -1042,22 +1042,22 @@ void SpiderSwarm::setDefaultPopulation() {
   params.DynamicCompatibility = true;
   params.MinSpecies           = 8;
   params.MaxSpecies           = 32;
-  params.AllowClones          = true;
+  params.AllowClones          = false;
 
   // GA parameters
   params.YoungAgeTreshold                       = 15;
   params.YoungAgeFitnessBoost                   = 1.1;
-  params.SpeciesMaxStagnation                   = 15;
+  params.SpeciesMaxStagnation                   = 12;
   params.StagnationDelta                        = 0.0;
-  params.OldAgeTreshold                         = 35;
+  params.OldAgeTreshold                         = 25;
   params.OldAgePenalty                          = 1.0;
-  params.DetectCompetetiveCoevolutionStagnation = false;
-  params.KillWorstSpeciesEach                   = 15;
+  params.DetectCompetetiveCoevolutionStagnation = true;
+  params.KillWorstSpeciesEach                   = 10;
   params.KillWorstAge                           = 10;
-  params.SurvivalRate                           = 0.2;
-  params.CrossoverRate                          = 0.75;
+  params.SurvivalRate                           = 0.15;
+  params.CrossoverRate                          = 0.65;
   params.OverallMutationRate                    = 0.2;
-  params.InterspeciesCrossoverRate              = 0.001;
+  params.InterspeciesCrossoverRate              = 0.01;
   params.MultipointCrossoverRate                = 0.4;
   params.RouletteWheelSelection                 = false;
   params.TournamentSize                         = 4;
@@ -1072,7 +1072,7 @@ void SpiderSwarm::setDefaultPopulation() {
   params.MutateRemLinkProb         = 0.0;
   params.MutateRemSimpleNeuronProb = 0.0;
   params.LinkTries                 = 32;
-  params.RecurrentProb             = 0.50;
+  params.RecurrentProb             = 0.3;
   params.RecurrentLoopProb         = 0.25;
 
   // Parameter mutation parameters
@@ -1082,14 +1082,14 @@ void SpiderSwarm::setDefaultPopulation() {
   params.WeightMutationMaxPower        = 0.5;
   params.WeightReplacementMaxPower     = 1.0;
   params.MaxWeight                     = 8.0;
-  params.MutateActivationAProb         = 0.0;
-  params.MutateActivationBProb         = 0.0;
+  params.MutateActivationAProb         = 0.05;
+  params.MutateActivationBProb         = 0.05;
   params.ActivationAMutationMaxPower   = 0.5;
   params.ActivationBMutationMaxPower   = 0.0;
   params.MinActivationA                = 1.1;
   params.MaxActivationA                = 6.9;
-  params.MinActivationB                = 0.0;
-  params.MaxActivationB                = 0.0;
+  params.MinActivationB                = 0.1;
+  params.MaxActivationB                = 1.5;
   params.TimeConstantMutationMaxPower  = 0.1;
   params.MutateNeuronTimeConstantsProb = 0.0;
   params.MutateNeuronBiasesProb        = 0.1;
@@ -1103,12 +1103,12 @@ void SpiderSwarm::setDefaultPopulation() {
   params.ActivationFunction_SignedSigmoid_Prob   = 1.0;
   params.ActivationFunction_UnsignedSigmoid_Prob = 0.0;
   params.ActivationFunction_Tanh_Prob            = 1.0;
-  params.ActivationFunction_TanhCubic_Prob       = 0.0;
-  params.ActivationFunction_SignedStep_Prob      = 1.0;
+  params.ActivationFunction_TanhCubic_Prob       = 1.0;
+  params.ActivationFunction_SignedStep_Prob      = 0.0;
   params.ActivationFunction_UnsignedStep_Prob    = 0.0;
   params.ActivationFunction_SignedGauss_Prob     = 1.0;
   params.ActivationFunction_UnsignedGauss_Prob   = 0.0;
-  params.ActivationFunction_Abs_Prob             = 1.0;
+  params.ActivationFunction_Abs_Prob             = 0.0;
   params.ActivationFunction_SignedSine_Prob      = 1.0;
   params.ActivationFunction_UnsignedSine_Prob    = 0.0;
   params.ActivationFunction_Linear_Prob          = 0.0;
@@ -1126,12 +1126,12 @@ void SpiderSwarm::setDefaultPopulation() {
   params.DisjointCoeff                         = 1.0;
   params.ExcessCoeff                           = 1.0;
   params.WeightDiffCoeff                       = 1.0;
-  params.ActivationADiffCoeff                  = 0.0;
-  params.ActivationBDiffCoeff                  = 0.0;
-  params.TimeConstantDiffCoeff                 = 0.0;
+  params.ActivationADiffCoeff                  = 1.0;
+  params.ActivationBDiffCoeff                  = 1.0;
+  params.TimeConstantDiffCoeff                 = 1.0;
   params.BiasDiffCoeff                         = 0.0;
-  params.ActivationFunctionDiffCoeff           = 0.0;
-  params.CompatTreshold                        = 2.0;
+  params.ActivationFunctionDiffCoeff           = 1.0;
+  params.CompatTreshold                        = 1.2;
   params.MinCompatTreshold                     = 0.2;
   params.CompatTresholdModifier                = 0.3;
   params.CompatTreshChangeInterval_Generations = 1;
@@ -1159,8 +1159,8 @@ void SpiderSwarm::setDefaultPopulation() {
                       0,
                       mSubstrate->GetMinCPPNOutputs(),
                       false,
-                      NEAT::ActivationFunction::TANH,
-                      NEAT::ActivationFunction::TANH,
+                      NEAT::ActivationFunction::TANH_CUBIC,
+                      NEAT::ActivationFunction::TANH_CUBIC,
                       0,
                       params);
 
