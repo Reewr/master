@@ -37,8 +37,9 @@ SpiderSwarm::SpiderSwarm()
     , mBatchSize(7)
     , mGeneration(0)
     , mCurrentDuration(0)
-    , mIterationDuration(6)
+    , mIterationDuration(10)
     , mBestPossibleFitness(0)
+    , mBestPossibleFitnessGeneration(0)
     , mDrawDebugNetworks(false)
     , mRestartOnNextUpdate(false)
     , mDrawingMethod(SpiderSwarm::DrawingMethod::Species1)
@@ -584,15 +585,24 @@ void SpiderSwarm::updateEpoch() {
   }
 
   ++mGeneration;
-  mBestIndex           = bestIndex;
-  mBestPossibleFitness = mmm::max(best, mBestPossibleFitness);
+  mBestIndex = bestIndex;
+
+  if (best > mBestPossibleFitness) {
+    mBestPossibleFitness = best;
+    mBestPossibleFitnessGeneration = mGeneration;
+  }
 
   mLog->info("Generation {}", mGeneration);
-  mLog->info("Best of current generation {} %, Best of all: {} %",
-             best * 100,
-             mBestPossibleFitness * 100);
+  mLog->info("Best of current generation {}, Best of all: {} ({})",
+             best,
+             mBestPossibleFitness,
+             mBestPossibleFitnessGeneration);
 
   for (auto i : mSpeciesLeaders) {
+    if (mPhenotypes[i].hasBeenKilled()) {
+      continue;
+    }
+
     mLog->info("-------------------------------------");
     mLog->info("The best in species: {}-{} >>= {} %{}",
                mPhenotypes[i].speciesIndex,

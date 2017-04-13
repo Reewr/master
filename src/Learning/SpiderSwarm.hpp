@@ -101,6 +101,7 @@ private:
   float mCurrentDuration;
   float mIterationDuration;
   float mBestPossibleFitness;
+  unsigned int mBestPossibleFitnessGeneration;
 
   bool mDrawDebugNetworks;
   bool mRestartOnNextUpdate;
