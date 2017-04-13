@@ -80,6 +80,8 @@ public:
   void loadPopulation(const std::string& filename);
   void loadSubstrate(const std::string& filename);
 
+  float currentDuration();
+  float iterationDuration();
   void setIterationDuration(float x);
 
   // Returns a reference to the parameter

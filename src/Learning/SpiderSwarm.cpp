@@ -412,6 +412,12 @@ void SpiderSwarm::loadSubstrate(const std::string& filename) {
   recreatePhenotypes();
 }
 
+float SpiderSwarm::currentDuration() {
+  return mCurrentDuration;
+}
+float SpiderSwarm::iterationDuration() {
+  return mIterationDuration;
+}
 void SpiderSwarm::setIterationDuration(float x) {
   mIterationDuration = x;
 }
