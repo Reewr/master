@@ -8,6 +8,7 @@
 
 #include "../Log.hpp"
 #include "Phenotype.hpp"
+#include "Statistics.hpp"
 
 #include <Genome.h>
 
@@ -115,6 +116,8 @@ private:
 
   bool mDrawDebugNetworks;
   bool mRestartOnNextUpdate;
+
+  Statistics mStats;
 
   NEAT::Genome mBestPossibleGenome;
 

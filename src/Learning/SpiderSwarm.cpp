@@ -327,10 +327,12 @@ void SpiderSwarm::save(const std::string& filename) {
   std::string paramFilename  = filename + ".parameters";
   std::string subFilename    = filename + ".substrate";
   std::string genomeFilename = filename + ".genome";
+  std::string statsFilename  = filename + ".csv";
 
   mPopulation->Save(popFilename.c_str());
   mSubstrate->save(subFilename);
   mBestPossibleGenome.Save(genomeFilename.c_str());
+  mStats.save(statsFilename);
 }
 
 /**
@@ -617,6 +619,8 @@ void SpiderSwarm::updateEpoch() {
 
   ++mGeneration;
   mBestIndex = bestIndex;
+
+  mStats.addEntry(mPhenotypes, mGeneration);
 
   mLog->info("Generation {}", mGeneration);
   mLog->info("Best of current generation {}, Best of all: {} ({})",
