@@ -388,6 +388,7 @@ void SpiderSwarm::load(const std::string& filename) {
   mCurrentDuration     = 0;
   mBestPossibleFitness = 0;
   mBestPossibleFitnessGeneration = 0;
+  mStats               = Statistics();
 
   recreatePhenotypes();
 }
