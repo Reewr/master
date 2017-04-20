@@ -92,6 +92,8 @@ public:
 private:
   std::vector<Phenotype> mPhenotypes;
 
+  unsigned int mNumInputs;
+
   size_t mCurrentBatch;
   size_t mBatchStart;
   size_t mBatchEnd;
