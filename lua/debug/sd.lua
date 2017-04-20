@@ -68,12 +68,23 @@ function SD.show(x, y, textSize, printInfo)
     textElement:draw()
   end
 
+  local time = 0
+
   -- on update, update the number of frames only
   -- showing them when a second has passed.
   function element:update(deltaTime)
     if swarm == nil then
       return
     end
+
+    time = time + deltaTime
+
+    -- Only update once per second
+    if time < 1.0 then
+      return
+    end
+
+    time = 0
 
     local strSD = string.format("%.2f", swarm:currentDuration())
 
