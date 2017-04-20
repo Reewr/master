@@ -9,6 +9,8 @@
 #include "../Log.hpp"
 #include "Phenotype.hpp"
 
+#include <Genome.h>
+
 class Program;
 class Spider;
 class Terrain;
@@ -86,6 +88,12 @@ public:
   // Returns a reference to the substrate
   NEAT::Substrate& substrate();
 
+  // Returns the best genome for the current generation
+  NEAT::Genome bestGenome();
+
+  // Returns the best possible genome ever
+  NEAT::Genome& bestPossibleGenome();
+
   // Restarts the simulation
   void restart();
 
@@ -107,6 +115,8 @@ private:
 
   bool mDrawDebugNetworks;
   bool mRestartOnNextUpdate;
+
+  NEAT::Genome mBestPossibleGenome;
 
   // Drawing settings
   DrawingMethod mDrawingMethod;

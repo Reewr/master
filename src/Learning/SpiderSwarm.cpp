@@ -323,12 +323,14 @@ void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
  * @param filename
  */
 void SpiderSwarm::save(const std::string& filename) {
-  std::string popFilename   = filename + ".population";
-  std::string paramFilename = filename + ".parameters";
-  std::string subFilename   = filename + ".substrate";
+  std::string popFilename    = filename + ".population";
+  std::string paramFilename  = filename + ".parameters";
+  std::string subFilename    = filename + ".substrate";
+  std::string genomeFilename = filename + ".genome";
 
   mPopulation->Save(popFilename.c_str());
   mSubstrate->save(subFilename);
+  mBestPossibleGenome.Save(genomeFilename.c_str());
 }
 
 /**
@@ -357,9 +359,10 @@ void SpiderSwarm::save(const std::string& filename) {
  * @param filename
  */
 void SpiderSwarm::load(const std::string& filename) {
-  std::string popFilename   = filename + ".population";
-  std::string paramFilename = filename + ".parameters";
-  std::string subFilename   = filename + ".substrate";
+  std::string popFilename    = filename + ".population";
+  std::string paramFilename  = filename + ".parameters";
+  std::string subFilename    = filename + ".substrate";
+  std::string genomeFilename = filename + ".genome";
 
   if (mPopulation != nullptr)
     delete mPopulation;
@@ -367,11 +370,22 @@ void SpiderSwarm::load(const std::string& filename) {
   mPopulation = new NEAT::Population(popFilename.c_str());
   mSubstrate->load(subFilename);
 
+  // Load the best possible genome if its available.
+  std::ifstream fs;
+  fs.open(genomeFilename);
+
+  if (fs.is_open()) {
+    mBestPossibleGenome = NEAT::Genome(genomeFilename.c_str());
+  } else {
+    mBestPossibleGenome = bestGenome();
+  }
+
   mCurrentBatch        = 0;
   mBestIndex           = 0;
   mGeneration          = mPopulation->m_Generation;
   mCurrentDuration     = 0;
   mBestPossibleFitness = 0;
+  mBestPossibleFitnessGeneration = 0;
 
   recreatePhenotypes();
 }
@@ -583,6 +597,13 @@ void SpiderSwarm::updateEpoch() {
         bestIndex = index;
       }
 
+      // Save the best possible genome
+      if (fitness > mBestPossibleFitness) {
+        mBestPossibleFitness = best;
+        mBestPossibleGenome  = mPopulation->m_Species[i].m_Individuals[j];
+        mBestPossibleFitnessGeneration = mGeneration + 1;
+      }
+
       if (fitness > bestOfSpecies) {
         bestOfSpecies = fitness;
         leaderIndex   = index;
@@ -596,11 +617,6 @@ void SpiderSwarm::updateEpoch() {
 
   ++mGeneration;
   mBestIndex = bestIndex;
-
-  if (best > mBestPossibleFitness) {
-    mBestPossibleFitness = best;
-    mBestPossibleFitnessGeneration = mGeneration;
-  }
 
   mLog->info("Generation {}", mGeneration);
   mLog->info("Best of current generation {}, Best of all: {} ({})",
@@ -776,6 +792,28 @@ NEAT::Parameters& SpiderSwarm::parameters() {
  */
 NEAT::Substrate& SpiderSwarm::substrate() {
   return *mSubstrate;
+}
+
+/**
+ * @brief
+ *   Returns the best genome for the current
+ *   generation
+ *
+ * @return
+ */
+NEAT::Genome SpiderSwarm::bestGenome() {
+  return mPopulation->GetBestGenome();
+}
+
+/**
+ * @brief
+ *   Returns the best possible genome since the start
+ *   of the simulation
+ *
+ * @return
+ */
+NEAT::Genome& SpiderSwarm::bestPossibleGenome() {
+  return mBestPossibleGenome;
 }
 
 /**
