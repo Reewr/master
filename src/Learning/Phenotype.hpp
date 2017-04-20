@@ -55,9 +55,7 @@ struct Phenotype : Logging::Log {
   Phenotype();
   ~Phenotype();
 
-  void updateFitness(float deltaTime);
-  void kill() const;
-
+  // Returns whether or not the robot has been killed
   bool hasBeenKilled() const;
 
   // Returns the final fitness of the Phenotype
@@ -80,8 +78,17 @@ struct Phenotype : Logging::Log {
   // Performs the update of the phenotype
   void update(float deltaTime);
 
+  // Draws the spider representing the phenotype together with its text
   void draw(std::shared_ptr<Program>& prog, mmm::vec3 offset, bool bindTexture);
 
   static btStaticPlaneShape* plane;
   static std::vector<Fitness> FITNESS_HANDLERS;
+
+private:
+  // Updates the fitness of the phenotype by
+  // running the fitness handlers
+  void updateFitness(float deltaTime);
+
+  // Kills the spider, stopping the evaluation of it
+  void kill() const;
 };
