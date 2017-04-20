@@ -485,7 +485,9 @@ float Phenotype::finalizeFitness() {
     index += 1;
   }
 
-  return fitness[0];
+  finalizedFitness = fitness[0];
+
+  return finalizedFitness;
 }
 
 /**
@@ -560,6 +562,7 @@ void Phenotype::reset(int speciesId, int individualId, unsigned int numInputs) {
   speciesIndex    = speciesId;
   individualIndex = individualId;
   numberOfInputs  = numInputs;
+  finalizedFitness = 0;
 }
 
 // In order to save memory, this shape is stored statically on

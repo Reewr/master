@@ -45,6 +45,7 @@ struct Phenotype : Logging::Log {
 
   float        variance;
   mutable bool failed;
+  float        finalizedFitness;
   float        duration;
   bool         hasFinalized;
 
