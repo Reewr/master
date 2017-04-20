@@ -63,7 +63,8 @@ float score(float deltaTime, float zeroIsBest, float bias = 0.05f) {
 
 /**
  * @brief
- *   Returns the Euler angles of a Quaternion
+ *   Returns the Euler angles of a Quaternion, as in the rotation
+ *   around a specific axis.
  *
  * @param x
  * @param y
@@ -110,10 +111,10 @@ Phenotype::Phenotype()
     , drawablePhenotype(nullptr)
     , hoverText(nullptr)
     , fitness(1)
-    , numUpdates(0)
     , variance(0)
     , failed(false)
     , duration(0)
+    , hasFinalized(false)
     , speciesIndex(-1)
     , individualIndex(-1) {}
 
@@ -225,67 +226,116 @@ float denormalizeHingeAngle(float p, float low, float up, float rest) {
  * @param deltaTime
  */
 void Phenotype::update(float deltaTime) {
+  // If the robot has been set to a fail state we ignore future simulations.
   if (failed)
     return;
 
   auto  pi    = mmm::constants<float>::pi;
   auto& parts = spider->parts();
 
-  // construct input vector which is known to be exactly 172 elements
-  std::vector<double> inputs;
-  inputs.reserve(188);
+  // Initiate start position
+  //
+  // We want to the simulation to always be equal for all robots. In order to do
+  // this more easily, we move the robot to a resting position before the simulation
+  // starts.
+  //
+  // This makes sure that all positions are equal.
+  if (duration < 0.0) {
+    for (auto& part : parts) {
+      if (part.second.hinge != nullptr) {
 
-  inputs.push_back(mmm::sin(duration));
+        auto currentAngle = part.second.hinge->getHingeAngle();
+        float velocity = mmm::clamp(part.second.restAngle - currentAngle, -0.3f, 0.3f) * 16.f;
+        part.second.hinge->enableAngularMotor(true, velocity, 2.f);
+      } else if (part.second.dof != nullptr) {
 
-  // float phase0 = mmm::sin(duration);
-  // float phase1 = mmm::sin(duration + pi);
+        // TODO
+      }
 
-  // inputs.push_back(phase0);
-  // inputs.push_back(phase1);
-  // inputs.push_back(phase0);
-  // inputs.push_back(phase1);
-  // inputs.push_back(phase1);
-  // inputs.push_back(phase0);
-  // inputs.push_back(phase1);
-  // inputs.push_back(phase0);
+    }
+
+    world->doPhysics(deltaTime);
+
+    duration += deltaTime;
+
+    // Return since we dont want the network to be used just yet.
+    return;
+  }
 
   duration += deltaTime;
 
-  inputs.push_back(collidesWithTerrain(parts["TarsusL1"].part) ? 1.0 : 0.0);
-  inputs.push_back(collidesWithTerrain(parts["TarsusL2"].part) ? 1.0 : 0.0);
-  inputs.push_back(collidesWithTerrain(parts["TarsusL3"].part) ? 1.0 : 0.0);
-  inputs.push_back(collidesWithTerrain(parts["TarsusL4"].part) ? 1.0 : 0.0);
-  inputs.push_back(collidesWithTerrain(parts["TarsusR1"].part) ? 1.0 : 0.0);
-  inputs.push_back(collidesWithTerrain(parts["TarsusR2"].part) ? 1.0 : 0.0);
-  inputs.push_back(collidesWithTerrain(parts["TarsusR3"].part) ? 1.0 : 0.0);
-  inputs.push_back(collidesWithTerrain(parts["TarsusR4"].part) ? 1.0 : 0.0);
+  auto tl1 = parts["TarsusL1"].part->rigidBody()->getCenterOfMassPosition().z();
+  auto tl2 = parts["TarsusL2"].part->rigidBody()->getCenterOfMassPosition().z();
+  auto tl3 = parts["TarsusL3"].part->rigidBody()->getCenterOfMassPosition().z();
+  auto tl4 = parts["TarsusL4"].part->rigidBody()->getCenterOfMassPosition().z();
+
+  auto tr1 = parts["TarsusR1"].part->rigidBody()->getCenterOfMassPosition().z();
+  auto tr2 = parts["TarsusR2"].part->rigidBody()->getCenterOfMassPosition().z();
+  auto tr3 = parts["TarsusR3"].part->rigidBody()->getCenterOfMassPosition().z();
+  auto tr4 = parts["TarsusR4"].part->rigidBody()->getCenterOfMassPosition().z();
+
+  auto neck     = parts["Neck"].part->rigidBody()->getCenterOfMassPosition().z();
+  auto abomin   = parts["Abdomin"].part->rigidBody()->getCenterOfMassPosition().z();
+  auto& sternum = parts["Sternum"].part->rigidBody()->getCenterOfMassPosition();
+
+  // Initialize the input list, which will contain many many elements.
+  std::vector<double> inputs;
+  inputs.reserve(numberOfInputs);
+
+  // Add an input that gives some indication of time.
+  inputs.push_back(mmm::sin(duration));
+
+  // Give the network an indication of how the legs are positioned
+  // relative to some central pieces of the robot. This may be
+  // used by the network to know which way to move the elements.
+  inputs.push_back(tl1 > neck ? -1.0 : 1.0);
+  inputs.push_back(tl2 > sternum.z() ? -1.0 : 1.0);
+  inputs.push_back(tl3 > sternum.z() ? -1.0 : 1.0);
+  inputs.push_back(tl4 > abomin ? -1.0 : 1.0);
+
+  inputs.push_back(tr1 > neck ? -1.0 : 1.0);
+  inputs.push_back(tr2 > sternum.z() ? -1.0 : 1.0);
+  inputs.push_back(tr3 > sternum.z() ? -1.0 : 1.0);
+  inputs.push_back(tr4 > abomin ? -1.0 : 1.0);
 
   for (auto& part : parts) {
 
-    // vec3 ang = part.second.part->angularVelocity();
-    // inputs.push_back(ang.x);
-    // inputs.push_back(ang.y);
-    // inputs.push_back(ang.z);
+    // If the part isnt active, ignore it
+    if (!part.second.active)
+      continue;
 
-    auto v = part.second.part->rigidBody()->getLinearVelocity();
-    inputs.push_back(v.x());
-    inputs.push_back(v.z());
-    inputs.push_back(v.y());
+    btRigidBody*     body         = part.second.part->rigidBody();
+    const btVector3& centerOfMass = body->getCenterOfMassPosition();
+    const btVector3& angularVel   = body->getAngularVelocity();
+    const btVector3& linearVel    = body->getLinearVelocity();
+    btVector3        relative     = centerOfMass - sternum;
 
+    // Add whether or not the element colides with anything.
+    inputs.push_back(collidesWithTerrain(body) ? 1.0 : 0.0);
+
+    // Add the height of the element
+    inputs.push_back(centerOfMass.y());
+
+    // Add position of the element relative to the Sternum, which
+    // represent the 0,0,0 point
+    inputs.push_back(relative.x());
+    inputs.push_back(relative.y());
+    inputs.push_back(relative.z());
+
+    // Add the current angular velocity of the element
+    inputs.push_back(angularVel.x());
+    inputs.push_back(angularVel.y());
+    inputs.push_back(angularVel.z());
+
+    // Add the current linear velocity of the element
+    inputs.push_back(linearVel.x());
+    inputs.push_back(linearVel.y());
+    inputs.push_back(linearVel.z());
 
     if (part.second.hinge != nullptr) {
 
-      float rot = part.second.hinge->getHingeAngle();
-
-      if (part.second.hinge->hasLimit()) {
-        float low = part.second.hinge->getLowerLimit();
-        float up  = part.second.hinge->getUpperLimit();
-        rot = normalizeHingeAngle(rot, low, up, 0.f);
-      } else {
-        rot = normalizeHingeAngle(rot, -pi, pi, 0.f);
-      }
-
-      inputs.push_back(rot);
+      // Add the current rotation of the hinge for the element
+      inputs.push_back(part.second.hinge->getHingeAngle());
 
     } else if (part.second.dof != nullptr) {
 
@@ -293,12 +343,25 @@ void Phenotype::update(float deltaTime) {
     }
   }
 
-  // activate network to retrieve output vector
+  // Throw error if the input is not equal to the expected number of inputs.
+  // This is mostly for debugging as we may sometimes forget to add/remove
+  // an input when we are adjusting the substrate
+  if (inputs.size() != numberOfInputs) {
+    mLog->error("Missing inputs. Expected: {}, Got: {}", inputs.size(), numberOfInputs);
+    throw std::runtime_error("Phenotype missing inputs. See message above.");
+  }
+
+  // Flush the network, resetting its activesum and activations
+  // before giving it new input
   network->Flush();
   network->Input(inputs);
 
-  for (unsigned int i = 0; i < 3; ++i)
+  // Activate the network, going through all connections and neurons
+  // to set the activesum and activation values. The number of
+  // times needed to activate depends on the depth of the network
+  for (int a = 0; a < 4; a++) {
     network->Activate();
+  }
 
   std::vector<double> outputs = network->Output();
 
@@ -307,28 +370,22 @@ void Phenotype::update(float deltaTime) {
   for (auto& part : parts) {
     if (part.second.hinge != nullptr) {
 
-      auto currentAngle = part.second.hinge->getHingeAngle();
-      // auto targetAngle = part.second.restAngle;
-      // auto targetAngle =
-      //   (part.second.active) ?
-      //     outputs[i] * 4.f * pi - 2.f * pi + part.second.restAngle :
-      //     part.second.restAngle;
+      float currentAngle = part.second.hinge->getHingeAngle();
+      float rotation;
 
-      float targetAngle;
-      float rot = part.second.active ? outputs[i] : 0.f;
+      // If the element is active, set the angle to an angle that is mutliplied so
+      // its between 2*PI and -2*PI
+      //
+      // If the element isnt active we wont punish the robot and set the part
+      // to a neutral angle that wont be in the way.
+      if (part.second.active)
+        rotation = 4 * pi * outputs[i] - 2 * pi;
+      else
+        rotation = mmm::clamp(part.second.restAngle - currentAngle, -0.3f, 0.3f) * 16.0f;
 
-      if (part.second.hinge->hasLimit()) {
-        float low = part.second.hinge->getLowerLimit();
-        float up  = part.second.hinge->getUpperLimit();
-        targetAngle = denormalizeHingeAngle(rot, low, up, 0.f);
-      } else {
-        targetAngle = denormalizeHingeAngle(rot, -pi, pi, 0.f);
-      }
+      part.second.hinge->enableAngularMotor(true, rotation, 4.f);
 
-      float velocity = mmm::clamp(targetAngle - currentAngle, -0.1f, 0.1f) * 16.f;
-      part.second.hinge->enableAngularMotor(true, velocity, 2.f);
-
-      i += (part.second.active) ? 1 : 0;
+      i += part.second.active ? 1 : 0;
 
     } else if (part.second.dof != nullptr) {
 
@@ -338,24 +395,25 @@ void Phenotype::update(float deltaTime) {
     }
   }
 
-  // update physics
+  // Finally, now that all things are set, lets keep updating the
+  // physics
   world->doPhysics(deltaTime);
 
-  // hack fitness
-  float prev = variance;
-  float next = 0.f;
-  for (auto x : outputs)
-    next += mmm::abs(x);
-  fitness[0] = next == prev ? fitness[0] - deltaTime * 0.5 : 1.f;
-  variance = next;
-
-  // judge fitness, if we can
+  // After the physics have been executed, evaluate the fitness
+  // of the robot.
   updateFitness(deltaTime);
-
-  // update counter
-  ++numUpdates;
 }
 
+/**
+ * @brief
+ *   Draw the Phenotype by drawing the spider with an offset as
+ *   well as text above it to make it easier to distinguish the
+ *   different robots
+ *
+ * @param prog
+ * @param offset
+ * @param bindTexture
+ */
 void Phenotype::draw(std::shared_ptr<Program>& prog,
                      mmm::vec3                 offset,
                      bool                      bindTexture) {
@@ -385,9 +443,6 @@ void Phenotype::updateFitness(float deltaTime) {
     fitness[index] = s.runCalculation(*this, fitness[index], deltaTime);
     index += 1;
   }
-
-  if (failed)
-    mLog->debug("Killed spider");
 }
 
 /**
@@ -422,13 +477,15 @@ bool Phenotype::hasBeenKilled() const {
  * @return
  */
 float Phenotype::finalizeFitness() {
+  hasFinalized = true;
+
   int index = 0;
   for(const auto& s : Phenotype::FITNESS_HANDLERS) {
     fitness[index] = s.runFinalize(*this, fitness[index], 1.f);
     index += 1;
   }
 
-  return mmm::product(fitness);
+  return fitness[0];
 }
 
 /**
@@ -439,15 +496,20 @@ float Phenotype::finalizeFitness() {
  *
  *   If all the values are nullptr, allocate them
  */
-void Phenotype::reset(int speciesId, int individualId) {
+void Phenotype::reset(int speciesId, int individualId, unsigned int numInputs) {
+
+  // Create the world or reset it if it exists
   if (world == nullptr)
     world = new World(mmm::vec3(0, -9.81, 0));
   else
     world->reset();
 
+  // Initiate the DrawablePhenotype class that lets
+  // you draw the network that the Phenotype represents
   if (drawablePhenotype == nullptr)
     drawablePhenotype = new DrawablePhenotype();
 
+  // Create the plane that the spider will walk upon
   if (planeBody == nullptr) {
     planeMotion = new btDefaultMotionState(
       btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1, 0)));
@@ -455,10 +517,15 @@ void Phenotype::reset(int speciesId, int individualId) {
                                                       planeMotion,
                                                       plane,
                                                       btVector3(0, 0, 0));
+    consInfo.m_friction = 1.0;
     planeBody = new btRigidBody(consInfo);
     world->world()->addRigidBody(planeBody);
   }
 
+  // In order to distinguish the spiders from each other, each spider
+  // has an assigned number to it in the format of 'X:Y" where X
+  // is the speciesIndex and Y is the individual index. Both of
+  // these together gives a unique ID.
   std::string textOverHead = "\\<255,255,255,255:0,0,0,255>" + std::to_string(speciesId) +
                              ":" + std::to_string(individualId) + "\\</>";
 
@@ -468,6 +535,8 @@ void Phenotype::reset(int speciesId, int individualId) {
     hoverText->setText(textOverHead);
   }
 
+  // Create the spider and add it to the world if it doesnt exist
+  // otherwise reset it to start position
   if (spider == nullptr) {
     spider = new Spider();
     world->addObject(spider);
@@ -476,6 +545,7 @@ void Phenotype::reset(int speciesId, int individualId) {
     spider->reset();
   }
 
+  // Reset the network
   if (network == nullptr)
     network = new NEAT::NeuralNetwork();
   else {
@@ -483,264 +553,110 @@ void Phenotype::reset(int speciesId, int individualId) {
     network->Flush();
   }
 
+  hasFinalized    = false;
   failed          = false;
-  duration        = 0;
-  numUpdates      = 0;
+  duration        = -2;
   fitness         = mmm::vec<9>(1);
   speciesIndex    = speciesId;
   individualIndex = individualId;
+  numberOfInputs  = numInputs;
 }
 
+// In order to save memory, this shape is stored statically on
+// the Phenotype and is used by every instance of the Phenotype
 btStaticPlaneShape* Phenotype::plane =
   new btStaticPlaneShape(btVector3(0, 1, 0), 1);
 
 // Below here is where all the fitness handlers are defined
-
 std::vector<Fitness> Phenotype::FITNESS_HANDLERS = {
-
-  Fitness(
-    "Laziness  ",
-    "Fitness based on variance of network outputs.",
-    [](const auto& phenotype, float current, float) -> float {
-
-      // This is a hack, as the actual variance is calculated within the
-      // `update` function... This is also why this fitness absolutely has to be
-      // the first fitness value in the handler array. Should fix this as some-
-      // point...
-
-      if (current <= 0.f) {
-        phenotype.kill();
-        return -1.f;
-      }
-
-      return current;
-    },
-    [](const auto&, float current, float) -> float {
-      if (current <= 0.f)
-        return 0.f;
-      return 1.f;
-    }
-  ),
 
   Fitness(
     "Movement  ",
     "Fitness based on movement is positive z direction.",
     [](const auto& phenotype, float current, float) -> float {
-      const auto& parts = phenotype.spider->parts();
-      auto t = parts.at("Sternum").part->rigidBody()->getCenterOfMassPosition();
-      return mmm::max(current, t.z() + 1.f);
+      /* const auto& parts = phenotype.spider->parts(); */
+      /* auto t = parts.at("Sternum").part->rigidBody()->getCenterOfMassPosition(); */
+      /* return mmm::max(current, t.z() + 1.f); */
+      return 1.f;
     },
-    [](const auto&, float current, float) -> float {
-      return (current - 1.f) / 100.f;
-    }
-  ),
-  Fitness(
-    "Height    ",
-    "Fitness based on sternum height.",
-    [](const auto& phenotype, float current, float deltaTime) -> float {
-      const auto& parts   = phenotype.spider->parts();
-      auto*       sternum = parts.at("Sternum").part->rigidBody();
-      auto        t       = sternum->getCenterOfMassPosition();
+    [](const Phenotype& p, float, float) -> float {
+      float z = p.spider->parts().at("Sternum").part->rigidBody()->getCenterOfMassPosition().z();
 
-      return current * score(deltaTime, t.y() - 0.8f, 0.2f);
+      return z;
     }
   ),
+
   Fitness(
-    "Stability ",
-    "Fitness based on sternum rotation.",
-    [](const auto& phenotype, float current, float deltaTime) -> float {
+    "Collision  ",
+    "Fitness based on height with Sternum",
+    [](const Phenotype& phenotype, float current, float dt) -> float {
       const auto& parts = phenotype.spider->parts();
 
-      auto* sternum = parts.at("Sternum").part->rigidBody();
-      auto  q       = sternum->getOrientation();
-      vec3  r       = getEulerAngles(q.x(), q.y(), q.z(), q.w());
-      r.y += mmm::radians(90.f);
+      auto body = parts.at("Sternum").part->rigidBody();
+      auto h    = body->getCenterOfMassPosition().y();
+      auto q    = body->getOrientation();
+      auto v    = getEulerAngles(q.x(), q.y(), q.z(), q.w());
 
-      current *= score(deltaTime, r.x, mmm::radians(5.f));
-      current *= score(deltaTime, r.y, mmm::radians(10.f));
-      current *= score(deltaTime, r.z, mmm::radians(5.f));
+      float hasTooSteepAngles = 1;
+      hasTooSteepAngles *= score(dt, v.x, mmm::radians(35.f));
+      hasTooSteepAngles *= score(dt, v.z, mmm::radians(35.f));
+      hasTooSteepAngles *= score(dt, v.y + mmm::radians(90.f), mmm::radians(50.f));
 
-      return current;
-    }
-  ),
+      // If the angle of sternum is too far away from stable
+      if (hasTooSteepAngles < 1.0) {
+        /* phenotype.kill(); */
+        return current;
+      }
 
-  Fitness(
-    "Trochanter",
-    "Fitness based on asymmetry of the trochanter joints.",
-    [](const auto& phenotype, float current, float deltaTime) -> float {
-      const auto& parts = phenotype.spider->parts();
+      // If the height is too low or too high
+      if (h > 1.9) {
+        /* debug("Killed {}-{} due to height", phenotype.speciesIndex, phenotype.individualIndex); */
+        /* phenotype.kill(); */
+        return current;
+      }
 
-      auto l1 = parts.at("TrochanterL1");
-      auto l2 = parts.at("TrochanterL2");
-      auto l3 = parts.at("TrochanterL3");
-      auto l4 = parts.at("TrochanterL4");
-      auto r1 = parts.at("TrochanterR1");
-      auto r2 = parts.at("TrochanterR2");
-      auto r3 = parts.at("TrochanterR3");
-      auto r4 = parts.at("TrochanterR4");
+      // If any of the important pieces are hitting the floor
+      if (phenotype.collidesWithTerrain(body) ||
+          phenotype.collidesWithTerrain("Eye") ||
+          phenotype.collidesWithTerrain("Neck")) {
+        /* debug("Killed {}-{} due to Eye/Neck/Sternum", phenotype.speciesIndex, phenotype.individualIndex); */
+        /* phenotype.kill(); */
+        return current;
+      }
 
-      float a1 = normalizeHingeAngle(l1.hinge->getHingeAngle(), l1.hinge->getLowerLimit(), l1.hinge->getUpperLimit(), l1.restAngle);
-      float a2 = normalizeHingeAngle(l2.hinge->getHingeAngle(), l2.hinge->getLowerLimit(), l2.hinge->getUpperLimit(), l2.restAngle);
-      float a3 = normalizeHingeAngle(l3.hinge->getHingeAngle(), l3.hinge->getLowerLimit(), l3.hinge->getUpperLimit(), l3.restAngle);
-      float a4 = normalizeHingeAngle(l4.hinge->getHingeAngle(), l4.hinge->getLowerLimit(), l4.hinge->getUpperLimit(), l4.restAngle);
-      float b1 = normalizeHingeAngle(r1.hinge->getHingeAngle(), r1.hinge->getLowerLimit(), r1.hinge->getUpperLimit(), r1.restAngle);
-      float b2 = normalizeHingeAngle(r2.hinge->getHingeAngle(), r2.hinge->getLowerLimit(), r2.hinge->getUpperLimit(), r2.restAngle);
-      float b3 = normalizeHingeAngle(r3.hinge->getHingeAngle(), r3.hinge->getLowerLimit(), r3.hinge->getUpperLimit(), r3.restAngle);
-      float b4 = normalizeHingeAngle(r4.hinge->getHingeAngle(), r4.hinge->getLowerLimit(), r4.hinge->getUpperLimit(), r4.restAngle);
+      // If even more parts of its legs are hitting the floor
+      if (phenotype.collidesWithTerrain("PatellaL1") ||
+          phenotype.collidesWithTerrain("PatellaL2") ||
+          phenotype.collidesWithTerrain("PatellaL3") ||
+          phenotype.collidesWithTerrain("PatellaL4") ||
+          phenotype.collidesWithTerrain("PatellaR1") ||
+          phenotype.collidesWithTerrain("PatellaR2") ||
+          phenotype.collidesWithTerrain("PatellaR3") ||
+          phenotype.collidesWithTerrain("PatellaR4")) {
+        /* debug("Killed {}-{} due to patella", phenotype.speciesIndex, phenotype.individualIndex); */
+        /* phenotype.kill(); */
+        return current;
+      }
 
-      // Asymmetry between opposite legs
-      current *= score(deltaTime, a1 + b1, 0.05f);
-      current *= score(deltaTime, a2 + b2, 0.05f);
-      current *= score(deltaTime, a3 + b3, 0.05f);
-      current *= score(deltaTime, a4 + b4, 0.05f);
+      // Lastly, it shouldnt rest on the bendy bit by the sternum
+      if (phenotype.collidesWithTerrain("FemurL1") ||
+          phenotype.collidesWithTerrain("FemurL2") ||
+          phenotype.collidesWithTerrain("FemurL3") ||
+          phenotype.collidesWithTerrain("FemurL4") ||
+          phenotype.collidesWithTerrain("FemurR1") ||
+          phenotype.collidesWithTerrain("FemurR2") ||
+          phenotype.collidesWithTerrain("FemurR3") ||
+          phenotype.collidesWithTerrain("FemurR4")) {
+        /* debug("Killed {}-{} due to femur", phenotype.speciesIndex, phenotype.individualIndex); */
+        /* phenotype.kill(); */
+        return current;
+      }
 
-      // Symmetry between counter opposite legs
-      current *= score(deltaTime, a1 - b2, 0.05f);
-      current *= score(deltaTime, a2 - b3, 0.05f);
-      current *= score(deltaTime, a3 - b4, 0.05f);
-      current *= score(deltaTime, a4 - b1, 0.05f);
-
-      return current;
-    }
-  ),
-  Fitness(
-    "Swing     ",
-    "Fitness based on the movement of the trochanter joints.",
-    [](const auto& phenotype, float current, float) -> float {
-      const auto& parts = phenotype.spider->parts();
-
-      auto l1 = parts.at("TrochanterL1");
-      auto l2 = parts.at("TrochanterL2");
-      auto l3 = parts.at("TrochanterL3");
-      auto l4 = parts.at("TrochanterL4");
-      auto r1 = parts.at("TrochanterR1");
-      auto r2 = parts.at("TrochanterR2");
-      auto r3 = parts.at("TrochanterR3");
-      auto r4 = parts.at("TrochanterR4");
-
-      float a1 = normalizeHingeAngle(l1.hinge->getHingeAngle(), l1.hinge->getLowerLimit(), l1.hinge->getUpperLimit(), l1.restAngle);
-      float a2 = normalizeHingeAngle(l2.hinge->getHingeAngle(), l2.hinge->getLowerLimit(), l2.hinge->getUpperLimit(), l2.restAngle);
-      float a3 = normalizeHingeAngle(l3.hinge->getHingeAngle(), l3.hinge->getLowerLimit(), l3.hinge->getUpperLimit(), l3.restAngle);
-      float a4 = normalizeHingeAngle(l4.hinge->getHingeAngle(), l4.hinge->getLowerLimit(), l4.hinge->getUpperLimit(), l4.restAngle);
-      float b1 = normalizeHingeAngle(r1.hinge->getHingeAngle(), r1.hinge->getLowerLimit(), r1.hinge->getUpperLimit(), r1.restAngle);
-      float b2 = normalizeHingeAngle(r2.hinge->getHingeAngle(), r2.hinge->getLowerLimit(), r2.hinge->getUpperLimit(), r2.restAngle);
-      float b3 = normalizeHingeAngle(r3.hinge->getHingeAngle(), r3.hinge->getLowerLimit(), r3.hinge->getUpperLimit(), r3.restAngle);
-      float b4 = normalizeHingeAngle(r4.hinge->getHingeAngle(), r4.hinge->getLowerLimit(), r4.hinge->getUpperLimit(), r4.restAngle);
-
-      float x = 1.f;
-
-      x = mmm::min(x, a1);
-      x = mmm::min(x, a2);
-      x = mmm::min(x, a3);
-      x = mmm::min(x, a4);
-      x = mmm::min(x, b1);
-      x = mmm::min(x, b2);
-      x = mmm::min(x, b3);
-      x = mmm::min(x, b4);
-
-      x += 1.f;
-
-      return mmm::max(current, x);
+      // If it passed all these tests, yay for it.
+      return current + dt;
     },
-    [](const auto&, float current, float) -> float {
-      return current - 1.f;
-    }
-  ),
-
-  Fitness(
-    "Femur     ",
-    "Fitness based on symmetry or asymmetry of the femur joints.",
-    [](const auto& phenotype, float current, float deltaTime) -> float {
-      const auto& parts = phenotype.spider->parts();
-
-      auto l1 = parts.at("FemurL1");
-      auto l2 = parts.at("FemurL2");
-      auto l3 = parts.at("FemurL3");
-      auto l4 = parts.at("FemurL4");
-      auto r1 = parts.at("FemurR1");
-      auto r2 = parts.at("FemurR2");
-      auto r3 = parts.at("FemurR3");
-      auto r4 = parts.at("FemurR4");
-
-      float a1 = normalizeHingeAngle(l1.hinge->getHingeAngle(), l1.hinge->getLowerLimit(), l1.hinge->getUpperLimit(), l1.restAngle);
-      float a2 = normalizeHingeAngle(l2.hinge->getHingeAngle(), l2.hinge->getLowerLimit(), l2.hinge->getUpperLimit(), l2.restAngle);
-      float a3 = normalizeHingeAngle(l3.hinge->getHingeAngle(), l3.hinge->getLowerLimit(), l3.hinge->getUpperLimit(), l3.restAngle);
-      float a4 = normalizeHingeAngle(l4.hinge->getHingeAngle(), l4.hinge->getLowerLimit(), l4.hinge->getUpperLimit(), l4.restAngle);
-      float b1 = normalizeHingeAngle(r1.hinge->getHingeAngle(), r1.hinge->getLowerLimit(), r1.hinge->getUpperLimit(), r1.restAngle);
-      float b2 = normalizeHingeAngle(r2.hinge->getHingeAngle(), r2.hinge->getLowerLimit(), r2.hinge->getUpperLimit(), r2.restAngle);
-      float b3 = normalizeHingeAngle(r3.hinge->getHingeAngle(), r3.hinge->getLowerLimit(), r3.hinge->getUpperLimit(), r3.restAngle);
-      float b4 = normalizeHingeAngle(r4.hinge->getHingeAngle(), r4.hinge->getLowerLimit(), r4.hinge->getUpperLimit(), r4.restAngle);
-
-      current *= score(deltaTime, mmm::min(a1 + b1, a1 - b1), 0.05f);
-      current *= score(deltaTime, mmm::min(a2 + b2, a2 - b2), 0.05f);
-      current *= score(deltaTime, mmm::min(a3 + b3, a3 - b3), 0.05f);
-      current *= score(deltaTime, mmm::min(a4 + b4, a4 - b4), 0.05f);
-
-      return current;
-    }
-  ),
-  Fitness(
-    "Patella   ",
-    "Fitness based on symmetry or asymmetry of the patella joints.",
-    [](const auto& phenotype, float current, float deltaTime) -> float {
-      const auto& parts = phenotype.spider->parts();
-
-      auto l1 = parts.at("PatellaL1");
-      auto l2 = parts.at("PatellaL2");
-      auto l3 = parts.at("PatellaL3");
-      auto l4 = parts.at("PatellaL4");
-      auto r1 = parts.at("PatellaR1");
-      auto r2 = parts.at("PatellaR2");
-      auto r3 = parts.at("PatellaR3");
-      auto r4 = parts.at("PatellaR4");
-
-      float a1 = normalizeHingeAngle(l1.hinge->getHingeAngle(), l1.hinge->getLowerLimit(), l1.hinge->getUpperLimit(), l1.restAngle);
-      float a2 = normalizeHingeAngle(l2.hinge->getHingeAngle(), l2.hinge->getLowerLimit(), l2.hinge->getUpperLimit(), l2.restAngle);
-      float a3 = normalizeHingeAngle(l3.hinge->getHingeAngle(), l3.hinge->getLowerLimit(), l3.hinge->getUpperLimit(), l3.restAngle);
-      float a4 = normalizeHingeAngle(l4.hinge->getHingeAngle(), l4.hinge->getLowerLimit(), l4.hinge->getUpperLimit(), l4.restAngle);
-      float b1 = normalizeHingeAngle(r1.hinge->getHingeAngle(), r1.hinge->getLowerLimit(), r1.hinge->getUpperLimit(), r1.restAngle);
-      float b2 = normalizeHingeAngle(r2.hinge->getHingeAngle(), r2.hinge->getLowerLimit(), r2.hinge->getUpperLimit(), r2.restAngle);
-      float b3 = normalizeHingeAngle(r3.hinge->getHingeAngle(), r3.hinge->getLowerLimit(), r3.hinge->getUpperLimit(), r3.restAngle);
-      float b4 = normalizeHingeAngle(r4.hinge->getHingeAngle(), r4.hinge->getLowerLimit(), r4.hinge->getUpperLimit(), r4.restAngle);
-
-      current *= score(deltaTime, mmm::min(a1 + b1, a1 - b1), 0.05f);
-      current *= score(deltaTime, mmm::min(a2 + b2, a2 - b2), 0.05f);
-      current *= score(deltaTime, mmm::min(a3 + b3, a3 - b3), 0.05f);
-      current *= score(deltaTime, mmm::min(a4 + b4, a4 - b4), 0.05f);
-
-      return current;
-    }
-  ),
-  Fitness(
-    "Tibia     ",
-    "Fitness based on symmetry or asymmetry of the tibia joints.",
-    [](const auto& phenotype, float current, float deltaTime) -> float {
-      const auto& parts = phenotype.spider->parts();
-
-      auto l1 = parts.at("TibiaL1");
-      auto l2 = parts.at("TibiaL2");
-      auto l3 = parts.at("TibiaL3");
-      auto l4 = parts.at("TibiaL4");
-      auto r1 = parts.at("TibiaR1");
-      auto r2 = parts.at("TibiaR2");
-      auto r3 = parts.at("TibiaR3");
-      auto r4 = parts.at("TibiaR4");
-
-      float a1 = normalizeHingeAngle(l1.hinge->getHingeAngle(), l1.hinge->getLowerLimit(), l1.hinge->getUpperLimit(), l1.restAngle);
-      float a2 = normalizeHingeAngle(l2.hinge->getHingeAngle(), l2.hinge->getLowerLimit(), l2.hinge->getUpperLimit(), l2.restAngle);
-      float a3 = normalizeHingeAngle(l3.hinge->getHingeAngle(), l3.hinge->getLowerLimit(), l3.hinge->getUpperLimit(), l3.restAngle);
-      float a4 = normalizeHingeAngle(l4.hinge->getHingeAngle(), l4.hinge->getLowerLimit(), l4.hinge->getUpperLimit(), l4.restAngle);
-      float b1 = normalizeHingeAngle(r1.hinge->getHingeAngle(), r1.hinge->getLowerLimit(), r1.hinge->getUpperLimit(), r1.restAngle);
-      float b2 = normalizeHingeAngle(r2.hinge->getHingeAngle(), r2.hinge->getLowerLimit(), r2.hinge->getUpperLimit(), r2.restAngle);
-      float b3 = normalizeHingeAngle(r3.hinge->getHingeAngle(), r3.hinge->getLowerLimit(), r3.hinge->getUpperLimit(), r3.restAngle);
-      float b4 = normalizeHingeAngle(r4.hinge->getHingeAngle(), r4.hinge->getLowerLimit(), r4.hinge->getUpperLimit(), r4.restAngle);
-
-      current *= score(deltaTime, mmm::min(a1 + b1, a1 - b1), 0.05f);
-      current *= score(deltaTime, mmm::min(a2 + b2, a2 - b2), 0.05f);
-      current *= score(deltaTime, mmm::min(a3 + b3, a3 - b3), 0.05f);
-      current *= score(deltaTime, mmm::min(a4 + b4, a4 - b4), 0.05f);
-
-      return current;
+    [](const Phenotype&, float current, float) -> float {
+      return current - 1;
     }
   )
 };

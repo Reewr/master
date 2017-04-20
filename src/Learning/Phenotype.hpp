@@ -42,14 +42,15 @@ struct Phenotype : Logging::Log {
   Text3D* hoverText;
 
   mmm::vec<9>  fitness;
-  unsigned int numUpdates;
 
   float        variance;
   mutable bool failed;
   float        duration;
+  bool         hasFinalized;
 
   unsigned int speciesIndex;
   unsigned int individualIndex;
+  unsigned int numberOfInputs;
 
   Phenotype();
   ~Phenotype();
@@ -71,7 +72,7 @@ struct Phenotype : Logging::Log {
   bool collidesWithTerrain(const std::string& name) const;
 
   // Resets the phenotype back into its original state
-  void reset(int speciesId, int individualId);
+  void reset(int speciesId, int individualId, unsigned int numInputs);
 
   // Performs the update of the phenotype
   void update(float deltaTime);
