@@ -108,6 +108,8 @@ void Statistics::save(const std::string& filename) const {
         else
           fs << std::to_string(entry.individualFitness[i]);
       }
+
+      fs << std::endl;
     }
   }
 }
