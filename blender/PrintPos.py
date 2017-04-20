@@ -1,6 +1,6 @@
 import bpy
-from mathutils import Vector
-from math import degrees
+from mathutils import Vector, Matrix
+from math import degrees, sin, pi
 
 PARTS = {
   'Eye':          ( '0b1000000000000000', '0b1011111111111111',   0, False ),
@@ -75,27 +75,14 @@ PARTS = {
   }
 
 
-def errorCheck():
-  for obj in bpy.data.objects:
-    if 'Imp' not in obj.name and 'Out' not in obj.name:
-      continue
-
-    for i in ['L1','L2','L3','L4','R1','R2','R3','R4']:
-      if i in obj.name and i not in obj.parent.name:
-        print('error in object ' + obj.name)
-
-
-def showVec(vec):
-  for k,v in vec.items():
-    if not v:
-      return 'vec3(0)'
-    return 'vec3(%f, %f, %f)' % (v.x, v.y, v.z)
-
-def showVector(vec):
+def showVector(vec, comment):
   for k,v in vec.items():
     if not v:
       return ''
-    return '{ %f, %f, %f }, // %s' % (v.x, v.y, v.z, k)
+    if comment:
+      return '{ %f, %f, %f }, // %s' % (v.x, v.y, v.z, k)
+    else:
+      return '{ %f, %f, %f },' % (v.x, v.y, v.z)
 
 
 def showPart(name):
@@ -108,6 +95,7 @@ def printParts():
   r += ' };'
   print('std::map<std::string, Spider::Part> Spider::SPIDER_PARTS =')
   print(r)
+
 
 def getInputLegCenterNeurons():
   xs = []
@@ -131,58 +119,282 @@ def getInputLegTipNeurons():
 
   return xs;
 
+
 def getInputNeurons(name):
   xs = []
 
-  impAngX = bpy.data.objects.get(name + 'ImpAngX')
-  if impAngX:
-    xs.append({ name+'ImpAngX': impAngX.matrix_world.to_translation() })
+  f = bpy.data.objects.get(name + 'CM_F')
+  if f:
+    xs.append({ name+'CM_F': f.matrix_world.to_translation() })
 
-  impAngY = bpy.data.objects.get(name + 'ImpAngY')
-  if impAngY:
-    xs.append({ name+'ImpAngY': impAngY.matrix_world.to_translation() })
+  b = bpy.data.objects.get(name + 'CM_B')
+  if b:
+    xs.append({ name+'CM_B': b.matrix_world.to_translation() })
 
-  impAngZ = bpy.data.objects.get(name + 'ImpAngZ')
-  if impAngZ:
-    xs.append({ name+'ImpAngZ': impAngZ.matrix_world.to_translation() })
+  u = bpy.data.objects.get(name + 'CM_U')
+  if u:
+    xs.append({ name+'CM_U': u.matrix_world.to_translation() })
 
-  impRot  = bpy.data.objects.get(name + 'ImpRot')
-  if impRot:
-    xs.append({ name+'ImpRot': impRot.matrix_world.to_translation() })
+  u = bpy.data.objects.get(name + 'CM_D')
+  if u:
+    xs.append({ name+'CM_D': u.matrix_world.to_translation() })
+
+
+  rot  = bpy.data.objects.get(name + 'Rot')
+  if rot:
+    xs.append({ name+'Rot': rot.matrix_world.to_translation() })
 
   return xs;
+
+def getHiddenNeurons():
+  xs = []
+
+  for x in bpy.data.objects:
+    if "Hidden" in x.name:
+      xs.append({ x.name: x.matrix_world.to_translation() })
+
+  return xs
 
 def getOutputNeurons(name):
   xs = []
 
-  output  = bpy.data.objects.get(name + 'ImpRot')
-  if output:
-    xs.append({ name+'ImpRot': output.matrix_world.to_translation() })
+  rot  = bpy.data.objects.get(name + 'Rot')
+  if rot:
+    xs.append({ name+'Rot': rot.matrix_world.to_translation() })
 
   return xs
 
 def printNeuronData():
   inn = []
+  hid = []
   out = []
 
-  # inn += [ getInputLegCenterNeurons() ]
+  inn += [ getInputLegCenterNeurons() ]
   inn += [ getInputLegTipNeurons() ]
 
   inn += [ getInputNeurons(x) for x in sorted(PARTS) if bpy.data.objects.get(x) ]
+  hid += [ getHiddenNeurons() ]
   out += [ getOutputNeurons(x) for x in sorted(PARTS) if bpy.data.objects.get(x) ]
 
   # flatten lists
-  inn = [ '    ' + showVector(x) for xs in inn for x in xs if len(xs) > 0 ]
-  out = [ '    ' + showVector(x) for xs in out for x in xs if len(xs) > 0 ]
+  inn = [ '    ' + showVector(x, True ) for xs in inn for x in xs if len(xs) > 0 ]
+  hid = [ '    ' + showVector(x, False) for xs in hid for x in xs if len(xs) > 0 ]
+  out = [ '    ' + showVector(x, True ) for xs in out for x in xs if len(xs) > 0 ]
 
   print('  std::vector<std::vector<double>> inputs{')
   print('\n'.join(inn))
   print('  };')
-  print('  std::vector<std::vector<double>> hidden{};')
+  print('  std::vector<std::vector<double>> hidden{')
+  print('\n'.join(hid))
+  print('  };')
   print('  std::vector<std::vector<double>> outputs{')
   print('\n'.join(out))
   print('  };')
 
-errorCheck()
+
+def removeNeurons():
+  for x in bpy.data.objects:
+    if "CM_" in x.name:
+      bpy.ops.object.select_all(action='DESELECT')
+      x.select = True
+      bpy.ops.object.delete()
+
+    if "Rot_" in x.name:
+      bpy.ops.object.select_all(action='DESELECT')
+      x.select = True
+      bpy.ops.object.delete()
+
+    if "Tip_" in x.name:
+      bpy.ops.object.select_all(action='DESELECT')
+      x.select = True
+      bpy.ops.object.delete()
+
+    if "Hidden" in x.name:
+      bpy.ops.object.select_all(action='DESELECT')
+      x.select = True
+      bpy.ops.object.delete()
+
+def makeNeurons():
+  for x in bpy.data.objects:
+    if "CM" in x.name:
+      f = x.copy()
+      bpy.context.scene.objects.link(f)
+      f.name = x.name + "_F"
+      f.matrix_basis[1][3] = 0.1 if "L" in x.name else -0.1
+
+      b = x.copy()
+      bpy.context.scene.objects.link(b)
+      b.name = x.name + "_B"
+      b.matrix_basis[1][3] = -0.1 if "L" in x.name else 0.1
+
+      l = x.copy()
+      bpy.context.scene.objects.link(l)
+      l.name = x.name + "_L"
+      l.matrix_basis[0][3] = -0.1 if "L" in x.name else 0.1
+
+      r = x.copy()
+      bpy.context.scene.objects.link(r)
+      r.name = x.name + "_R"
+      r.matrix_basis[0][3] = 0.1 if "L" in x.name else -0.1
+
+      u = x.copy()
+      bpy.context.scene.objects.link(u)
+      u.name = x.name + "_U"
+      u.matrix_basis[2][3] = 0.1
+
+      d = x.copy()
+      bpy.context.scene.objects.link(d)
+      d.name = x.name + "_D"
+      d.matrix_basis[2][3] = -0.1
+
+def makeHidden():
+  for obj in bpy.data.objects:
+    if "Tip" in obj.name:
+
+      while True:
+        x = obj.matrix_world.to_translation()
+        y = obj.parent.matrix_world.to_translation()
+        m = y + (y-x) * 0.5
+        s = 1.0 if "L" in obj.parent.name else -1.0
+        l = max((y-x).length * 0.25, 0.15)
+        k = sin(pi/4) * l
+
+        na = obj.parent.name.replace("Anchor", "")
+        cp = [ y for y in obj.parent.children if na == y.name ][0]
+        cm = [ y for y in cp.children if na + "CM" == y.name ][0]
+
+        c1 = cm.copy()
+        bpy.context.scene.objects.link(c1)
+        c1.parent = cm
+        c1.name = cm.name + "_Hidden_1"
+        c1.matrix_basis = Matrix()
+        c1.matrix_basis[1][3] = l
+
+        c2 = cm.copy()
+        bpy.context.scene.objects.link(c2)
+        c2.parent = cm
+        c2.name = cm.name + "_Hidden_2"
+        c2.matrix_basis = Matrix()
+        c2.matrix_basis[1][3] = k
+        c2.matrix_basis[2][3] = k * s
+
+        c3 = cm.copy()
+        bpy.context.scene.objects.link(c3)
+        c3.parent = cm
+        c3.name = cm.name + "_Hidden_3"
+        c3.matrix_basis = Matrix()
+        c3.matrix_basis[2][3] = l * s
+
+        c4 = cm.copy()
+        bpy.context.scene.objects.link(c4)
+        c4.parent = cm
+        c4.name = cm.name + "_Hidden_4"
+        c4.matrix_basis = Matrix()
+        c4.matrix_basis[1][3] = -k
+        c4.matrix_basis[2][3] = k * s
+
+        c5 = cm.copy()
+        bpy.context.scene.objects.link(c5)
+        c5.parent = cm
+        c5.name = cm.name + "_Hidden_5"
+        c5.matrix_basis = Matrix()
+        c5.matrix_basis[1][3] = -l
+
+        c6 = cm.copy()
+        bpy.context.scene.objects.link(c6)
+        c6.parent = cm
+        c6.name = cm.name + "_Hidden_6"
+        c6.matrix_basis = Matrix()
+        c6.matrix_basis[1][3] = -k
+        c6.matrix_basis[2][3] = -k * s
+
+        c7 = cm.copy()
+        bpy.context.scene.objects.link(c7)
+        c7.parent = cm
+        c7.name = cm.name + "_Hidden_7"
+        c7.matrix_basis = Matrix()
+        c7.matrix_basis[2][3] = -l * s
+
+        c8 = cm.copy()
+        bpy.context.scene.objects.link(c8)
+        c8.parent = cm
+        c8.name = cm.name + "_Hidden_8"
+        c8.matrix_basis = Matrix()
+        c8.matrix_basis[1][3] = k
+        c8.matrix_basis[2][3] = -k * s
+
+
+
+        m1 = obj.parent.copy()
+        bpy.context.scene.objects.link(m1)
+        m1.parent = obj.parent
+        m1.name = obj.parent.name + "_Hidden_1"
+        m1.matrix_basis = Matrix()
+        m1.matrix_basis[1][3] = l
+
+        m2 = obj.parent.copy()
+        bpy.context.scene.objects.link(m2)
+        m2.parent = obj.parent
+        m2.name = obj.parent.name + "_Hidden_2"
+        m2.matrix_basis = Matrix()
+        m2.matrix_basis[1][3] = k
+        m2.matrix_basis[2][3] = k * s
+
+        m3 = obj.parent.copy()
+        bpy.context.scene.objects.link(m3)
+        m3.parent = obj.parent
+        m3.name = obj.parent.name + "_Hidden_3"
+        m3.matrix_basis = Matrix()
+        m3.matrix_basis[2][3] = l * s
+
+        m4 = obj.parent.copy()
+        bpy.context.scene.objects.link(m4)
+        m4.parent = obj.parent
+        m4.name = obj.parent.name + "_Hidden_4"
+        m4.matrix_basis = Matrix()
+        m4.matrix_basis[1][3] = -k
+        m4.matrix_basis[2][3] = k * s
+
+        m5 = obj.parent.copy()
+        bpy.context.scene.objects.link(m5)
+        m5.parent = obj.parent
+        m5.name = obj.parent.name + "_Hidden_5"
+        m5.matrix_basis = Matrix()
+        m5.matrix_basis[1][3] = -l
+
+        m6 = obj.parent.copy()
+        bpy.context.scene.objects.link(m6)
+        m6.parent = obj.parent
+        m6.name = obj.parent.name + "_Hidden_6"
+        m6.matrix_basis = Matrix()
+        m6.matrix_basis[1][3] = -k
+        m6.matrix_basis[2][3] = -k * s
+
+        m7 = obj.parent.copy()
+        bpy.context.scene.objects.link(m7)
+        m7.parent = obj.parent
+        m7.name = obj.parent.name + "_Hidden_7"
+        m7.matrix_basis = Matrix()
+        m7.matrix_basis[2][3] = -l * s
+
+        m8 = obj.parent.copy()
+        bpy.context.scene.objects.link(m8)
+        m8.parent = obj.parent
+        m8.name = obj.parent.name + "_Hidden_8"
+        m8.matrix_basis = Matrix()
+        m8.matrix_basis[1][3] = k
+        m8.matrix_basis[2][3] = -k * s
+
+        obj = obj.parent
+        if "Sternum" in obj.parent.name:
+          break
+
+
+removeNeurons()
+makeNeurons()
+makeHidden()
+
 printParts()
 printNeuronData()
+
+removeNeurons()
