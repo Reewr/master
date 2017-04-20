@@ -43,7 +43,6 @@ struct Phenotype : Logging::Log {
 
   mmm::vec<9>  fitness;
 
-  float        variance;
   mutable bool failed;
   float        finalizedFitness;
   float        duration;
