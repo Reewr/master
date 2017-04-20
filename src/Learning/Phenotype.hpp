@@ -85,6 +85,10 @@ struct Phenotype : Logging::Log {
   static std::vector<Fitness> FITNESS_HANDLERS;
 
 private:
+
+  // Prepares the phenotype for simulation
+  void updatePrepareStanding(float deltatime);
+
   // Updates the fitness of the phenotype by
   // running the fitness handlers
   void updateFitness(float deltaTime);

@@ -101,6 +101,48 @@ mmm::vec3 getEulerAngles(float x, float y, float z, float w) {
   return r;
 }
 
+/**
+ * @brief
+ *   Normalizes the hinge angle between -1 and 1 depending
+ *   on what `low` and `up`.
+ *
+ * @param angle
+ * @param low
+ * @param up
+ * @param rest
+ *
+ * @return
+ */
+float normalizeHingeAngle(float angle, float low, float up, float rest) {
+  if (angle < low)
+    angle += 2.f * mmm::constants<float>::pi;
+  if (angle > up)
+    angle -= 2.f * mmm::constants<float>::pi;
+
+  if (angle - rest == 0.f)
+    return 0.f;
+
+  return angle < rest ? -(angle - rest) / (low - rest)
+                      : (angle - rest) / (up - rest);
+};
+
+/**
+ * @brief
+ *   Does the opposite of normalizeHingeAngle
+ *
+ * @param p
+ * @param low
+ * @param up
+ * @param rest
+ *
+ * @return
+ */
+float denormalizeHingeAngle(float p, float low, float up, float rest) {
+  return p < 0 ? p * mmm::abs(low - rest) + rest
+               : p * mmm::abs(up - rest) + rest;
+};
+
+
 Phenotype::Phenotype()
     : Logging::Log("Phenotype")
     , world(nullptr)
@@ -198,24 +240,40 @@ bool Phenotype::collidesWithTerrain(const std::string& str) const {
   return false;
 }
 
+/**
+ * @brief
+ *   There may be times when we want to the Phenotype to be in specific
+ *   positions before the simulation takes place.
+ *
+ *   This function puts the robot into a standing/resting position.
+ *
+ * @param deltaTime
+ */
+void Phenotype::updatePrepareStanding(float deltaTime) {
+  // Initiate start position
+  //
+  // We want to the simulation to always be equal for all robots. In order to do
+  // this more easily, we move the robot to a resting position before the simulation
+  // starts.
+  //
+  // This makes sure that all positions are equal.
+  for (auto& part : spider->parts()) {
+    if (part.second.hinge != nullptr) {
 
-float normalizeHingeAngle(float angle, float low, float up, float rest) {
-  if (angle < low)
-    angle += 2.f * mmm::constants<float>::pi;
-  if (angle > up)
-    angle -= 2.f * mmm::constants<float>::pi;
+      float currentAngle = part.second.hinge->getHingeAngle();
+      float velocity =
+        mmm::clamp(part.second.restAngle - currentAngle, -1.f, 1.f) * 16.f;
+      part.second.hinge->enableAngularMotor(true, velocity, 5.f);
+    } else if (part.second.dof != nullptr) {
 
-  if (angle - rest == 0.f)
-    return 0.f;
+      // TODO
+    }
+  }
 
-  return angle < rest ? -(angle - rest) / (low - rest)
-                      : (angle - rest) / (up - rest);
-};
-float denormalizeHingeAngle(float p, float low, float up, float rest) {
-  return p < 0 ? p * mmm::abs(low - rest) + rest
-               : p * mmm::abs(up - rest) + rest;
-};
+  world->doPhysics(deltaTime);
 
+  duration += deltaTime;
+}
 
 /**
  * @brief
@@ -232,37 +290,13 @@ void Phenotype::update(float deltaTime) {
   if (failed)
     return;
 
+  // If the duration is less than 0, prepare the robot
+  // to be standing
+  if (duration < 0.0)
+    return updatePrepareStanding(deltaTime);
+
   auto  pi    = mmm::constants<float>::pi;
   auto& parts = spider->parts();
-
-  // Initiate start position
-  //
-  // We want to the simulation to always be equal for all robots. In order to do
-  // this more easily, we move the robot to a resting position before the simulation
-  // starts.
-  //
-  // This makes sure that all positions are equal.
-  if (duration < 0.0) {
-    for (auto& part : parts) {
-      if (part.second.hinge != nullptr) {
-
-        auto currentAngle = part.second.hinge->getHingeAngle();
-        float velocity = mmm::clamp(part.second.restAngle - currentAngle, -0.3f, 0.3f) * 16.f;
-        part.second.hinge->enableAngularMotor(true, velocity, 2.f);
-      } else if (part.second.dof != nullptr) {
-
-        // TODO
-      }
-
-    }
-
-    world->doPhysics(deltaTime);
-
-    duration += deltaTime;
-
-    // Return since we dont want the network to be used just yet.
-    return;
-  }
 
   duration += deltaTime;
 
