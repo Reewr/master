@@ -111,12 +111,14 @@ Phenotype::Phenotype()
     , drawablePhenotype(nullptr)
     , hoverText(nullptr)
     , fitness(1)
-    , variance(0)
     , failed(false)
+    , finalizedFitness(0)
     , duration(0)
     , hasFinalized(false)
-    , speciesIndex(-1)
-    , individualIndex(-1) {}
+    , genomeId(0)
+    , speciesIndex(0)
+    , individualIndex(0)
+    , numberOfInputs(0) {}
 
 Phenotype::~Phenotype() {}
 
