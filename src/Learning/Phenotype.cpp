@@ -128,7 +128,8 @@ float normalizeHingeAngle(float angle, float low, float up, float rest) {
 
 /**
  * @brief
- *   Does the opposite of normalizeHingeAngle
+ *   Does the opposite of normalizeHingeAngle given the same
+ *   `low`, `up` and `rest` arguments.
  *
  * @param p
  * @param low
