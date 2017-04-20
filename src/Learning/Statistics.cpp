@@ -55,11 +55,9 @@ void Statistics::addEntry(const std::vector<Phenotype>& phenotypes,
     e.finalizedFitness = phenotype.finalizedFitness;
     e.individualFitness = vecNtoList(phenotype.fitness);
 
-    if (leaders[phenotype.speciesIndex]->individualIndex == phenotype.individualIndex)
-      e.bestOfSpecies = true;
-    if (absoluteBest->speciesIndex == phenotype.speciesIndex &&
-        absoluteBest->individualIndex == phenotype.individualIndex)
-      e.bestOfGeneration = true;
+    e.bestOfSpecies = leaders[phenotype.speciesIndex]->individualIndex == phenotype.individualIndex;
+    e.bestOfGeneration = absoluteBest->speciesIndex == phenotype.speciesIndex &&
+                         absoluteBest->individualIndex == phenotype.individualIndex;
 
     mEntries[generation].push_back(e);
   }
