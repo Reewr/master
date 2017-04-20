@@ -85,5 +85,6 @@ function quit()
   exit()
 end
 
--- Shows the FPS
+-- Shows the FPS and Swarm Duration
 hud.fps.show()
+hud.sd.show(10,10)
