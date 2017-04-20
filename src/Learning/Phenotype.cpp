@@ -483,7 +483,7 @@ float Phenotype::finalizeFitness() {
 
   int index = 0;
   for(const auto& s : Phenotype::FITNESS_HANDLERS) {
-    fitness[index] = s.runFinalize(*this, fitness[index], 1.f);
+    fitness[index] = s.runFinalize(*this, fitness[index], duration);
     index += 1;
   }
 
