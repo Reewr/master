@@ -4,12 +4,6 @@
 
 #include "Phenotype.hpp"
 
-Statistics::Statistics() {}
-
-Statistics::Statistics(const std::string& filename) {
-  load(filename);
-}
-
 template<size_t n>
 std::vector<float> vecNtoList(const mmm::vec<n>& t) {
   std::vector<float> elements;
@@ -19,6 +13,8 @@ std::vector<float> vecNtoList(const mmm::vec<n>& t) {
 
   return elements;
 }
+
+Statistics::Statistics() {}
 
 /**
  * @brief

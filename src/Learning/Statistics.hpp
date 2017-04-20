@@ -16,7 +16,6 @@ struct Phenotype;
 class Statistics {
 public:
   Statistics();
-  Statistics(const std::string& filename);
 
   void addEntry(const std::vector<Phenotype>& phenotypes,
                 unsigned int                  generation);
