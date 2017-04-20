@@ -34,7 +34,7 @@ public:
   // be done to finalize values.
   float runFinalize(const Phenotype& phenotype,
                     float            fitness,
-                    float            deltaValue) const;
+                    float            totalRuntime) const;
 
   // Returns the description
   const std::string& desc() const;

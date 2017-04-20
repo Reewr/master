@@ -8,6 +8,9 @@
 
 #include "../Log.hpp"
 #include "Phenotype.hpp"
+#include "Statistics.hpp"
+
+#include <Genome.h>
 
 class Program;
 class Spider;
@@ -90,11 +93,19 @@ public:
   // Returns a reference to the substrate
   NEAT::Substrate& substrate();
 
+  // Returns the best genome for the current generation
+  NEAT::Genome bestGenome();
+
+  // Returns the best possible genome ever
+  NEAT::Genome& bestPossibleGenome();
+
   // Restarts the simulation
   void restart();
 
 private:
   std::vector<Phenotype> mPhenotypes;
+
+  unsigned int mNumInputs;
 
   size_t mCurrentBatch;
   size_t mBatchStart;
@@ -109,6 +120,10 @@ private:
 
   bool mDrawDebugNetworks;
   bool mRestartOnNextUpdate;
+
+  Statistics mStats;
+
+  NEAT::Genome mBestPossibleGenome;
 
   // Drawing settings
   DrawingMethod mDrawingMethod;

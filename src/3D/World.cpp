@@ -74,7 +74,7 @@ World::World(const vec3& gravity, World::Solver solver, World::Broadphase phase)
 
   // info.m_tau = 0.6;
   // info.m_damping = 1;
-  info.m_friction = 10.0;
+  info.m_friction = 0.3;
   // info.m_restitution = 0;
   info.m_numIterations = 25;
   // info.m_maxErrorReduction = 20;
