@@ -689,13 +689,15 @@ void SpiderSwarm::recreatePhenotypes() {
     }
 
     for (size_t j = 0; j < species.m_Individuals.size(); ++j) {
+      NEAT::Genome& g = species.m_Individuals[j];
+
       // Add new element if the population size has increased
       if (index >= mPhenotypes.size()) {
         mLog->debug("Adding new spider due to increase in population");
         mPhenotypes.push_back(Phenotype());
       }
 
-      mPhenotypes[index].reset(i, j, mNumInputs);
+      mPhenotypes[index].reset(i, j, g.GetID(), mNumInputs);
       mPhenotypes[index].spider->disableUpdatingFromPhysics();
 
       // If we are using single-threaded mode, create the neural
