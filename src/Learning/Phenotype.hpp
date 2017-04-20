@@ -36,7 +36,6 @@ struct Phenotype : Logging::Log {
 
   btDefaultMotionState*      planeMotion;
   btRigidBody*               planeBody;
-  static btStaticPlaneShape* plane;
 
   DrawablePhenotype* drawablePhenotype;
   Text3D* hoverText;
@@ -83,5 +82,6 @@ struct Phenotype : Logging::Log {
 
   void draw(std::shared_ptr<Program>& prog, mmm::vec3 offset, bool bindTexture);
 
+  static btStaticPlaneShape* plane;
   static std::vector<Fitness> FITNESS_HANDLERS;
 };
