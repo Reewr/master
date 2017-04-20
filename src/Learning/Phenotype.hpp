@@ -49,6 +49,7 @@ struct Phenotype : Logging::Log {
   float        duration;
   bool         hasFinalized;
 
+  unsigned int genomeId;
   unsigned int speciesIndex;
   unsigned int individualIndex;
   unsigned int numberOfInputs;
@@ -73,7 +74,10 @@ struct Phenotype : Logging::Log {
   bool collidesWithTerrain(const std::string& name) const;
 
   // Resets the phenotype back into its original state
-  void reset(int speciesId, int individualId, unsigned int numInputs);
+  void reset(int          speciesId,
+             int          individualId,
+             unsigned int id,
+             unsigned int numInputs);
 
   // Performs the update of the phenotype
   void update(float deltaTime);

@@ -498,7 +498,7 @@ float Phenotype::finalizeFitness() {
  *
  *   If all the values are nullptr, allocate them
  */
-void Phenotype::reset(int speciesId, int individualId, unsigned int numInputs) {
+void Phenotype::reset(int speciesId, int individualId, unsigned int id, unsigned int numInputs) {
 
   // Create the world or reset it if it exists
   if (world == nullptr)
@@ -555,14 +555,15 @@ void Phenotype::reset(int speciesId, int individualId, unsigned int numInputs) {
     network->Flush();
   }
 
-  hasFinalized    = false;
-  failed          = false;
-  duration        = -2;
-  fitness         = mmm::vec<9>(1);
-  speciesIndex    = speciesId;
-  individualIndex = individualId;
-  numberOfInputs  = numInputs;
+  hasFinalized     = false;
+  failed           = false;
   finalizedFitness = 0;
+  duration         = -2;
+  fitness          = mmm::vec<9>(1);
+  speciesIndex     = speciesId;
+  individualIndex  = individualId;
+  genomeId         = id;
+  numberOfInputs   = numInputs;
 }
 
 // In order to save memory, this shape is stored statically on
