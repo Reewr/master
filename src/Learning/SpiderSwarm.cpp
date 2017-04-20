@@ -37,10 +37,10 @@ SpiderSwarm::SpiderSwarm()
     , mBatchSize(7)
     , mGeneration(0)
     , mCurrentDuration(0)
-    , mIterationDuration(10)
+    , mIterationDuration(12)
     , mBestPossibleFitness(0)
     , mBestPossibleFitnessGeneration(0)
-    , mDrawDebugNetworks(false)
+    , mDrawDebugNetworks(true)
     , mRestartOnNextUpdate(false)
     , mDrawingMethod(SpiderSwarm::DrawingMethod::Species1)
     , mBestIndex(0)
@@ -166,6 +166,16 @@ void SpiderSwarm::update(float deltaTime) {
 
   if (deltaTime > 0.5)
     return;
+
+  bool isWipeout = true;
+  for(auto& p : mPhenotypes)
+    if (!p.hasBeenKilled()) {
+      isWipeout = false;
+      break;
+    }
+
+  if (isWipeout)
+    return updateEpoch();
 
 #ifndef BT_NO_PROFILE
   if (mCurrentDuration == 0)
