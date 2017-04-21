@@ -681,7 +681,7 @@ void SpiderSwarm::updateEpoch() {
     mLog->info("The best in species: {}-{} >>= {}{}{}",
                p.speciesIndex,
                p.individualIndex,
-               p.fitness[0],
+               p.finalizedFitness,
                i == mBestIndex ? " (best)" : "",
                p.hasBeenKilled() ? " (killed)" : "");
 
