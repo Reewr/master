@@ -28,7 +28,23 @@ namespace NEAT {
  * The SpiderSwarm is a class that holds a population of spiders that are used
  * to train a ESHyperNEAT network.
  *
- * \todo Add more documentation
+ * This class handles all of the simulation through the use of Phenotypes,
+ * it also handles building Neural Networks.
+ *
+ * In addition to this, it handles drawing of the Phenotypes in different
+ * ways described by the DrawingMethod enum.
+ *
+ * As mentioned, the SpiderSwarm uses Phenotypes. The Phenotype represent
+ * one individual within the population. There will always be the same
+ * number of Phenotypes as the PopulationSize is set to. There may be,
+ * due to some rounding errors, become more than the PopulationSize, but
+ * never less.
+ *
+ * A Phenotype handles the simulation of itself. It also has all the inputs
+ * that is sent to the network and uses the outputs given.
+ *
+ * The SpiderSwarm will use mutlithreading on hte machine if BT_NO_PROFILE is
+ * defined.
  */
 class SpiderSwarm : Logging::Log {
 public:
