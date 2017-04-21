@@ -643,6 +643,23 @@ btStaticPlaneShape* Phenotype::plane =
 std::vector<Fitness> Phenotype::FITNESS_HANDLERS = {
 
   Fitness(
+    "Speed     ",
+    R"( Kill spiders that are not moving fast enough, as an exponential function
+        of distance over time. )",
+    [](const auto& phenotype, float current, float deltaTime) -> float {
+      const auto& parts = phenotype.spider->parts();
+
+      auto* sternum = parts.at("Sternum").part->rigidBody();
+      auto  t       = sternum->getCenterOfMassPosition();
+
+      if (mmm::pow(phenotype.duration, 2.f) / 8.f > t.z() + 1.f)
+        phenotype.kill();
+
+      return current;
+    }
+  ),
+
+  Fitness(
     "Movement  ",
     "Fitness based on movement is positive z direction.",
     [](const auto& phenotype, float current, float) -> float {
