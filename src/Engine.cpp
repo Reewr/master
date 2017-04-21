@@ -363,6 +363,11 @@ void Engine::sendEvent(const Input::Event& event) {
  *   If true, also shuts down glfw.
  */
 void Engine::deinitialize(bool isFullDeinit) {
+  if (mCurrent != nullptr) {
+    delete mCurrent;
+    mCurrent = nullptr;
+  }
+
   mResourceManager->unloadAll();
   /* Model::deinit(); */
   /* Spider::deinit(); */
@@ -387,11 +392,6 @@ void Engine::deinitialize(bool isFullDeinit) {
   if (mLua != nullptr) {
     delete mLua;
     mLua = nullptr;
-  }
-
-  if (mCurrent != nullptr) {
-    delete mCurrent;
-    mCurrent = nullptr;
   }
 
   if (mResourceManager != nullptr) {
