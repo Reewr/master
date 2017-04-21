@@ -29,6 +29,7 @@ private:
     float              finalizedFitness;
     std::vector<float> individualFitness;
     unsigned int       speciesIndex;
+    unsigned int       speciesId;
     unsigned int       individualIndex;
     bool               bestOfSpecies;
     bool               bestOfGeneration;

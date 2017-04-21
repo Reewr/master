@@ -751,7 +751,7 @@ void SpiderSwarm::recreatePhenotypes() {
         mPhenotypes.push_back(Phenotype());
       }
 
-      mPhenotypes[index].reset(i, j, g.GetID(), mNumInputs);
+      mPhenotypes[index].reset(species.ID(), i, j, g.GetID(), mNumInputs);
       mPhenotypes[index].spider->disableUpdatingFromPhysics();
 
       // If we are using single-threaded mode, create the neural

@@ -511,7 +511,11 @@ float Phenotype::finalizeFitness() {
  *   the elements for each loop. This allows us to reuse the Phenotypes,
  *   improving the performance.
  */
-void Phenotype::reset(int speciesId, int individualId, unsigned int id, unsigned int numInputs) {
+void Phenotype::reset(int          speciesId,
+                      int          speciesIndex,
+                      int          individualIndex,
+                      unsigned int genomeId,
+                      unsigned int numInputs) {
 
   // Create the world or reset it if it exists
   if (world == nullptr)
@@ -541,8 +545,10 @@ void Phenotype::reset(int speciesId, int individualId, unsigned int id, unsigned
   // has an assigned number to it in the format of 'X:Y" where X
   // is the speciesIndex and Y is the individual index. Both of
   // these together gives a unique ID.
-  std::string textOverHead = "\\<255,255,255,255:0,0,0,255>" + std::to_string(speciesId) +
-                             ":" + std::to_string(individualId) + "\\</>";
+  std::string textOverHead = "\\<255,255,255,255:0,0,0,255>" +
+                             std::to_string(speciesId) + " - " +
+                             std::to_string(speciesIndex) + ":" +
+                             std::to_string(individualIndex) + "\\</>";
 
   if (hoverText == nullptr) {
     hoverText = new Text3D("Font::Dejavu", textOverHead, mmm::vec3(0, 0, 0));
@@ -573,10 +579,12 @@ void Phenotype::reset(int speciesId, int individualId, unsigned int id, unsigned
   finalizedFitness = 0;
   duration         = -1;
   fitness          = mmm::vec<9>(0);
-  speciesIndex     = speciesId;
-  individualIndex  = individualId;
-  genomeId         = id;
   numberOfInputs   = numInputs;
+
+  this->speciesId       = speciesId;
+  this->speciesIndex    = speciesIndex;
+  this->individualIndex = individualIndex;
+  this->genomeId        = genomeId;
 }
 
 // In order to save memory, this shape is stored statically on

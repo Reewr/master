@@ -48,6 +48,7 @@ struct Phenotype : Logging::Log {
   bool         hasFinalized;
 
   unsigned int genomeId;
+  unsigned int speciesId;
   unsigned int speciesIndex;
   unsigned int individualIndex;
   unsigned int numberOfInputs;
@@ -71,8 +72,9 @@ struct Phenotype : Logging::Log {
 
   // Resets the phenotype back into its original state
   void reset(int          speciesId,
-             int          individualId,
-             unsigned int id,
+             int          speciesIndex,
+             int          individualIndex,
+             unsigned int genomeId,
              unsigned int numInputs);
 
   // Performs the update of the phenotype
