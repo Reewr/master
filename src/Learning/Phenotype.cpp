@@ -646,15 +646,9 @@ std::vector<Fitness> Phenotype::FITNESS_HANDLERS = {
     "Movement  ",
     "Fitness based on movement is positive z direction.",
     [](const auto& phenotype, float current, float) -> float {
-      /* const auto& parts = phenotype.spider->parts(); */
-      /* auto t = parts.at("Sternum").part->rigidBody()->getCenterOfMassPosition(); */
-      /* return mmm::max(current, t.z() + 1.f); */
-      return 1.f;
-    },
-    [](const Phenotype& p, float, float) -> float {
-      float z = p.spider->parts().at("Sternum").part->rigidBody()->getCenterOfMassPosition().z();
-
-      return z;
+      const auto& parts = phenotype.spider->parts();
+      auto t = parts.at("Sternum").part->rigidBody()->getCenterOfMassPosition();
+      return mmm::max(current, t.z() + 1.f);
     }
   ),
 
