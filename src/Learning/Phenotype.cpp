@@ -608,7 +608,34 @@ void Phenotype::reset(int speciesId, int individualId, unsigned int id, unsigned
 btStaticPlaneShape* Phenotype::plane =
   new btStaticPlaneShape(btVector3(0, 1, 0), 1);
 
-// Below here is where all the fitness handlers are defined
+/*
+ * Below here is where all the fitness handlers are defined
+ *
+ * Each of these handlers are run in the order that they are defined
+ * and are expected to return a float value that describes the fitness.
+ *
+ * Each function receives a const copy of the phenotype that can be accessed
+ * to assert the fitness of the phenotype. In addition to this, it also
+ * receives the current fitness and deltatime.
+ *
+ * Multiple handlers gives you a clean way to defined multiple different
+ * factors of what it should be measured on.
+ *
+ * All fitness values are finally summed together.
+ *
+ * The first parameter is the name of the Fitness function that should be a very
+ * short description of what it measures.
+ *
+ * The next parameter is a longer description of the fitness function where you
+ * can explain in more detail what it does.
+ *
+ * The third parameter is the fitness function that will be executed every update
+ * to let you update the fitness value as you go.
+ *
+ * Lastly, the fourth parameter which is optional is a function that is executed
+ * once the simulation is over to finalize the values. If this is not defined,
+ * the current fitness will be returned.
+ */
 std::vector<Fitness> Phenotype::FITNESS_HANDLERS = {
 
   Fitness(
