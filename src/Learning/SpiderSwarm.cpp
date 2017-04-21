@@ -76,8 +76,6 @@ SpiderSwarm::SpiderSwarm()
   setDefaultSubstrate();
   setDefaultPopulation();
 
-  mPhenotypes.reserve(mPopulation->m_Parameters.PopulationSize);
-
   recreatePhenotypes();
 }
 
@@ -311,20 +309,23 @@ void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
  *   filename. It will save three files representing:
  *
  *   - Population
- *   - Parameters
  *   - Substrate
+ *   - Statistics
+ *   - Best Possible Genome
  *
  *   The filename convention will be:
  *
  *   - `filename.population`
- *   - `filename.parameters`
  *   - `filename.substrate`
+ *   - `filename.csv`
+ *   - `filename.genome`
+ *
+ *   The parameters are saved in the population.
  *
  * @param filename
  */
 void SpiderSwarm::save(const std::string& filename) {
   std::string popFilename    = filename + ".population";
-  std::string paramFilename  = filename + ".parameters";
   std::string subFilename    = filename + ".substrate";
   std::string genomeFilename = filename + ".genome";
   std::string statsFilename  = filename + ".csv";
@@ -343,9 +344,14 @@ void SpiderSwarm::save(const std::string& filename) {
  *   If filename is `mySpiderSwarm`, it will expect to find
  *   three different files:
  *
- *   - `mySpiderSwarm.population`
  *   - `mySpiderSwarm.parameters`
  *   - `mySpiderSwarm.substrate`
+ *
+ *   It will also look for:
+ *
+ *   - `mySpiderSwarm.genome`
+ *
+ *   but this one is not required.
  *
  *   **Note**: This also resets the current values to their
  *   initial values:
@@ -439,12 +445,35 @@ void SpiderSwarm::loadSubstrate(const std::string& filename) {
   recreatePhenotypes();
 }
 
+/**
+ * @brief
+ *   Returns the current iteration duration
+ *   that is incremented with 1/60th of a second every
+ *   time the update loop is executed.
+ *
+ * @return
+ */
 float SpiderSwarm::currentDuration() {
   return mCurrentDuration;
 }
+
+/**
+ * @brief
+ *   Returns the set iteration duration
+ *
+ * @return
+ */
 float SpiderSwarm::iterationDuration() {
   return mIterationDuration;
 }
+
+/**
+ * @brief
+ *   Sets the simulation duration of the phenotypes.
+ *   The value represents seconds
+ *
+ * @param x
+ */
 void SpiderSwarm::setIterationDuration(float x) {
   mIterationDuration = x;
 }
