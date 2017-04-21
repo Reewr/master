@@ -340,13 +340,14 @@ void Phenotype::update(float deltaTime) {
     inputs.push_back(linearVel.y());
     inputs.push_back(linearVel.z());
 
+    // Add the current rotation of the hinge for the element
     if (part.second.hinge != nullptr) {
 
-      // Add the current rotation of the hinge for the element
-      inputs.push_back(part.second.hinge->getHingeAngle());
+      float rot = part.second.hinge->getHingeAngle();
+      rot       = normalizeHingeAngle(rot, -pi, pi, 0.f);
+      inputs.push_back(rot);
 
     } else if (part.second.dof != nullptr) {
-
       // TODO
     }
   }
