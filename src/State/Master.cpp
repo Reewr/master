@@ -56,20 +56,6 @@ Master::Master(Asset* a) : mAsset(a) {
 
   a->setCamera(mCamera);
   mLua->reInitialize();
-  mLua->engine.set_function("disablePhysics",
-                            [&]() { mWorld->disablePhysics(); });
-
-  mLua->engine.set_function("enablePhysics",
-                            [&]() { mWorld->enablePhysics(); });
-
-  mLua->engine.set_function("saveSwarm", [&](const std::string& filename) {
-    mSwarm->save(filename);
-  });
-
-  mLua->engine.set_function("loadSwarm", [&](const std::string& filename) {
-    mSwarm->load(filename);
-  });
-
   mLua->engine["swarm"] = mSwarm;
 
   // add CFG is enabled
@@ -77,17 +63,9 @@ Master::Master(Asset* a) : mAsset(a) {
     mGUIElements.push_back(new Console(a));
   }
 
-  // mLog->info("Initialized successfully");
-
-  // auto test = r->get<PhysicsMesh>("PhysicsMesh::Box");
-  // mLog->debug("Logging the names of PhysicsMesh::Box");
-
-  // for (auto m : test->names()) {
-  //   mLog->debug("{}", m);
-  // }
-
   // just run physics once so the terrain is positioned correctly
   mWorld->doPhysics(1);
+  mLog->info("Initialized successfully");
 }
 
 Master::~Master() {
