@@ -167,7 +167,7 @@ void World::reset() {
     btBroadphasePairArray& pairArray = pairCache->getOverlappingPairArray();
 
     for (int i = 0; i < pairArray.size(); ++i)
-      pairCache->cleanOverlappingPair(pairArray[i], mWorld->getDispatcher());
+      pairCache->cleanOverlappingPair(pairArray[i], mDispatcher);
   }
 
   mSolver->reset();
@@ -186,6 +186,39 @@ void World::reset() {
  *   if this is true, which it defaults to, it will remove
  *   children as well.
  */
+void World::removeObject(Drawable3D* element, bool removeChildren) {
+  if (element == nullptr)
+    return;
+
+  // remove them from the world first
+  for (auto a : mElements) {
+    if (a == element && element != nullptr) {
+
+      if (a->hasPhysics()) {
+        mWorld->removeRigidBody(a->rigidBody());
+
+        for (auto& c : a->constraints()) {
+          if (&c->getRigidBodyA() == a->rigidBody()) {
+            mWorld->removeConstraint(c);
+          }
+        }
+      }
+
+      if (removeChildren) {
+        for (auto& child : a->children())
+          removeObject(child);
+      }
+    }
+  }
+
+  // then remove them from the list
+  mElements.erase(std::remove_if(mElements.begin(),
+                                 mElements.end(),
+                                 [element](Drawable* e) {
+                                   return e == element;
+                                 }),
+                  mElements.end());
+}
 
 /**
  * @brief
@@ -197,7 +230,7 @@ void World::reset() {
  *
  * @param deltaTime
  */
-void World::doPhysics(float deltaTime) {
+void World::doPhysics(float) {
   mWorld->stepSimulation(1.f/60.f, 3, 1.f/120.f);
 
   for (auto a : mElements)
