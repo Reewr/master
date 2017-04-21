@@ -153,7 +153,7 @@ Phenotype::Phenotype()
     , planeBody(nullptr)
     , drawablePhenotype(nullptr)
     , hoverText(nullptr)
-    , fitness(1)
+    , fitness(0)
     , failed(false)
     , finalizedFitness(0)
     , duration(0)
@@ -522,7 +522,7 @@ float Phenotype::finalizeFitness() {
     index += 1;
   }
 
-  finalizedFitness = fitness[0];
+  finalizedFitness = mmm::sum(fitness);
 
   return finalizedFitness;
 }
@@ -600,7 +600,7 @@ void Phenotype::reset(int speciesId, int individualId, unsigned int id, unsigned
   failed           = false;
   finalizedFitness = 0;
   duration         = -2;
-  fitness          = mmm::vec<9>(1);
+  fitness          = mmm::vec<9>(0);
   speciesIndex     = speciesId;
   individualIndex  = individualId;
   genomeId         = id;
