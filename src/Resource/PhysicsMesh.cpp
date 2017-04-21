@@ -278,7 +278,7 @@ PhysicsElements* PhysicsMesh::createCopyAll() {
     btMotionState* motion = new btDefaultMotionState(btTransform(mat, pos));
 
     auto info       = RigidBodyInfo(mass, motion, shape, inertia);
-    info.m_friction = 1.0;
+    info.m_friction = 10.0;
 
     btRigidBody* body = new btRigidBody(info);
 
