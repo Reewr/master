@@ -59,6 +59,8 @@ public:
 
   Input::Input* input();
 
+  void closeWindow();
+
 protected:
   //! Initializesers of the different libraries that are being used
   bool initGLFW();
@@ -73,7 +75,6 @@ protected:
   void refreshState(int refreshType);
   void changeState(int newState);
   void createState();
-  void closeWindow();
 
   std::stack<int> mActiveStates;
 
