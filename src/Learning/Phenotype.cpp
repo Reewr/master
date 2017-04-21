@@ -652,77 +652,77 @@ std::vector<Fitness> Phenotype::FITNESS_HANDLERS = {
     }
   ),
 
-  Fitness(
-    "Collision  ",
-    "Fitness based on height with Sternum",
-    [](const Phenotype& phenotype, float current, float dt) -> float {
-      const auto& parts = phenotype.spider->parts();
+  // Fitness(
+  //   "Collision  ",
+  //   "Fitness based on height with Sternum",
+  //   [](const Phenotype& phenotype, float current, float dt) -> float {
+  //     const auto& parts = phenotype.spider->parts();
 
-      auto body = parts.at("Sternum").part->rigidBody();
-      auto h    = body->getCenterOfMassPosition().y();
-      auto q    = body->getOrientation();
-      auto v    = getEulerAngles(q.x(), q.y(), q.z(), q.w());
+  //     auto body = parts.at("Sternum").part->rigidBody();
+  //     auto h    = body->getCenterOfMassPosition().y();
+  //     auto q    = body->getOrientation();
+  //     auto v    = getEulerAngles(q.x(), q.y(), q.z(), q.w());
 
-      float hasTooSteepAngles = 1;
-      hasTooSteepAngles *= score(dt, v.x, mmm::radians(35.f));
-      hasTooSteepAngles *= score(dt, v.z, mmm::radians(35.f));
-      hasTooSteepAngles *= score(dt, v.y + mmm::radians(90.f), mmm::radians(50.f));
+  //     float hasTooSteepAngles = 1;
+  //     hasTooSteepAngles *= score(dt, v.x, mmm::radians(35.f));
+  //     hasTooSteepAngles *= score(dt, v.z, mmm::radians(35.f));
+  //     hasTooSteepAngles *= score(dt, v.y + mmm::radians(90.f), mmm::radians(50.f));
 
-      // If the angle of sternum is too far away from stable
-      if (hasTooSteepAngles < 1.0) {
-        /* phenotype.kill(); */
-        return current;
-      }
+  //     // If the angle of sternum is too far away from stable
+  //     if (hasTooSteepAngles < 1.0) {
+  //       /* phenotype.kill(); */
+  //       return current;
+  //     }
 
-      // If the height is too low or too high
-      if (h > 1.9) {
-        /* debug("Killed {}-{} due to height", phenotype.speciesIndex, phenotype.individualIndex); */
-        /* phenotype.kill(); */
-        return current;
-      }
+  //     // If the height is too low or too high
+  //     if (h > 1.9) {
+  //       /* debug("Killed {}-{} due to height", phenotype.speciesIndex, phenotype.individualIndex); */
+  //       /* phenotype.kill(); */
+  //       return current;
+  //     }
 
-      // If any of the important pieces are hitting the floor
-      if (phenotype.collidesWithTerrain(body) ||
-          phenotype.collidesWithTerrain("Eye") ||
-          phenotype.collidesWithTerrain("Neck")) {
-        /* debug("Killed {}-{} due to Eye/Neck/Sternum", phenotype.speciesIndex, phenotype.individualIndex); */
-        /* phenotype.kill(); */
-        return current;
-      }
+  //     // If any of the important pieces are hitting the floor
+  //     if (phenotype.collidesWithTerrain(body) ||
+  //         phenotype.collidesWithTerrain("Eye") ||
+  //         phenotype.collidesWithTerrain("Neck")) {
+  //       /* debug("Killed {}-{} due to Eye/Neck/Sternum", phenotype.speciesIndex, phenotype.individualIndex); */
+  //       /* phenotype.kill(); */
+  //       return current;
+  //     }
 
-      // If even more parts of its legs are hitting the floor
-      if (phenotype.collidesWithTerrain("PatellaL1") ||
-          phenotype.collidesWithTerrain("PatellaL2") ||
-          phenotype.collidesWithTerrain("PatellaL3") ||
-          phenotype.collidesWithTerrain("PatellaL4") ||
-          phenotype.collidesWithTerrain("PatellaR1") ||
-          phenotype.collidesWithTerrain("PatellaR2") ||
-          phenotype.collidesWithTerrain("PatellaR3") ||
-          phenotype.collidesWithTerrain("PatellaR4")) {
-        /* debug("Killed {}-{} due to patella", phenotype.speciesIndex, phenotype.individualIndex); */
-        /* phenotype.kill(); */
-        return current;
-      }
+  //     // If even more parts of its legs are hitting the floor
+  //     if (phenotype.collidesWithTerrain("PatellaL1") ||
+  //         phenotype.collidesWithTerrain("PatellaL2") ||
+  //         phenotype.collidesWithTerrain("PatellaL3") ||
+  //         phenotype.collidesWithTerrain("PatellaL4") ||
+  //         phenotype.collidesWithTerrain("PatellaR1") ||
+  //         phenotype.collidesWithTerrain("PatellaR2") ||
+  //         phenotype.collidesWithTerrain("PatellaR3") ||
+  //         phenotype.collidesWithTerrain("PatellaR4")) {
+  //       /* debug("Killed {}-{} due to patella", phenotype.speciesIndex, phenotype.individualIndex); */
+  //       /* phenotype.kill(); */
+  //       return current;
+  //     }
 
-      // Lastly, it shouldnt rest on the bendy bit by the sternum
-      if (phenotype.collidesWithTerrain("FemurL1") ||
-          phenotype.collidesWithTerrain("FemurL2") ||
-          phenotype.collidesWithTerrain("FemurL3") ||
-          phenotype.collidesWithTerrain("FemurL4") ||
-          phenotype.collidesWithTerrain("FemurR1") ||
-          phenotype.collidesWithTerrain("FemurR2") ||
-          phenotype.collidesWithTerrain("FemurR3") ||
-          phenotype.collidesWithTerrain("FemurR4")) {
-        /* debug("Killed {}-{} due to femur", phenotype.speciesIndex, phenotype.individualIndex); */
-        /* phenotype.kill(); */
-        return current;
-      }
+  //     // Lastly, it shouldnt rest on the bendy bit by the sternum
+  //     if (phenotype.collidesWithTerrain("FemurL1") ||
+  //         phenotype.collidesWithTerrain("FemurL2") ||
+  //         phenotype.collidesWithTerrain("FemurL3") ||
+  //         phenotype.collidesWithTerrain("FemurL4") ||
+  //         phenotype.collidesWithTerrain("FemurR1") ||
+  //         phenotype.collidesWithTerrain("FemurR2") ||
+  //         phenotype.collidesWithTerrain("FemurR3") ||
+  //         phenotype.collidesWithTerrain("FemurR4")) {
+  //       /* debug("Killed {}-{} due to femur", phenotype.speciesIndex, phenotype.individualIndex); */
+  //       /* phenotype.kill(); */
+  //       return current;
+  //     }
 
-      // If it passed all these tests, yay for it.
-      return current + dt;
-    },
-    [](const Phenotype&, float current, float) -> float {
-      return current - 1;
-    }
-  )
+  //     // If it passed all these tests, yay for it.
+  //     return current + dt;
+  //   },
+  //   [](const Phenotype&, float current, float) -> float {
+  //     return current - 1;
+  //   }
+  // )
 };
