@@ -301,18 +301,6 @@ void Phenotype::update(float deltaTime) {
 
   duration += deltaTime;
 
-  auto tl1 = parts["TarsusL1"].part->rigidBody()->getCenterOfMassPosition().z();
-  auto tl2 = parts["TarsusL2"].part->rigidBody()->getCenterOfMassPosition().z();
-  auto tl3 = parts["TarsusL3"].part->rigidBody()->getCenterOfMassPosition().z();
-  auto tl4 = parts["TarsusL4"].part->rigidBody()->getCenterOfMassPosition().z();
-
-  auto tr1 = parts["TarsusR1"].part->rigidBody()->getCenterOfMassPosition().z();
-  auto tr2 = parts["TarsusR2"].part->rigidBody()->getCenterOfMassPosition().z();
-  auto tr3 = parts["TarsusR3"].part->rigidBody()->getCenterOfMassPosition().z();
-  auto tr4 = parts["TarsusR4"].part->rigidBody()->getCenterOfMassPosition().z();
-
-  auto neck     = parts["Neck"].part->rigidBody()->getCenterOfMassPosition().z();
-  auto abomin   = parts["Abdomin"].part->rigidBody()->getCenterOfMassPosition().z();
   auto& sternum = parts["Sternum"].part->rigidBody()->getCenterOfMassPosition();
 
   // Initialize the input list, which will contain many many elements.
@@ -320,26 +308,9 @@ void Phenotype::update(float deltaTime) {
   inputs.reserve(numberOfInputs);
 
   // Add an input that gives some indication of time.
-  inputs.push_back(mmm::sin(duration));
-
-  // Give the network an indication of how the legs are positioned
-  // relative to some central pieces of the robot. This may be
-  // used by the network to know which way to move the elements.
-  inputs.push_back(tl1 > neck ? -1.0 : 1.0);
-  inputs.push_back(tl2 > sternum.z() ? -1.0 : 1.0);
-  inputs.push_back(tl3 > sternum.z() ? -1.0 : 1.0);
-  inputs.push_back(tl4 > abomin ? -1.0 : 1.0);
-
-  inputs.push_back(tr1 > neck ? -1.0 : 1.0);
-  inputs.push_back(tr2 > sternum.z() ? -1.0 : 1.0);
-  inputs.push_back(tr3 > sternum.z() ? -1.0 : 1.0);
-  inputs.push_back(tr4 > abomin ? -1.0 : 1.0);
+  inputs.push_back(mmm::sin(duration * 2.f));
 
   for (auto& part : parts) {
-
-    // If the part isnt active, ignore it
-    if (!part.second.active)
-      continue;
 
     btRigidBody*     body         = part.second.part->rigidBody();
     const btVector3& centerOfMass = body->getCenterOfMassPosition();

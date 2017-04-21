@@ -900,14 +900,31 @@ void SpiderSwarm::setDefaultSubstrate() {
     // { -2.55,  2.4, -1.04 }, // R4Tip
 
     // Ang: 135, Rot: 44
-    /* { -0.100000, 1.565926, 0.258819 },   // AbdominImpAngX */
-    /* { 0.100000, 1.565926, 0.258819 },    // AbdominImpAngY */
-    /* { 0.000000, 1.540044, 0.355412 },    // AbdominImpAngZ */
-    /* { 0.000000, 0.898278, 0.079924 },    // AbdominImpRot */
-    /* { -0.100000, -0.850000, 0.446689 },  // EyeImpAngX */
-    /* { 0.100000, -0.850000, 0.446689 },   // EyeImpAngY */
-    /* { 0.000000, -0.850000, 0.546689 },   // EyeImpAngZ */
-    /* { 0.000000, -0.850000, 0.242041 },   // EyeImpRot */
+    { -0.10, 1.56, 0.25 },   // AbdominCollision
+    { 0.10, 1.56, 0.25 },    // AbdominHeight
+    { 0.00, 1.54, 0.35 },    // AbdominPOS X
+    { 0.01, 1.55, 0.35 },    // AbdominPOS Y
+    { 0.02, 1.56, 0.35 },    // AbdominPOS Z
+    { 0.001, 1.541, 0.35 },  // AbdominANG X
+    { 0.011, 1.551, 0.35 },  // AbdominANG Y
+    { 0.021, 1.561, 0.35 },  // AbdominANG Z
+    { 0.002, 1.542, 0.35 },  // AbdominVEL X
+    { 0.012, 1.552, 0.35 },  // AbdominVEL Y
+    { 0.022, 1.562, 0.35 },  // AbdominVEL Z
+    { 0.00, 0.89, 0.07 },    // AbdominRot
+
+    { -0.10, -0.85, 0.44 },  // EyeImpAngX
+    { 0.10, -0.85, 0.44 },   // EyeImpAngY
+    { 0.00, -0.85, 0.54 },   // Eye POS X
+    { 0.01, -0.86, 0.54 },   // Eye POS Y
+    { 0.02, -0.87, 0.54 },   // Eye POS Z
+    { 0.001, -0.851, 0.54 }, // Eye ANG X
+    { 0.011, -0.861, 0.54 }, // Eye ANG Y
+    { 0.021, -0.871, 0.54 }, // Eye ANG Z
+    { 0.002, -0.852, 0.54 }, // Eye VEL X
+    { 0.012, -0.862, 0.54 }, // Eye VEL Y
+    { 0.022, -0.872, 0.54 }, // Eye VEL Z
+    { 0.00, -0.85, 0.24 },   // EyeImpRot
 
     { 0.95, -1.03, 0.32 },   // FemurL1Collision
     { 1.05, -0.86, 0.32 },   // FemurL1Height
@@ -1013,14 +1030,32 @@ void SpiderSwarm::setDefaultSubstrate() {
     { -0.912, 1.032, 0.40 },   // FemurR4ImpAngZ VEL Z
     { -0.58, 0.75, 0.00 },   // FemurR4ImpRot
 
-    /* { -0.100000, 0.722260, 0.032758 },   // HipImpAngX */
-    /* { 0.100000, 0.722260, 0.032758 },    // HipImpAngY */
-    /* { 0.000000, 0.696378, 0.129351 },    // HipImpAngZ */
-    /* { 0.000000, 0.600004, 0.000000 },    // HipImpRot */
-    /* { -0.100000, -0.709850, 0.109850 },  // NeckImpAngX */
-    /* { 0.100000, -0.709850, 0.109850 },   // NeckImpAngY */
-    /* { -0.000000, -0.639139, 0.180561 },  // NeckImpAngZ */
-    /* { 0.000000, -0.599997, -0.000003 },  // NeckImpRot */
+    { -0.10, 0.72, 0.03 },   // HipImpAngX
+    { 0.10, 0.72, 0.03 },    // HipImpAngY
+    { 0.00, 0.69, 0.12 },    // Hip POS X
+    { 0.01, 0.70, 0.12 },    // Hip POS Y
+    { 0.02, 0.71, 0.12 },    // Hip POS Z
+    { 0.001, 0.691, 0.12 },    // Hip ANG X
+    { 0.011, 0.701, 0.12 },    // Hip ANG Y
+    { 0.021, 0.711, 0.12 },    // Hip ANG Z
+    { 0.002, 0.692, 0.12 },    // Hip VEL X
+    { 0.012, 0.702, 0.12 },    // Hip VEL Y
+    { 0.022, 0.712, 0.12 },    // Hip VEL Z
+    { 0.00, 0.60, 0.00 },    // HipImpRot
+
+    { -0.10, -0.70,  0.10 },  // NeckImpAngX
+    {  0.10, -0.70,  0.10 },   // NeckImpAngY
+    { -0.00, -0.63,  0.18 },  // Neck POS X
+    { -0.01, -0.64,  0.18 },  // Neck POS Y
+    { -0.02, -0.65,  0.18 },  // Neck POS Z
+    { -0.001, -0.631,  0.18 },  // Neck ANG X
+    { -0.011, -0.641,  0.18 },  // Neck ANG Y
+    { -0.021, -0.651,  0.18 },  // Neck ANG Z
+    { -0.002, -0.632,  0.18 },  // Neck VEL X
+    { -0.012, -0.642,  0.18 },  // Neck VEL Y
+    { -0.022, -0.652,  0.18 },  // Neck VEL Z
+    {  0.00, -0.59, -0.00 },  // NeckImpRot
+
     { 1.70, -1.46, 0.57 },   // PatellaL1ImpAngX
     { 1.80, -1.29, 0.57 },   // PatellaL1ImpAngY
     { 1.76, -1.38, 0.67 },   // PatellaL1ImpAngZ POS X
@@ -1125,9 +1160,17 @@ void SpiderSwarm::setDefaultSubstrate() {
     { -1.622, 1.632, 0.67 },   // PatellaR4ImpAngZ VEL Z
     { -1.29, 1.34, 0.64 },   // PatellaR4ImpRot
 
-    /* { -0.100000, 0.000000, 0.000000 },   // SternumImpAngX */
-    /* { 0.100000, 0.000000, 0.000000 },    // SternumImpAngY */
-    /* { 0.000000, 0.000000, 0.100000 },    // SternumImpAngZ */
+    { -0.10, 0.00, 0.00 },    // SternumImpAngX
+    {  0.10, 0.00, 0.00 },    // SternumImpAngY
+    {  0.00, 0.00, 0.10 },    // Sternum POS X
+    {  0.01, 0.01, 0.10 },    // Sternum POS Y
+    {  0.02, 0.02, 0.10 },    // Sternum POS Z
+    {  0.001, 0.001, 0.10 },    // Sternum ANG X
+    {  0.011, 0.011, 0.10 },    // Sternum ANG Y
+    {  0.021, 0.021, 0.10 },    // Sternum ANG Z
+    {  0.002, 0.002, 0.10 },    // Sternum VEL X
+    {  0.012, 0.012, 0.10 },    // Sternum VEL Y
+    {  0.022, 0.022, 0.10 },    // Sternum VEL Z
 
     { 2.71, -2.05, -0.72 },  // TarsusL1ImpAngX
     { 2.81, -1.87, -0.72 },  // TarsusL1ImpAngY
