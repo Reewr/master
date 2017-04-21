@@ -686,8 +686,18 @@ void SpiderSwarm::updateEpoch() {
                p.hasBeenKilled() ? " (killed)" : "");
 
     size_t j = 0;
+    int maxLength = 0;
+
+    // Find the longest name so alignment can be done
+    for (auto& f : Phenotype::FITNESS_HANDLERS)
+      maxLength = mmm::max(f.name().size(), maxLength);
+
+    // Print out aligned fitness names and their values
     for (auto& f : Phenotype::FITNESS_HANDLERS) {
-      mLog->info("  {}: {}", f.name(), p.fitness[j]);
+      std::string name =
+        f.name() + std::string(" ", mmm::max(maxLength - f.name().size(), 0));
+
+      mLog->info("  {}: {}", name, p.fitness[j]);
       j += 1;
     }
   }
