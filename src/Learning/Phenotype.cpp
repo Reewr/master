@@ -534,6 +534,10 @@ float Phenotype::finalizeFitness() {
  *   the fitness and number of updates.
  *
  *   If all the values are nullptr, allocate them
+ *
+ *   This function is used instead of deallocating and reallocating
+ *   the elements for each loop. This allows us to reuse the Phenotypes,
+ *   improving the performance.
  */
 void Phenotype::reset(int speciesId, int individualId, unsigned int id, unsigned int numInputs) {
 
