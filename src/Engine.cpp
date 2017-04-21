@@ -369,8 +369,6 @@ void Engine::deinitialize(bool isFullDeinit) {
   }
 
   mResourceManager->unloadAll();
-  /* Model::deinit(); */
-  /* Spider::deinit(); */
 
   mCFG->writetoFile("config/config.ini");
 
