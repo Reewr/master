@@ -620,6 +620,8 @@ void SpiderSwarm::updateEpoch() {
   float  best      = -1.f;
   size_t bestIndex = 0;
 
+  ++mGeneration;
+
   size_t index = 0;
   for (size_t i = 0; i < mPopulation->m_Species.size(); ++i) {
     float  bestOfSpecies = -1.0;
@@ -643,7 +645,10 @@ void SpiderSwarm::updateEpoch() {
       if (fitness > mBestPossibleFitness) {
         mBestPossibleFitness = best;
         mBestPossibleGenome  = mPopulation->m_Species[i].m_Individuals[j];
-        mBestPossibleFitnessGeneration = mGeneration + 1;
+        mBestPossibleFitnessGeneration = mGeneration;
+
+        // also store it to file for future reference
+        save("current-g" + std::to_string(mGeneration));
       }
 
       if (fitness > bestOfSpecies) {
@@ -657,7 +662,6 @@ void SpiderSwarm::updateEpoch() {
     mSpeciesLeaders.push_back(leaderIndex);
   }
 
-  ++mGeneration;
   mBestIndex = bestIndex;
 
   mStats.addEntry(mPhenotypes, mGeneration);
