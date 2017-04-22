@@ -1607,7 +1607,7 @@ void SpiderSwarm::setDefaultPopulation() {
   ////////////////////
 
   // Size of population
-  params.PopulationSize = 50;
+  params.PopulationSize = 128;
 
   // If true, this enables dynamic compatibility thresholding
   // It will keep the number of species between MinSpecies and MaxSpecies
