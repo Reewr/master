@@ -7,20 +7,20 @@
 
 Engine* engine = nullptr;
 // Handle sigterm on both Linux and Windows
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) || defined(__CYGWIN__)
-#include <windows.h>
-BOOL WINAPI consoleHandler(DWORD signal) {
-  if (signal == CTRL_C_EVENT)
-    engine->closeWindow();
-}
-#else
-#include <cstdlib>
-#include <signal.h>
+// #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) || defined(__CYGWIN__)
+// #include <windows.h>
+// BOOL WINAPI consoleHandler(DWORD signal) {
+//   if (signal == CTRL_C_EVENT)
+//     engine->closeWindow();
+// }
+// #else
+// #include <cstdlib>
+// #include <signal.h>
 
-void controlCHandler(int) {
-  engine->closeWindow();
-}
-#endif
+// void controlCHandler(int) {
+//   engine->closeWindow();
+// }
+// #endif
 
 /**
  * @brief
@@ -47,13 +47,13 @@ void controlCHandler(int) {
  */
 int main(int argc, char* argv[]) {
 
-  // Add the control C handler
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) || defined(__CYGWIN__)
-  if (!SetConsoleCtrlHandler(consoleHandler, TRUE))
-    throw std::runtime_error("Unable to set Console Handler");
-#else
-  signal(SIGINT, controlCHandler);
-#endif
+  //   // Add the control C handler
+  // #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) || defined(__CYGWIN__)
+  //   if (!SetConsoleCtrlHandler(consoleHandler, TRUE))
+  //     throw std::runtime_error("Unable to set Console Handler");
+  // #else
+  //   signal(SIGINT, controlCHandler);
+  // #endif
 
   Logging::init(spdlog::level::trace);
 
