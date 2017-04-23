@@ -701,8 +701,13 @@ void SpiderSwarm::updateEpoch() {
 
     // Print out aligned fitness names and their values
     for (auto& f : Phenotype::FITNESS_HANDLERS) {
-      std::string name =
-        f.name() + std::string(" ", mmm::max(maxLength - f.name().size(), 0));
+      int padding = mmm::max(maxLength - f.name().size(), 0);
+      std::string name;
+
+      if (padding != 0)
+        name = f.name() + std::string(" ", padding);
+      else
+        name = f.name();
 
       mLog->info("  {}: {}", name, p.fitness[j]);
       j += 1;
