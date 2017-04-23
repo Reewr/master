@@ -666,6 +666,9 @@ void SpiderSwarm::updateEpoch() {
 
   mStats.addEntry(mPhenotypes, mGeneration);
 
+  // Log some information about the generation that just finished
+  // excuting, such as the best fitness overall and the best
+  // for each species, together with the individual fitness values
   mLog->info("Generation {}", mGeneration);
   mLog->info("Best of current generation {}, Best of all: {} ({})",
              best,
