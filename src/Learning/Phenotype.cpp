@@ -382,13 +382,15 @@ void Phenotype::update(float deltaTime) {
       float currentAngle = part.second.hinge->getHingeAngle();
       float rotation;
 
+      float maxMotorStrength = 2;
+
       // If the element is active, set the angle to an angle that is mutliplied so
       // its between 2*PI and -2*PI
       //
       // If the element isnt active we wont punish the robot and set the part
       // to a neutral angle that wont be in the way.
       if (part.second.active)
-        rotation = 4 * pi * outputs[i] - 2 * pi;
+        rotation = 2 * maxMotorStrength * outputs[i] - maxMotorStrength;
       else
         rotation = mmm::clamp(part.second.restAngle - currentAngle, -0.3f, 0.3f) * 16.0f;
 
