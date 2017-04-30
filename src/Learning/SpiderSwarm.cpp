@@ -682,7 +682,7 @@ void SpiderSwarm::updateEpoch() {
 
     mLog->info("-------------------------------------");
     mLog->info("The best in species: {}-{} >>= {}{}{}",
-               p.speciesIndex,
+               p.speciesId,
                p.individualIndex,
                p.finalizedFitness,
                i == mBestIndex ? " (best)" : "",
@@ -887,663 +887,134 @@ void SpiderSwarm::setDefaultSubstrate() {
 
   // clang-format off
   std::vector<std::vector<double>> inputs{
-    { 0.00, 0.00, -1.00 },    // Phase
+    {  0.0, -0.6, -0.4 }, // Phase -cos
+    {  0.0, -0.2, -0.4 }, // Phase -sin
+    {  0.0,  0.2, -0.4 }, // Phase  cos
+    {  0.0,  0.6, -0.4 }, // Phase  sin
 
-    // {  2.84, -2.0, -1.04 }, // L1Tip
-    // {  3.17, -0.6, -1.04 }, // L2Tip
-    // {  3.12,  0.9, -1.04 }, // L3Tip
-    // {  2.55,  2.4, -1.04 }, // L4Tip
+    {  0.0, -0.4, -0.4 }, // Rotation sternum z
+    {  0.0,  0.0, -0.4 }, // Rotation sternum y
+    {  0.0,  0.4, -0.4 }, // Rotation sternum x
 
-    // { -2.84, -2.0, -1.04 }, // R1Tip
-    // { -3.17, -0.6, -1.04 }, // R2Tip
-    // { -3.12,  0.9, -1.04 }, // R3Tip
-    // { -2.55,  2.4, -1.04 }, // R4Tip
+    {  1.2, -0.6, -0.4 }, // TipL1
+    {  1.2, -0.2, -0.4 }, // TipL2
+    {  1.2,  0.2, -0.4 }, // TipL3
+    {  1.2,  0.6, -0.4 }, // TipL4
+    { -1.2, -0.6, -0.4 }, // TipR1
+    { -1.2, -0.2, -0.4 }, // TipR2
+    { -1.2,  0.2, -0.4 }, // TipR3
+    { -1.2,  0.6, -0.4 }, // TipR4
 
-    // Ang: 135, Rot: 44
-    { -0.10, 1.56, 0.25 },   // AbdominCollision
-    { 0.10, 1.56, 0.25 },    // AbdominHeight
-    { 0.00, 1.54, 0.35 },    // AbdominPOS X
-    { 0.01, 1.55, 0.35 },    // AbdominPOS Y
-    { 0.02, 1.56, 0.35 },    // AbdominPOS Z
-    { 0.001, 1.541, 0.35 },  // AbdominANG X
-    { 0.011, 1.551, 0.35 },  // AbdominANG Y
-    { 0.021, 1.561, 0.35 },  // AbdominANG Z
-    { 0.002, 1.542, 0.35 },  // AbdominVEL X
-    { 0.012, 1.552, 0.35 },  // AbdominVEL Y
-    { 0.022, 1.562, 0.35 },  // AbdominVEL Z
-    { 0.00, 0.89, 0.07 },    // AbdominRot
+    {  1.0, -0.4, -0.4 }, // Tarsus L1 L2 Diff
+    {  1.0,  0.0, -0.4 }, // Tarsus L2 L3 Diff
+    {  1.0,  0.4, -0.4 }, // Tarsus L3 L4 Diff
+    { -1.0, -0.4, -0.4 }, // Tarsus R1 R2 Diff
+    { -1.0,  0.0, -0.4 }, // Tarsus R2 R3 Diff
+    { -1.0,  0.4, -0.4 }, // Tarsus R3 R4 Diff
 
-    { -0.10, -0.85, 0.44 },  // EyeImpAngX
-    { 0.10, -0.85, 0.44 },   // EyeImpAngY
-    { 0.00, -0.85, 0.54 },   // Eye POS X
-    { 0.01, -0.86, 0.54 },   // Eye POS Y
-    { 0.02, -0.87, 0.54 },   // Eye POS Z
-    { 0.001, -0.851, 0.54 }, // Eye ANG X
-    { 0.011, -0.861, 0.54 }, // Eye ANG Y
-    { 0.021, -0.871, 0.54 }, // Eye ANG Z
-    { 0.002, -0.852, 0.54 }, // Eye VEL X
-    { 0.012, -0.862, 0.54 }, // Eye VEL Y
-    { 0.022, -0.872, 0.54 }, // Eye VEL Z
-    { 0.00, -0.85, 0.24 },   // EyeImpRot
-
-    { 0.95, -1.03, 0.32 },   // FemurL1Collision
-    { 1.05, -0.86, 0.32 },   // FemurL1Height
-    { 0.95, -0.91, 0.40 },   // FemurL1POS X
-    { 0.96, -0.92, 0.40 },   // FemurL1POS Y
-    { 0.97, -0.93, 0.40 },   // FemurL1POS Z
-    { 0.951, -0.911, 0.40 }, // FemurL1ANG X
-    { 0.961, -0.921, 0.40 }, // FemurL1ANG Y
-    { 0.971, -0.931, 0.40 }, // FemurL1ANG Z
-    { 0.952, -0.912, 0.40 }, // FemurL1VEL X
-    { 0.962, -0.922, 0.40 }, // FemurL1VEL Y
-    { 0.972, -0.932, 0.40 }, // FemurL1VEL Z
-    { 0.60, -0.72, 0.00 },   // FemurL1Rot
-
-    { 1.07, -0.42, 0.32 },   // FemurL2ImpAngX
-    { 1.10, -0.22, 0.32 },   // FemurL2ImpAngY
-    { 1.03, -0.31, 0.40 },   // FemurL2 POS X
-    { 1.04, -0.32, 0.40 },   // FemurL2 POS Y
-    { 1.05, -0.33, 0.40 },   // FemurL2 POS Z
-    { 1.031, -0.311, 0.40 }, // FemurL2 ANG X
-    { 1.041, -0.321, 0.40 }, // FemurL2 ANG Y
-    { 1.051, -0.331, 0.40 }, // FemurL2 ANG Z
-    { 1.032, -0.312, 0.40 }, // FemurL2 VEL X
-    { 1.042, -0.322, 0.40 }, // FemurL2 VEL Y
-    { 1.052, -0.332, 0.40 }, // FemurL2 VEL Z
-    { 0.63, -0.24, 0.00 },   // FemurL2ImpRot
-
-    { 1.10, 0.28, 0.32 },    // FemurL3ImpAngX
-    { 1.05, 0.47, 0.32 },    // FemurL3ImpAngY
-    { 1.02, 0.36, 0.40 },    // FemurL3 POS X
-    { 1.03, 0.37, 0.40 },    // FemurL3 POS Y
-    { 1.04, 0.38, 0.40 },    // FemurL3 POS Z
-    { 1.021, 0.361, 0.40 },  // FemurL3 ANG X
-    { 1.031, 0.371, 0.40 },  // FemurL3 ANG Y
-    { 1.041, 0.381, 0.40 },  // FemurL3 ANG Z
-    { 1.021, 0.362, 0.40 },  // FemurL3 VEL X
-    { 1.031, 0.372, 0.40 },  // FemurL3 VEL Y
-    { 1.041, 0.382, 0.40 },  // FemurL3 VEL Z
-    { 0.63, 0.26, 0.00 },    // FemurL3ImpRot
-
-    { 1.00, 0.97, 0.32 },    // FemurL4Collision
-    { 0.87, 1.12, 0.32 },    // FemurL4Height
-    { 0.89, 1.01, 0.40 },    // FemurL4 POS X
-    { 0.90, 1.02, 0.40 },    // FemurL4 POS Y
-    { 0.91, 1.03, 0.40 },    // FemurL4 POS Z
-    { 0.891, 1.011, 0.40 },  // FemurL4 ANG X
-    { 0.901, 1.021, 0.40 },  // FemurL4 ANG Y
-    { 0.911, 1.031, 0.40 },  // FemurL4 ANG Z
-    { 0.891, 1.012, 0.40 },  // FemurL4 VEL X
-    { 0.901, 1.022, 0.40 },  // FemurL4 VEL Y
-    { 0.911, 1.032, 0.40 },  // FemurL4 VEL Z
-    { 0.58, 0.75, 0.00 },    // FemurL4ImpRot
-
-    { -0.95, -1.03, 0.32 },  // FemurR1Collision
-    { -1.05, -0.86, 0.32 },  // FemurR1Height
-    { -0.95, -0.92, 0.40 },  // FemurR1 POS X
-    { -0.96, -0.93, 0.40 },  // FemurR1 POS Y
-    { -0.97, -0.94, 0.40 },  // FemurR1 POS Z
-    { -0.951, -0.921, 0.40 },// FemurR1 ANG X
-    { -0.961, -0.931, 0.40 },// FemurR1 ANG Y
-    { -0.971, -0.941, 0.40 },// FemurR1 ANG Z
-    { -0.952, -0.922, 0.40 },// FemurR1 VEL X
-    { -0.962, -0.932, 0.40 },// FemurR1 VEL Y
-    { -0.972, -0.942, 0.40 },// FemurR1 VEL Z
-    { -0.60, -0.72, 0.00 },  // FemurR1ImpRot
-
-    { -1.07, -0.42, 0.32 },  // FemurR2Collision
-    { -1.10, -0.22, 0.32 },  // FemurR2Height
-    { -1.03, -0.31, 0.40 },  // FemurR2 POS X
-    { -1.04, -0.32, 0.40 },  // FemurR2 POS Y
-    { -1.05, -0.33, 0.40 },  // FemurR2 POS Z
-    { -1.031, -0.311, 0.40 },// FemurR2 ANG X
-    { -1.041, -0.321, 0.40 },// FemurR2 ANG Y
-    { -1.051, -0.331, 0.40 },// FemurR2 ANG Z
-    { -1.032, -0.312, 0.40 },// FemurR2 VEL X
-    { -1.042, -0.322, 0.40 },// FemurR2 VEL Y
-    { -1.052, -0.332, 0.40 },// FemurR2 VEL Z
-    { -0.63, -0.24, 0.00 },  // FemurR2Rot
-
-    { -1.10, 0.28, 0.32 },   // FemurR3ImpAngX
-    { -1.05, 0.47, 0.32 },   // FemurR3ImpAngY
-    { -1.02, 0.36, 0.40 },   // FemurR3ImpAngZ POS X
-    { -1.03, 0.37, 0.40 },   // FemurR3ImpAngZ POS Y
-    { -1.04, 0.38, 0.40 },   // FemurR3ImpAngZ POS Z
-    { -1.021, 0.361, 0.40 },   // FemurR3ImpAngZ ANG X
-    { -1.031, 0.371, 0.40 },   // FemurR3ImpAngZ ANG Y
-    { -1.041, 0.381, 0.40 },   // FemurR3ImpAngZ ANG Z
-    { -1.022, 0.362, 0.40 },   // FemurR3ImpAngZ VEL X
-    { -1.032, 0.372, 0.40 },   // FemurR3ImpAngZ VEL Y
-    { -1.042, 0.382, 0.40 },   // FemurR3ImpAngZ VEL Z
-    { -0.63, 0.26, 0.00 },   // FemurR3ImpRot
-
-    { -1.00, 0.97, 0.32 },   // FemurR4ImpAngX
-    { -0.87, 1.12, 0.32 },   // FemurR4ImpAngY
-    { -0.89, 1.01, 0.40 },   // FemurR4ImpAngZ POS X
-    { -0.90, 1.02, 0.40 },   // FemurR4ImpAngZ POS Y
-    { -0.91, 1.03, 0.40 },   // FemurR4ImpAngZ POS Z
-    { -0.891, 1.011, 0.40 },   // FemurR4ImpAngZ ANG X
-    { -0.901, 1.021, 0.40 },   // FemurR4ImpAngZ ANG Y
-    { -0.911, 1.031, 0.40 },   // FemurR4ImpAngZ ANG Z
-    { -0.892, 1.012, 0.40 },   // FemurR4ImpAngZ VEL X
-    { -0.902, 1.022, 0.40 },   // FemurR4ImpAngZ VEL Y
-    { -0.912, 1.032, 0.40 },   // FemurR4ImpAngZ VEL Z
-    { -0.58, 0.75, 0.00 },   // FemurR4ImpRot
-
-    { -0.10, 0.72, 0.03 },   // HipImpAngX
-    { 0.10, 0.72, 0.03 },    // HipImpAngY
-    { 0.00, 0.69, 0.12 },    // Hip POS X
-    { 0.01, 0.70, 0.12 },    // Hip POS Y
-    { 0.02, 0.71, 0.12 },    // Hip POS Z
-    { 0.001, 0.691, 0.12 },    // Hip ANG X
-    { 0.011, 0.701, 0.12 },    // Hip ANG Y
-    { 0.021, 0.711, 0.12 },    // Hip ANG Z
-    { 0.002, 0.692, 0.12 },    // Hip VEL X
-    { 0.012, 0.702, 0.12 },    // Hip VEL Y
-    { 0.022, 0.712, 0.12 },    // Hip VEL Z
-    { 0.00, 0.60, 0.00 },    // HipImpRot
-
-    { -0.10, -0.70,  0.10 },  // NeckImpAngX
-    {  0.10, -0.70,  0.10 },   // NeckImpAngY
-    { -0.00, -0.63,  0.18 },  // Neck POS X
-    { -0.01, -0.64,  0.18 },  // Neck POS Y
-    { -0.02, -0.65,  0.18 },  // Neck POS Z
-    { -0.001, -0.631,  0.18 },  // Neck ANG X
-    { -0.011, -0.641,  0.18 },  // Neck ANG Y
-    { -0.021, -0.651,  0.18 },  // Neck ANG Z
-    { -0.002, -0.632,  0.18 },  // Neck VEL X
-    { -0.012, -0.642,  0.18 },  // Neck VEL Y
-    { -0.022, -0.652,  0.18 },  // Neck VEL Z
-    {  0.00, -0.59, -0.00 },  // NeckImpRot
-
-    { 1.70, -1.46, 0.57 },   // PatellaL1ImpAngX
-    { 1.80, -1.29, 0.57 },   // PatellaL1ImpAngY
-    { 1.76, -1.38, 0.67 },   // PatellaL1ImpAngZ POS X
-    { 1.77, -1.39, 0.67 },   // PatellaL1ImpAngZ POS Y
-    { 1.78, -1.40, 0.67 },   // PatellaL1ImpAngZ POS Z
-    { 1.761, -1.381, 0.67 }, // PatellaL1ImpAngZ ANG X
-    { 1.771, -1.391, 0.67 }, // PatellaL1ImpAngZ ANG Y
-    { 1.781, -1.401, 0.67 }, // PatellaL1ImpAngZ ANG Z
-    { 1.762, -1.382, 0.67 },   // PatellaL1ImpAngZ VEL X
-    { 1.772, -1.392, 0.67 },   // PatellaL1ImpAngZ VEL Y
-    { 1.782, -1.402, 0.67 },   // PatellaL1ImpAngZ VEL Z
-    { 1.40, -1.18, 0.64 },   // PatellaL1ImpRot
-
-    { 1.91, -0.56, 0.57 },   // PatellaL2ImpAngX
-    { 1.95, -0.37, 0.57 },   // PatellaL2ImpAngY
-    { 1.95, -0.47, 0.67 },   // PatellaL2ImpAngZ POS X
-    { 1.96, -0.48, 0.67 },   // PatellaL2ImpAngZ POS Y
-    { 1.97, -0.49, 0.67 },   // PatellaL2ImpAngZ POS Z
-    { 1.951, -0.471, 0.67 },   // PatellaL2ImpAngZ ANG X
-    { 1.961, -0.481, 0.67 },   // PatellaL2ImpAngZ ANG Y
-    { 1.971, -0.491, 0.67 },   // PatellaL2ImpAngZ ANG Z
-    { 1.952, -0.472, 0.67 },   // PatellaL2ImpAngZ VEL X
-    { 1.962, -0.482, 0.67 },   // PatellaL2ImpAngZ VEL Y
-    { 1.972, -0.492, 0.67 },   // PatellaL2ImpAngZ VEL Z
-    { 1.54, -0.40, 0.64 },   // PatellaL2ImpRot
-
-    { 1.93, 0.50, 0.57 },    // PatellaL3ImpAngX
-    { 1.88, 0.70, 0.57 },    // PatellaL3ImpAngY
-    { 1.92, 0.60, 0.67 },    // PatellaL3ImpAngZ POS X
-    { 1.93, 0.61, 0.67 },    // PatellaL3ImpAngZ POS Y
-    { 1.94, 0.62, 0.67 },    // PatellaL3ImpAngZ POS Z
-    { 1.921, 0.601, 0.67 },    // PatellaL3ImpAngZ ANG X
-    { 1.931, 0.611, 0.67 },    // PatellaL3ImpAngZ ANG Y
-    { 1.941, 0.621, 0.67 },    // PatellaL3ImpAngZ ANG Z
-    { 1.922, 0.602, 0.67 },    // PatellaL3ImpAngZ VEL X
-    { 1.932, 0.612, 0.67 },    // PatellaL3ImpAngZ VEL Y
-    { 1.942, 0.622, 0.67 },    // PatellaL3ImpAngZ VEL Z
-    { 1.52, 0.50, 0.64 },    // PatellaL3ImpRot
-
-    { 1.65, 1.52, 0.57 },    // PatellaL4ImpAngX
-    { 1.53, 1.67, 0.57 },    // PatellaL4ImpAngY
-    { 1.60, 1.61, 0.67 },    // PatellaL4ImpAngZ POS X
-    { 1.61, 1.62, 0.67 },    // PatellaL4ImpAngZ POS Y
-    { 1.62, 1.63, 0.67 },    // PatellaL4ImpAngZ POS Z
-    { 1.601, 1.611, 0.67 },    // PatellaL4ImpAngZ ANG X
-    { 1.611, 1.621, 0.67 },    // PatellaL4ImpAngZ ANG Y
-    { 1.621, 1.631, 0.67 },    // PatellaL4ImpAngZ ANG Z
-    { 1.602, 1.612, 0.67 },    // PatellaL4ImpAngZ VEL X
-    { 1.612, 1.622, 0.67 },    // PatellaL4ImpAngZ VEL Y
-    { 1.622, 1.632, 0.67 },    // PatellaL4ImpAngZ VEL Z
-    { 1.29, 1.34, 0.64 },    // PatellaL4ImpRot
-
-    { -1.70, -1.46, 0.57 },  // PatellaR1ImpAngX
-    { -1.80, -1.29, 0.57 },  // PatellaR1ImpAngY
-    { -1.76, -1.38, 0.67 },  // PatellaR1ImpAngZ POS X
-    { -1.77, -1.39, 0.67 },  // PatellaR1ImpAngZ POS Y
-    { -1.78, -1.40, 0.67 },  // PatellaR1ImpAngZ POS Z
-    { -1.761, -1.381, 0.67 },  // PatellaR1ImpAngZ ANG X
-    { -1.771, -1.391, 0.67 },  // PatellaR1ImpAngZ ANG Y
-    { -1.781, -1.401, 0.67 },  // PatellaR1ImpAngZ ANG Z
-    { -1.762, -1.382, 0.67 },  // PatellaR1ImpAngZ VEL X
-    { -1.772, -1.392, 0.67 },  // PatellaR1ImpAngZ VEL Y
-    { -1.782, -1.402, 0.67 },  // PatellaR1ImpAngZ VEL Z
-    { -1.40, -1.18, 0.64 },  // PatellaR1ImpRot
-
-    { -1.91, -0.56, 0.57 },  // PatellaR2ImpAngX
-    { -1.95, -0.37, 0.57 },  // PatellaR2ImpAngY
-    { -1.95, -0.47, 0.67 },  // PatellaR2ImpAngZ POS X
-    { -1.96, -0.48, 0.67 },  // PatellaR2ImpAngZ POS Y
-    { -1.97, -0.49, 0.67 },  // PatellaR2ImpAngZ POS Z
-    { -1.951, -0.471, 0.67 },  // PatellaR2ImpAngZ ANG X
-    { -1.961, -0.481, 0.67 },  // PatellaR2ImpAngZ ANG Y
-    { -1.971, -0.491, 0.67 },  // PatellaR2ImpAngZ ANG Z
-    { -1.952, -0.472, 0.67 },  // PatellaR2ImpAngZ VEL X
-    { -1.962, -0.482, 0.67 },  // PatellaR2ImpAngZ VEL Y
-    { -1.972, -0.492, 0.67 },  // PatellaR2ImpAngZ VEL Z
-    { -1.54, -0.40, 0.64 },  // PatellaR2ImpRot
-
-    { -1.93, 0.50, 0.57 },   // PatellaR3ImpAngX
-    { -1.88, 0.70, 0.57 },   // PatellaR3ImpAngY
-    { -1.92, 0.60, 0.67 },   // PatellaR3ImpAngZ POS X
-    { -1.93, 0.61, 0.67 },   // PatellaR3ImpAngZ POS Y
-    { -1.94, 0.62, 0.67 },   // PatellaR3ImpAngZ POS Z
-    { -1.921, 0.601, 0.67 },   // PatellaR3ImpAngZ ANG X
-    { -1.931, 0.611, 0.67 },   // PatellaR3ImpAngZ ANG Y
-    { -1.941, 0.621, 0.67 },   // PatellaR3ImpAngZ ANG Z
-    { -1.922, 0.602, 0.67 },   // PatellaR3ImpAngZ VEL X
-    { -1.932, 0.612, 0.67 },   // PatellaR3ImpAngZ VEL Y
-    { -1.942, 0.622, 0.67 },   // PatellaR3ImpAngZ VEL Z
-    { -1.52, 0.50, 0.64 },   // PatellaR3ImpRot
-
-    { -1.65, 1.52, 0.57 },   // PatellaR4ImpAngX
-    { -1.53, 1.67, 0.57 },   // PatellaR4ImpAngY
-    { -1.60, 1.61, 0.67 },   // PatellaR4ImpAngZ POS X
-    { -1.61, 1.62, 0.67 },   // PatellaR4ImpAngZ POS Y
-    { -1.62, 1.63, 0.67 },   // PatellaR4ImpAngZ POS Z
-    { -1.601, 1.611, 0.67 },   // PatellaR4ImpAngZ ANG X
-    { -1.611, 1.621, 0.67 },   // PatellaR4ImpAngZ ANG Y
-    { -1.621, 1.631, 0.67 },   // PatellaR4ImpAngZ ANG Z
-    { -1.602, 1.612, 0.67 },   // PatellaR4ImpAngZ VEL X
-    { -1.612, 1.622, 0.67 },   // PatellaR4ImpAngZ VEL Y
-    { -1.622, 1.632, 0.67 },   // PatellaR4ImpAngZ VEL Z
-    { -1.29, 1.34, 0.64 },   // PatellaR4ImpRot
-
-    { -0.10, 0.00, 0.00 },    // SternumImpAngX
-    {  0.10, 0.00, 0.00 },    // SternumImpAngY
-    {  0.00, 0.00, 0.10 },    // Sternum POS X
-    {  0.01, 0.01, 0.10 },    // Sternum POS Y
-    {  0.02, 0.02, 0.10 },    // Sternum POS Z
-    {  0.001, 0.001, 0.10 },    // Sternum ANG X
-    {  0.011, 0.011, 0.10 },    // Sternum ANG Y
-    {  0.021, 0.021, 0.10 },    // Sternum ANG Z
-    {  0.002, 0.002, 0.10 },    // Sternum VEL X
-    {  0.012, 0.012, 0.10 },    // Sternum VEL Y
-    {  0.022, 0.022, 0.10 },    // Sternum VEL Z
-
-    { 2.71, -2.05, -0.72 },  // TarsusL1ImpAngX
-    { 2.81, -1.87, -0.72 },  // TarsusL1ImpAngY
-    { 2.84, -2.01, -0.69 },  // TarsusL1ImpAngZ POS X
-    { 2.85, -2.02, -0.69 },  // TarsusL1ImpAngZ POS Y
-    { 2.86, -2.03, -0.69 },  // TarsusL1ImpAngZ POS Z
-    { 2.841, -2.011, -0.69 },  // TarsusL1ImpAngZ ANG X
-    { 2.851, -2.021, -0.69 },  // TarsusL1ImpAngZ ANG Y
-    { 2.861, -2.031, -0.69 },  // TarsusL1ImpAngZ ANG Z
-    { 2.842, -2.012, -0.69 },  // TarsusL1ImpAngZ VEL X
-    { 2.852, -2.022, -0.69 },  // TarsusL1ImpAngZ VEL Y
-    { 2.862, -2.032, -0.69 },  // TarsusL1ImpAngZ VEL Z
-    { 2.70, -1.93, -0.47 },  // TarsusL1ImpRot
-
-    { 3.07, -0.74, -0.72 },  // TarsusL2ImpAngX
-    { 3.10, -0.52, -0.72 },  // TarsusL2ImpAngY
-    { 3.18, -0.66, -0.69 },  // TarsusL2ImpAngZ POS X
-    { 3.19, -0.76, -0.69 },  // TarsusL2ImpAngZ POS Y
-    { 3.20, -0.76, -0.69 },  // TarsusL2ImpAngZ POS Z
-    { 3.181, -0.661, -0.69 },  // TarsusL2ImpAngZ ANG X
-    { 3.191, -0.761, -0.69 },  // TarsusL2ImpAngZ ANG Y
-    { 3.201, -0.761, -0.69 },  // TarsusL2ImpAngZ ANG Z
-    { 3.182, -0.662, -0.69 },  // TarsusL2ImpAngZ VEL X
-    { 3.192, -0.762, -0.69 },  // TarsusL2ImpAngZ VEL Y
-    { 3.202, -0.762, -0.69 },  // TarsusL2ImpAngZ VEL Z
-    { 3.02, -0.61, -0.47 },  // TarsusL2ImpRot
-
-    { 3.06, 0.87, -0.72 },   // TarsusL3ImpAngX
-    { 3.01, 1.02, -0.72 },   // TarsusL3ImpAngY
-    { 3.13, 0.90, -0.69 },   // TarsusL3ImpAngZ POS X
-    { 3.14, 0.90, -0.69 },   // TarsusL3ImpAngZ POS Y
-    { 3.15, 0.90, -0.69 },   // TarsusL3ImpAngZ POS Z
-    { 3.131, 0.901, -0.69 },   // TarsusL3ImpAngZ ANG X
-    { 3.141, 0.901, -0.69 },   // TarsusL3ImpAngZ ANG Y
-    { 3.151, 0.901, -0.69 },   // TarsusL3ImpAngZ ANG Z
-    { 3.132, 0.902, -0.69 },   // TarsusL3ImpAngZ VEL X
-    { 3.142, 0.902, -0.69 },   // TarsusL3ImpAngZ VEL Y
-    { 3.152, 0.902, -0.69 },   // TarsusL3ImpAngZ VEL Z
-    { 2.97, 0.88, -0.47 },   // TarsusL3ImpRot
-
-    { 2.55, 2.27, -0.72 },   // TarsusL4ImpAngX
-    { 2.42, 2.43, -0.72 },   // TarsusL4ImpAngY
-    { 2.56, 2.41, -0.69 },   // TarsusL4ImpAngZ POS X
-    { 2.57, 2.42, -0.69 },   // TarsusL4ImpAngZ POS Y
-    { 2.58, 2.43, -0.69 },   // TarsusL4ImpAngZ POS Z
-    { 2.561, 2.411, -0.69 },   // TarsusL4ImpAngZ ANG X
-    { 2.571, 2.421, -0.69 },   // TarsusL4ImpAngZ ANG Y
-    { 2.581, 2.431, -0.69 },   // TarsusL4ImpAngZ ANG Z
-    { 2.562, 2.412, -0.69 },   // TarsusL4ImpAngZ VEL X
-    { 2.572, 2.422, -0.69 },   // TarsusL4ImpAngZ VEL Y
-    { 2.582, 2.432, -0.69 },   // TarsusL4ImpAngZ VEL Z
-    { 2.44, 2.31, -0.47 },   // TarsusL4ImpRot
-
-    { -2.71, -2.05, -0.72 }, // TarsusR1ImpAngX
-    { -2.81, -1.87, -0.72 }, // TarsusR1ImpAngY
-    { -2.84, -2.01, -0.69 }, // TarsusR1ImpAngZ POS X
-    { -2.85, -2.02, -0.69 }, // TarsusR1ImpAngZ POS Y
-    { -2.86, -2.03, -0.69 }, // TarsusR1ImpAngZ POS Z
-    { -2.841, -2.011, -0.69 }, // TarsusR1ImpAngZ ANG X
-    { -2.851, -2.021, -0.69 }, // TarsusR1ImpAngZ ANG Y
-    { -2.861, -2.031, -0.69 }, // TarsusR1ImpAngZ ANG Z
-    { -2.842, -2.012, -0.69 }, // TarsusR1ImpAngZ VEL X
-    { -2.852, -2.022, -0.69 }, // TarsusR1ImpAngZ VEL Y
-    { -2.862, -2.032, -0.69 }, // TarsusR1ImpAngZ VEL Z
-    { -2.70, -1.93, -0.47 }, // TarsusR1ImpRot
-
-    { -3.07, -0.77, -0.72 }, // TarsusR2ImpAngX
-    { -3.10, -0.57, -0.72 }, // TarsusR2ImpAngY
-    { -3.18, -0.69, -0.69 }, // TarsusR2ImpAngZ POS X
-    { -3.19, -0.70, -0.69 }, // TarsusR2ImpAngZ POS Y
-    { -3.20, -0.71, -0.69 }, // TarsusR2ImpAngZ POS Z
-    { -3.181, -0.691, -0.69 }, // TarsusR2ImpAngZ ANG X
-    { -3.191, -0.701, -0.69 }, // TarsusR2ImpAngZ ANG Y
-    { -3.201, -0.711, -0.69 }, // TarsusR2ImpAngZ ANG Z
-    { -3.182, -0.692, -0.69 }, // TarsusR2ImpAngZ VEL X
-    { -3.192, -0.702, -0.69 }, // TarsusR2ImpAngZ VEL Y
-    { -3.202, -0.712, -0.69 }, // TarsusR2ImpAngZ VEL Z
-    { -3.02, -0.66, -0.47 }, // TarsusR2ImpRot
-
-    { -3.06, 0.81, -0.72 },  // TarsusR3ImpAngX
-    { -3.01, 1.00, -0.72 },  // TarsusR3ImpAngY
-    { -3.13, 0.93, -0.69 },  // TarsusR3ImpAngZ POS X
-    { -3.14, 0.94, -0.69 },  // TarsusR3ImpAngZ POS Y
-    { -3.15, 0.95, -0.69 },  // TarsusR3ImpAngZ POS Z
-    { -3.131, 0.931, -0.69 },  // TarsusR3ImpAngZ ANG X
-    { -3.141, 0.941, -0.69 },  // TarsusR3ImpAngZ ANG Y
-    { -3.151, 0.951, -0.69 },  // TarsusR3ImpAngZ ANG Z
-    { -3.132, 0.932, -0.69 },  // TarsusR3ImpAngZ VEL X
-    { -3.142, 0.942, -0.69 },  // TarsusR3ImpAngZ VEL Y
-    { -3.152, 0.952, -0.69 },  // TarsusR3ImpAngZ VEL Z
-    { -2.97, 0.88, -0.47 },  // TarsusR3ImpRot
-
-    { -2.55, 2.27, -0.72 },  // TarsusR4ImpAngX
-    { -2.42, 2.43, -0.72 },  // TarsusR4ImpAngY
-    { -2.56, 2.41, -0.69 },  // TarsusR4ImpAngZ POS X
-    { -2.57, 2.42, -0.69 },  // TarsusR4ImpAngZ POS Y
-    { -2.58, 2.43, -0.69 },  // TarsusR4ImpAngZ POS Z
-    { -2.561, 2.411, -0.69 },  // TarsusR4ImpAngZ ANG X
-    { -2.571, 2.421, -0.69 },  // TarsusR4ImpAngZ ANG Y
-    { -2.581, 2.431, -0.69 },  // TarsusR4ImpAngZ ANG Z
-    { -2.562, 2.412, -0.69 },  // TarsusR4ImpAngZ VEL X
-    { -2.572, 2.422, -0.69 },  // TarsusR4ImpAngZ VEL Y
-    { -2.582, 2.432, -0.69 },  // TarsusR4ImpAngZ VEL Z
-    { -2.44, 2.31, -0.47 },  // TarsusR4ImpRot
-
-    { 2.33, -1.83, 0.02 },   // TibiaL1ImpAngX
-    { 2.43, -1.66, 0.02 },   // TibiaL1ImpAngY
-    { 2.45, -1.78, 0.07 },   // TibiaL1ImpAngZ POS X
-    { 2.46, -1.79, 0.07 },   // TibiaL1ImpAngZ POS Y
-    { 2.47, -1.80, 0.07 },   // TibiaL1ImpAngZ POS Z
-    { 2.451, -1.781, 0.07 },   // TibiaL1ImpAngZ ANG X
-    { 2.461, -1.791, 0.07 },   // TibiaL1ImpAngZ ANG Y
-    { 2.471, -1.801, 0.07 },   // TibiaL1ImpAngZ ANG Z
-    { 2.452, -1.782, 0.07 },   // TibiaL1ImpAngZ VEL X
-    { 2.462, -1.792, 0.07 },   // TibiaL1ImpAngZ VEL Y
-    { 2.472, -1.802, 0.07 },   // TibiaL1ImpAngZ VEL Z
-    { 2.09, -1.57, 0.50 },   // TibiaL1ImpRot
-
-    { 2.64, -0.69, 0.02 },   // TibiaL2ImpAngX
-    { 2.67, -0.50, 0.02 },   // TibiaL2ImpAngY
-    { 2.74, -0.61, 0.07 },   // TibiaL2ImpAngZ POS X
-    { 2.75, -0.62, 0.07 },   // TibiaL2ImpAngZ POS Y
-    { 2.76, -0.63, 0.07 },   // TibiaL2ImpAngZ POS Z
-    { 2.741, -0.611, 0.07 },   // TibiaL2ImpAngZ ANG X
-    { 2.751, -0.621, 0.07 },   // TibiaL2ImpAngZ ANG Y
-    { 2.761, -0.631, 0.07 },   // TibiaL2ImpAngZ ANG Z
-    { 2.742, -0.612, 0.07 },   // TibiaL2ImpAngZ VEL X
-    { 2.752, -0.622, 0.07 },   // TibiaL2ImpAngZ VEL Y
-    { 2.762, -0.632, 0.07 },   // TibiaL2ImpAngZ VEL Z
-    { 2.32, -0.53, 0.50 },   // TibiaL2ImpRot
-
-    { 2.64, 0.69, 0.02 },    // TibiaL3ImpAngX
-    { 2.59, 0.89, 0.02 },    // TibiaL3ImpAngY
-    { 2.69, 0.81, 0.07 },    // TibiaL3ImpAngZ POS X
-    { 2.70, 0.82, 0.07 },    // TibiaL3ImpAngZ POS Y
-    { 2.71, 0.83, 0.07 },    // TibiaL3ImpAngZ POS Z
-    { 2.691, 0.811, 0.07 },    // TibiaL3ImpAngZ ANG X
-    { 2.701, 0.821, 0.07 },    // TibiaL3ImpAngZ ANG Y
-    { 2.711, 0.831, 0.07 },    // TibiaL3ImpAngZ ANG Z
-    { 2.692, 0.812, 0.07 },    // TibiaL3ImpAngZ VEL X
-    { 2.702, 0.822, 0.07 },    // TibiaL3ImpAngZ VEL Y
-    { 2.712, 0.832, 0.07 },    // TibiaL3ImpAngZ VEL Z
-    { 2.28, 0.70, 0.50 },    // TibiaL3ImpRot
-
-    { 2.22, 1.99, 0.02 },    // TibiaL4ImpAngX
-    { 2.09, 2.15, 0.02 },    // TibiaL4ImpAngY
-    { 2.22, 2.12, 0.07 },    // TibiaL4ImpAngZ POS X
-    { 2.23, 2.13, 0.07 },    // TibiaL4ImpAngZ POS Y
-    { 2.24, 2.14, 0.07 },    // TibiaL4ImpAngZ POS Z
-    { 2.221, 2.121, 0.07 },    // TibiaL4ImpAngZ ANG X
-    { 2.231, 2.131, 0.07 },    // TibiaL4ImpAngZ ANG Y
-    { 2.241, 2.141, 0.07 },    // TibiaL4ImpAngZ ANG Z
-    { 2.222, 2.122, 0.07 },    // TibiaL4ImpAngZ VEL X
-    { 2.232, 2.132, 0.07 },    // TibiaL4ImpAngZ VEL Y
-    { 2.242, 2.142, 0.07 },    // TibiaL4ImpAngZ VEL Z
-    { 1.89, 1.85, 0.50 },    // TibiaL4ImpRot
-
-    { -2.33, -1.83, 0.02 },  // TibiaR1ImpAngX
-    { -2.43, -1.66, 0.02 },  // TibiaR1ImpAngY
-    { -2.45, -1.78, 0.07 },  // TibiaR1ImpAngZ POS X
-    { -2.46, -1.79, 0.07 },  // TibiaR1ImpAngZ POS Y
-    { -2.47, -1.80, 0.07 },  // TibiaR1ImpAngZ POS Z
-    { -2.451, -1.781, 0.07 },  // TibiaR1ImpAngZ ANG X
-    { -2.461, -1.791, 0.07 },  // TibiaR1ImpAngZ ANG Y
-    { -2.471, -1.801, 0.07 },  // TibiaR1ImpAngZ ANG Z
-    { -2.452, -1.782, 0.07 },  // TibiaR1ImpAngZ VEL X
-    { -2.462, -1.792, 0.07 },  // TibiaR1ImpAngZ VEL Y
-    { -2.472, -1.802, 0.07 },  // TibiaR1ImpAngZ VEL Z
-    { -2.09, -1.57, 0.50 },  // TibiaR1ImpRot
-
-    { -2.64, -0.69, 0.02 },  // TibiaR2ImpAngX
-    { -2.67, -0.50, 0.02 },  // TibiaR2ImpAngY
-    { -2.74, -0.61, 0.07 },  // TibiaR2ImpAngZ POS X
-    { -2.75, -0.62, 0.07 },  // TibiaR2ImpAngZ POS Y
-    { -2.76, -0.63, 0.07 },  // TibiaR2ImpAngZ POS Z
-    { -2.741, -0.611, 0.07 },  // TibiaR2ImpAngZ ANG X
-    { -2.751, -0.621, 0.07 },  // TibiaR2ImpAngZ ANG Y
-    { -2.761, -0.631, 0.07 },  // TibiaR2ImpAngZ ANG Z
-    { -2.742, -0.612, 0.07 },  // TibiaR2ImpAngZ VEL X
-    { -2.752, -0.622, 0.07 },  // TibiaR2ImpAngZ VEL Y
-    { -2.762, -0.632, 0.07 },  // TibiaR2ImpAngZ VEL Z
-    { -2.32, -0.53, 0.50 },  // TibiaR2ImpRot
-
-    { -2.64, 0.69, 0.02 },   // TibiaR3ImpAngX
-    { -2.59, 0.89, 0.02 },   // TibiaR3ImpAngY
-    { -2.69, 0.81, 0.07 },   // TibiaR3ImpAngZ POS X
-    { -2.70, 0.82, 0.07 },   // TibiaR3ImpAngZ POS Y
-    { -2.71, 0.83, 0.07 },   // TibiaR3ImpAngZ POS Z
-    { -2.691, 0.811, 0.07 },   // TibiaR3ImpAngZ ANG X
-    { -2.701, 0.821, 0.07 },   // TibiaR3ImpAngZ ANG Y
-    { -2.711, 0.831, 0.07 },   // TibiaR3ImpAngZ ANG Z
-    { -2.692, 0.812, 0.07 },   // TibiaR3ImpAngZ VEL X
-    { -2.702, 0.822, 0.07 },   // TibiaR3ImpAngZ VEL Y
-    { -2.712, 0.832, 0.07 },   // TibiaR3ImpAngZ VEL Z
-    { -2.28, 0.70, 0.50 },   // TibiaR3ImpRot
-
-    { -2.22, 1.99, 0.02 },   // TibiaR4ImpAngX
-    { -2.09, 2.15, 0.02 },   // TibiaR4ImpAngY
-    { -2.22, 2.12, 0.07 },   // TibiaR4ImpAngZ POS X
-    { -2.23, 2.13, 0.07 },   // TibiaR4ImpAngZ POS Y
-    { -2.24, 2.14, 0.07 },   // TibiaR4ImpAngZ POS Z
-    { -2.221, 2.121, 0.07 },   // TibiaR4ImpAngZ ANG X
-    { -2.231, 2.131, 0.07 },   // TibiaR4ImpAngZ ANG Y
-    { -2.241, 2.141, 0.07 },   // TibiaR4ImpAngZ ANG Z
-    { -2.222, 2.122, 0.07 },   // TibiaR4ImpAngZ VEL X
-    { -2.232, 2.132, 0.07 },   // TibiaR4ImpAngZ VEL Y
-    { -2.242, 2.142, 0.07 },   // TibiaR4ImpAngZ VEL Z
-    { -1.89, 1.85, 0.50 },   // TibiaR4ImpRot
-
-    { 0.45, -0.74, -0.00 },  // TrochanterL1ImpAngX
-    { 0.55, -0.57, -0.00 },  // TrochanterL1ImpAngY
-    { 0.50, -0.66,  0.10 },   // TrochanterL1ImpAngZ POS X
-    { 0.51, -0.67,  0.10 },   // TrochanterL1ImpAngZ POS Y
-    { 0.52, -0.68,  0.10 },   // TrochanterL1ImpAngZ POS Z
-    { 0.501, -0.661,  0.10 },   // TrochanterL1ImpAngZ ANG X
-    { 0.511, -0.671,  0.10 },   // TrochanterL1ImpAngZ ANG Y
-    { 0.521, -0.681,  0.10 },   // TrochanterL1ImpAngZ ANG Z
-    { 0.502, -0.662,  0.10 },   // TrochanterL1ImpAngZ VEL X
-    { 0.512, -0.672,  0.10 },   // TrochanterL1ImpAngZ VEL Y
-    { 0.522, -0.682,  0.10 },   // TrochanterL1ImpAngZ VEL Z
-    { 0.40, -0.60, -0.00 },  // TrochanterL1ImpRot
-
-    { 0.50, -0.31, 0.00 },   // TrochanterL2ImpAngX
-    { 0.53, -0.12, 0.00 },   // TrochanterL2ImpAngY
-    { 0.51, -0.22, 0.10 },   // TrochanterL2ImpAngZ POS X
-    { 0.52, -0.23, 0.10 },   // TrochanterL2ImpAngZ POS Y
-    { 0.53, -0.24, 0.10 },   // TrochanterL2ImpAngZ POS Z
-    { 0.511, -0.221, 0.10 },   // TrochanterL2ImpAngZ ANG X
-    { 0.521, -0.231, 0.10 },   // TrochanterL2ImpAngZ ANG Y
-    { 0.531, -0.241, 0.10 },   // TrochanterL2ImpAngZ ANG Z
-    { 0.512, -0.222, 0.10 },   // TrochanterL2ImpAngZ VEL X
-    { 0.522, -0.232, 0.10 },   // TrochanterL2ImpAngZ VEL Y
-    { 0.532, -0.242, 0.10 },   // TrochanterL2ImpAngZ VEL Z
-    { 0.40, -0.20, 0.00 },   // TrochanterL2ImpRot
-
-    { 0.54, 0.13, 0.00 },    // TrochanterL3ImpAngX
-    { 0.49, 0.32, 0.00 },    // TrochanterL3ImpAngY
-    { 0.51, 0.23, 0.10 },    // TrochanterL3ImpAngZ POS X
-    { 0.52, 0.24, 0.10 },    // TrochanterL3ImpAngZ POS Y
-    { 0.53, 0.25, 0.10 },    // TrochanterL3ImpAngZ POS Z
-    { 0.511, 0.231, 0.10 },    // TrochanterL3ImpAngZ ANG X
-    { 0.521, 0.241, 0.10 },    // TrochanterL3ImpAngZ ANG Y
-    { 0.531, 0.251, 0.10 },    // TrochanterL3ImpAngZ ANG Z
-    { 0.512, 0.232, 0.10 },    // TrochanterL3ImpAngZ VEL X
-    { 0.522, 0.242, 0.10 },    // TrochanterL3ImpAngZ VEL Y
-    { 0.532, 0.252, 0.10 },    // TrochanterL3ImpAngZ VEL Z
-    { 0.40, 0.20, 0.00 },    // TrochanterL3ImpRot
-
-    { 0.55, 0.60,  0.00 },   // TrochanterL4ImpAngX
-    { 0.42, 0.75,  0.00 },   // TrochanterL4ImpAngY
-    { 0.49, 0.67,  0.10 },    // TrochanterL4ImpAngZ POS X
-    { 0.50, 0.68,  0.10 },    // TrochanterL4ImpAngZ POS Y
-    { 0.51, 0.69,  0.10 },    // TrochanterL4ImpAngZ POS Z
-    { 0.491, 0.671,  0.10 },    // TrochanterL4ImpAngZ ANG X
-    { 0.501, 0.681,  0.10 },    // TrochanterL4ImpAngZ ANG Y
-    { 0.511, 0.691,  0.10 },    // TrochanterL4ImpAngZ ANG Z
-    { 0.492, 0.672,  0.10 },    // TrochanterL4ImpAngZ VEL X
-    { 0.502, 0.682,  0.10 },    // TrochanterL4ImpAngZ VEL Y
-    { 0.512, 0.692,  0.10 },    // TrochanterL4ImpAngZ VEL Z
-    { 0.40, 0.60, -0.00 },   // TrochanterL4ImpRot
-
-    { -0.45, -0.74, 0.00 },  // TrochanterR1ImpAngX
-    { -0.55, -0.57, 0.00 },  // TrochanterR1ImpAngY
-    { -0.50, -0.66, 0.10 },  // TrochanterR1ImpAngZ POS X
-    { -0.51, -0.67, 0.10 },  // TrochanterR1ImpAngZ POS Y
-    { -0.52, -0.68, 0.10 },  // TrochanterR1ImpAngZ POS Z
-    { -0.501, -0.661, 0.10 },  // TrochanterR1ImpAngZ ANG X
-    { -0.511, -0.671, 0.10 },  // TrochanterR1ImpAngZ ANG Y
-    { -0.521, -0.681, 0.10 },  // TrochanterR1ImpAngZ ANG Z
-    { -0.502, -0.662, 0.10 },  // TrochanterR1ImpAngZ VEL X
-    { -0.512, -0.672, 0.10 },  // TrochanterR1ImpAngZ VEL Y
-    { -0.522, -0.682, 0.10 },  // TrochanterR1ImpAngZ VEL Z
-    { -0.40, -0.60, 0.00 },  // TrochanterR1ImpRot
-
-    { -0.50, -0.31, 0.00 },   // TrochanterR2Collision
-    { -0.53, -0.12, 0.00 },   // TrochanterR2Height
-    { -0.51, -0.22, 0.10 },   // TrochanterR2 POS X
-    { -0.52, -0.23, 0.10 },   // TrochanterR2 POS Y
-    { -0.53, -0.24, 0.10 },   // TrochanterR2 POS Z
-    { -0.511, -0.221, 0.10 }, // TrochanterR2 ANG X
-    { -0.521, -0.231, 0.10 }, // TrochanterR2 ANG Y
-    { -0.531, -0.241, 0.10 }, // TrochanterR2 ANG Z
-    { -0.512, -0.222, 0.10 }, // TrochanterR2 VEL X
-    { -0.522, -0.232, 0.10 }, // TrochanterR2 VEL Y
-    { -0.532, -0.242, 0.10 }, // TrochanterR2 VEL Z
-    { -0.40, -0.20, 0.00 },   // TrochanterR2Rot
-
-    { -0.54, 0.13, 0.00},   // TrochanterR3Collision
-    { -0.49, 0.32, 0.00},   // TrochanterR3Height
-    { -0.51, 0.23, 0.10},   // TrochanterR3 POS X
-    { -0.52, 0.24, 0.10},   // TrochanterR3 POS Y
-    { -0.53, 0.25, 0.10},   // TrochanterR3 POS Z
-    { -0.511, 0.231, 0.10}, // TrochanterR3 ANG X
-    { -0.521, 0.241, 0.10}, // TrochanterR3 ANG Y
-    { -0.531, 0.251, 0.10}, // TrochanterR3 ANG Z
-    { -0.512, 0.232, 0.10}, // TrochanterR3 VEL X
-    { -0.522, 0.242, 0.10}, // TrochanterR3 VEL Y
-    { -0.532, 0.252, 0.10}, // TrochanterR3 VEL Z
-    { -0.40, 0.20, 0.00},   // TrochanterR3Rot
-
-    { -0.55, 0.60, 0.00 },   // TrochanterR4Collision
-    { -0.42, 0.75, 0.00 },   // TrochanterR4Height
-    { -0.49, 0.67, 0.10 },   // TrochanterR4 POS X
-    { -0.50, 0.68, 0.10 },   // TrochanterR4 POS Y
-    { -0.51, 0.69, 0.10 },   // TrochanterR4 POS Z
-    { -0.491, 0.671, 0.10 }, // TrochanterR4 ANG X
-    { -0.501, 0.681, 0.10 }, // TrochanterR4 ANG Y
-    { -0.511, 0.691, 0.10 }, // TrochanterR4 ANG Z
-    { -0.492, 0.672, 0.10 }, // TrochanterR4 VEL X
-    { -0.502, 0.682, 0.10 }, // TrochanterR4 VEL Y
-    { -0.512, 0.692, 0.10 }, // TrochanterR4 VEL Z
-    { -0.40, 0.60, 0.00 },   // TrochanterR4Rot
+    {  0.4, -0.6, -0.4 }, // FemurL1
+    {  0.4, -0.2, -0.4 }, // FemurL2
+    {  0.4,  0.2, -0.4 }, // FemurL3
+    {  0.4,  0.6, -0.4 }, // FemurL4
+    { -0.4, -0.6, -0.4 }, // FemurR1
+    { -0.4, -0.2, -0.4 }, // FemurR2
+    { -0.4,  0.2, -0.4 }, // FemurR3
+    { -0.4,  0.6, -0.4 }, // FemurR4
+    {  0.6, -0.6, -0.4 }, // PatellaL1
+    {  0.6, -0.2, -0.4 }, // PatellaL2
+    {  0.6,  0.2, -0.4 }, // PatellaL3
+    {  0.6,  0.6, -0.4 }, // PatellaL4
+    { -0.6, -0.6, -0.4 }, // PatellaR1
+    { -0.6, -0.2, -0.4 }, // PatellaR2
+    { -0.6,  0.2, -0.4 }, // PatellaR3
+    { -0.6,  0.6, -0.4 }, // PatellaR4
+    {  1.0, -0.6, -0.4 }, // TarsusL1
+    {  1.0, -0.2, -0.4 }, // TarsusL2
+    {  1.0,  0.2, -0.4 }, // TarsusL3
+    {  1.0,  0.6, -0.4 }, // TarsusL4
+    { -1.0, -0.6, -0.4 }, // TarsusR1
+    { -1.0, -0.2, -0.4 }, // TarsusR2
+    { -1.0,  0.2, -0.4 }, // TarsusR3
+    { -1.0,  0.6, -0.4 }, // TarsusR4
+    {  0.8, -0.6, -0.4 }, // TibiaL1
+    {  0.8, -0.2, -0.4 }, // TibiaL2
+    {  0.8,  0.2, -0.4 }, // TibiaL3
+    {  0.8,  0.6, -0.4 }, // TibiaL4
+    { -0.8, -0.6, -0.4 }, // TibiaR1
+    { -0.8, -0.2, -0.4 }, // TibiaR2
+    { -0.8,  0.2, -0.4 }, // TibiaR3
+    { -0.8,  0.6, -0.4 }, // TibiaR4
+    {  0.2, -0.6, -0.4 }, // TrochanterL1
+    {  0.2, -0.2, -0.4 }, // TrochanterL2
+    {  0.2,  0.2, -0.4 }, // TrochanterL3
+    {  0.2,  0.6, -0.4 }, // TrochanterL4
+    { -0.2, -0.6, -0.4 }, // TrochanterR1
+    { -0.2, -0.2, -0.4 }, // TrochanterR2
+    { -0.2,  0.2, -0.4 }, // TrochanterR3
+    { -0.2,  0.6, -0.4 }  // TrochanterR4
   };
   std::vector<std::vector<double>> hidden{};
   std::vector<std::vector<double>> outputs{
- // {  0.00,  0.89,  0.07 }, // Abdomin
- // {  0.00, -0.85,  0.24 }, // Eye
-    {  0.60, -0.72,  0.00 }, // FemurL1
-    {  0.63, -0.24,  0.00 }, // FemurL2
-    {  0.63,  0.26,  0.00 }, // FemurL3
-    {  0.58,  0.75,  0.00 }, // FemurL4
-    { -0.60, -0.72,  0.00 }, // FemurR1
-    { -0.63, -0.24,  0.00 }, // FemurR2
-    { -0.63,  0.26,  0.00 }, // FemurR3
-    { -0.58,  0.75,  0.00 }, // FemurR4
- // {  0.00,  0.60, 0.00  }, // Hip
- // {  0.00, -0.59, 0.00  }, // Neck
-    {  1.40, -1.18,  0.64 }, // PatellaL1
-    {  1.54, -0.40,  0.64 }, // PatellaL2
-    {  1.52,  0.50,  0.64 }, // PatellaL3
-    {  1.29,  1.34,  0.64 }, // PatellaL4
-    { -1.40, -1.18,  0.64 }, // PatellaR1
-    { -1.54, -0.40,  0.64 }, // PatellaR2
-    { -1.52,  0.50,  0.64 }, // PatellaR3
-    { -1.29,  1.34,  0.64 }, // PatellaR4
-    {  2.70, -1.93, -0.47 }, // TarsusL1
-    {  3.02, -0.66, -0.47 }, // TarsusL2
-    {  2.97,  0.88, -0.47 }, // TarsusL3
-    {  2.44,  2.31, -0.47 }, // TarsusL4
-    { -2.70, -1.93, -0.47 }, // TarsusR1
-    { -3.02, -0.66, -0.47 }, // TarsusR2
-    { -2.97,  0.88, -0.47 }, // TarsusR3
-    { -2.44,  2.31, -0.47 }, // TarsusR4
-    {  2.09, -1.57,  0.50 }, // TibiaL1
-    {  2.32, -0.53,  0.50 }, // TibiaL2
-    {  2.28,  0.70,  0.50 }, // TibiaL3
-    {  1.89,  1.85,  0.50 }, // TibiaL4
-    { -2.09, -1.57,  0.50 }, // TibiaR1
-    { -2.32, -0.53,  0.50 }, // TibiaR2
-    { -2.28,  0.70,  0.50 }, // TibiaR3
-    { -1.89,  1.85,  0.50 }, // TibiaR4
-    {  0.40, -0.60,  0.00 }, // TrochanterL1
-    {  0.40, -0.20,  0.00 }, // TrochanterL2
-    {  0.40,  0.20,  0.00 }, // TrochanterL3
-    {  0.40,  0.60,  0.00 }, // TrochanterL4
-    { -0.40, -0.60,  0.00 }, // TrochanterR1
-    { -0.40, -0.20,  0.00 }, // TrochanterR2
-    { -0.40,  0.20,  0.00 }, // TrochanterR3
-    { -0.40,  0.60,  0.00 }  // TrochanterR4
+    {  0.4, -0.6,  0.4 }, // FemurL1
+    {  0.4, -0.2,  0.4 }, // FemurL2
+    {  0.4,  0.2,  0.4 }, // FemurL3
+    {  0.4,  0.6,  0.4 }, // FemurL4
+    { -0.4, -0.6,  0.4 }, // FemurR1
+    { -0.4, -0.2,  0.4 }, // FemurR2
+    { -0.4,  0.2,  0.4 }, // FemurR3
+    { -0.4,  0.6,  0.4 }, // FemurR4
+    {  0.6, -0.6,  0.4 }, // PatellaL1
+    {  0.6, -0.2,  0.4 }, // PatellaL2
+    {  0.6,  0.2,  0.4 }, // PatellaL3
+    {  0.6,  0.6,  0.4 }, // PatellaL4
+    { -0.6, -0.6,  0.4 }, // PatellaR1
+    { -0.6, -0.2,  0.4 }, // PatellaR2
+    { -0.6,  0.2,  0.4 }, // PatellaR3
+    { -0.6,  0.6,  0.4 }, // PatellaR4
+    {  1.0, -0.6,  0.4 }, // TarsusL1
+    {  1.0, -0.2,  0.4 }, // TarsusL2
+    {  1.0,  0.2,  0.4 }, // TarsusL3
+    {  1.0,  0.6,  0.4 }, // TarsusL4
+    { -1.0, -0.6,  0.4 }, // TarsusR1
+    { -1.0, -0.2,  0.4 }, // TarsusR2
+    { -1.0,  0.2,  0.4 }, // TarsusR3
+    { -1.0,  0.6,  0.4 }, // TarsusR4
+    {  0.8, -0.6,  0.4 }, // TibiaL1
+    {  0.8, -0.2,  0.4 }, // TibiaL2
+    {  0.8,  0.2,  0.4 }, // TibiaL3
+    {  0.8,  0.6,  0.4 }, // TibiaL4
+    { -0.8, -0.6,  0.4 }, // TibiaR1
+    { -0.8, -0.2,  0.4 }, // TibiaR2
+    { -0.8,  0.2,  0.4 }, // TibiaR3
+    { -0.8,  0.6,  0.4 }, // TibiaR4
+    {  0.2, -0.6,  0.4 }, // TrochanterL1
+    {  0.2, -0.2,  0.4 }, // TrochanterL2
+    {  0.2,  0.2,  0.4 }, // TrochanterL3
+    {  0.2,  0.6,  0.4 }, // TrochanterL4
+    { -0.2, -0.6,  0.4 }, // TrochanterR1
+    { -0.2, -0.2,  0.4 }, // TrochanterR2
+    { -0.2,  0.2,  0.4 }, // TrochanterR3
+    { -0.2,  0.6,  0.4 }  // TrochanterR4
   };
   // clang-format on
+
+
+  // clone the input neuron positions to hidden, but at different height
+  for (auto& x : inputs)
+    hidden.push_back(std::vector<double>{x[0], x[1],  0.0});
+
 
   mSubstrate = new Substrate(inputs, hidden, outputs);
 
   // These variables are only used in HyperNEAT variations and not
   // in ESHyperNEAT.
-  mSubstrate->m_allow_input_hidden_links  = false;
-  mSubstrate->m_allow_input_output_links  = false;
-  mSubstrate->m_allow_hidden_output_links = false;
-  mSubstrate->m_allow_output_hidden_links = false;
-  mSubstrate->m_allow_output_output_links = false;
-  mSubstrate->m_allow_looped_hidden_links = false;
-  mSubstrate->m_allow_looped_output_links = false;
+  mSubstrate->m_allow_input_hidden_links  = true;
+  mSubstrate->m_allow_input_output_links  = true;
+  mSubstrate->m_allow_hidden_output_links = true;
+  mSubstrate->m_allow_output_hidden_links = true;
+  mSubstrate->m_allow_output_output_links = true;
+  mSubstrate->m_allow_looped_hidden_links = true;
+  mSubstrate->m_allow_looped_output_links = true;
 
   mSubstrate->m_allow_input_hidden_links  = true;
   mSubstrate->m_allow_input_output_links  = true;
@@ -1576,7 +1047,7 @@ void SpiderSwarm::setDefaultSubstrate() {
 
   // When a new connection, it will not be added if the weight*maxWeightAndBias
   // is less than 0.2
-  mSubstrate->m_max_weight_and_bias = 0.8;
+  mSubstrate->m_max_weight_and_bias = 8.0;
 }
 
 /**
@@ -1607,7 +1078,7 @@ void SpiderSwarm::setDefaultPopulation() {
   ////////////////////
 
   // Size of population
-  params.PopulationSize = 128;
+  params.PopulationSize = 64;
 
   // If true, this enables dynamic compatibility thresholding
   // It will keep the number of species between MinSpecies and MaxSpecies
@@ -1620,7 +1091,7 @@ void SpiderSwarm::setDefaultPopulation() {
   params.MaxSpecies = 10;
 
   // Don't wipe the innovation database each generation?
-  params.InnovationsForever = true;
+  params.InnovationsForever = false;
 
   // Allow clones or nearly identical genomes to exist simultaneously in the population.
   // This is useful for non-deterministic environments,
@@ -1895,15 +1366,15 @@ void SpiderSwarm::setDefaultPopulation() {
 
   // How many hidden layers before connecting nodes to output. At 0 there is
   // one hidden layer. At 1, there are two and so on.
-  params.IterationLevel = 1;
+  params.IterationLevel = 2;
 
   // The Bias value for the CPPN queries.
   params.CPPN_Bias = 1.0;
 
   // Quadtree Dimensions
   // The range of the tree. Typically set to 2,
-  params.Width = 3.0;
-  params.Height = 3.0;
+  params.Width = 1.2;
+  params.Height = 0.6;
 
   // The (x, y) coordinates of the tree
   params.Qtree_X = 0.0;
