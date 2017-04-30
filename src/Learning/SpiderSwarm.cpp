@@ -37,9 +37,9 @@ SpiderSwarm::SpiderSwarm()
     , mBatchSize(7)
     , mGeneration(0)
     , mCurrentDuration(0)
-    , mIterationDuration(60)
-    , mBestPossibleFitness(0)
-    , mBestPossibleFitnessGeneration(0)
+    , mIterationDuration(11)
+    , mBestPossibleFitness(-99999)
+    , mBestPossibleFitnessGeneration(-99999)
     , mDrawDebugNetworks(false)
     , mRestartOnNextUpdate(false)
     , mDrawingMethod(SpiderSwarm::DrawingMethod::Species1)
@@ -616,14 +616,14 @@ void SpiderSwarm::updateEpoch() {
 
   mSpeciesLeaders.clear();
 
-  float  best      = -1.f;
+  float  best      = -99999.f;
   size_t bestIndex = 0;
 
   ++mGeneration;
 
   size_t index = 0;
   for (size_t i = 0; i < mPopulation->m_Species.size(); ++i) {
-    float  bestOfSpecies = -1.0;
+    float  bestOfSpecies = -99999.f;
     size_t leaderIndex   = 0;
 
     for (size_t j = 0; j < mPopulation->m_Species[i].m_Individuals.size();
