@@ -57,15 +57,14 @@ SpiderSwarm::SpiderSwarm()
       it->update(deltaTime);
   };
 
-  mBuildingESHyperNeatWorker = [](std::vector<Phenotype>::iterator begin,
+  mBuildingHyperNeatWorker = [](std::vector<Phenotype>::iterator begin,
                                   std::vector<Phenotype>::iterator end,
                                   NEAT::Population&                pop,
-                                  Substrate&                       sub,
-                                  NEAT::Parameters&                params) {
+                                  Substrate&                       sub) {
     for (auto it = begin; it != end; ++it) {
       pop.m_Species[it->speciesIndex]
         .m_Individuals[it->individualIndex]
-        .BuildESHyperNEATPhenotype(*it->network, sub, params);
+        .BuildHyperNEATPhenotype(*it->network, sub);
     }
   };
 #endif
@@ -762,9 +761,8 @@ void SpiderSwarm::recreatePhenotypes() {
       // networks, otherwise wait until later
 #ifndef BT_NO_PROFILE
       auto& individual = species.m_Individuals[j];
-      individual.BuildESHyperNEATPhenotype(*mPhenotypes[index].network,
-                                           *mSubstrate,
-                                           mPopulation->m_Parameters);
+      individual.BuildHyperNEATPhenotype(*mPhenotypes[index].network,
+                                           *mSubstrate);
 #endif
       ++index;
     }
@@ -788,21 +786,19 @@ void SpiderSwarm::recreatePhenotypes() {
   int  grainSize = size / threads.size();
 
   for (auto it = std::begin(threads); it != std::end(threads) - 1; ++it) {
-    *it = std::thread(mBuildingESHyperNeatWorker,
+    *it = std::thread(mBuildingHyperNeatWorker,
                       workIter,
                       workIter + grainSize,
                       std::ref(*mPopulation),
-                      std::ref(*mSubstrate),
-                      std::ref(mPopulation->m_Parameters));
+                      std::ref(*mSubstrate));
     workIter += grainSize;
   }
 
-  threads.back() = std::thread(mBuildingESHyperNeatWorker,
+  threads.back() = std::thread(mBuildingHyperNeatWorker,
                                workIter,
                                std::end(mPhenotypes),
                                std::ref(*mPopulation),
-                               std::ref(*mSubstrate),
-                               std::ref(mPopulation->m_Parameters));
+                               std::ref(*mSubstrate));
 
   for (auto&& i : threads)
     i.join();

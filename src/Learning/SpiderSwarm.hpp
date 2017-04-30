@@ -158,9 +158,8 @@ private:
   std::function<void(std::vector<Phenotype>::iterator begin,
                      std::vector<Phenotype>::iterator end,
                      NEAT::Population&                pop,
-                     Substrate&                       sub,
-                     NEAT::Parameters&                params)>
-    mBuildingESHyperNeatWorker;
+                     Substrate&                       sub)>
+    mBuildingHyperNeatWorker;
 #endif
 
   // If called, it will use as many threads as possible to
