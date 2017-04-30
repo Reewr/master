@@ -306,50 +306,100 @@ void Phenotype::update(float deltaTime) {
 
   duration += deltaTime;
 
-  auto& sternum = parts["Sternum"].part->rigidBody()->getCenterOfMassPosition();
 
   // Initialize the input list, which will contain many many elements.
   std::vector<double> inputs;
   inputs.reserve(numberOfInputs);
 
-  // Add an input that gives some indication of time.
-  inputs.push_back(mmm::sin(duration * 2.f));
+  // // Add an input that gives some indication of time.
+  auto psin = mmm::sin(duration * 2.f);
+  auto pcos = mmm::cos(duration * 2.f);
+
+  inputs.push_back(-pcos);
+  inputs.push_back(-psin);
+  inputs.push_back(pcos);
+  inputs.push_back(psin);
+
+  auto q = parts["Sternum"].part->rigidBody()->getOrientation();
+  vec3 e = getEulerAngles(q.x(), q.y(), q.z(), q.w());
+
+  inputs.push_back(e.z);
+  inputs.push_back(e.y);
+  inputs.push_back(e.x);
+
+  inputs.push_back(collidesWithTerrain("TarsusL1") ? 1.0 : 0.0);
+  inputs.push_back(collidesWithTerrain("TarsusL2") ? 1.0 : 0.0);
+  inputs.push_back(collidesWithTerrain("TarsusL3") ? 1.0 : 0.0);
+  inputs.push_back(collidesWithTerrain("TarsusL4") ? 1.0 : 0.0);
+  inputs.push_back(collidesWithTerrain("TarsusR1") ? 1.0 : 0.0);
+  inputs.push_back(collidesWithTerrain("TarsusR2") ? 1.0 : 0.0);
+  inputs.push_back(collidesWithTerrain("TarsusR3") ? 1.0 : 0.0);
+  inputs.push_back(collidesWithTerrain("TarsusR4") ? 1.0 : 0.0);
+
+  {
+    vec3 l1 = fromVector(parts["TarsusL1"].part->rigidBody()->getCenterOfMassPosition());
+    vec3 l2 = fromVector(parts["TarsusL2"].part->rigidBody()->getCenterOfMassPosition());
+    vec3 l3 = fromVector(parts["TarsusL3"].part->rigidBody()->getCenterOfMassPosition());
+    vec3 l4 = fromVector(parts["TarsusL4"].part->rigidBody()->getCenterOfMassPosition());
+    vec3 r1 = fromVector(parts["TarsusR1"].part->rigidBody()->getCenterOfMassPosition());
+    vec3 r2 = fromVector(parts["TarsusR2"].part->rigidBody()->getCenterOfMassPosition());
+    vec3 r3 = fromVector(parts["TarsusR3"].part->rigidBody()->getCenterOfMassPosition());
+    vec3 r4 = fromVector(parts["TarsusR4"].part->rigidBody()->getCenterOfMassPosition());
+
+    inputs.push_back(mmm::length(l1 - l2));
+    inputs.push_back(mmm::length(l2 - l3));
+    inputs.push_back(mmm::length(l3 - l4));
+    inputs.push_back(mmm::length(r1 - r2));
+    inputs.push_back(mmm::length(r2 - r3));
+    inputs.push_back(mmm::length(r3 - r4));
+  }
 
   for (auto& part : parts) {
 
-    btRigidBody*     body         = part.second.part->rigidBody();
-    const btVector3& centerOfMass = body->getCenterOfMassPosition();
-    const btVector3& angularVel   = body->getAngularVelocity();
-    const btVector3& linearVel    = body->getLinearVelocity();
-    btVector3        relative     = centerOfMass - sternum;
+    if (!part.second.active)
+      continue;
 
-    // Add whether or not the element colides with anything.
-    inputs.push_back(collidesWithTerrain(body) ? 1.0 : 0.0);
+    // btRigidBody*     body         = part.second.part->rigidBody();
+    // const btVector3& centerOfMass = body->getCenterOfMassPosition();
+    // const btVector3& angularVel   = body->getAngularVelocity();
+    // const btVector3& linearVel    = body->getLinearVelocity();
+    // btVector3        relative     = centerOfMass - sternum;
 
-    // Add the height of the element
-    inputs.push_back(centerOfMass.y());
+    // // Add whether or not the element colides with anything.
+    // inputs.push_back(collidesWithTerrain(body) ? 1.0 : 0.0);
 
-    // Add position of the element relative to the Sternum, which
-    // represent the 0,0,0 point
-    inputs.push_back(relative.x());
-    inputs.push_back(relative.y());
-    inputs.push_back(relative.z());
+    // // Add the height of the element
+    // inputs.push_back(centerOfMass.y());
 
-    // Add the current angular velocity of the element
-    inputs.push_back(angularVel.x());
-    inputs.push_back(angularVel.y());
-    inputs.push_back(angularVel.z());
+    // // Add position of the element relative to the Sternum, which
+    // // represent the 0,0,0 point
+    // inputs.push_back(relative.x());
+    // inputs.push_back(relative.y());
+    // inputs.push_back(relative.z());
 
-    // Add the current linear velocity of the element
-    inputs.push_back(linearVel.x());
-    inputs.push_back(linearVel.y());
-    inputs.push_back(linearVel.z());
+    // // Add the current angular velocity of the element
+    // inputs.push_back(angularVel.x());
+    // inputs.push_back(angularVel.y());
+    // inputs.push_back(angularVel.z());
+
+    // // Add the current linear velocity of the element
+    // inputs.push_back(linearVel.x());
+    // inputs.push_back(linearVel.y());
+    // inputs.push_back(linearVel.z());
 
     // Add the current rotation of the hinge for the element
     if (part.second.hinge != nullptr) {
 
       float rot = part.second.hinge->getHingeAngle();
-      rot       = normalizeHingeAngle(rot, -pi, pi, 0.f);
+
+      if (part.second.hinge->hasLimit()) {
+        float low = part.second.hinge->getLowerLimit();
+        float up  = part.second.hinge->getUpperLimit();
+        rot = normalizeHingeAngle(rot, low, up, part.second.restAngle);
+      } else {
+        rot = normalizeHingeAngle(rot, -pi, pi, part.second.restAngle);
+      }
+
       inputs.push_back(rot);
 
     } else if (part.second.dof != nullptr) {
@@ -379,27 +429,67 @@ void Phenotype::update(float deltaTime) {
 
   std::vector<double> outputs = network->Output();
 
+  // // set hinge motor targets based on network output
+  // size_t i = 0;
+  // for (auto& part : parts) {
+  //   if (part.second.hinge != nullptr) {
+
+  //     float currentAngle = part.second.hinge->getHingeAngle();
+  //     float velocity;
+
+  //     float maxMotorSpeed = 0.5f;
+
+  //     if (part.second.active) {
+
+  //       auto j = i;
+  //       if (part.first.find("L1") != std::string::npos ||
+  //           part.first.find("L3") != std::string::npos ||
+  //           part.first.find("R2") != std::string::npos ||
+  //           part.first.find("R4") != std::string::npos)
+  //         j += 1;
+
+  //       float low = part.second.hinge->getLowerLimit();
+  //       float up  = part.second.hinge->getUpperLimit();
+  //       float rot = denormalizeHingeAngle(outputs[j] * 2.0 - 1.0, low, up, part.second.restAngle);
+  //       velocity  = mmm::clamp((rot - currentAngle) * 10.f, -maxMotorSpeed, maxMotorSpeed);
+  //       // velocity = 2 * maxMotorSpeed * outputs[i] - maxMotorSpeed;
+  //     } else {
+  //       velocity = mmm::clamp(part.second.restAngle - currentAngle, -0.3f, 0.3f) * 16.0f;
+  //     }
+
+  //     part.second.hinge->enableAngularMotor(true, velocity, 16.f);
+
+  //     i += (part.second.active && part.first.find("R4") != std::string::npos) ? 1 : 0;
+  //   }
+  // }
+
   // set hinge motor targets based on network output
   size_t i = 0;
   for (auto& part : parts) {
     if (part.second.hinge != nullptr) {
 
       float currentAngle = part.second.hinge->getHingeAngle();
-      float rotation;
+      float velocity;
 
-      float maxMotorStrength = 2;
+      float maxMotorSpeed = 0.5f;
 
       // If the element is active, set the angle to an angle that is mutliplied so
       // its between 2*PI and -2*PI
       //
       // If the element isnt active we wont punish the robot and set the part
       // to a neutral angle that wont be in the way.
-      if (part.second.active)
-        rotation = 2 * maxMotorStrength * outputs[i] - maxMotorStrength;
-      else
-        rotation = mmm::clamp(part.second.restAngle - currentAngle, -0.3f, 0.3f) * 16.0f;
+      if (part.second.active) {
 
-      part.second.hinge->enableAngularMotor(true, rotation, 4.f);
+        float low = part.second.hinge->getLowerLimit();
+        float up  = part.second.hinge->getUpperLimit();
+        float rot = denormalizeHingeAngle(outputs[i] * 2.0 - 1.0, low, up, part.second.restAngle);
+        velocity  = mmm::clamp((rot - currentAngle) * 10.f, -maxMotorSpeed, maxMotorSpeed);
+        // velocity = 2 * maxMotorSpeed * outputs[i] - maxMotorSpeed;
+      } else {
+        velocity = mmm::clamp(part.second.restAngle - currentAngle, -0.3f, 0.3f) * 16.0f;
+      }
+
+      part.second.hinge->enableAngularMotor(true, velocity, 16.f);
 
       i += part.second.active ? 1 : 0;
 
