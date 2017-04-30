@@ -614,6 +614,7 @@ float Phenotype::finalizeFitness() {
   }
 
   finalizedFitness = mmm::sum(fitness);
+  // finalizedFitness = score(duration, mmm::sum(mmm::drop<1>(fitness)), 0.f) * fitness[0];
 
   return finalizedFitness;
 }
@@ -743,32 +744,303 @@ btStaticPlaneShape* Phenotype::plane =
  */
 std::vector<Fitness> Phenotype::FITNESS_HANDLERS = {
 
+  // Fitness(
+  //   "Speed     ",
+  //   R"( Kill spiders that are not moving fast enough, as an exponential function
+  //       of distance over time. )",
+  //   [](const auto& phenotype, float current, float deltaTime) -> float {
+  //     const auto& parts = phenotype.spider->parts();
+
+  //     auto* sternum = parts.at("Sternum").part->rigidBody();
+  //     auto  t       = sternum->getCenterOfMassPosition();
+
+  //     if (mmm::pow(phenotype.duration, 2.f) / 9.f > t.z() + 1.f)
+  //       phenotype.kill();
+
+  //     return current;
+  //   }
+  // ),
+
   Fitness(
-    "Speed     ",
-    R"( Kill spiders that are not moving fast enough, as an exponential function
-        of distance over time. )",
-    [](const auto& phenotype, float current, float deltaTime) -> float {
+    "Movement  ",
+    "Fitness based on movement in positive z direction.",
+    [](const auto& phenotype, float current, float) -> float {
       const auto& parts = phenotype.spider->parts();
+      auto t = parts.at("Sternum").part->rigidBody()->getCenterOfMassPosition();
+      current = mmm::max(current, t.z());
 
-      auto* sternum = parts.at("Sternum").part->rigidBody();
-      auto  t       = sternum->getCenterOfMassPosition();
-
-      if (mmm::pow(phenotype.duration, 2.f) / 8.f > t.z() + 1.f)
+      if (current >= 8.f) {
         phenotype.kill();
+        current = 18.f - phenotype.duration;
+      }
+
+      return current;
+    },
+    [](const auto&, float current, float) -> float {
+      return mmm::pow(current, 2.f);
+    }
+  ),
+
+
+  // Fitness(
+  //   "Legs      ",
+  //   "...",
+  //   [](const auto&, float current, float) -> float {
+  //     return current;
+  //   },
+  //   [](const auto& phenotype, float current, float) -> float {
+
+  //     auto p = phenotype.tmp[0];
+
+  //     for (auto x : phenotype.tmp) {
+  //       for (size_t i = 0; i < x.size(); ++i)
+  //         current += mmm::abs(x[i] - p[i]);
+  //       p = x;
+  //     }
+
+  //     return current;
+  //   }
+  // ),
+
+  // Fitness(
+  //   "Asymmetry ",
+  //   "...",
+  //   [](const auto&, float current, float) -> float {
+  //     return current;
+  //   },
+  //   [](const auto& phenotype, float current, float) -> float {
+
+  //     auto  p = phenotype.tmp[0];
+  //     float t = 0.0;
+
+  //     for (auto x : phenotype.tmp) {
+
+  //       float p1 = mmm::sign(mmm::sin(t * 2.f));
+  //       float p2 = -p1;
+
+  //       float l1 = x[0] - p[0];
+  //       float l2 = x[1] - p[1];
+  //       float l3 = x[2] - p[2];
+  //       float l4 = x[3] - p[3];
+  //       float r1 = x[4] - p[4];
+  //       float r2 = x[5] - p[5];
+  //       float r3 = x[6] - p[6];
+  //       float r4 = x[7] - p[7];
+
+  //       current += mmm::sign(l1) == p1 ? mmm::abs(l1) : -mmm::abs(l1);
+  //       current += mmm::sign(l2) == p2 ? mmm::abs(l2) : -mmm::abs(l2);
+  //       current += mmm::sign(l3) == p1 ? mmm::abs(l3) : -mmm::abs(l3);
+  //       current += mmm::sign(l4) == p2 ? mmm::abs(l4) : -mmm::abs(l4);
+
+  //       current += mmm::sign(r1) == p2 ? mmm::abs(r1) : -mmm::abs(r1);
+  //       current += mmm::sign(r2) == p1 ? mmm::abs(r2) : -mmm::abs(r2);
+  //       current += mmm::sign(r3) == p2 ? mmm::abs(r3) : -mmm::abs(r3);
+  //       current += mmm::sign(r4) == p1 ? mmm::abs(r4) : -mmm::abs(r4);
+
+  //       t += 1.f/60.f;
+  //       p = x;
+  //     }
+
+  //     return current;
+  //   }
+  // ),
+
+
+  // Fitness(
+  //   "Velocity.z",
+  //   "...",
+  //   [](const auto& phenotype, float current, float) -> float {
+  //     const auto& parts = phenotype.spider->parts();
+  //     float t = parts.at("Sternum").part->rigidBody()->getLinearVelocity().z();
+  //     return current + t;
+  //   }
+  // ),
+  // Fitness(
+  //   "Velocity.y",
+  //   "...",
+  //   [](const auto& phenotype, float current, float) -> float {
+  //     const auto& parts = phenotype.spider->parts();
+  //     float t = parts.at("Sternum").part->rigidBody()->getLinearVelocity().y();
+  //     return current + t;
+  //   },
+  //   [](const auto&, float current, float) -> float {
+  //     return - mmm::abs(current) * 8.f;
+  //   }
+  // ),
+  // Fitness(
+  //   "Velocity.x",
+  //   "...",
+  //   [](const auto& phenotype, float current, float) -> float {
+  //     const auto& parts = phenotype.spider->parts();
+  //     float t = parts.at("Sternum").part->rigidBody()->getLinearVelocity().x();
+  //     return current + t;
+  //   },
+  //   [](const auto&, float current, float) -> float {
+  //     return - mmm::abs(current) * 8.f;
+  //   }
+  // ),
+
+
+
+
+
+
+
+
+  // Fitness(
+  //   "Height    ",
+  //   "Fitness based on sternum height.",
+  //   [](const auto& phenotype, float current, float deltaTime) -> float {
+  //     const auto& parts   = phenotype.spider->parts();
+  //     auto*       sternum = parts.at("Sternum").part->rigidBody();
+  //     auto        t       = sternum->getCenterOfMassPosition();
+
+  //     current -= mmm::abs(t.y()) * deltaTime * 2.f;
+
+  //     return current;
+  //   }
+  // ),
+
+  // Fitness(
+  //   "StabilityX",
+  //   "Fitness based on sternum rotation.",
+  //   [](const auto& phenotype, float current, float deltaTime) -> float {
+  //     const auto& parts = phenotype.spider->parts();
+
+  //     auto* sternum = parts.at("Sternum").part->rigidBody();
+  //     auto  q       = sternum->getOrientation();
+  //     vec3  r       = getEulerAngles(q.x(), q.y(), q.z(), q.w());
+  //     auto  t       = sternum->getCenterOfMassPosition();
+
+  //     current -= mmm::abs(r.x) * deltaTime * 2.f;
+
+  //     return current;
+  //   }
+  // ),
+  // Fitness(
+  //   "StabilityY",
+  //   "Fitness based on sternum rotation.",
+  //   [](const auto& phenotype, float current, float deltaTime) -> float {
+  //     const auto& parts = phenotype.spider->parts();
+
+  //     auto* sternum = parts.at("Sternum").part->rigidBody();
+  //     auto  q       = sternum->getOrientation();
+  //     vec3  r       = getEulerAngles(q.x(), q.y(), q.z(), q.w());
+  //     auto  t       = sternum->getCenterOfMassPosition();
+
+  //     r.y += mmm::radians(90.f);
+  //     r = mmm::abs(r);
+
+  //     current -= mmm::abs(r.y) * deltaTime * 2.f;
+
+  //     return current;
+  //   }
+  // ),
+  // Fitness(
+  //   "StabilityZ",
+  //   "Fitness based on sternum rotation.",
+  //   [](const auto& phenotype, float current, float deltaTime) -> float {
+  //     const auto& parts = phenotype.spider->parts();
+
+  //     auto* sternum = parts.at("Sternum").part->rigidBody();
+  //     auto  q       = sternum->getOrientation();
+  //     vec3  r       = getEulerAngles(q.x(), q.y(), q.z(), q.w());
+  //     auto  t       = sternum->getCenterOfMassPosition();
+
+  //     r = mmm::abs(r);
+
+  //     current -= mmm::abs(r.z) * deltaTime * 2.f;
+
+  //     return current;
+  //   }
+  // ),
+
+  // Fitness(
+  //   "Strafe    ",
+  //   "Fitness based on movement in x direction.",
+  //   [](const auto& phenotype, float current, float deltaTime) -> float {
+  //     const auto& parts = phenotype.spider->parts();
+
+  //     auto* sternum = parts.at("Sternum").part->rigidBody();
+  //     auto  t       = sternum->getCenterOfMassPosition();
+
+  //     current -= mmm::abs(t.x()) * deltaTime * 2.f;
+
+  //     return current;
+  //   }
+  // ),
+
+
+
+  Fitness(
+    "FacePlant ",
+    "plz, don't do this...",
+    [](const auto& phenotype, float current, float deltaTime) -> float {
+
+      if (phenotype.collidesWithTerrain("TrochanterL1") ||
+          phenotype.collidesWithTerrain("TrochanterL2") ||
+          phenotype.collidesWithTerrain("TrochanterL3") ||
+          phenotype.collidesWithTerrain("TrochanterL4") ||
+          phenotype.collidesWithTerrain("TrochanterR1") ||
+          phenotype.collidesWithTerrain("TrochanterR2") ||
+          phenotype.collidesWithTerrain("TrochanterR3") ||
+          phenotype.collidesWithTerrain("TrochanterR4") ||
+          phenotype.collidesWithTerrain("FemurL1") ||
+          phenotype.collidesWithTerrain("FemurL2") ||
+          phenotype.collidesWithTerrain("FemurL3") ||
+          phenotype.collidesWithTerrain("FemurL4") ||
+          phenotype.collidesWithTerrain("FemurR1") ||
+          phenotype.collidesWithTerrain("FemurR2") ||
+          phenotype.collidesWithTerrain("FemurR3") ||
+          phenotype.collidesWithTerrain("FemurR4") ||
+          phenotype.collidesWithTerrain("PatellaL1") ||
+          phenotype.collidesWithTerrain("PatellaL2") ||
+          phenotype.collidesWithTerrain("PatellaL3") ||
+          phenotype.collidesWithTerrain("PatellaL4") ||
+          phenotype.collidesWithTerrain("PatellaR1") ||
+          phenotype.collidesWithTerrain("PatellaR2") ||
+          phenotype.collidesWithTerrain("PatellaR3") ||
+          phenotype.collidesWithTerrain("PatellaR4") ||
+          phenotype.collidesWithTerrain("Abdomin") ||
+          phenotype.collidesWithTerrain("Hip") ||
+          phenotype.collidesWithTerrain("Sternum") ||
+          phenotype.collidesWithTerrain("Neck") ||
+          phenotype.collidesWithTerrain("Eye")) {
+        phenotype.kill();
+        // return -(100.f - phenotype.duration);
+      }
 
       return current;
     }
   ),
 
-  Fitness(
-    "Movement  ",
-    "Fitness based on movement is positive z direction.",
-    [](const auto& phenotype, float current, float) -> float {
-      const auto& parts = phenotype.spider->parts();
-      auto t = parts.at("Sternum").part->rigidBody()->getCenterOfMassPosition();
-      return mmm::max(current, t.z() + 1.f);
-    }
-  ),
+  // Fitness(
+  //   "Speed     ",
+  //   R"( Kill spiders that are not moving fast enough, as an exponential function
+  //       of distance over time. )",
+  //   [](const auto& phenotype, float current, float deltaTime) -> float {
+  //     const auto& parts = phenotype.spider->parts();
+
+  //     auto* sternum = parts.at("Sternum").part->rigidBody();
+  //     auto  t       = sternum->getCenterOfMassPosition();
+
+  //     if (mmm::pow(phenotype.duration, 2.f) / 8.f > t.z() + 1.f)
+  //       phenotype.kill();
+
+  //     return current;
+  //   }
+  // ),
+
+  // Fitness(
+  //   "Movement  ",
+  //   "Fitness based on movement is positive z direction.",
+  //   [](const auto& phenotype, float current, float) -> float {
+  //     const auto& parts = phenotype.spider->parts();
+  //     auto t = parts.at("Sternum").part->rigidBody()->getCenterOfMassPosition();
+  //     return mmm::max(current, t.z() + 1.f);
+  //   }
+  // ),
+
 
   // Fitness(
   //   "Collision  ",
@@ -803,7 +1075,7 @@ std::vector<Fitness> Phenotype::FITNESS_HANDLERS = {
   //     if (phenotype.collidesWithTerrain(body) ||
   //         phenotype.collidesWithTerrain("Eye") ||
   //         phenotype.collidesWithTerrain("Neck")) {
-  //       /* debug("Killed {}-{} due to Eye/Neck/Sternum", phenotype.speciesIndex, phenotype.individualIndex); */
+  //        debug("Killed {}-{} due to Eye/Neck/Sternum", phenotype.speciesIndex, phenotype.individualIndex);
   //       /* phenotype.kill(); */
   //       return current;
   //     }
