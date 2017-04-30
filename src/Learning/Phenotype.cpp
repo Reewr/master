@@ -101,6 +101,11 @@ mmm::vec3 getEulerAngles(float x, float y, float z, float w) {
   return r;
 }
 
+mmm::vec3 fromVector(const btVector3& v) {
+  return vec3(v.x(), v.y(), v.z());
+}
+
+
 /**
  * @brief
  *   Normalizes the hinge angle between -1 and 1 depending
@@ -413,6 +418,28 @@ void Phenotype::update(float deltaTime) {
   // After the physics have been executed, evaluate the fitness
   // of the robot.
   updateFitness(deltaTime);
+
+  // {
+  //   auto& l1 = parts["TrochanterL1"];
+  //   auto& l2 = parts["TrochanterL2"];
+  //   auto& l3 = parts["TrochanterL3"];
+  //   auto& l4 = parts["TrochanterL4"];
+  //   auto& r1 = parts["TrochanterR1"];
+  //   auto& r2 = parts["TrochanterR2"];
+  //   auto& r3 = parts["TrochanterR3"];
+  //   auto& r4 = parts["TrochanterR4"];
+
+  //   tmp.push_back(std::vector<float>{
+  //     normalizeHingeAngle(l1.hinge->getHingeAngle(), l1.hinge->getLowerLimit(), l1.hinge->getUpperLimit(), l1.restAngle),
+  //     normalizeHingeAngle(l2.hinge->getHingeAngle(), l2.hinge->getLowerLimit(), l2.hinge->getUpperLimit(), l2.restAngle),
+  //     normalizeHingeAngle(l3.hinge->getHingeAngle(), l3.hinge->getLowerLimit(), l3.hinge->getUpperLimit(), l3.restAngle),
+  //     normalizeHingeAngle(l4.hinge->getHingeAngle(), l4.hinge->getLowerLimit(), l4.hinge->getUpperLimit(), l4.restAngle),
+  //     normalizeHingeAngle(r1.hinge->getHingeAngle(), r1.hinge->getLowerLimit(), r1.hinge->getUpperLimit(), r1.restAngle),
+  //     normalizeHingeAngle(r2.hinge->getHingeAngle(), r2.hinge->getLowerLimit(), r2.hinge->getUpperLimit(), r2.restAngle),
+  //     normalizeHingeAngle(r3.hinge->getHingeAngle(), r3.hinge->getLowerLimit(), r3.hinge->getUpperLimit(), r3.restAngle),
+  //     normalizeHingeAngle(r4.hinge->getHingeAngle(), r4.hinge->getLowerLimit(), r4.hinge->getUpperLimit(), r4.restAngle)
+  //   });
+  // }
 }
 
 /**
@@ -582,6 +609,8 @@ void Phenotype::reset(int          speciesId,
   duration         = -1;
   fitness          = mmm::vec<9>(0);
   numberOfInputs   = numInputs;
+
+  // tmp.clear();
 
   this->speciesId       = speciesId;
   this->speciesIndex    = speciesIndex;

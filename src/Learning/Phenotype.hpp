@@ -1,6 +1,7 @@
 #pragma once
 
 #include <mmm.hpp>
+#include <vector>
 
 #include "../Log.hpp"
 #include "Fitness.hpp"
@@ -41,6 +42,8 @@ struct Phenotype : Logging::Log {
   Text3D* hoverText;
 
   mmm::vec<9>  fitness;
+
+  // std::vector<std::vector<float>> tmp;
 
   mutable bool failed;
   float        finalizedFitness;
