@@ -200,9 +200,6 @@ void Phenotype::update(const Experiment& experiment) {
   if (duration < 0.0)
     return updatePrepareStanding(deltaTime);
 
-  auto  pi    = mmm::constants<float>::pi;
-  auto& parts = spider->parts();
-
   duration += deltaTime;
 
   std::vector<double> inputs = experiment.inputs(*this);
