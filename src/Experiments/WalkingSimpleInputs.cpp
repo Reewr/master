@@ -200,7 +200,6 @@ WalkingSimpleInputs::WalkingSimpleInputs() : Experiment("WalkingSimpleInputs") {
   // is less than 0.2
   mSubstrate->m_max_weight_and_bias = 4.0;
 
-
   NEAT::Parameters params;
 
   // Below follows all the parameters. The first comment is described
