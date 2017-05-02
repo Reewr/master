@@ -5,6 +5,8 @@
 #include "DrawablePhenotype.hpp"
 #include "Substrate.hpp"
 
+#include "../Experiments/WalkingSimpleInputs.hpp"
+
 #include <btBulletDynamicsCommon.h>
 #include <thread>
 
@@ -52,9 +54,9 @@ SpiderSwarm::SpiderSwarm()
 #ifdef BT_NO_PROFILE
   mWorker = [](std::vector<Phenotype>::iterator begin,
                std::vector<Phenotype>::iterator end,
-               float                            deltaTime) {
+               const Experiment&                experiment) {
     for (auto it = begin; it != end; ++it)
-      it->update(deltaTime);
+      it->update(experiment);
   };
 
   mBuildingHyperNeatWorker = [](std::vector<Phenotype>::iterator begin,
@@ -72,8 +74,15 @@ SpiderSwarm::SpiderSwarm()
   NEAT::RNG rng;
   rng.TimeSeed();
 
-  setDefaultSubstrate();
-  setDefaultPopulation();
+  mCurrentExperiment = new WalkingSimpleInputs();
+  mPopulation = mCurrentExperiment->population();
+  mSubstrate  = mCurrentExperiment->substrate();
+
+  if (mPopulation == nullptr)
+    throw std::runtime_error("Population is not defined by experiment");
+
+  if (mSubstrate == nullptr)
+    throw std::runtime_error("Substrate is not defined by experiment");
 
   recreatePhenotypes();
 }
@@ -87,9 +96,8 @@ SpiderSwarm::~SpiderSwarm() {
   for (auto& p : mPhenotypes)
     p.remove();
 
+  delete mCurrentExperiment;
   mPhenotypes.clear();
-  delete mSubstrate;
-  delete mPopulation;
 }
 
 /**
@@ -371,9 +379,6 @@ void SpiderSwarm::load(const std::string& filename) {
   std::string subFilename    = filename + ".substrate";
   std::string genomeFilename = filename + ".genome";
 
-  if (mPopulation != nullptr)
-    delete mPopulation;
-
   mPopulation = new NEAT::Population(popFilename.c_str());
   mSubstrate->load(subFilename);
 
@@ -394,6 +399,27 @@ void SpiderSwarm::load(const std::string& filename) {
   mBestPossibleFitness = 0;
   mBestPossibleFitnessGeneration = 0;
   mStats               = Statistics();
+
+  mLog->info("Loaded from file: {}", filename);
+  mLog->debug(R"(Substrate
+    input -> hidden: {}
+    input -> output: {}
+    hidden -> hidden: {}
+    hidden -> output: {}
+    output -> hidden: {}
+    output -> output: {}
+    looped hidden: {}
+    looped output: {}
+    )",
+      mSubstrate->m_allow_input_hidden_links,
+      mSubstrate->m_allow_input_output_links,
+      mSubstrate->m_allow_hidden_hidden_links,
+      mSubstrate->m_allow_hidden_output_links,
+      mSubstrate->m_allow_output_hidden_links,
+      mSubstrate->m_allow_output_output_links,
+      mSubstrate->m_allow_looped_hidden_links,
+      mSubstrate->m_allow_looped_output_links
+      );
 
   recreatePhenotypes();
 }
@@ -479,6 +505,46 @@ void SpiderSwarm::setIterationDuration(float x) {
 
 /**
  * @brief
+ *   If BT_NO_PROFILE is defined, it will assume that we are to use
+ *   multithreading. Unlike `updateUsingThreads` it does not split the current
+ *   batch into several smaller pieces, but instead splits the entire number
+ *   of Phenotypes into smaller batches.
+ *
+ *   For instance, if you have 4 threads and a population size of 50, it will
+ *   split 12 Phenotypes to 3 of the threads and the last one will have work
+ *   with the remaining 14.
+ *
+ * @param deltaTime
+ */
+#ifdef BT_NO_PROFILE
+void SpiderSwarm::updateThreadBatches(float deltaTime) {
+
+  int size    = mPhenotypes.size();
+  int nThread = mmm::min(std::thread::hardware_concurrency(), size);
+  std::vector<std::thread> threads(nThread);
+
+  auto workIter  = std::begin(mPhenotypes);
+  int  grainSize = size / threads.size();
+
+  for (auto it = std::begin(threads); it != std::end(threads) - 1; ++it) {
+    *it = std::thread(mWorker, workIter, workIter + grainSize, std::ref(*mCurrentExperiment));
+    workIter += grainSize;
+  }
+
+  threads.back() =
+    std::thread(mWorker, workIter, std::end(mPhenotypes), std::ref(*mCurrentExperiment));
+
+  for (auto&& i : threads)
+    i.join();
+
+  mCurrentDuration += deltaTime;
+}
+#else
+void SpiderSwarm::updateThreadBatches(float) {}
+#endif
+
+/**
+ * @brief
  *   Works exactly like `updateNormal` but instead of performing everything in
  *   a single thread, it runs multiple threads (as many as the system can
  *   support, returned by std::thread::hardware_concurrency or the max
@@ -508,14 +574,17 @@ void SpiderSwarm::updateUsingThreads(float deltaTime) {
   auto                     workIter  = std::begin(mPhenotypes) + mBatchStart;
 
   for (auto it = std::begin(threads); it != std::end(threads) - 1; ++it) {
-    *it = std::thread(mWorker, workIter, workIter + grainSize, deltaTime);
+    *it = std::thread(mWorker,
+                      workIter,
+                      workIter + grainSize,
+                      std::ref(*mCurrentExperiment));
     workIter += grainSize;
   }
 
   threads.back() = std::thread(mWorker,
                                workIter,
                                std::begin(mPhenotypes) + mBatchEnd,
-                               deltaTime);
+                               std::ref(*mCurrentExperiment));
 
   for (auto&& i : threads)
     i.join();
@@ -523,46 +592,6 @@ void SpiderSwarm::updateUsingThreads(float deltaTime) {
   mCurrentDuration += deltaTime;
 #endif
 }
-
-/**
- * @brief
- *   If BT_NO_PROFILE is defined, it will assume that we are to use
- *   multithreading. Unlike `updateUsingThreads` it does not split the current
- *   batch into several smaller pieces, but instead splits the entire number
- *   of Phenotypes into smaller batches.
- *
- *   For instance, if you have 4 threads and a population size of 50, it will
- *   split 12 Phenotypes to 3 of the threads and the last one will have work
- *   with the remaining 14.
- *
- * @param deltaTime
- */
-#ifdef BT_NO_PROFILE
-void SpiderSwarm::updateThreadBatches(float deltaTime) {
-
-  int size    = mPhenotypes.size();
-  int nThread = mmm::min(std::thread::hardware_concurrency(), size);
-  std::vector<std::thread> threads(nThread);
-
-  auto workIter  = std::begin(mPhenotypes);
-  int  grainSize = size / threads.size();
-
-  for (auto it = std::begin(threads); it != std::end(threads) - 1; ++it) {
-    *it = std::thread(mWorker, workIter, workIter + grainSize, deltaTime);
-    workIter += grainSize;
-  }
-
-  threads.back() =
-    std::thread(mWorker, workIter, std::end(mPhenotypes), deltaTime);
-
-  for (auto&& i : threads)
-    i.join();
-
-  mCurrentDuration += deltaTime;
-}
-#else
-void SpiderSwarm::updateThreadBatches(float) {}
-#endif
 
 /**
  * @brief
@@ -578,7 +607,7 @@ void SpiderSwarm::updateThreadBatches(float) {}
  */
 void SpiderSwarm::updateNormal(float deltaTime) {
   for (size_t i = mBatchStart; i < mBatchEnd && i < mPhenotypes.size(); ++i) {
-    mPhenotypes[i].update(deltaTime);
+    mPhenotypes[i].update(*mCurrentExperiment);
   }
   mCurrentDuration += deltaTime;
 }
@@ -629,7 +658,7 @@ void SpiderSwarm::updateEpoch() {
     for (size_t j = 0; j < mPopulation->m_Species[i].m_Individuals.size();
          ++j) {
 
-      float fitness = mPhenotypes[index].finalizeFitness();
+      float fitness = mPhenotypes[index].finalizeFitness(*mCurrentExperiment);
       mPopulation->m_Species[i].m_Individuals[j].SetFitness(fitness);
       mPopulation->m_Species[i].m_Individuals[j].SetEvaluated();
 
@@ -678,7 +707,7 @@ void SpiderSwarm::updateEpoch() {
     Phenotype& p = mPhenotypes[i];
 
     if (!p.hasFinalized)
-      p.finalizeFitness();
+      p.finalizeFitness(*mCurrentExperiment);
 
     mLog->info("-------------------------------------");
     mLog->info("The best in species: {}-{} >>= {}{}{}",
@@ -692,11 +721,11 @@ void SpiderSwarm::updateEpoch() {
     int maxLength = 0;
 
     // Find the longest name so alignment can be done
-    for (auto& f : Phenotype::FITNESS_HANDLERS)
+    for (auto& f : mCurrentExperiment->fitnessFunctions())
       maxLength = mmm::max(f.name().size(), maxLength);
 
     // Print out aligned fitness names and their values
-    for (auto& f : Phenotype::FITNESS_HANDLERS) {
+    for (auto& f : mCurrentExperiment->fitnessFunctions()) {
       std::string name =
         f.name() + std::string(" ", mmm::max(maxLength - f.name().size(), 0));
 
@@ -733,9 +762,6 @@ void SpiderSwarm::recreatePhenotypes() {
   mLog->debug("Recreating {} phenotypes...", mPopulation->m_Parameters.PopulationSize);
   mLog->debug("We have {} species", mPopulation->m_Species.size());
 
-  if (mNumInputs != mSubstrate->m_input_coords.size())
-    mNumInputs = mSubstrate->m_input_coords.size();
-
   size_t index      = 0;
   bool   addLeaders = mSpeciesLeaders.size() == 0;
   for (size_t i = 0; i < mPopulation->m_Species.size(); ++i) {
@@ -754,7 +780,7 @@ void SpiderSwarm::recreatePhenotypes() {
         mPhenotypes.push_back(Phenotype());
       }
 
-      mPhenotypes[index].reset(species.ID(), i, j, g.GetID(), mNumInputs);
+      mPhenotypes[index].reset(species.ID(), i, j, g.GetID());
       mPhenotypes[index].spider->disableUpdatingFromPhysics();
 
       // If we are using single-threaded mode, create the neural
@@ -762,7 +788,7 @@ void SpiderSwarm::recreatePhenotypes() {
 #ifndef BT_NO_PROFILE
       auto& individual = species.m_Individuals[j];
       individual.BuildHyperNEATPhenotype(*mPhenotypes[index].network,
-                                           *mSubstrate);
+                                         *mSubstrate);
 #endif
       ++index;
     }
@@ -785,6 +811,8 @@ void SpiderSwarm::recreatePhenotypes() {
   auto workIter  = std::begin(mPhenotypes);
   int  grainSize = size / threads.size();
 
+  mLog->debug("Building networks with {} thread(s)", nThread);
+
   for (auto it = std::begin(threads); it != std::end(threads) - 1; ++it) {
     *it = std::thread(mBuildingHyperNeatWorker,
                       workIter,
@@ -804,20 +832,6 @@ void SpiderSwarm::recreatePhenotypes() {
     i.join();
 
 #endif
-
-  /* mLog->debug("{} - {} has {} connections", */
-  /*     mPhenotypes[0].speciesIndex, */
-  /*     mPhenotypes[0].individualIndex, */
-  /*     mPhenotypes[0].network->m_connections.size()); */
-  /* for(auto& c : mPhenotypes[0].network->m_connections) { */
-  /*   mLog->debug("Connection: {}:{} -> {}:{} x {} - Recurrent", */
-  /*       c.m_source_neuron_idx, */
-  /*       mPhenotypes[0].network->m_neurons[c.m_source_neuron_idx].m_type, */
-  /*       c.m_target_neuron_idx, */
-  /*       mPhenotypes[0].network->m_neurons[c.m_target_neuron_idx].m_type, */
-  /*       c.m_weight, */
-  /*       c.m_recur_flag); */
-  /* } */
 
   // If we want to see the Networks, create those
   // after the networks have been added
@@ -879,527 +893,4 @@ NEAT::Genome& SpiderSwarm::bestPossibleGenome() {
  */
 void SpiderSwarm::restart() {
   mRestartOnNextUpdate = true;
-}
-
-void SpiderSwarm::setDefaultSubstrate() {
-  if (mSubstrate != nullptr)
-    delete mSubstrate;
-
-  // clang-format off
-  std::vector<std::vector<double>> inputs{
-    {  0.0, -0.6, -0.4 }, // Phase -cos
-    {  0.0, -0.2, -0.4 }, // Phase -sin
-    {  0.0,  0.2, -0.4 }, // Phase  cos
-    {  0.0,  0.6, -0.4 }, // Phase  sin
-
-    {  0.0, -0.4, -0.4 }, // Rotation sternum z
-    {  0.0,  0.0, -0.4 }, // Rotation sternum y
-    {  0.0,  0.4, -0.4 }, // Rotation sternum x
-
-    {  1.2, -0.6, -0.4 }, // TipL1
-    {  1.2, -0.2, -0.4 }, // TipL2
-    {  1.2,  0.2, -0.4 }, // TipL3
-    {  1.2,  0.6, -0.4 }, // TipL4
-    { -1.2, -0.6, -0.4 }, // TipR1
-    { -1.2, -0.2, -0.4 }, // TipR2
-    { -1.2,  0.2, -0.4 }, // TipR3
-    { -1.2,  0.6, -0.4 }, // TipR4
-
-    {  1.0, -0.4, -0.4 }, // Tarsus L1 L2 Diff
-    {  1.0,  0.0, -0.4 }, // Tarsus L2 L3 Diff
-    {  1.0,  0.4, -0.4 }, // Tarsus L3 L4 Diff
-    { -1.0, -0.4, -0.4 }, // Tarsus R1 R2 Diff
-    { -1.0,  0.0, -0.4 }, // Tarsus R2 R3 Diff
-    { -1.0,  0.4, -0.4 }, // Tarsus R3 R4 Diff
-
-    {  0.4, -0.6, -0.4 }, // FemurL1
-    {  0.4, -0.2, -0.4 }, // FemurL2
-    {  0.4,  0.2, -0.4 }, // FemurL3
-    {  0.4,  0.6, -0.4 }, // FemurL4
-    { -0.4, -0.6, -0.4 }, // FemurR1
-    { -0.4, -0.2, -0.4 }, // FemurR2
-    { -0.4,  0.2, -0.4 }, // FemurR3
-    { -0.4,  0.6, -0.4 }, // FemurR4
-    {  0.6, -0.6, -0.4 }, // PatellaL1
-    {  0.6, -0.2, -0.4 }, // PatellaL2
-    {  0.6,  0.2, -0.4 }, // PatellaL3
-    {  0.6,  0.6, -0.4 }, // PatellaL4
-    { -0.6, -0.6, -0.4 }, // PatellaR1
-    { -0.6, -0.2, -0.4 }, // PatellaR2
-    { -0.6,  0.2, -0.4 }, // PatellaR3
-    { -0.6,  0.6, -0.4 }, // PatellaR4
-    {  1.0, -0.6, -0.4 }, // TarsusL1
-    {  1.0, -0.2, -0.4 }, // TarsusL2
-    {  1.0,  0.2, -0.4 }, // TarsusL3
-    {  1.0,  0.6, -0.4 }, // TarsusL4
-    { -1.0, -0.6, -0.4 }, // TarsusR1
-    { -1.0, -0.2, -0.4 }, // TarsusR2
-    { -1.0,  0.2, -0.4 }, // TarsusR3
-    { -1.0,  0.6, -0.4 }, // TarsusR4
-    {  0.8, -0.6, -0.4 }, // TibiaL1
-    {  0.8, -0.2, -0.4 }, // TibiaL2
-    {  0.8,  0.2, -0.4 }, // TibiaL3
-    {  0.8,  0.6, -0.4 }, // TibiaL4
-    { -0.8, -0.6, -0.4 }, // TibiaR1
-    { -0.8, -0.2, -0.4 }, // TibiaR2
-    { -0.8,  0.2, -0.4 }, // TibiaR3
-    { -0.8,  0.6, -0.4 }, // TibiaR4
-    {  0.2, -0.6, -0.4 }, // TrochanterL1
-    {  0.2, -0.2, -0.4 }, // TrochanterL2
-    {  0.2,  0.2, -0.4 }, // TrochanterL3
-    {  0.2,  0.6, -0.4 }, // TrochanterL4
-    { -0.2, -0.6, -0.4 }, // TrochanterR1
-    { -0.2, -0.2, -0.4 }, // TrochanterR2
-    { -0.2,  0.2, -0.4 }, // TrochanterR3
-    { -0.2,  0.6, -0.4 }  // TrochanterR4
-  };
-  std::vector<std::vector<double>> hidden{};
-  std::vector<std::vector<double>> outputs{
-    {  0.4, -0.6,  0.4 }, // FemurL1
-    {  0.4, -0.2,  0.4 }, // FemurL2
-    {  0.4,  0.2,  0.4 }, // FemurL3
-    {  0.4,  0.6,  0.4 }, // FemurL4
-    { -0.4, -0.6,  0.4 }, // FemurR1
-    { -0.4, -0.2,  0.4 }, // FemurR2
-    { -0.4,  0.2,  0.4 }, // FemurR3
-    { -0.4,  0.6,  0.4 }, // FemurR4
-    {  0.6, -0.6,  0.4 }, // PatellaL1
-    {  0.6, -0.2,  0.4 }, // PatellaL2
-    {  0.6,  0.2,  0.4 }, // PatellaL3
-    {  0.6,  0.6,  0.4 }, // PatellaL4
-    { -0.6, -0.6,  0.4 }, // PatellaR1
-    { -0.6, -0.2,  0.4 }, // PatellaR2
-    { -0.6,  0.2,  0.4 }, // PatellaR3
-    { -0.6,  0.6,  0.4 }, // PatellaR4
-    {  1.0, -0.6,  0.4 }, // TarsusL1
-    {  1.0, -0.2,  0.4 }, // TarsusL2
-    {  1.0,  0.2,  0.4 }, // TarsusL3
-    {  1.0,  0.6,  0.4 }, // TarsusL4
-    { -1.0, -0.6,  0.4 }, // TarsusR1
-    { -1.0, -0.2,  0.4 }, // TarsusR2
-    { -1.0,  0.2,  0.4 }, // TarsusR3
-    { -1.0,  0.6,  0.4 }, // TarsusR4
-    {  0.8, -0.6,  0.4 }, // TibiaL1
-    {  0.8, -0.2,  0.4 }, // TibiaL2
-    {  0.8,  0.2,  0.4 }, // TibiaL3
-    {  0.8,  0.6,  0.4 }, // TibiaL4
-    { -0.8, -0.6,  0.4 }, // TibiaR1
-    { -0.8, -0.2,  0.4 }, // TibiaR2
-    { -0.8,  0.2,  0.4 }, // TibiaR3
-    { -0.8,  0.6,  0.4 }, // TibiaR4
-    {  0.2, -0.6,  0.4 }, // TrochanterL1
-    {  0.2, -0.2,  0.4 }, // TrochanterL2
-    {  0.2,  0.2,  0.4 }, // TrochanterL3
-    {  0.2,  0.6,  0.4 }, // TrochanterL4
-    { -0.2, -0.6,  0.4 }, // TrochanterR1
-    { -0.2, -0.2,  0.4 }, // TrochanterR2
-    { -0.2,  0.2,  0.4 }, // TrochanterR3
-    { -0.2,  0.6,  0.4 }  // TrochanterR4
-  };
-  // clang-format on
-
-
-  // clone the input neuron positions to hidden, but at different height
-  for (auto& x : inputs)
-    hidden.push_back(std::vector<double>{x[0], x[1],  0.0});
-
-
-  mSubstrate = new Substrate(inputs, hidden, outputs);
-
-  // These variables are only used in HyperNEAT variations and not
-  // in ESHyperNEAT.
-  mSubstrate->m_allow_input_hidden_links  = true;
-  mSubstrate->m_allow_input_output_links  = true;
-  mSubstrate->m_allow_hidden_output_links = true;
-  mSubstrate->m_allow_output_hidden_links = true;
-  mSubstrate->m_allow_output_output_links = true;
-  mSubstrate->m_allow_looped_hidden_links = true;
-  mSubstrate->m_allow_looped_output_links = true;
-
-  mSubstrate->m_allow_input_hidden_links  = true;
-  mSubstrate->m_allow_input_output_links  = true;
-  mSubstrate->m_allow_hidden_output_links = true;
-  mSubstrate->m_allow_hidden_hidden_links = true;
-
-  // These determine the output of the ESHyperNEAT CPPN hidden
-  // and output nodes.
-  //
-  // The following activation functions are available:
-  // NEAT::ActivationFunction::UNSIGNED_SIGMOID
-  // NEAT::ActivationFunction::UNSIGNED_STEP
-  // NEAT::ActivationFunction::UNSIGNED_SINE
-  // NEAT::ActivationFunction::UNSIGNED_GAUSS
-  // NEAT::ActivationFunction::SIGNED_SIGMOID
-  // NEAT::ActivationFunction::SIGNED_STEP
-  // NEAT::ActivationFunction::SIGNED_SINE
-  // NEAT::ActivationFunction::SIGNED_GAUSS
-  // NEAT::ActivationFunction::RELU
-  // NEAT::ActivationFunction::LINEAR
-  // NEAT::ActivationFunction::SOFTPLU
-  // NEAT::ActivationFunction::TAHN
-  // NEAT::ActivationFunction::TAHN_CUBIC
-  // NEAT::ActivationFunction::ABS
-  mSubstrate->m_hidden_nodes_activation = NEAT::ActivationFunction::SIGNED_SIGMOID;
-  mSubstrate->m_output_nodes_activation = NEAT::ActivationFunction::UNSIGNED_SIGMOID;
-
-  // This is only available in HyperNEAT and not ESHyperNEAT
-  mSubstrate->m_with_distance = false;
-
-  // When a new connection, it will not be added if the weight*maxWeightAndBias
-  // is less than 0.2
-  mSubstrate->m_max_weight_and_bias = 8.0;
-}
-
-/**
- * @brief
- *   This sets the default parameters for a population. By default, we mean
- *   that its set to what is defined in this function and not what is defined
- *   else where, for instance through loading a file
- */
-void SpiderSwarm::setDefaultPopulation() {
-
-  // sanity checking
-  if (mSubstrate == nullptr)
-    throw std::runtime_error("Substrate is not set");
-  if (mPopulation != nullptr)
-    delete mPopulation;
-
-  NEAT::Parameters params;
-
-  // Below follows all the parameters. The first comment is described
-  // by the author of the library and "US" is a comment from our side to
-  // explain more on the subject
-  //
-  // If there is a commented out value behind the value, then that represents
-  // the default value for that parameter
-
-  ////////////////////
-  // Basic parameters
-  ////////////////////
-
-  // Size of population
-  params.PopulationSize = 64;
-
-  // If true, this enables dynamic compatibility thresholding
-  // It will keep the number of species between MinSpecies and MaxSpecies
-  params.DynamicCompatibility = true;
-
-  // Minimum number of species
-  params.MinSpecies = 5;
-
-  // Maximum number of species
-  params.MaxSpecies = 10;
-
-  // Don't wipe the innovation database each generation?
-  params.InnovationsForever = false;
-
-  // Allow clones or nearly identical genomes to exist simultaneously in the population.
-  // This is useful for non-deterministic environments,
-  // as the same individual will get more than one chance to prove himself, also
-  // there will be more chances the same individual to mutate in different ways.
-  // The drawback is greatly increased time for reproduction. If you want to
-  // search quickly, yet less efficient, leave this to true.
-  params.AllowClones = true;
-
-  ////////////////////////////////
-  // GA Parameters
-  ////////////////////////////////
-
-  // Age treshold, meaning if a species is below it, it is considered young
-  params.YoungAgeTreshold = 5;
-
-  // Fitness boost multiplier for young species (1.0 means no boost)
-  // Make sure it is >= 1.0 to avoid confusion
-  params.YoungAgeFitnessBoost = 1.1;
-
-  // Number of generations without improvement (stagnation) allowed for a species
-  params.SpeciesMaxStagnation = 25;
-
-  // Minimum jump in fitness necessary to be considered as improvement.
-  // Setting this value to 0.0 makes the system to behave like regular NEAT.
-  params.StagnationDelta = 0.0;
-
-  // Age threshold, meaning if a species is above it, it is considered old
-  params.OldAgeTreshold = 30;
-
-  // Multiplier that penalizes old species.
-  // Make sure it is <= 1.0 to avoid confusion.
-  params.OldAgePenalty = 1.1;
-
-  // Detect competetive coevolution stagnation
-  // This kills the worst species of age >N (each X generations)
-  params.DetectCompetetiveCoevolutionStagnation = false;
-
-  // Each X generation..
-  params.KillWorstSpeciesEach = 15;
-
-  // Of age above..
-  params.KillWorstAge = 10;
-
-  // Percent of best individuals that are allowed to reproduce. 1.0 = 100%
-  params.SurvivalRate = 0.25;
-
-  // Probability for a baby to result from sexual reproduction (crossover/mating). 1.0 = 100%
-  // If asexual reprodiction is chosen, the baby will be mutated 100%
-  params.CrossoverRate = 0.7;
-
-  // If a baby results from sexual reproduction, this probability determines if mutation will
-  // be performed after crossover. 1.0 = 100% (always mutate after crossover)
-  params.OverallMutationRate = 0.25;
-
-  // Probability for a baby to result from inter-species mating.
-  params.InterspeciesCrossoverRate = 0.0001;
-
-  // Probability for a baby to result from Multipoint Crossover when mating. 1.0 = 100%
-  // The default is the Average mating.
-  params.MultipointCrossoverRate = 0.75;
-
-  // Performing roulette wheel selection or not?
-  params.RouletteWheelSelection = false;
-
-  // For tournament selection
-  params.TournamentSize = 4;
-
-  // Fraction of individuals to be copied unchanged
-  params.EliteFraction = 0.1; // 0.001
-
-  ///////////////////////////////////
-  // Structural Mutation parameters
-  ///////////////////////////////////
-
-  // Probability for a baby to be mutated with the Add-Neuron mutation.
-  params.MutateAddNeuronProb = 0.08;
-
-  // Allow splitting of any recurrent links
-  params.SplitRecurrent = true;
-
-  // Allow splitting of looped recurrent links
-  params.SplitLoopedRecurrent = true;
-
-  // Probability for a baby to be mutated with the Add-Link mutation
-  params.MutateAddLinkProb = 0.06;
-
-  // Probability for a new incoming link to be from the bias neuron;
-  // This enforces it. A value of 0.0 doesn't mean there will not be such links
-  params.MutateAddLinkFromBiasProb = 0.0;
-
-  // Probability for a baby to be mutated with the Remove-Link mutation
-  params.MutateRemLinkProb = 0.1;
-
-  // Probability for a baby that a simple neuron will be replaced with a link
-  params.MutateRemSimpleNeuronProb = 0.1;
-
-  // Maximum number of tries to find 2 neurons to add/remove a link
-  params.LinkTries = 32;
-
-  // Probability that a link mutation will be made recurrent
-  params.RecurrentProb = 0.25;
-
-  // Probability that a recurrent link mutation will be looped
-  params.RecurrentLoopProb = 0.25;
-
-  ///////////////////////////////////
-  // Parameter Mutation parameters
-  ///////////////////////////////////
-
-  // Probability for a baby's weights to be mutated
-  params.MutateWeightsProb = 0.94;
-
-  // Probability for a severe (shaking) weight mutation
-  params.MutateWeightsSevereProb = 0.25;
-
-  // Probability for a particular gene's weight to be mutated. 1.0 = 100%
-  params.WeightMutationRate = 1.0;
-
-  // Maximum perturbation for a weight mutation
-  params.WeightMutationMaxPower = 1.0;
-
-  // Maximum magnitude of a replaced weight
-  params.WeightReplacementMaxPower = 1.0;
-
-  // Maximum absolute magnitude of a weight
-  // US: This only affects the weight in the CPPN and not the
-  //     weights in the connection generated by the CPPN for the
-  //     network we use.
-  params.MaxWeight = 8.0;
-
-  // Probability for a baby's A activation function parameters to be perturbed
-  params.MutateActivationAProb = 0.1;
-
-  // Probability for a baby's B activation function parameters to be perturbed
-  params.MutateActivationBProb = 0.1;
-
-  // Maximum magnitude for the A parameter perturbation
-  params.ActivationAMutationMaxPower = 0.0;
-
-  // Maximum magnitude for the B parameter perturbation
-  params.ActivationBMutationMaxPower = 0.0;
-
-  // Activation parameter A min/max
-  params.MinActivationA = 1.0;
-  params.MaxActivationA = 2.0;
-
-  // Activation parameter B min/max
-  params.MinActivationB = 0.0;
-  params.MaxActivationB = 0.0;
-
-  // Maximum magnitude for time costants perturbation
-  params.TimeConstantMutationMaxPower = 0.0;
-
-  // Maximum magnitude for biases perturbation
-  params.BiasMutationMaxPower = params.WeightMutationMaxPower;
-
-  // Probability for a baby's neuron time constant values to be mutated
-  params.MutateNeuronTimeConstantsProb = 0.0;
-
-  // Probability for a baby's neuron bias values to be mutated
-  params.MutateNeuronBiasesProb = 0.0;
-
-  // Time constant range
-  params.MinNeuronTimeConstant = 0.0;
-  params.MaxNeuronTimeConstant = 0.0;
-
-  // Bias range
-  params.MinNeuronBias = -params.MaxWeight; //0.0;
-  params.MaxNeuronBias = params.MaxWeight; //0.0;
-
-  // Probability for a baby that an activation function type will be changed for a single neuron
-  // considered a structural mutation because of the large impact on fitness
-  params.MutateNeuronActivationTypeProb = 0.15;
-
-  // Probabilities for a particular activation function appearance
-  params.ActivationFunction_SignedSigmoid_Prob = 1.0;
-  params.ActivationFunction_UnsignedSigmoid_Prob = 1.0;
-  params.ActivationFunction_Tanh_Prob = 1.0;
-  params.ActivationFunction_TanhCubic_Prob = 1.0;
-  params.ActivationFunction_SignedStep_Prob = 1.0;
-  params.ActivationFunction_UnsignedStep_Prob = 1.0;
-  params.ActivationFunction_SignedGauss_Prob = 1.0;
-  params.ActivationFunction_UnsignedGauss_Prob = 1.0;
-  params.ActivationFunction_Abs_Prob = 1.0;
-  params.ActivationFunction_SignedSine_Prob = 1.0;
-  params.ActivationFunction_UnsignedSine_Prob = 1.0;
-  params.ActivationFunction_Linear_Prob = 0.0;
-  params.ActivationFunction_Relu_Prob = 0.0;
-  params.ActivationFunction_Softplus_Prob = 0.0;
-
-  params.BiasMutationMaxPower = 0.5;
-
-  // Genome properties parameters
-  // params.DontUseBiasNeuron                       = false;
-  // params.AllowLoops                              = true;
-
-  /////////////////////////////////////
-  // Speciation parameters
-  /////////////////////////////////////
-
-  // Percent of disjoint genes importance
-  params.DisjointCoeff = 1.0;
-
-  // Percent of excess genes importance
-  params.ExcessCoeff = 1.0;
-
-  // Average weight difference importance
-  params.WeightDiffCoeff = 0.5;
-
-  // Node-specific activation parameter A difference importance
-  params.ActivationADiffCoeff = 0.0;
-
-  // Node-specific activation parameter B difference importance
-  params.ActivationBDiffCoeff = 0.0;
-
-  // Average time constant difference importance
-  params.TimeConstantDiffCoeff = 0.0;
-
-  // Average bias difference importance
-  params.BiasDiffCoeff = 0.0;
-
-  // Activation function type difference importance
-  params.ActivationFunctionDiffCoeff = 0.0;
-
-  // Compatibility treshold
-  params.CompatTreshold = 5.0;
-
-  // Minumal value of the compatibility treshold
-  params.MinCompatTreshold = 0.2;
-
-  // Modifier per generation for keeping the species stable
-  params.CompatTresholdModifier = 0.3;
-
-  // Per how many generations to change the treshold
-  // (used in generational mode)
-  params.CompatTreshChangeInterval_Generations = 1;
-
-  // Per how many evaluations to change the treshold
-  // (used in steady state mode)
-  params.CompatTreshChangeInterval_Evaluations = 10;
-
-  // ES-HyperNEAT parameters
-
-  // US: Determines the threshold that determines whether a
-  // another node within the Quad Tree is to be added.
-  // The sum of all weights of the children of a specific
-  // quadpoint has to be higher than the DivisionThreshold.
-  params.DivisionThreshold = 0.03; // 0.03
-
-  // US: The variance threshold is used to determine whether
-  // new connections for a specific QuadPoint is suppose be
-  // generated. If the sum of all weights of a quadpoint is
-  // higher than the variance threshold, it will generat new
-  // connections for that point.
-  params.VarianceThreshold = 0.05; // 0.05
-
-  // Used for Band prunning.
-  //
-  // US: This determines whether a new connection is to be added or not.
-  // If the output of the CPPN is higher than BandThreshold, add new
-  // connections.
-  params.BandThreshold = 0.28; // 0.3
-
-  // Max and Min Depths of the quadtree
-  //
-  // US: Keep in mind that MaxDepth determines how many connections
-  // may be generated. For any given N, (4^N) * ((4^N) - 1) / 2 connections
-  // may be generated.
-  params.InitialDepth = 3;
-  params.MaxDepth = 4; // 3
-
-  // How many hidden layers before connecting nodes to output. At 0 there is
-  // one hidden layer. At 1, there are two and so on.
-  params.IterationLevel = 2;
-
-  // The Bias value for the CPPN queries.
-  params.CPPN_Bias = 1.0;
-
-  // Quadtree Dimensions
-  // The range of the tree. Typically set to 2,
-  params.Width = 1.2;
-  params.Height = 0.6;
-
-  // The (x, y) coordinates of the tree
-  params.Qtree_X = 0.0;
-  params.Qtree_Y = 0.0;
-
-  // Use Link Expression output
-  params.Leo = false;
-
-  // Threshold above which a connection is expressed
-  params.LeoThreshold = 0.1;
-
-  // Use geometric seeding. Currently only along the X axis. 1
-  params.LeoSeed = false;
-
-  params.GeometrySeed = false;
-
-  NEAT::Genome genome(0,
-                      mSubstrate->GetMinCPPNInputs(),
-                      0,
-                      mSubstrate->GetMinCPPNOutputs(),
-                      false,
-                      NEAT::ActivationFunction::SIGNED_SIGMOID,
-                      NEAT::ActivationFunction::SIGNED_SIGMOID,
-                      0,
-                      params);
-
-  mPopulation = new NEAT::Population(genome, params, true, 1.0, time(0));
 }

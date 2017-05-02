@@ -121,8 +121,6 @@ public:
 private:
   std::vector<Phenotype> mPhenotypes;
 
-  unsigned int mNumInputs;
-
   size_t mCurrentBatch;
   size_t mBatchStart;
   size_t mBatchEnd;
@@ -152,7 +150,7 @@ private:
 #ifdef BT_NO_PROFILE
   std::function<void(std::vector<Phenotype>::iterator begin,
                      std::vector<Phenotype>::iterator end,
-                     float                            deltaTime)>
+                     const Experiment& experiment)>
     mWorker;
 
   std::function<void(std::vector<Phenotype>::iterator begin,
@@ -182,7 +180,5 @@ private:
   // NEAT stuff
   Substrate*        mSubstrate;
   NEAT::Population* mPopulation;
-
-  void setDefaultSubstrate();
-  void setDefaultPopulation();
+  Experiment*       mCurrentExperiment;
 };

@@ -205,6 +205,10 @@ set(SOURCE_FILES
   ${SRC_DIR}/Input/Input.cpp
   ${SRC_DIR}/Input/Event.cpp
 
+  # src/Experiment
+  ${SRC_DIR}/Experiments/Experiment.cpp
+  ${SRC_DIR}/Experiments/WalkingSimpleInputs.cpp
+
   # src/Learning
   ${SRC_DIR}/Learning/SpiderSwarm.cpp
   ${SRC_DIR}/Learning/Substrate.cpp
@@ -304,6 +308,10 @@ set(HEADER_FILES
   # src/Input
   ${SRC_DIR}/Input/Input.hpp
   ${SRC_DIR}/Input/Event.hpp
+
+  # src/Experiments
+  ${SRC_DIR}/Experiments/Experiment.cpp
+  ${SRC_DIR}/Experiments/WalkingSimpleInputs.cpp
 
   # src/Learning
   ${SRC_DIR}/Learning/SpiderSwarm.hpp

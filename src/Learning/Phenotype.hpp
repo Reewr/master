@@ -4,7 +4,6 @@
 #include <vector>
 
 #include "../Log.hpp"
-#include "Fitness.hpp"
 
 struct btDefaultMotionState;
 class btRigidBody;
@@ -14,6 +13,9 @@ class World;
 class Spider;
 class DrawablePhenotype;
 class Text3D;
+class Experiment;
+class Drawable3D;
+class Program;
 
 namespace NEAT {
   class NeuralNetwork;
@@ -54,7 +56,6 @@ struct Phenotype : Logging::Log {
   unsigned int speciesId;
   unsigned int speciesIndex;
   unsigned int individualIndex;
-  unsigned int numberOfInputs;
 
   Phenotype();
   ~Phenotype();
@@ -63,7 +64,7 @@ struct Phenotype : Logging::Log {
   bool hasBeenKilled() const;
 
   // Returns the final fitness of the Phenotype
-  float finalizeFitness();
+  float finalizeFitness(const Experiment& experiment);
 
   // Deletes the memory allocated in reset
   void remove();
@@ -77,17 +78,18 @@ struct Phenotype : Logging::Log {
   void reset(int          speciesId,
              int          speciesIndex,
              int          individualIndex,
-             unsigned int genomeId,
-             unsigned int numInputs);
+             unsigned int genomeId);
 
   // Performs the update of the phenotype
-  void update(float deltaTime);
+  void update(const Experiment& experiment);
 
   // Draws the spider representing the phenotype together with its text
   void draw(std::shared_ptr<Program>& prog, mmm::vec3 offset, bool bindTexture);
 
   static btStaticPlaneShape* plane;
-  static std::vector<Fitness> FITNESS_HANDLERS;
+
+  // Kills the spider, stopping the evaluation of it
+  void kill() const;
 
 private:
 
@@ -96,8 +98,5 @@ private:
 
   // Updates the fitness of the phenotype by
   // running the fitness handlers
-  void updateFitness(float deltaTime);
-
-  // Kills the spider, stopping the evaluation of it
-  void kill() const;
+  void updateFitness(const Experiment& experiment);
 };

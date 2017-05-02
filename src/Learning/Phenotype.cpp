@@ -10,6 +10,9 @@
 #include "../GlobalLog.hpp"
 
 #include "DrawablePhenotype.hpp"
+#include "Fitness.hpp"
+#include "Substrate.hpp"
+#include "../Experiments/Experiment.hpp"
 
 using mmm::vec2;
 using mmm::vec3;
@@ -165,8 +168,7 @@ Phenotype::Phenotype()
     , hasFinalized(false)
     , genomeId(0)
     , speciesIndex(0)
-    , individualIndex(0)
-    , numberOfInputs(0) {}
+    , individualIndex(0) {}
 
 Phenotype::~Phenotype() {}
 
@@ -291,11 +293,12 @@ void Phenotype::updatePrepareStanding(float deltaTime) {
  *
  * @param deltaTime
  */
-void Phenotype::update(float deltaTime) {
+void Phenotype::update(const Experiment& experiment) {
   // If the robot has been set to a fail state we ignore future simulations.
-  if (failed || network->m_connections.size() == 0)
+  if (failed)
     return;
 
+  float deltaTime = experiment.parameters().deltaTime;
   // If the duration is less than 0, prepare the robot
   // to be standing
   if (duration < 0.0)
@@ -306,112 +309,13 @@ void Phenotype::update(float deltaTime) {
 
   duration += deltaTime;
 
-
-  // Initialize the input list, which will contain many many elements.
-  std::vector<double> inputs;
-  inputs.reserve(numberOfInputs);
-
-  // // Add an input that gives some indication of time.
-  auto psin = mmm::sin(duration * 2.f);
-  auto pcos = mmm::cos(duration * 2.f);
-
-  inputs.push_back(-pcos);
-  inputs.push_back(-psin);
-  inputs.push_back(pcos);
-  inputs.push_back(psin);
-
-  auto q = parts["Sternum"].part->rigidBody()->getOrientation();
-  vec3 e = getEulerAngles(q.x(), q.y(), q.z(), q.w());
-
-  inputs.push_back(e.z);
-  inputs.push_back(e.y);
-  inputs.push_back(e.x);
-
-  inputs.push_back(collidesWithTerrain("TarsusL1") ? 1.0 : 0.0);
-  inputs.push_back(collidesWithTerrain("TarsusL2") ? 1.0 : 0.0);
-  inputs.push_back(collidesWithTerrain("TarsusL3") ? 1.0 : 0.0);
-  inputs.push_back(collidesWithTerrain("TarsusL4") ? 1.0 : 0.0);
-  inputs.push_back(collidesWithTerrain("TarsusR1") ? 1.0 : 0.0);
-  inputs.push_back(collidesWithTerrain("TarsusR2") ? 1.0 : 0.0);
-  inputs.push_back(collidesWithTerrain("TarsusR3") ? 1.0 : 0.0);
-  inputs.push_back(collidesWithTerrain("TarsusR4") ? 1.0 : 0.0);
-
-  {
-    vec3 l1 = fromVector(parts["TarsusL1"].part->rigidBody()->getCenterOfMassPosition());
-    vec3 l2 = fromVector(parts["TarsusL2"].part->rigidBody()->getCenterOfMassPosition());
-    vec3 l3 = fromVector(parts["TarsusL3"].part->rigidBody()->getCenterOfMassPosition());
-    vec3 l4 = fromVector(parts["TarsusL4"].part->rigidBody()->getCenterOfMassPosition());
-    vec3 r1 = fromVector(parts["TarsusR1"].part->rigidBody()->getCenterOfMassPosition());
-    vec3 r2 = fromVector(parts["TarsusR2"].part->rigidBody()->getCenterOfMassPosition());
-    vec3 r3 = fromVector(parts["TarsusR3"].part->rigidBody()->getCenterOfMassPosition());
-    vec3 r4 = fromVector(parts["TarsusR4"].part->rigidBody()->getCenterOfMassPosition());
-
-    inputs.push_back(mmm::length(l1 - l2));
-    inputs.push_back(mmm::length(l2 - l3));
-    inputs.push_back(mmm::length(l3 - l4));
-    inputs.push_back(mmm::length(r1 - r2));
-    inputs.push_back(mmm::length(r2 - r3));
-    inputs.push_back(mmm::length(r3 - r4));
-  }
-
-  for (auto& part : parts) {
-
-    if (!part.second.active)
-      continue;
-
-    // btRigidBody*     body         = part.second.part->rigidBody();
-    // const btVector3& centerOfMass = body->getCenterOfMassPosition();
-    // const btVector3& angularVel   = body->getAngularVelocity();
-    // const btVector3& linearVel    = body->getLinearVelocity();
-    // btVector3        relative     = centerOfMass - sternum;
-
-    // // Add whether or not the element colides with anything.
-    // inputs.push_back(collidesWithTerrain(body) ? 1.0 : 0.0);
-
-    // // Add the height of the element
-    // inputs.push_back(centerOfMass.y());
-
-    // // Add position of the element relative to the Sternum, which
-    // // represent the 0,0,0 point
-    // inputs.push_back(relative.x());
-    // inputs.push_back(relative.y());
-    // inputs.push_back(relative.z());
-
-    // // Add the current angular velocity of the element
-    // inputs.push_back(angularVel.x());
-    // inputs.push_back(angularVel.y());
-    // inputs.push_back(angularVel.z());
-
-    // // Add the current linear velocity of the element
-    // inputs.push_back(linearVel.x());
-    // inputs.push_back(linearVel.y());
-    // inputs.push_back(linearVel.z());
-
-    // Add the current rotation of the hinge for the element
-    if (part.second.hinge != nullptr) {
-
-      float rot = part.second.hinge->getHingeAngle();
-
-      if (part.second.hinge->hasLimit()) {
-        float low = part.second.hinge->getLowerLimit();
-        float up  = part.second.hinge->getUpperLimit();
-        rot = normalizeHingeAngle(rot, low, up, part.second.restAngle);
-      } else {
-        rot = normalizeHingeAngle(rot, -pi, pi, part.second.restAngle);
-      }
-
-      inputs.push_back(rot);
-
-    } else if (part.second.dof != nullptr) {
-      // TODO
-    }
-  }
+  std::vector<double> inputs = experiment.inputs(*this);
 
   // Throw error if the input is not equal to the expected number of inputs.
   // This is mostly for debugging as we may sometimes forget to add/remove
   // an input when we are adjusting the substrate
-  if (inputs.size() != numberOfInputs) {
-    mLog->error("Missing inputs. Expected: {}, Got: {}", inputs.size(), numberOfInputs);
+  if (inputs.size() != experiment.numInputs()) {
+    mLog->error("Missing inputs. Expected: {}, Got: {}", inputs.size(), experiment.numInputs());
     throw std::runtime_error("Phenotype missing inputs. See message above.");
   }
 
@@ -423,83 +327,14 @@ void Phenotype::update(float deltaTime) {
   // Activate the network, going through all connections and neurons
   // to set the activesum and activation values. The number of
   // times needed to activate depends on the depth of the network
-  for (int a = 0; a < 4; a++) {
-    network->Activate();
+  for (int a = 0; a < experiment.parameters().numActivates; a++) {
+    if (experiment.substrate()->m_leaky)
+      network->ActivateLeaky(deltaTime);
+    else
+      network->Activate();
   }
 
-  std::vector<double> outputs = network->Output();
-
-  // // set hinge motor targets based on network output
-  // size_t i = 0;
-  // for (auto& part : parts) {
-  //   if (part.second.hinge != nullptr) {
-
-  //     float currentAngle = part.second.hinge->getHingeAngle();
-  //     float velocity;
-
-  //     float maxMotorSpeed = 0.5f;
-
-  //     if (part.second.active) {
-
-  //       auto j = i;
-  //       if (part.first.find("L1") != std::string::npos ||
-  //           part.first.find("L3") != std::string::npos ||
-  //           part.first.find("R2") != std::string::npos ||
-  //           part.first.find("R4") != std::string::npos)
-  //         j += 1;
-
-  //       float low = part.second.hinge->getLowerLimit();
-  //       float up  = part.second.hinge->getUpperLimit();
-  //       float rot = denormalizeHingeAngle(outputs[j] * 2.0 - 1.0, low, up, part.second.restAngle);
-  //       velocity  = mmm::clamp((rot - currentAngle) * 10.f, -maxMotorSpeed, maxMotorSpeed);
-  //       // velocity = 2 * maxMotorSpeed * outputs[i] - maxMotorSpeed;
-  //     } else {
-  //       velocity = mmm::clamp(part.second.restAngle - currentAngle, -0.3f, 0.3f) * 16.0f;
-  //     }
-
-  //     part.second.hinge->enableAngularMotor(true, velocity, 16.f);
-
-  //     i += (part.second.active && part.first.find("R4") != std::string::npos) ? 1 : 0;
-  //   }
-  // }
-
-  // set hinge motor targets based on network output
-  size_t i = 0;
-  for (auto& part : parts) {
-    if (part.second.hinge != nullptr) {
-
-      float currentAngle = part.second.hinge->getHingeAngle();
-      float velocity;
-
-      float maxMotorSpeed = 0.5f;
-
-      // If the element is active, set the angle to an angle that is mutliplied so
-      // its between 2*PI and -2*PI
-      //
-      // If the element isnt active we wont punish the robot and set the part
-      // to a neutral angle that wont be in the way.
-      if (part.second.active) {
-
-        float low = part.second.hinge->getLowerLimit();
-        float up  = part.second.hinge->getUpperLimit();
-        float rot = denormalizeHingeAngle(outputs[i] * 2.0 - 1.0, low, up, part.second.restAngle);
-        velocity  = mmm::clamp((rot - currentAngle) * 10.f, -maxMotorSpeed, maxMotorSpeed);
-        // velocity = 2 * maxMotorSpeed * outputs[i] - maxMotorSpeed;
-      } else {
-        velocity = mmm::clamp(part.second.restAngle - currentAngle, -0.3f, 0.3f) * 16.0f;
-      }
-
-      part.second.hinge->enableAngularMotor(true, velocity, 16.f);
-
-      i += part.second.active ? 1 : 0;
-
-    } else if (part.second.dof != nullptr) {
-
-      // TODO
-
-      i += (part.second.active) ? 1 : 0;
-    }
-  }
+  experiment.outputs(*this, network->Output());
 
   // Finally, now that all things are set, lets keep updating the
   // physics
@@ -507,29 +342,7 @@ void Phenotype::update(float deltaTime) {
 
   // After the physics have been executed, evaluate the fitness
   // of the robot.
-  updateFitness(deltaTime);
-
-  // {
-  //   auto& l1 = parts["TrochanterL1"];
-  //   auto& l2 = parts["TrochanterL2"];
-  //   auto& l3 = parts["TrochanterL3"];
-  //   auto& l4 = parts["TrochanterL4"];
-  //   auto& r1 = parts["TrochanterR1"];
-  //   auto& r2 = parts["TrochanterR2"];
-  //   auto& r3 = parts["TrochanterR3"];
-  //   auto& r4 = parts["TrochanterR4"];
-
-  //   tmp.push_back(std::vector<float>{
-  //     normalizeHingeAngle(l1.hinge->getHingeAngle(), l1.hinge->getLowerLimit(), l1.hinge->getUpperLimit(), l1.restAngle),
-  //     normalizeHingeAngle(l2.hinge->getHingeAngle(), l2.hinge->getLowerLimit(), l2.hinge->getUpperLimit(), l2.restAngle),
-  //     normalizeHingeAngle(l3.hinge->getHingeAngle(), l3.hinge->getLowerLimit(), l3.hinge->getUpperLimit(), l3.restAngle),
-  //     normalizeHingeAngle(l4.hinge->getHingeAngle(), l4.hinge->getLowerLimit(), l4.hinge->getUpperLimit(), l4.restAngle),
-  //     normalizeHingeAngle(r1.hinge->getHingeAngle(), r1.hinge->getLowerLimit(), r1.hinge->getUpperLimit(), r1.restAngle),
-  //     normalizeHingeAngle(r2.hinge->getHingeAngle(), r2.hinge->getLowerLimit(), r2.hinge->getUpperLimit(), r2.restAngle),
-  //     normalizeHingeAngle(r3.hinge->getHingeAngle(), r3.hinge->getLowerLimit(), r3.hinge->getUpperLimit(), r3.restAngle),
-  //     normalizeHingeAngle(r4.hinge->getHingeAngle(), r4.hinge->getLowerLimit(), r4.hinge->getUpperLimit(), r4.restAngle)
-  //   });
-  // }
+  updateFitness(experiment);
 }
 
 /**
@@ -565,9 +378,10 @@ void Phenotype::draw(std::shared_ptr<Program>& prog,
  *
  * @param deltaTime
  */
-void Phenotype::updateFitness(float deltaTime) {
+void Phenotype::updateFitness(const Experiment& experiment) {
   int index = 0;
-  for(const auto& s : Phenotype::FITNESS_HANDLERS) {
+  float deltaTime = experiment.parameters().deltaTime;
+  for(const auto& s : experiment.fitnessFunctions()) {
     fitness[index] = s.runCalculation(*this, fitness[index], deltaTime);
     index += 1;
   }
@@ -604,11 +418,11 @@ bool Phenotype::hasBeenKilled() const {
  *
  * @return
  */
-float Phenotype::finalizeFitness() {
+float Phenotype::finalizeFitness(const Experiment& experiment) {
   hasFinalized = true;
 
   int index = 0;
-  for(const auto& s : Phenotype::FITNESS_HANDLERS) {
+  for(const auto& s : experiment.fitnessFunctions()) {
     fitness[index] = s.runFinalize(*this, fitness[index], duration);
     index += 1;
   }
@@ -634,8 +448,7 @@ float Phenotype::finalizeFitness() {
 void Phenotype::reset(int          speciesId,
                       int          speciesIndex,
                       int          individualIndex,
-                      unsigned int genomeId,
-                      unsigned int numInputs) {
+                      unsigned int genomeId) {
 
   // Create the world or reset it if it exists
   if (world == nullptr)
@@ -656,7 +469,7 @@ void Phenotype::reset(int          speciesId,
                                                       planeMotion,
                                                       plane,
                                                       btVector3(0, 0, 0));
-    consInfo.m_friction = 1.0;
+    consInfo.m_friction = 0.84;
     planeBody = new btRigidBody(consInfo);
     world->world()->addRigidBody(planeBody);
   }
@@ -699,9 +512,6 @@ void Phenotype::reset(int          speciesId,
   finalizedFitness = 0;
   duration         = -1;
   fitness          = mmm::vec<9>(0);
-  numberOfInputs   = numInputs;
-
-  // tmp.clear();
 
   this->speciesId       = speciesId;
   this->speciesIndex    = speciesIndex;
@@ -713,406 +523,3 @@ void Phenotype::reset(int          speciesId,
 // the Phenotype and is used by every instance of the Phenotype
 btStaticPlaneShape* Phenotype::plane =
   new btStaticPlaneShape(btVector3(0, 1, 0), 1);
-
-/*
- * Below here is where all the fitness handlers are defined
- *
- * Each of these handlers are run in the order that they are defined
- * and are expected to return a float value that describes the fitness.
- *
- * Each function receives a const copy of the phenotype that can be accessed
- * to assert the fitness of the phenotype. In addition to this, it also
- * receives the current fitness and deltatime.
- *
- * Multiple handlers gives you a clean way to defined multiple different
- * factors of what it should be measured on.
- *
- * All fitness values are finally summed together.
- *
- * The first parameter is the name of the Fitness function that should be a very
- * short description of what it measures.
- *
- * The next parameter is a longer description of the fitness function where you
- * can explain in more detail what it does.
- *
- * The third parameter is the fitness function that will be executed every update
- * to let you update the fitness value as you go.
- *
- * Lastly, the fourth parameter which is optional is a function that is executed
- * once the simulation is over to finalize the values. If this is not defined,
- * the current fitness will be returned.
- */
-std::vector<Fitness> Phenotype::FITNESS_HANDLERS = {
-
-  // Fitness(
-  //   "Speed     ",
-  //   R"( Kill spiders that are not moving fast enough, as an exponential function
-  //       of distance over time. )",
-  //   [](const auto& phenotype, float current, float deltaTime) -> float {
-  //     const auto& parts = phenotype.spider->parts();
-
-  //     auto* sternum = parts.at("Sternum").part->rigidBody();
-  //     auto  t       = sternum->getCenterOfMassPosition();
-
-  //     if (mmm::pow(phenotype.duration, 2.f) / 9.f > t.z() + 1.f)
-  //       phenotype.kill();
-
-  //     return current;
-  //   }
-  // ),
-
-  Fitness(
-    "Movement  ",
-    "Fitness based on movement in positive z direction.",
-    [](const auto& phenotype, float current, float) -> float {
-      const auto& parts = phenotype.spider->parts();
-      auto t = parts.at("Sternum").part->rigidBody()->getCenterOfMassPosition();
-      current = mmm::max(current, t.z());
-
-      if (current >= 8.f) {
-        phenotype.kill();
-        current = 18.f - phenotype.duration;
-      }
-
-      return current;
-    },
-    [](const auto&, float current, float) -> float {
-      return mmm::pow(current, 2.f);
-    }
-  ),
-
-
-  // Fitness(
-  //   "Legs      ",
-  //   "...",
-  //   [](const auto&, float current, float) -> float {
-  //     return current;
-  //   },
-  //   [](const auto& phenotype, float current, float) -> float {
-
-  //     auto p = phenotype.tmp[0];
-
-  //     for (auto x : phenotype.tmp) {
-  //       for (size_t i = 0; i < x.size(); ++i)
-  //         current += mmm::abs(x[i] - p[i]);
-  //       p = x;
-  //     }
-
-  //     return current;
-  //   }
-  // ),
-
-  // Fitness(
-  //   "Asymmetry ",
-  //   "...",
-  //   [](const auto&, float current, float) -> float {
-  //     return current;
-  //   },
-  //   [](const auto& phenotype, float current, float) -> float {
-
-  //     auto  p = phenotype.tmp[0];
-  //     float t = 0.0;
-
-  //     for (auto x : phenotype.tmp) {
-
-  //       float p1 = mmm::sign(mmm::sin(t * 2.f));
-  //       float p2 = -p1;
-
-  //       float l1 = x[0] - p[0];
-  //       float l2 = x[1] - p[1];
-  //       float l3 = x[2] - p[2];
-  //       float l4 = x[3] - p[3];
-  //       float r1 = x[4] - p[4];
-  //       float r2 = x[5] - p[5];
-  //       float r3 = x[6] - p[6];
-  //       float r4 = x[7] - p[7];
-
-  //       current += mmm::sign(l1) == p1 ? mmm::abs(l1) : -mmm::abs(l1);
-  //       current += mmm::sign(l2) == p2 ? mmm::abs(l2) : -mmm::abs(l2);
-  //       current += mmm::sign(l3) == p1 ? mmm::abs(l3) : -mmm::abs(l3);
-  //       current += mmm::sign(l4) == p2 ? mmm::abs(l4) : -mmm::abs(l4);
-
-  //       current += mmm::sign(r1) == p2 ? mmm::abs(r1) : -mmm::abs(r1);
-  //       current += mmm::sign(r2) == p1 ? mmm::abs(r2) : -mmm::abs(r2);
-  //       current += mmm::sign(r3) == p2 ? mmm::abs(r3) : -mmm::abs(r3);
-  //       current += mmm::sign(r4) == p1 ? mmm::abs(r4) : -mmm::abs(r4);
-
-  //       t += 1.f/60.f;
-  //       p = x;
-  //     }
-
-  //     return current;
-  //   }
-  // ),
-
-
-  // Fitness(
-  //   "Velocity.z",
-  //   "...",
-  //   [](const auto& phenotype, float current, float) -> float {
-  //     const auto& parts = phenotype.spider->parts();
-  //     float t = parts.at("Sternum").part->rigidBody()->getLinearVelocity().z();
-  //     return current + t;
-  //   }
-  // ),
-  // Fitness(
-  //   "Velocity.y",
-  //   "...",
-  //   [](const auto& phenotype, float current, float) -> float {
-  //     const auto& parts = phenotype.spider->parts();
-  //     float t = parts.at("Sternum").part->rigidBody()->getLinearVelocity().y();
-  //     return current + t;
-  //   },
-  //   [](const auto&, float current, float) -> float {
-  //     return - mmm::abs(current) * 8.f;
-  //   }
-  // ),
-  // Fitness(
-  //   "Velocity.x",
-  //   "...",
-  //   [](const auto& phenotype, float current, float) -> float {
-  //     const auto& parts = phenotype.spider->parts();
-  //     float t = parts.at("Sternum").part->rigidBody()->getLinearVelocity().x();
-  //     return current + t;
-  //   },
-  //   [](const auto&, float current, float) -> float {
-  //     return - mmm::abs(current) * 8.f;
-  //   }
-  // ),
-
-
-
-
-
-
-
-
-  // Fitness(
-  //   "Height    ",
-  //   "Fitness based on sternum height.",
-  //   [](const auto& phenotype, float current, float deltaTime) -> float {
-  //     const auto& parts   = phenotype.spider->parts();
-  //     auto*       sternum = parts.at("Sternum").part->rigidBody();
-  //     auto        t       = sternum->getCenterOfMassPosition();
-
-  //     current -= mmm::abs(t.y()) * deltaTime * 2.f;
-
-  //     return current;
-  //   }
-  // ),
-
-  // Fitness(
-  //   "StabilityX",
-  //   "Fitness based on sternum rotation.",
-  //   [](const auto& phenotype, float current, float deltaTime) -> float {
-  //     const auto& parts = phenotype.spider->parts();
-
-  //     auto* sternum = parts.at("Sternum").part->rigidBody();
-  //     auto  q       = sternum->getOrientation();
-  //     vec3  r       = getEulerAngles(q.x(), q.y(), q.z(), q.w());
-  //     auto  t       = sternum->getCenterOfMassPosition();
-
-  //     current -= mmm::abs(r.x) * deltaTime * 2.f;
-
-  //     return current;
-  //   }
-  // ),
-  // Fitness(
-  //   "StabilityY",
-  //   "Fitness based on sternum rotation.",
-  //   [](const auto& phenotype, float current, float deltaTime) -> float {
-  //     const auto& parts = phenotype.spider->parts();
-
-  //     auto* sternum = parts.at("Sternum").part->rigidBody();
-  //     auto  q       = sternum->getOrientation();
-  //     vec3  r       = getEulerAngles(q.x(), q.y(), q.z(), q.w());
-  //     auto  t       = sternum->getCenterOfMassPosition();
-
-  //     r.y += mmm::radians(90.f);
-  //     r = mmm::abs(r);
-
-  //     current -= mmm::abs(r.y) * deltaTime * 2.f;
-
-  //     return current;
-  //   }
-  // ),
-  // Fitness(
-  //   "StabilityZ",
-  //   "Fitness based on sternum rotation.",
-  //   [](const auto& phenotype, float current, float deltaTime) -> float {
-  //     const auto& parts = phenotype.spider->parts();
-
-  //     auto* sternum = parts.at("Sternum").part->rigidBody();
-  //     auto  q       = sternum->getOrientation();
-  //     vec3  r       = getEulerAngles(q.x(), q.y(), q.z(), q.w());
-  //     auto  t       = sternum->getCenterOfMassPosition();
-
-  //     r = mmm::abs(r);
-
-  //     current -= mmm::abs(r.z) * deltaTime * 2.f;
-
-  //     return current;
-  //   }
-  // ),
-
-  // Fitness(
-  //   "Strafe    ",
-  //   "Fitness based on movement in x direction.",
-  //   [](const auto& phenotype, float current, float deltaTime) -> float {
-  //     const auto& parts = phenotype.spider->parts();
-
-  //     auto* sternum = parts.at("Sternum").part->rigidBody();
-  //     auto  t       = sternum->getCenterOfMassPosition();
-
-  //     current -= mmm::abs(t.x()) * deltaTime * 2.f;
-
-  //     return current;
-  //   }
-  // ),
-
-
-
-  Fitness(
-    "FacePlant ",
-    "plz, don't do this...",
-    [](const auto& phenotype, float current, float deltaTime) -> float {
-
-      if (phenotype.collidesWithTerrain("TrochanterL1") ||
-          phenotype.collidesWithTerrain("TrochanterL2") ||
-          phenotype.collidesWithTerrain("TrochanterL3") ||
-          phenotype.collidesWithTerrain("TrochanterL4") ||
-          phenotype.collidesWithTerrain("TrochanterR1") ||
-          phenotype.collidesWithTerrain("TrochanterR2") ||
-          phenotype.collidesWithTerrain("TrochanterR3") ||
-          phenotype.collidesWithTerrain("TrochanterR4") ||
-          phenotype.collidesWithTerrain("FemurL1") ||
-          phenotype.collidesWithTerrain("FemurL2") ||
-          phenotype.collidesWithTerrain("FemurL3") ||
-          phenotype.collidesWithTerrain("FemurL4") ||
-          phenotype.collidesWithTerrain("FemurR1") ||
-          phenotype.collidesWithTerrain("FemurR2") ||
-          phenotype.collidesWithTerrain("FemurR3") ||
-          phenotype.collidesWithTerrain("FemurR4") ||
-          phenotype.collidesWithTerrain("PatellaL1") ||
-          phenotype.collidesWithTerrain("PatellaL2") ||
-          phenotype.collidesWithTerrain("PatellaL3") ||
-          phenotype.collidesWithTerrain("PatellaL4") ||
-          phenotype.collidesWithTerrain("PatellaR1") ||
-          phenotype.collidesWithTerrain("PatellaR2") ||
-          phenotype.collidesWithTerrain("PatellaR3") ||
-          phenotype.collidesWithTerrain("PatellaR4") ||
-          phenotype.collidesWithTerrain("Abdomin") ||
-          phenotype.collidesWithTerrain("Hip") ||
-          phenotype.collidesWithTerrain("Sternum") ||
-          phenotype.collidesWithTerrain("Neck") ||
-          phenotype.collidesWithTerrain("Eye")) {
-        phenotype.kill();
-        // return -(100.f - phenotype.duration);
-      }
-
-      return current;
-    }
-  ),
-
-  // Fitness(
-  //   "Speed     ",
-  //   R"( Kill spiders that are not moving fast enough, as an exponential function
-  //       of distance over time. )",
-  //   [](const auto& phenotype, float current, float deltaTime) -> float {
-  //     const auto& parts = phenotype.spider->parts();
-
-  //     auto* sternum = parts.at("Sternum").part->rigidBody();
-  //     auto  t       = sternum->getCenterOfMassPosition();
-
-  //     if (mmm::pow(phenotype.duration, 2.f) / 8.f > t.z() + 1.f)
-  //       phenotype.kill();
-
-  //     return current;
-  //   }
-  // ),
-
-  // Fitness(
-  //   "Movement  ",
-  //   "Fitness based on movement is positive z direction.",
-  //   [](const auto& phenotype, float current, float) -> float {
-  //     const auto& parts = phenotype.spider->parts();
-  //     auto t = parts.at("Sternum").part->rigidBody()->getCenterOfMassPosition();
-  //     return mmm::max(current, t.z() + 1.f);
-  //   }
-  // ),
-
-
-  // Fitness(
-  //   "Collision  ",
-  //   "Fitness based on height with Sternum",
-  //   [](const Phenotype& phenotype, float current, float dt) -> float {
-  //     const auto& parts = phenotype.spider->parts();
-
-  //     auto body = parts.at("Sternum").part->rigidBody();
-  //     auto h    = body->getCenterOfMassPosition().y();
-  //     auto q    = body->getOrientation();
-  //     auto v    = getEulerAngles(q.x(), q.y(), q.z(), q.w());
-
-  //     float hasTooSteepAngles = 1;
-  //     hasTooSteepAngles *= score(dt, v.x, mmm::radians(35.f));
-  //     hasTooSteepAngles *= score(dt, v.z, mmm::radians(35.f));
-  //     hasTooSteepAngles *= score(dt, v.y + mmm::radians(90.f), mmm::radians(50.f));
-
-  //     // If the angle of sternum is too far away from stable
-  //     if (hasTooSteepAngles < 1.0) {
-  //       /* phenotype.kill(); */
-  //       return current;
-  //     }
-
-  //     // If the height is too low or too high
-  //     if (h > 1.9) {
-  //       /* debug("Killed {}-{} due to height", phenotype.speciesIndex, phenotype.individualIndex); */
-  //       /* phenotype.kill(); */
-  //       return current;
-  //     }
-
-  //     // If any of the important pieces are hitting the floor
-  //     if (phenotype.collidesWithTerrain(body) ||
-  //         phenotype.collidesWithTerrain("Eye") ||
-  //         phenotype.collidesWithTerrain("Neck")) {
-  //        debug("Killed {}-{} due to Eye/Neck/Sternum", phenotype.speciesIndex, phenotype.individualIndex);
-  //       /* phenotype.kill(); */
-  //       return current;
-  //     }
-
-  //     // If even more parts of its legs are hitting the floor
-  //     if (phenotype.collidesWithTerrain("PatellaL1") ||
-  //         phenotype.collidesWithTerrain("PatellaL2") ||
-  //         phenotype.collidesWithTerrain("PatellaL3") ||
-  //         phenotype.collidesWithTerrain("PatellaL4") ||
-  //         phenotype.collidesWithTerrain("PatellaR1") ||
-  //         phenotype.collidesWithTerrain("PatellaR2") ||
-  //         phenotype.collidesWithTerrain("PatellaR3") ||
-  //         phenotype.collidesWithTerrain("PatellaR4")) {
-  //       /* debug("Killed {}-{} due to patella", phenotype.speciesIndex, phenotype.individualIndex); */
-  //       /* phenotype.kill(); */
-  //       return current;
-  //     }
-
-  //     // Lastly, it shouldnt rest on the bendy bit by the sternum
-  //     if (phenotype.collidesWithTerrain("FemurL1") ||
-  //         phenotype.collidesWithTerrain("FemurL2") ||
-  //         phenotype.collidesWithTerrain("FemurL3") ||
-  //         phenotype.collidesWithTerrain("FemurL4") ||
-  //         phenotype.collidesWithTerrain("FemurR1") ||
-  //         phenotype.collidesWithTerrain("FemurR2") ||
-  //         phenotype.collidesWithTerrain("FemurR3") ||
-  //         phenotype.collidesWithTerrain("FemurR4")) {
-  //       /* debug("Killed {}-{} due to femur", phenotype.speciesIndex, phenotype.individualIndex); */
-  //       /* phenotype.kill(); */
-  //       return current;
-  //     }
-
-  //     // If it passed all these tests, yay for it.
-  //     return current + dt;
-  //   },
-  //   [](const Phenotype&, float current, float) -> float {
-  //     return current - 1;
-  //   }
-  // )
-};
