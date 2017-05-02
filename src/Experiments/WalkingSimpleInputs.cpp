@@ -1,36 +1,13 @@
 #include "WalkingSimpleInputs.hpp"
 
+#include "ExperimentUtil.hpp"
+
 #include "../Learning/Phenotype.hpp"
 #include "../Learning/Substrate.hpp"
 
 #include <btBulletDynamicsCommon.h>
 
 const float PI = mmm::constants<float>::pi;
-
-/**
- * @brief
- *   Normalizes the hinge angle between -1 and 1 depending
- *   on what `low` and `up`.
- *
- * @param angle
- * @param low
- * @param up
- * @param rest
- *
- * @return
- */
-float normalizeAngle(float angle, float low, float up, float rest) {
-  if (angle < low)
-    angle += 2.f * mmm::constants<float>::pi;
-  if (angle > up)
-    angle -= 2.f * mmm::constants<float>::pi;
-
-  if (angle - rest == 0.f)
-    return 0.f;
-
-  return angle < rest ? -(angle - rest) / (low - rest)
-                      : (angle - rest) / (up - rest);
-};
 
 WalkingSimpleInputs::WalkingSimpleInputs() : Experiment("WalkingSimpleInputs") {
 
@@ -558,7 +535,7 @@ void WalkingSimpleInputs::outputs(Phenotype&                 p,
 
     if (part.second.active) {
       float output = outputs[index];
-      currentAngle = normalizeAngle(currentAngle, -PI, PI, 0);
+      currentAngle = ExpUtil::normalizeAngle(currentAngle, -PI, PI, 0);
       velocity     = currentAngle - output;
       index++;
     } else {
