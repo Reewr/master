@@ -1,5 +1,7 @@
 #include "ExperimentUtil.hpp"
 
+#include <btBulletDynamicsCommon.h>
+
 /**
  * @brief
  *   Calculates a score based on on the `zeroIsBest` value.
@@ -12,7 +14,7 @@
  *
  * @return
  */
-float ExpUtil::score(float deltaTime, float zeroIsBest, float bias = 0.05f) {
+float ExpUtil::score(float deltaTime, float zeroIsBest, float bias) {
   return 1.f / (mmm::max(mmm::abs(zeroIsBest) - bias, 0.f) * deltaTime + 1.f);
 };
 
@@ -66,7 +68,7 @@ mmm::vec3 ExpUtil::getEulerAngles(float x, float y, float z, float w) {
  *
  * @return
  */
-mmm::vec3 ExpUtil::getEulerAngles(const btQuaterion& q) {
+mmm::vec3 ExpUtil::getEulerAngles(const btQuaternion& q) {
   return getEulerAngles(q.x(), q.y(), q.z(), q.w());
 }
 
@@ -79,7 +81,7 @@ mmm::vec3 ExpUtil::getEulerAngles(const btQuaterion& q) {
  * @return
  */
 mmm::vec3 ExpUtil::fromVector(const btVector3& v) {
-  return vec3(v.x(), v.y(), v.z());
+  return mmm::vec3(v.x(), v.y(), v.z());
 }
 
 

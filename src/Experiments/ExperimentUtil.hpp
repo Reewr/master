@@ -1,5 +1,10 @@
 #pragma once
 
+#include <mmm.hpp>
+
+class btQuaternion;
+class btVector3;
+
 // This file contains functions that are useful while doing experiments
 
 namespace ExpUtil {
@@ -15,8 +20,8 @@ namespace ExpUtil {
   mmm::vec3 fromVector(const btVector3& v);
 
   // normalizes an angle between low and up where rest is considered 0
-  float normalizeHingeAngle(float angle, float low, float up, float rest);
+  float normalizeAngle(float angle, float low, float up, float rest);
 
   // Opposite normalize
-  float denormalizeHingeAngle(float p, float low, float up, float rest);
+  float denormalizeAngle(float p, float low, float up, float rest);
 }
