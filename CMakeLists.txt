@@ -209,6 +209,7 @@ set(SOURCE_FILES
   ${SRC_DIR}/Experiments/Experiment.cpp
   ${SRC_DIR}/Experiments/ExperimentUtil.cpp
   ${SRC_DIR}/Experiments/WalkingSimpleInputs.cpp
+  ${SRC_DIR}/Experiments/StandingSimpleInputs.cpp
 
   # src/Learning
   ${SRC_DIR}/Learning/SpiderSwarm.cpp
@@ -314,6 +315,7 @@ set(HEADER_FILES
   ${SRC_DIR}/Experiments/Experiment.hpp
   ${SRC_DIR}/Experiments/ExperimentUtil.hpp
   ${SRC_DIR}/Experiments/WalkingSimpleInputs.hpp
+  ${SRC_DIR}/Experiments/StandingSimpleInputs.hpp
 
   # src/Learning
   ${SRC_DIR}/Learning/SpiderSwarm.hpp

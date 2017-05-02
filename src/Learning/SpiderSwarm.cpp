@@ -6,6 +6,7 @@
 #include "Substrate.hpp"
 
 #include "../Experiments/WalkingSimpleInputs.hpp"
+#include "../Experiments/StandingSimpleInputs.hpp"
 
 #include <btBulletDynamicsCommon.h>
 #include <thread>
@@ -74,7 +75,8 @@ SpiderSwarm::SpiderSwarm()
   NEAT::RNG rng;
   rng.TimeSeed();
 
-  mCurrentExperiment = new WalkingSimpleInputs();
+  //mCurrentExperiment = new WalkingSimpleInputs();
+  mCurrentExperiment = new StandingSimpleInputs();
   mPopulation = mCurrentExperiment->population();
   mSubstrate  = mCurrentExperiment->substrate();
 
