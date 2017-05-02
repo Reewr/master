@@ -293,7 +293,7 @@ void Phenotype::updatePrepareStanding(float deltaTime) {
  */
 void Phenotype::update(float deltaTime) {
   // If the robot has been set to a fail state we ignore future simulations.
-  if (failed)
+  if (failed || network->m_connections.size() == 0)
     return;
 
   // If the duration is less than 0, prepare the robot
