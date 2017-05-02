@@ -694,6 +694,9 @@ void SpiderSwarm::updateEpoch() {
 
   mStats.addEntry(mPhenotypes, mGeneration);
 
+  // Log some information about the generation that just finished
+  // excuting, such as the best fitness overall and the best
+  // for each species, together with the individual fitness values
   mLog->info("Generation {}", mGeneration);
   mLog->info("Best of current generation {}, Best of all: {} ({})",
              best,
@@ -726,8 +729,10 @@ void SpiderSwarm::updateEpoch() {
 
     // Print out aligned fitness names and their values
     for (auto& f : mCurrentExperiment->fitnessFunctions()) {
-      std::string name =
-        f.name() + std::string(" ", mmm::max(maxLength - f.name().size(), 0));
+      std::string name = f.name();
+
+      if (name.size() < maxLength)
+        name.append(maxLength - name.size(), ' ');
 
       mLog->info("  {}: {}", name, p.fitness[j]);
       j += 1;

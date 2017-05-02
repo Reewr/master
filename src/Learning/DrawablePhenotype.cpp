@@ -200,11 +200,6 @@ void DrawablePhenotype::recreate(const NEAT::NeuralNetwork& network,
     const NEAT::Neuron& source = network.m_neurons[conn.m_source_neuron_idx];
     const NEAT::Neuron& target = network.m_neurons[conn.m_target_neuron_idx];
 
-    if (source.m_type != NEAT::NeuronType::INPUT &&
-        target.m_type != NEAT::NeuronType::OUTPUT)
-      continue;
-
-
     // double thickness =
     //   mmm::clamp(scale(conn.m_weight, 0, maxWeight, 1, maxLineThickness),
     //              1,
@@ -336,8 +331,8 @@ void DrawablePhenotype::recreate(const NEAT::NeuralNetwork& network,
 
 void DrawablePhenotype::recreate(const NEAT::NeuralNetwork& network,
                                  mmm::vec2                  size) {
-  // double rectDiv          = size.x / 15.0;
-  // double maxLineThickness = 3.0;
+  double rectDiv          = size.x / 15.0;
+  /* double maxLineThickness = 3.0; */
   double magn             = 255.0;
   double neuronRadius     = 15;
 
@@ -418,13 +413,13 @@ void DrawablePhenotype::recreate(const NEAT::NeuralNetwork& network,
     float x = scale(neuron.m_substrate_coords[0],
                     minValues.x,
                     maxValues.x,
-                    0,
-                    size.x - 0);
+                    rectDiv,
+                    size.x - rectDiv);
     float y = scale(neuron.m_substrate_coords[1],
                     minValues.y,
                     maxValues.y,
-                    0,
-                    size.y - 0);
+                    rectDiv,
+                    size.y - rectDiv);
 
     filled.point  = vec4(x, y, 0.0, 0.0);
     outline.point = vec4(x, y, 0.0, 0.0);

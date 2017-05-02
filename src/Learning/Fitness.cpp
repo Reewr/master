@@ -81,6 +81,6 @@ const std::string& Fitness::name() const {
  * @return
  */
 std::ostream& operator<<(std::ostream& os, const Fitness& fitness) {
-  os << fitness.desc();
+  os << fitness.name();
   return os;
 }
