@@ -223,7 +223,7 @@ std::map<std::string, Spider::Part> Spider::SPIDER_PARTS =
       { 0b0001001000000000, 0b1010110111111111, radians(35), true } },
     { "FemurR4",
       { 0b0001000100000000, 0b1010111011111111, radians(35), true } },
-    { "Hip", { 0b0100000000000000, 0b0011111111111111, radians(18), false } },
+    { "Hip", { 0b0100000000000000, 0b0011111111111111, radians(25), false } },
     { "Neck", { 0b0100000000000000, 0b0011111111111111, radians(0), false } },
     { "PatellaL1",
       { 0b0010100000000000, 0b1101011111111111, radians(-45), true } },
