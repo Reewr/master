@@ -34,7 +34,7 @@ StandingSimpleInputs::StandingSimpleInputs() : Experiment("StandingSimpleInputs"
               return current + dt;
             },
             [](const Phenotype& p, float current, float duration) -> float {
-              return current;
+              return current * 2 / duration;
             }),
     Fitness("Resting angles",
             "Fitness based on movement in positive z direction.",
@@ -570,7 +570,7 @@ void StandingSimpleInputs::outputs(Phenotype&                 p,
     if (part.second.active) {
       float output = outputs[index];
       currentAngle = ExpUtil::normalizeAngle(currentAngle, -PI, PI, 0);
-      velocity     = currentAngle - output;
+      velocity     = output - currentAngle;
       index++;
     } else {
       velocity = mmm::clamp(part.second.restAngle - currentAngle, -0.3f, 0.3f) * 16.0f;
