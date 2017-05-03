@@ -195,6 +195,7 @@ void Phenotype::update(const Experiment& experiment) {
     return;
 
   float deltaTime = experiment.parameters().deltaTime;
+
   // If the duration is less than 0, prepare the robot
   // to be standing
   if (duration < 0.0)
@@ -313,6 +314,8 @@ bool Phenotype::hasBeenKilled() const {
  */
 float Phenotype::finalizeFitness(const Experiment& experiment) {
   hasFinalized = true;
+
+  duration = experiment.parameters().experimentDuration;
 
   int index = 0;
   for(const auto& s : experiment.fitnessFunctions()) {
