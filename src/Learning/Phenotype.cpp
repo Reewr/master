@@ -209,7 +209,7 @@ void Phenotype::update(const Experiment& experiment) {
   // This is mostly for debugging as we may sometimes forget to add/remove
   // an input when we are adjusting the substrate
   if (inputs.size() != experiment.numInputs()) {
-    mLog->error("Missing inputs. Expected: {}, Got: {}", inputs.size(), experiment.numInputs());
+    mLog->error("Missing inputs. Expected: {}, Got: {}", experiment.numInputs(), inputs.size());
     throw std::runtime_error("Phenotype missing inputs. See message above.");
   }
 
