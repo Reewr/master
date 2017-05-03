@@ -7,6 +7,7 @@
 
 #include "../Experiments/WalkingSimpleInputs.hpp"
 #include "../Experiments/StandingSimpleInputs.hpp"
+#include "../Experiments/WalkingRotationInputs.hpp"
 
 #include <btBulletDynamicsCommon.h>
 #include <thread>
@@ -75,7 +76,8 @@ SpiderSwarm::SpiderSwarm()
   rng.TimeSeed();
 
   //mCurrentExperiment = new WalkingSimpleInputs();
-  mCurrentExperiment = new StandingSimpleInputs();
+  //mCurrentExperiment = new StandingSimpleInputs();
+  mCurrentExperiment = new WalkingRotationInputs();
   mPopulation = mCurrentExperiment->population();
   mSubstrate  = mCurrentExperiment->substrate();
 
