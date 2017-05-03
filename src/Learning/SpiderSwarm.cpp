@@ -40,7 +40,6 @@ SpiderSwarm::SpiderSwarm()
     , mBatchSize(7)
     , mGeneration(0)
     , mCurrentDuration(0)
-    , mIterationDuration(11)
     , mBestPossibleFitness(-99999)
     , mBestPossibleFitnessGeneration(-99999)
     , mDrawDebugNetworks(false)
@@ -188,7 +187,7 @@ void SpiderSwarm::update(float deltaTime) {
   if (mCurrentDuration == 0)
     mLog->debug("Processing {} individuals", mBatchEnd - mBatchStart);
 
-  if (mCurrentDuration < mIterationDuration) {
+  if (mCurrentDuration < mCurrentExperiment->parameters().experimentDuration) {
     updateNormal(deltaTime);
   } else if (mBatchEnd < mPhenotypes.size()) {
     setNextBatch();
@@ -200,7 +199,7 @@ void SpiderSwarm::update(float deltaTime) {
   if (mCurrentDuration == 0)
     mLog->debug("Processing {} individuals", mPhenotypes.size());
 
-  if (mCurrentDuration < mIterationDuration) {
+  if (mCurrentDuration < mCurrentExperiment->parameters().experimentDuration) {
     updateThreadBatches(deltaTime);
   } else {
     updateEpoch();
@@ -482,27 +481,6 @@ void SpiderSwarm::loadSubstrate(const std::string& filename) {
  */
 float SpiderSwarm::currentDuration() {
   return mCurrentDuration;
-}
-
-/**
- * @brief
- *   Returns the set iteration duration
- *
- * @return
- */
-float SpiderSwarm::iterationDuration() {
-  return mIterationDuration;
-}
-
-/**
- * @brief
- *   Sets the simulation duration of the phenotypes.
- *   The value represents seconds
- *
- * @param x
- */
-void SpiderSwarm::setIterationDuration(float x) {
-  mIterationDuration = x;
 }
 
 /**

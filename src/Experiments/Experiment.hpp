@@ -17,6 +17,12 @@ struct ExperimentParameters {
 
   // Performs the static deltaTime that should be used.
   float deltaTime  = 1.0f / 60.f;
+
+  // Sets the experiment duration
+  unsigned int experimentDuration = 10;
+
+  // Sets the preperation duration
+  unsigned int preperationDuration = 1;
 };
 
 /**

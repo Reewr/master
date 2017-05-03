@@ -100,8 +100,6 @@ public:
   void loadSubstrate(const std::string& filename);
 
   float currentDuration();
-  float iterationDuration();
-  void setIterationDuration(float x);
 
   // Returns a reference to the parameter
   NEAT::Parameters& parameters();
@@ -128,7 +126,6 @@ private:
   size_t mGeneration;
 
   float mCurrentDuration;
-  float mIterationDuration;
   float mBestPossibleFitness;
   unsigned int mBestPossibleFitnessGeneration;
 
