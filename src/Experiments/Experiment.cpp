@@ -3,7 +3,7 @@
 #include <Population.h>
 #include "../Learning/Substrate.hpp"
 
-Experiment::Experiment(const std::string& name) : mName(name) {}
+Experiment::Experiment(const std::string& name) : Logging::Log(name), mName(name) {}
 Experiment::~Experiment() {}
 
 Substrate* Experiment::substrate() const {

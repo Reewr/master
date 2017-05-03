@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "../Learning/Fitness.hpp"
+#include "../Log.hpp"
 
 #include <Genome.h>
 #include <Population.h>
@@ -34,7 +35,7 @@ struct ExperimentParameters {
  *   also set what fitness functions to use, what input to add and lastly
  *   how to use the output.
  */
-class Experiment {
+class Experiment : public Logging::Log {
 public:
 
   virtual ~Experiment();
