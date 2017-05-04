@@ -8,6 +8,7 @@
 #include "../Experiments/WalkingSimpleInputs.hpp"
 #include "../Experiments/StandingSimpleInputs.hpp"
 #include "../Experiments/WalkingRotationInputs.hpp"
+#include "../Experiments/WalkingRotationNoKill.hpp"
 
 #include <btBulletDynamicsCommon.h>
 #include <thread>
@@ -77,7 +78,8 @@ SpiderSwarm::SpiderSwarm()
 
   //mCurrentExperiment = new WalkingSimpleInputs();
   //mCurrentExperiment = new StandingSimpleInputs();
-  mCurrentExperiment = new WalkingRotationInputs();
+  //mCurrentExperiment = new WalkingRotationInputs();
+  mCurrentExperiment = new WalkingRotationNoKill();
   mPopulation = mCurrentExperiment->population();
   mSubstrate  = mCurrentExperiment->substrate();
 
