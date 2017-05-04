@@ -404,25 +404,6 @@ void SpiderSwarm::load(const std::string& filename) {
   mStats               = Statistics();
 
   mLog->info("Loaded from file: {}", filename);
-  mLog->debug(R"(Substrate
-    input -> hidden: {}
-    input -> output: {}
-    hidden -> hidden: {}
-    hidden -> output: {}
-    output -> hidden: {}
-    output -> output: {}
-    looped hidden: {}
-    looped output: {}
-    )",
-      mSubstrate->m_allow_input_hidden_links,
-      mSubstrate->m_allow_input_output_links,
-      mSubstrate->m_allow_hidden_hidden_links,
-      mSubstrate->m_allow_hidden_output_links,
-      mSubstrate->m_allow_output_hidden_links,
-      mSubstrate->m_allow_output_output_links,
-      mSubstrate->m_allow_looped_hidden_links,
-      mSubstrate->m_allow_looped_output_links
-      );
 
   recreatePhenotypes();
 }
