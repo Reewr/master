@@ -197,7 +197,8 @@ void Phenotype::update(const Experiment& experiment) {
   if (failed)
     return;
 
-  float deltaTime = experiment.parameters().deltaTime;
+  const ExperimentParameters& expParams = experiment.parameters();
+  float deltaTime = expParams.deltaTime;
 
   // If the duration is less than 0, prepare the robot
   // to be standing
@@ -221,11 +222,29 @@ void Phenotype::update(const Experiment& experiment) {
   network->Flush();
   network->Input(inputs);
 
+  // If using HyperNEAT, use the numActivates variable.
+  // If using ESHyperNEAT activate in the following way:
+  //
+  // IterationLevel describes how many hidden layers, where 0 = 1 hidden layer
+  // In order to activate properly, it has to be activated as many times
+  // as the number of hidden layers + 1, therefore:
+  //  0 IterationLevel = 1 Hidden Layer  = 2 Activations
+  //  1 IterationLevel = 2 Hidden Layers = 3 Activations
+  //  ...
+  //  and so on
+  int numActivates = expParams.useESHyperNEAT ?
+                     experiment.neatParameters().IterationLevel + 2 :
+                     expParams.numActivates;
+
   // Activate the network, going through all connections and neurons
   // to set the activesum and activation values. The number of
   // times needed to activate depends on the depth of the network
-  for (int a = 0; a < experiment.parameters().numActivates; a++) {
-    if (experiment.substrate()->m_leaky)
+  //
+  for (int a = 0; a < numActivates; a++) {
+
+    // ESHyperNEAT does not support leaky as the bias and timeconst variables
+    // never change.
+    if (experiment.substrate()->m_leaky && !expParams.useESHyperNEAT)
       network->ActivateLeaky(deltaTime);
     else
       network->Activate();
