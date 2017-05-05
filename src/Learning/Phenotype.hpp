@@ -48,7 +48,7 @@ struct Phenotype : Logging::Log {
 
   std::vector<double> previousOutput;
 
-  // std::vector<std::vector<float>> tmp;
+  mutable std::vector<std::vector<float>> tmp;
 
   mutable bool failed;
   float        finalizedFitness;

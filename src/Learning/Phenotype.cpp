@@ -261,6 +261,8 @@ void Phenotype::update(const Experiment& experiment) {
   // After the physics have been executed, evaluate the fitness
   // of the robot.
   updateFitness(experiment);
+
+  experiment.postUpdate(*this);
 }
 
 /**
@@ -430,6 +432,8 @@ void Phenotype::reset(int          speciesId,
   duration         = -1;
   fitness          = mmm::vec<9>(0);
   initialPosition  = mmm::vec3();
+
+  tmp.clear();
 
   this->speciesId       = speciesId;
   this->speciesIndex    = speciesIndex;

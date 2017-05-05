@@ -84,6 +84,10 @@ public:
   // Tells the experiment to retrieve inputs
   virtual std::vector<double> inputs(const Phenotype& p) const = 0;
 
+  virtual void postUpdate(const Phenotype& p) const {
+    // by default do nothing
+  };
+
 protected:
   Experiment(const std::string& name);
 
