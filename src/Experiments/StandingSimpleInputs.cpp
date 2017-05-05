@@ -13,7 +13,7 @@ StandingSimpleInputs::StandingSimpleInputs() : Experiment("StandingSimpleInputs"
 
   mFitnessFunctions =
   { Fitness("No movements",
-            "Fitness based on movement in positive z direction.",
+            "Makes sure the movement is close to zero",
             [](const Phenotype& p, float current, float dt) -> float {
               if (current == 0)
                 current = 1.0;
@@ -27,7 +27,7 @@ StandingSimpleInputs::StandingSimpleInputs() : Experiment("StandingSimpleInputs"
                      ExpUtil::score(dt, massPos.x()) * current;
             }),
     Fitness("Time Alive",
-            "Fitness based on movement in positive z direction.",
+            "How long the robot has been alive",
             [](const Phenotype& p, float current, float dt) -> float {
               if (p.hasBeenKilled())
                 return current;
@@ -37,7 +37,7 @@ StandingSimpleInputs::StandingSimpleInputs() : Experiment("StandingSimpleInputs"
               return current * 2 / duration;
             }),
     Fitness("Resting angles",
-            "Fitness based on movement in positive z direction.",
+            "How close the angles are to resting angles",
             [](const Phenotype& p, float current, float dt) -> float {
               if (current == 0)
                 current = 1.0;
