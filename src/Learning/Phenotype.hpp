@@ -46,6 +46,8 @@ struct Phenotype : Logging::Log {
   mmm::vec<9>  fitness;
   mmm::vec3 initialPosition;
 
+  std::vector<double> previousOutput;
+
   // std::vector<std::vector<float>> tmp;
 
   mutable bool failed;

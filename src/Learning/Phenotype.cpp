@@ -250,7 +250,9 @@ void Phenotype::update(const Experiment& experiment) {
       network->Activate();
   }
 
-  experiment.outputs(*this, network->Output());
+  std::vector<double> output = network->Output();
+  experiment.outputs(*this, output);
+  previousOutput = output;
 
   // Finally, now that all things are set, lets keep updating the
   // physics
@@ -435,6 +437,8 @@ void Phenotype::reset(int          speciesId,
   this->speciesIndex    = speciesIndex;
   this->individualIndex = individualIndex;
   this->genomeId        = genomeId;
+
+  previousOutput.clear();
 }
 
 // In order to save memory, this shape is stored statically on
