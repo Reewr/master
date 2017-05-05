@@ -690,7 +690,7 @@ void SpiderSwarm::updateEpoch() {
                p.hasBeenKilled() ? " (killed)" : "");
 
     size_t j = 0;
-    int maxLength = 0;
+    unsigned int maxLength = 0;
 
     // Find the longest name so alignment can be done
     for (auto& f : mCurrentExperiment->fitnessFunctions())
