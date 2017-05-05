@@ -64,8 +64,13 @@ public:
   // Returns the fitness functions
   const std::vector<Fitness>& fitnessFunctions() const;
 
-  // How to merge the fitness values into one value
-  float mergeFitnessValues(const mmm::vec<9>& fitnesses) const;
+  // Optional: Allows you to set values on the phenotype
+  // before a simulation is started
+  virtual void initPhenotype(Phenotype& p) const;
+
+  // Optional: How to merge the fitness values into one value
+  // Default behaviour is to sum all fitness values
+  virtual float mergeFitnessValues(const mmm::vec<9>& fitnesses) const;
 
   // Tells the experiment to use the outputs from the network
   virtual void outputs(Phenotype& p, const std::vector<double>& outputs) const = 0;

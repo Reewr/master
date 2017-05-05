@@ -48,6 +48,8 @@ const std::vector<Fitness>& Experiment::fitnessFunctions() const {
   return mFitnessFunctions;
 }
 
+void Experiment::initPhenotype(Phenotype&) const {}
+
 float Experiment::mergeFitnessValues(const mmm::vec<9>& fitnesses) const {
   return mmm::sum(fitnesses);
 }
