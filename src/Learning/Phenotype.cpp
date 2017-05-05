@@ -326,7 +326,7 @@ float Phenotype::finalizeFitness(const Experiment& experiment) {
     index += 1;
   }
 
-  finalizedFitness = mmm::sum(fitness);
+  finalizedFitness = experiment.mergeFitnessValues(fitness);
 
   return finalizedFitness;
 }

@@ -47,3 +47,7 @@ unsigned int Experiment::numInputs() const {
 const std::vector<Fitness>& Experiment::fitnessFunctions() const {
   return mFitnessFunctions;
 }
+
+float Experiment::mergeFitnessValues(const mmm::vec<9>& fitnesses) const {
+  return mmm::sum(fitnesses);
+}
