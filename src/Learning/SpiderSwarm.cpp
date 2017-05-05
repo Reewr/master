@@ -86,9 +86,9 @@ SpiderSwarm::SpiderSwarm()
 
   //mCurrentExperiment = new WalkingSimpleInputs();
   //mCurrentExperiment = new StandingSimpleInputs();
-  //mCurrentExperiment = new WalkingRotationInputs();
+  mCurrentExperiment = new WalkingRotationInputs();
   //mCurrentExperiment = new WalkingRotationNoKill();
-  mCurrentExperiment = new StandingRotationInputs();
+  //mCurrentExperiment = new StandingRotationInputs();
   mPopulation = mCurrentExperiment->population();
   mSubstrate  = mCurrentExperiment->substrate();
 
