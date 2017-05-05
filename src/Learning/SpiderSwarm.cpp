@@ -62,14 +62,21 @@ SpiderSwarm::SpiderSwarm()
       it->update(experiment);
   };
 
-  mBuildingHyperNeatWorker = [](std::vector<Phenotype>::iterator begin,
-                                  std::vector<Phenotype>::iterator end,
-                                  NEAT::Population&                pop,
-                                  Substrate&                       sub) {
+  mBuildingWorker = [](std::vector<Phenotype>::iterator begin,
+                       std::vector<Phenotype>::iterator end,
+                       const Experiment&                exp,
+                       NEAT::Population&                pop,
+                       Substrate&                       sub) {
     for (auto it = begin; it != end; ++it) {
-      pop.m_Species[it->speciesIndex]
-        .m_Individuals[it->individualIndex]
-        .BuildHyperNEATPhenotype(*it->network, sub);
+      if (exp.parameters().useESHyperNEAT) {
+        pop.m_Species[it->speciesIndex]
+          .m_Individuals[it->individualIndex]
+          .BuildESHyperNEATPhenotype(*it->network, sub, pop.m_Parameters);
+      } else {
+        pop.m_Species[it->speciesIndex]
+          .m_Individuals[it->individualIndex]
+          .BuildHyperNEATPhenotype(*it->network, sub);
+      }
     }
   };
 #endif
@@ -764,8 +771,14 @@ void SpiderSwarm::recreatePhenotypes() {
       // networks, otherwise wait until later
 #ifndef BT_NO_PROFILE
       auto& individual = species.m_Individuals[j];
-      individual.BuildHyperNEATPhenotype(*mPhenotypes[index].network,
-                                         *mSubstrate);
+      if (mCurrentExperiment->parameters().useESHyperNEAT) {
+        individual.BuildESHyperNEATPhenotype(*mPhenotypes[index].network,
+                                             *mSubstrate,
+                                             mPopulation->m_Parameters);
+      } else {
+        individual.BuildHyperNEATPhenotype(*mPhenotypes[index].network,
+                                           *mSubstrate);
+      }
 #endif
       ++index;
     }
@@ -791,17 +804,19 @@ void SpiderSwarm::recreatePhenotypes() {
   mLog->debug("Building networks with {} thread(s)", nThread);
 
   for (auto it = std::begin(threads); it != std::end(threads) - 1; ++it) {
-    *it = std::thread(mBuildingHyperNeatWorker,
+    *it = std::thread(mBuildingWorker,
                       workIter,
                       workIter + grainSize,
+                      std::ref(*mCurrentExperiment),
                       std::ref(*mPopulation),
                       std::ref(*mSubstrate));
     workIter += grainSize;
   }
 
-  threads.back() = std::thread(mBuildingHyperNeatWorker,
+  threads.back() = std::thread(mBuildingWorker,
                                workIter,
                                std::end(mPhenotypes),
+                               std::ref(*mCurrentExperiment),
                                std::ref(*mPopulation),
                                std::ref(*mSubstrate));
 

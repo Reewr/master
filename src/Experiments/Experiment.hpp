@@ -24,6 +24,9 @@ struct ExperimentParameters {
 
   // Sets the preperation duration
   unsigned int preperationDuration = 1;
+
+  // Whether or not to use ESHyperNEAT vs HyperNEAT
+  bool useESHyperNEAT = false;
 };
 
 /**

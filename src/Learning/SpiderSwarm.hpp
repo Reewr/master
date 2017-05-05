@@ -152,9 +152,10 @@ private:
 
   std::function<void(std::vector<Phenotype>::iterator begin,
                      std::vector<Phenotype>::iterator end,
+                     const Experiment&                exp,
                      NEAT::Population&                pop,
                      Substrate&                       sub)>
-    mBuildingHyperNeatWorker;
+    mBuildingWorker;
 #endif
 
   // If called, it will use as many threads as possible to
