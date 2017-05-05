@@ -44,6 +44,7 @@ struct Phenotype : Logging::Log {
   Text3D* hoverText;
 
   mmm::vec<9>  fitness;
+  mmm::vec3 initialPosition;
 
   // std::vector<std::vector<float>> tmp;
 

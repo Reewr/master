@@ -176,6 +176,9 @@ void Phenotype::updatePrepareStanding(float deltaTime) {
 
   world->doPhysics(deltaTime);
 
+  const btRigidBody* sternum  = spider->parts().at("Sternum").part->rigidBody();
+  const btVector3&   position = sternum->getCenterOfMassPosition();
+  initialPosition = mmm::vec3(position.x(), position.y(), position.z());
   duration += deltaTime;
 }
 
@@ -407,6 +410,7 @@ void Phenotype::reset(int          speciesId,
   finalizedFitness = 0;
   duration         = -1;
   fitness          = mmm::vec<9>(0);
+  initialPosition  = mmm::vec3();
 
   this->speciesId       = speciesId;
   this->speciesIndex    = speciesIndex;
