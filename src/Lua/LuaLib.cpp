@@ -1195,12 +1195,14 @@ sol::table LuaLib::Learning::openSpiderSwarm(sol::this_state state) {
   sol::usertype<SpiderSwarm> type(ctor,
     "save", &SpiderSwarm::save,
     "load", &SpiderSwarm::load,
-    "loadPopulation", &SpiderSwarm::loadPopulation,
-    "loadSubstrate", &SpiderSwarm::loadSubstrate,
     "parameters", &SpiderSwarm::parameters,
     "substrate", &SpiderSwarm::substrate,
     "restart", &SpiderSwarm::restart,
-    "toggleDrawDebugNetworks", &SpiderSwarm::toggleDrawDebugNetworks,
+    "setupExperiment", &SpiderSwarm::setupExperiment,
+    "startExperiment", &SpiderSwarm::startExperiment,
+    "stopExperiment", &SpiderSwarm::stopExperiment,
+    "runGenome", &SpiderSwarm::runGenome,
+    "toggleDrawANN", &SpiderSwarm::toggleDrawANN,
     "currentDuration", &SpiderSwarm::currentDuration);
 
   module.set_usertype("SpiderSwarm", type);
