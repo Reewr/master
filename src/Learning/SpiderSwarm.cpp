@@ -200,7 +200,7 @@ void SpiderSwarm::update(float deltaTime) {
   if (mCurrentDuration == 0)
     mLog->debug("Processing {} individuals", mBatchEnd - mBatchStart);
 
-  if (mCurrentDuration < mCurrentExperiment->parameters().experimentDuration) {
+  if (mCurrentDuration < mCurrentExperiment->totalDuration()) {
     updateNormal(deltaTime);
   } else if (mBatchEnd < mPhenotypes.size()) {
     setNextBatch();
@@ -212,7 +212,7 @@ void SpiderSwarm::update(float deltaTime) {
   if (mCurrentDuration == 0)
     mLog->debug("Processing {} individuals", mPhenotypes.size());
 
-  if (mCurrentDuration < mCurrentExperiment->parameters().experimentDuration) {
+  if (mCurrentDuration < mCurrentExperiment->totalDuration()) {
     updateThreadBatches(deltaTime);
   } else {
     updateEpoch();
