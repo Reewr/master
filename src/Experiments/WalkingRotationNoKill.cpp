@@ -11,6 +11,7 @@ const float PI = mmm::constants<float>::pi;
 
 WalkingRotationNoKill::WalkingRotationNoKill() : Experiment("WalkingRotationNoKill") {
 
+  mParameters.numActivates = 6;
   mFitnessFunctions =
   { Fitness("Movement",
             "Fitness based on movement in positive z direction.",
@@ -28,107 +29,77 @@ WalkingRotationNoKill::WalkingRotationNoKill() : Experiment("WalkingRotationNoKi
   };
 
   std::vector<std::vector<double>> inputs{
-    {  0.0, 0.0 }, // TipL1
-    {  0.3, 0.0 }, // TipL2
-    {  0.6, 0.0 }, // TipL3
-    {  0.9, 0.0 }, // TipL4
+   { -1.00,  1.00, -1.00 }, // MiscL1
+   { -0.71,  1.00, -1.00 }, // MiscL2
+   { -0.42,  1.00, -1.00 }, // MiscL3
+   { -0.14,  1.00, -1.00 }, // MiscL4
+   {  1.00,  1.00, -1.00 }, // MiscR1
+   {  0.42,  1.00, -1.00 }, // MiscR2
+   {  0.71,  1.00, -1.00 }, // MiscR3
+   {  0.14,  1.00, -1.00 }, // MiscR4
 
-    {  0.0, 1.0 }, // TipR1
-    {  0.3, 1.0 }, // TipR2
-    {  0.6, 1.0 }, // TipR3
-    {  0.9, 1.0 }, // TipR4
+   { -1.00,  0.66, -1.00 }, // TouchL1
+   { -0.71,  0.66, -1.00 }, // TouchL2
+   { -0.42,  0.66, -1.00 }, // TouchL3
+   { -0.14,  0.66, -1.00 }, // TouchL4
+   {  1.00,  0.66, -1.00 }, // TouchR1
+   {  0.42,  0.66, -1.00 }, // TouchR2
+   {  0.71,  0.66, -1.00 }, // TouchR3
+   {  0.14,  0.66, -1.00 }, // TouchR4
 
-    {  0.0,  0.15 }, // FemurL1
-    {  0.3,  0.15 }, // FemurL2
-    {  0.6,  0.15 }, // FemurL3
-    {  0.9,  0.15 }, // FemurL4
+   { -1.00, -0.66, -1.00 }, // FemurL1
+   { -0.71, -0.66, -1.00 }, // FemurL2
+   { -0.42, -0.66, -1.00 }, // FemurL3
+   { -0.14, -0.66, -1.00 }, // FemurL4
+   {  1.00, -0.66, -1.00 }, // FemurR1
+   {  0.42, -0.66, -1.00 }, // FemurR2
+   {  0.71, -0.66, -1.00 }, // FemurR3
+   {  0.14, -0.66, -1.00 }, // FemurR4
 
-    { 0.0,  0.85 }, // FemurR1
-    { 0.3,  0.85 }, // FemurR2
-    { 0.6,  0.85 }, // FemurR3
-    { 0.9,  0.85 }, // FemurR4
+   { -1.00, -0.33, -1.00 }, // PatellaL1
+   { -0.71, -0.33, -1.00 }, // PatellaL2
+   { -0.42, -0.33, -1.00 }, // PatellaL3
+   { -0.14, -0.33, -1.00 }, // PatellaL4
+   {  1.00, -0.33, -1.00 }, // PatellaR1
+   {  0.42, -0.33, -1.00 }, // PatellaR2
+   {  0.71, -0.33, -1.00 }, // PatellaR3
+   {  0.14, -0.33, -1.00 }, // PatellaR4
 
-    { 0.0, 0.10 }, // PatellaL1
-    { 0.3, 0.10 }, // PatellaL2
-    { 0.6, 0.10 }, // PatellaL3
-    { 0.9, 0.10 }, // PatellaL4
+   { -1.00,  0.33, -1.00 }, // TarsusL1
+   { -0.71,  0.33, -1.00 }, // TarsusL2
+   { -0.42,  0.33, -1.00 }, // TarsusL3
+   { -0.14,  0.33, -1.00 }, // TarsusL4
+   {  1.00,  0.33, -1.00 }, // TarsusR1
+   {  0.42,  0.33, -1.00 }, // TarsusR2
+   {  0.71,  0.33, -1.00 }, // TarsusR3
+   {  0.14,  0.33, -1.00 }, // TarsusR4
 
-    { 0.0, 0.90 }, // PatellaR1
-    { 0.3, 0.90 }, // PatellaR2
-    { 0.6, 0.90 }, // PatellaR3
-    { 0.9, 0.90 }, // PatellaR4
+   { -1.00,  0.00, -1.00 }, // TibiaL1
+   { -0.71,  0.00, -1.00 }, // TibiaL2
+   { -0.42,  0.00, -1.00 }, // TibiaL3
+   { -0.14,  0.00, -1.00 }, // TibiaL4
+   {  1.00,  0.00, -1.00 }, // TibiaR1
+   {  0.42,  0.00, -1.00 }, // TibiaR2
+   {  0.71,  0.00, -1.00 }, // TibiaR3
+   {  0.14,  0.00, -1.00 }, // TibiaR4
 
-    { 0.0,  0.05 }, // TibiaL1
-    { 0.3,  0.05 }, // TibiaL2
-    { 0.6,  0.05 }, // TibiaL3
-    { 0.9,  0.05 }, // TibiaL4
-
-    { 0.0, 0.95 }, // TibiaR1
-    { 0.3, 0.95 }, // TibiaR2
-    { 0.6, 0.95 }, // TibiaR3
-    { 0.9, 0.95 }, // TibiaR4
-
-    { 0.0, 0.20 }, // TrochanterL1
-    { 0.3, 0.20 }, // TrochanterL2
-    { 0.6, 0.20 }, // TrochanterL3
-    { 0.9, 0.20 }, // TrochanterL4
-
-    { 0.0,  0.80 }, // TrochanterR1
-    { 0.3,  0.80 }, // TrochanterR2
-    { 0.6,  0.80 }, // TrochanterR3
-    { 0.9,  0.80 }  // TrochanterR4
-
+   { -1.00, -1.00, -1.00 }, // TrochanterL1
+   { -0.71, -1.00, -1.00 }, // TrochanterL2
+   { -0.42, -1.00, -1.00 }, // TrochanterL3
+   { -0.14, -1.00, -1.00 }, // TrochanterL4
+   {  1.00, -1.00, -1.00 }, // TrochanterR1
+   {  0.42, -1.00, -1.00 }, // TrochanterR2
+   {  0.71, -1.00, -1.00 }, // TrochanterR3
+   {  0.14, -1.00, -1.00 }  // TrochanterR4
   };
   std::vector<std::vector<double>> hidden{};
-  std::vector<std::vector<double>> outputs{
-    { 0.025,  0.4 }, // FemurL1
-    { 0.325,  0.4 }, // FemurL2
-    { 0.625,  0.4 }, // FemurL3
-    { 0.925,  0.4 }, // FemurL4
-
-    { 0.025,  0.6 }, // FemurR1
-    { 0.325,  0.6 }, // FemurR2
-    { 0.625,  0.6 }, // FemurR3
-    { 0.925,  0.6 }, // FemurR4
-
-    { 0.05, 0.4 }, // PatellaL1
-    { 0.35, 0.4 }, // PatellaL2
-    { 0.65, 0.4 }, // PatellaL3
-    { 0.95, 0.4 }, // PatellaL4
-
-    { 0.05, 0.6 }, // PatellaR1
-    { 0.35, 0.6 }, // PatellaR2
-    { 0.65, 0.6 }, // PatellaR3
-    { 0.95, 0.6 }, // PatellaR4
-
-    { 0.075,  0.4 }, // TibiaL1
-    { 0.375,  0.4 }, // TibiaL2
-    { 0.675,  0.4 }, // TibiaL3
-    { 0.975,  0.4 }, // TibiaL4
-
-    { 0.075, 0.6 }, // TibiaR1
-    { 0.375, 0.6 }, // TibiaR2
-    { 0.675, 0.6 }, // TibiaR3
-    { 0.975, 0.6 }, // TibiaR4
-
-    { 0.0, 0.4 }, // TrochanterL1
-    { 0.3, 0.4 }, // TrochanterL2
-    { 0.6, 0.4 }, // TrochanterL3
-    { 0.9, 0.4 }, // TrochanterL4
-
-    { 0.0,  0.6 }, // TrochanterR1
-    { 0.3,  0.6 }, // TrochanterR2
-    { 0.6,  0.6 }, // TrochanterR3
-    { 0.9,  0.6 }  // TrochanterR4
-  };
+  std::vector<std::vector<double>> outputs{};
 
   // clang-format on
   // clone the input neuron positions to hidden, but at different height
-  for (auto& x : outputs) {
-    if (x[1] == 0.4)
-      hidden.push_back(std::vector<double>{x[0], 0.3});
-    else
-      hidden.push_back(std::vector<double>{x[0], 0.7});
+  for (auto& x : inputs) {
+    outputs.push_back(std::vector<double>{x[0], x[1], 1.0});
+    hidden.push_back(std::vector<double>{x[0], x[1], 0.0});
   }
 
   mSubstrate = new Substrate(inputs, hidden, outputs);
@@ -166,9 +137,9 @@ WalkingRotationNoKill::WalkingRotationNoKill() : Experiment("WalkingRotationNoKi
   mSubstrate->m_output_nodes_activation = NEAT::ActivationFunction::TANH;
 
   // This is only available in HyperNEAT and not ESHyperNEAT
-  mSubstrate->m_leaky = true;
-  mSubstrate->m_min_time_const = 0.1;
-  mSubstrate->m_max_time_const = 2.0;
+  mSubstrate->m_leaky = false;
+  mSubstrate->m_min_time_const = 0.0;
+  mSubstrate->m_max_time_const = 0.0;
   mSubstrate->m_query_weights_only = false;
 
   // When a new connection, it will not be added if the weight*maxWeightAndBias
@@ -189,17 +160,17 @@ WalkingRotationNoKill::WalkingRotationNoKill() : Experiment("WalkingRotationNoKi
   ////////////////////
 
   // Size of population
-  params.PopulationSize = 64;
+  params.PopulationSize = 150;
 
   // If true, this enables dynamic compatibility thresholding
   // It will keep the number of species between MinSpecies and MaxSpecies
-  params.DynamicCompatibility = false;
+  params.DynamicCompatibility = true;
 
   // Minimum number of species
-  params.MinSpecies = 5;
+  params.MinSpecies = 10;
 
   // Maximum number of species
-  params.MaxSpecies = 10;
+  params.MaxSpecies = 15;
 
   // Don't wipe the innovation database each generation?
   params.InnovationsForever = false;
@@ -272,14 +243,14 @@ WalkingRotationNoKill::WalkingRotationNoKill() : Experiment("WalkingRotationNoKi
   params.TournamentSize = 4;
 
   // Fraction of individuals to be copied unchanged
-  params.EliteFraction = 0.1; // 0.001
+  params.EliteFraction = 0.2; // 0.001
 
   ///////////////////////////////////
   // Structural Mutation parameters
   ///////////////////////////////////
 
   // Probability for a baby to be mutated with the Add-Neuron mutation.
-  params.MutateAddNeuronProb = 0.2;
+  params.MutateAddNeuronProb = 0.03;
 
   // Allow splitting of any recurrent links
   params.SplitRecurrent = true;
@@ -347,12 +318,12 @@ WalkingRotationNoKill::WalkingRotationNoKill() : Experiment("WalkingRotationNoKi
   params.ActivationBMutationMaxPower = 0.0;
 
   // Activation parameter A min/max
-  params.MinActivationA = 0.0;
-  params.MaxActivationA = 2.0;
+  params.MinActivationA = 1.0;
+  params.MaxActivationA = 6.0;
 
   // Activation parameter B min/max
   params.MinActivationB = 0.0;
-  params.MaxActivationB = 2.0;
+  params.MaxActivationB = 0.0;
 
   // Maximum magnitude for time costants perturbation
   params.TimeConstantMutationMaxPower = 0.1;
@@ -367,12 +338,12 @@ WalkingRotationNoKill::WalkingRotationNoKill() : Experiment("WalkingRotationNoKi
   params.MutateNeuronBiasesProb = 0.1;
 
   // Time constant range
-  params.MinNeuronTimeConstant = 0.1;
-  params.MaxNeuronTimeConstant = 2.0;
+  params.MinNeuronTimeConstant = 0.04;
+  params.MaxNeuronTimeConstant = 0.24;
 
   // Bias range
-  params.MinNeuronBias = -4.0;
-  params.MaxNeuronBias = 4.0;
+  params.MinNeuronBias = -params.MaxWeight;
+  params.MaxNeuronBias = params.MaxWeight;
 
   // Probability for a baby that an activation function type will be changed for a single neuron
   // considered a structural mutation because of the large impact on fitness
@@ -380,19 +351,19 @@ WalkingRotationNoKill::WalkingRotationNoKill() : Experiment("WalkingRotationNoKi
 
   // Probabilities for a particular activation function appearance
   params.ActivationFunction_SignedSigmoid_Prob = 1.0;
-  params.ActivationFunction_UnsignedSigmoid_Prob = 1.0;
-  params.ActivationFunction_Tanh_Prob = 1.0;
-  params.ActivationFunction_TanhCubic_Prob = 1.0;
-  params.ActivationFunction_SignedStep_Prob = 1.0;
-  params.ActivationFunction_UnsignedStep_Prob = 1.0;
+  params.ActivationFunction_UnsignedSigmoid_Prob = 0.0;
+  params.ActivationFunction_Tanh_Prob = 0.0;
+  params.ActivationFunction_TanhCubic_Prob = 0.0;
+  params.ActivationFunction_SignedStep_Prob = 0.0;
+  params.ActivationFunction_UnsignedStep_Prob = 0.0;
   params.ActivationFunction_SignedGauss_Prob = 1.0;
-  params.ActivationFunction_UnsignedGauss_Prob = 1.0;
-  params.ActivationFunction_Abs_Prob = 1.0;
+  params.ActivationFunction_UnsignedGauss_Prob = 0.0;
+  params.ActivationFunction_Abs_Prob = 0.0;
   params.ActivationFunction_SignedSine_Prob = 1.0;
-  params.ActivationFunction_UnsignedSine_Prob = 1.0;
+  params.ActivationFunction_UnsignedSine_Prob = 0.0;
   params.ActivationFunction_Linear_Prob = 1.0;
-  params.ActivationFunction_Relu_Prob = 1.0;
-  params.ActivationFunction_Softplus_Prob = 1.0;
+  params.ActivationFunction_Relu_Prob = 0.0;
+  params.ActivationFunction_Softplus_Prob = 0.0;
 
   params.BiasMutationMaxPower = 0.5;
 
@@ -507,12 +478,12 @@ WalkingRotationNoKill::WalkingRotationNoKill() : Experiment("WalkingRotationNoKi
                       0,
                       mSubstrate->GetMinCPPNOutputs(),
                       false,
-                      NEAT::ActivationFunction::TANH,
-                      NEAT::ActivationFunction::TANH,
+                      NEAT::ActivationFunction::SIGNED_SINE,
+                      NEAT::ActivationFunction::SIGNED_GAUSS,
                       0,
                       params);
 
-  mPopulation = new NEAT::Population(genome, params, true, 1.0, time(0));
+  mPopulation = new NEAT::Population(genome, params, true, params.MaxWeight, time(0));
   mParameters.numActivates = 8;
 }
 
@@ -523,7 +494,7 @@ WalkingRotationNoKill::~WalkingRotationNoKill() {
 
 void WalkingRotationNoKill::outputs(Phenotype&                 p,
                                   const std::vector<double>& outputs) const {
-  size_t index = 0;
+  size_t index = 16;
   for(auto& part : p.spider->parts()) {
     if (part.second.hinge == nullptr)
       continue;
@@ -533,6 +504,7 @@ void WalkingRotationNoKill::outputs(Phenotype&                 p,
 
     if (part.second.active) {
       float output = outputs[index];
+
       currentAngle = ExpUtil::normalizeAngle(currentAngle, -PI, PI, 0);
       velocity     = output - currentAngle;
       index++;
@@ -545,25 +517,38 @@ void WalkingRotationNoKill::outputs(Phenotype&                 p,
 }
 
 std::vector<double> WalkingRotationNoKill::inputs(const Phenotype& p) const {
-  std::vector<double> inputs = {
-    p.collidesWithTerrain("TarsusL1") ? 1.0 : 0.0,
-    p.collidesWithTerrain("TarsusL2") ? 1.0 : 0.0,
-    p.collidesWithTerrain("TarsusL3") ? 1.0 : 0.0,
-    p.collidesWithTerrain("TarsusL4") ? 1.0 : 0.0,
-    p.collidesWithTerrain("TarsusR1") ? 1.0 : 0.0,
-    p.collidesWithTerrain("TarsusR2") ? 1.0 : 0.0,
-    p.collidesWithTerrain("TarsusR3") ? 1.0 : 0.0,
-    p.collidesWithTerrain("TarsusR4") ? 1.0 : 0.0,
-  };
+  btRigidBody* sternum = p.spider->parts().at("Sternum").part->rigidBody();
+  mmm::vec3 rots       = ExpUtil::getEulerAngles(sternum->getOrientation());
+  std::vector<double> inputs = p.previousOutput;
 
-  for(auto& part : p.spider->parts()) {
-    if (!part.second.active || part.second.hinge == nullptr)
+  if (inputs.size() == 0) {
+    inputs.insert(inputs.end(), mSubstrate->m_output_coords.size(), 0);
+  }
+
+  inputs[0] = rots.x;
+  inputs[1] = rots.y;
+  inputs[2] = rots.z;
+  inputs[3] = mmm::sin(p.duration * 3);
+  inputs[4] = 1;
+  inputs[5] = 1;
+  inputs[6] = 1;
+  inputs[7] = 1;
+  inputs[8] = p.collidesWithTerrain("TarsusL1") ? 1.0 : 0.0;
+  inputs[9] = p.collidesWithTerrain("TarsusL2") ? 1.0 : 0.0;
+  inputs[10] = p.collidesWithTerrain("TarsusL3") ? 1.0 : 0.0;
+  inputs[11] = p.collidesWithTerrain("TarsusL4") ? 1.0 : 0.0;
+  inputs[12] = p.collidesWithTerrain("TarsusR1") ? 1.0 : 0.0;
+  inputs[13] = p.collidesWithTerrain("TarsusR2") ? 1.0 : 0.0;
+  inputs[14] = p.collidesWithTerrain("TarsusR3") ? 1.0 : 0.0;
+  inputs[15] = p.collidesWithTerrain("TarsusR4") ? 1.0 : 0.0;
+
+  size_t index = 16;
+  for(auto& a : p.spider->parts()) {
+    if (!a.second.active || a.second.hinge == nullptr)
       continue;
 
-    double hingeAngle = part.second.hinge->getHingeAngle();
-    double normAngle  = ExpUtil::normalizeAngle(hingeAngle, -PI, PI, 0);
-
-    inputs.push_back(normAngle);
+    inputs[index] = ExpUtil::normalizeAngle(a.second.hinge->getHingeAngle(), -PI, PI, 0);
+    index++;
   }
 
   return inputs;

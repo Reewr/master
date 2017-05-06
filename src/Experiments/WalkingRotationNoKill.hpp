@@ -11,10 +11,6 @@
  *
  *   In addition, it also takes an input of whether a leg is toching
  *   the ground or not.
- *
- *
- *   Unlike WalkingRotationInputs, this is never killed if it hits the ground,
- *   to showcase that it will do anything to get forward.
  */
 class WalkingRotationNoKill : public Experiment {
 public:
