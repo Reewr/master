@@ -237,6 +237,7 @@ void SpiderSwarm::toggleDrawANN() {
 }
 
 void SpiderSwarm::updateSimulation(float deltaTime) {
+  mPhenotypes[0].failed = false;
   mPhenotypes[0].update(*mCurrentExperiment);
 }
 
