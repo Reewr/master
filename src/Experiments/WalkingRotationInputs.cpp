@@ -11,6 +11,7 @@ const float PI = mmm::constants<float>::pi;
 
 WalkingRotationInputs::WalkingRotationInputs() : Experiment("WalkingRotationInputs") {
 
+  mParameters.numActivates = 6;
   mFitnessFunctions =
   { Fitness("Movement",
             "Fitness based on movement in positive z direction.",
@@ -23,7 +24,7 @@ WalkingRotationInputs::WalkingRotationInputs() : Experiment("WalkingRotationInpu
               return massPos.z();
             },
             [](const Phenotype&, float current, float) -> float {
-              return mmm::pow(mmm::pow(2, mmm::max(current, 0)), 2);
+              return mmm::max(current, 0);
             }),
     Fitness("Colliding",
             "If the spider falls, stop the simulation",
@@ -197,17 +198,17 @@ WalkingRotationInputs::WalkingRotationInputs() : Experiment("WalkingRotationInpu
   ////////////////////
 
   // Size of population
-  params.PopulationSize = 64;
+  params.PopulationSize = 150;
 
   // If true, this enables dynamic compatibility thresholding
   // It will keep the number of species between MinSpecies and MaxSpecies
   params.DynamicCompatibility = true;
 
   // Minimum number of species
-  params.MinSpecies = 5;
+  params.MinSpecies = 10;
 
   // Maximum number of species
-  params.MaxSpecies = 10;
+  params.MaxSpecies = 15;
 
   // Don't wipe the innovation database each generation?
   params.InnovationsForever = false;
@@ -280,14 +281,14 @@ WalkingRotationInputs::WalkingRotationInputs() : Experiment("WalkingRotationInpu
   params.TournamentSize = 4;
 
   // Fraction of individuals to be copied unchanged
-  params.EliteFraction = 0.1; // 0.001
+  params.EliteFraction = 0.2; // 0.001
 
   ///////////////////////////////////
   // Structural Mutation parameters
   ///////////////////////////////////
 
   // Probability for a baby to be mutated with the Add-Neuron mutation.
-  params.MutateAddNeuronProb = 0.2;
+  params.MutateAddNeuronProb = 0.03;
 
   // Allow splitting of any recurrent links
   params.SplitRecurrent = true;
@@ -355,12 +356,12 @@ WalkingRotationInputs::WalkingRotationInputs() : Experiment("WalkingRotationInpu
   params.ActivationBMutationMaxPower = 0.0;
 
   // Activation parameter A min/max
-  params.MinActivationA = 0.0;
-  params.MaxActivationA = 2.0;
+  params.MinActivationA = 1.0;
+  params.MaxActivationA = 6.0;
 
   // Activation parameter B min/max
   params.MinActivationB = 0.0;
-  params.MaxActivationB = 2.0;
+  params.MaxActivationB = 0.0;
 
   // Maximum magnitude for time costants perturbation
   params.TimeConstantMutationMaxPower = 0.1;
@@ -375,12 +376,12 @@ WalkingRotationInputs::WalkingRotationInputs() : Experiment("WalkingRotationInpu
   params.MutateNeuronBiasesProb = 0.1;
 
   // Time constant range
-  params.MinNeuronTimeConstant = 0.0;
-  params.MaxNeuronTimeConstant = 0.0;
+  params.MinNeuronTimeConstant = 0.04;
+  params.MaxNeuronTimeConstant = 0.24;
 
   // Bias range
-  params.MinNeuronBias = -4.0;
-  params.MaxNeuronBias = 4.0;
+  params.MinNeuronBias = -params.MaxWeight;
+  params.MaxNeuronBias = params.MaxWeight;
 
   // Probability for a baby that an activation function type will be changed for a single neuron
   // considered a structural mutation because of the large impact on fitness
@@ -388,19 +389,19 @@ WalkingRotationInputs::WalkingRotationInputs() : Experiment("WalkingRotationInpu
 
   // Probabilities for a particular activation function appearance
   params.ActivationFunction_SignedSigmoid_Prob = 1.0;
-  params.ActivationFunction_UnsignedSigmoid_Prob = 1.0;
-  params.ActivationFunction_Tanh_Prob = 1.0;
-  params.ActivationFunction_TanhCubic_Prob = 1.0;
-  params.ActivationFunction_SignedStep_Prob = 1.0;
-  params.ActivationFunction_UnsignedStep_Prob = 1.0;
+  params.ActivationFunction_UnsignedSigmoid_Prob = 0.0;
+  params.ActivationFunction_Tanh_Prob = 0.0;
+  params.ActivationFunction_TanhCubic_Prob = 0.0;
+  params.ActivationFunction_SignedStep_Prob = 0.0;
+  params.ActivationFunction_UnsignedStep_Prob = 0.0;
   params.ActivationFunction_SignedGauss_Prob = 1.0;
-  params.ActivationFunction_UnsignedGauss_Prob = 1.0;
-  params.ActivationFunction_Abs_Prob = 1.0;
+  params.ActivationFunction_UnsignedGauss_Prob = 0.0;
+  params.ActivationFunction_Abs_Prob = 0.0;
   params.ActivationFunction_SignedSine_Prob = 1.0;
-  params.ActivationFunction_UnsignedSine_Prob = 1.0;
+  params.ActivationFunction_UnsignedSine_Prob = 0.0;
   params.ActivationFunction_Linear_Prob = 1.0;
-  params.ActivationFunction_Relu_Prob = 1.0;
-  params.ActivationFunction_Softplus_Prob = 1.0;
+  params.ActivationFunction_Relu_Prob = 0.0;
+  params.ActivationFunction_Softplus_Prob = 0.0;
 
   params.BiasMutationMaxPower = 0.5;
 
@@ -437,7 +438,7 @@ WalkingRotationInputs::WalkingRotationInputs() : Experiment("WalkingRotationInpu
   params.ActivationFunctionDiffCoeff = 0.0;
 
   // Compatibility treshold
-  params.CompatTreshold = 5.0;
+  params.CompatTreshold = 2.0;
 
   // Minumal value of the compatibility treshold
   params.MinCompatTreshold = 0.2;
@@ -515,12 +516,12 @@ WalkingRotationInputs::WalkingRotationInputs() : Experiment("WalkingRotationInpu
                       0,
                       mSubstrate->GetMinCPPNOutputs(),
                       false,
-                      NEAT::ActivationFunction::TANH,
-                      NEAT::ActivationFunction::TANH,
+                      NEAT::ActivationFunction::SIGNED_SINE,
+                      NEAT::ActivationFunction::SIGNED_GAUSS,
                       0,
                       params);
 
-  mPopulation = new NEAT::Population(genome, params, true, 1.0, time(0));
+  mPopulation = new NEAT::Population(genome, params, true, params.MaxWeight, time(0));
   mParameters.numActivates = 8;
 }
 
@@ -565,8 +566,8 @@ std::vector<double> WalkingRotationInputs::inputs(const Phenotype& p) const {
   inputs[0] = rots.x;
   inputs[1] = rots.y;
   inputs[2] = rots.z;
-  inputs[3] = mmm::sin(p.duration * 12);
-  inputs[4] = mmm::cos(p.duration * 12);
+  inputs[3] = mmm::sin(p.duration * 3);
+  inputs[4] = 1;
   inputs[5] = 1;
   inputs[6] = 1;
   inputs[7] = 1;
@@ -578,6 +579,15 @@ std::vector<double> WalkingRotationInputs::inputs(const Phenotype& p) const {
   inputs[13] = p.collidesWithTerrain("TarsusR2") ? 1.0 : 0.0;
   inputs[14] = p.collidesWithTerrain("TarsusR3") ? 1.0 : 0.0;
   inputs[15] = p.collidesWithTerrain("TarsusR4") ? 1.0 : 0.0;
+
+  size_t index = 16;
+  for(auto& a : p.spider->parts()) {
+    if (!a.second.active || a.second.hinge == nullptr)
+      continue;
+
+    inputs[index] = ExpUtil::normalizeAngle(a.second.hinge->getHingeAngle(), -PI, PI, 0);
+    index++;
+  }
 
   return inputs;
 }
