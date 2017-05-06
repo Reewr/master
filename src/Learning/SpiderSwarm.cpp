@@ -518,56 +518,10 @@ void SpiderSwarm::load(const std::string& filename) {
   mBestPossibleFitness = 0;
   mBestPossibleFitnessGeneration = 0;
   mStats               = Statistics();
+  mSimulatingStage     = SimulationStage::None;
 
   mLog->info("Loaded from file: {}", filename);
-
-  recreatePhenotypes();
-}
-
-/**
- * @brief
- *   Like `load`, but only loads the population from file. The population
- *   does actually contain its stored parameters, so it also loads that
- *   from file.
- *
- * @param filename
- */
-void SpiderSwarm::loadPopulation(const std::string& filename) {
-  std::string popFilename   = filename + ".population";
-
-  if (mPopulation != nullptr)
-    delete mPopulation;
-
-  mPopulation = new NEAT::Population(popFilename.c_str());
-
-  mCurrentBatch        = 0;
-  mBestIndex           = 0;
-  mGeneration          = mPopulation->m_Generation;
-  mCurrentDuration     = 0;
-  mBestPossibleFitness = 0;
-
-  recreatePhenotypes();
-}
-
-/**
- * @brief
- *   Like `load` but only loads the substrate from file. Like
- *   the other load functions, it basically resets everything.
- *
- * @param filename
- */
-void SpiderSwarm::loadSubstrate(const std::string& filename) {
-  std::string subFilename   = filename + ".substrate";
-
-  mSubstrate->load(subFilename);
-
-  mCurrentBatch        = 0;
-  mBestIndex           = 0;
-  mGeneration          = mPopulation->m_Generation;
-  mCurrentDuration     = 0;
-  mBestPossibleFitness = 0;
-
-  recreatePhenotypes();
+  mLog->info("Ready to start experiment");
 }
 
 /**
