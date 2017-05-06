@@ -193,6 +193,8 @@ void SpiderSwarm::setupExperiment(const std::string& name) {
 
   if (mSubstrate == nullptr)
     throw std::runtime_error("Substrate is not defined by experiment");
+
+  recreatePhenotypes();
 }
 
 void SpiderSwarm::startExperiment() {
