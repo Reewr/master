@@ -68,11 +68,25 @@ public:
     DrawAll
   };
 
+  enum class SimulationStage {
+    None,
+    Experiment,
+    Simulating
+  };
+
   SpiderSwarm();
   ~SpiderSwarm();
 
   // Sets the drawing method. Will update on the next update
   void setDrawingMethod(DrawingMethod dm = DrawingMethod::SpeciesLeaders);
+
+  // Starts an experiment
+  void setupExperiment(const std::string& name);
+
+  void startExperiment();
+
+  // Stops the experiment
+  void stopExperiment();
 
   // Returns the current drawing method
   DrawingMethod drawingMethod();
@@ -131,6 +145,7 @@ private:
 
   bool mDrawDebugNetworks;
   bool mRestartOnNextUpdate;
+  SimulationStage mSimulatingStage;
 
   Statistics mStats;
 

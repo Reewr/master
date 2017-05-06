@@ -47,6 +47,7 @@ SpiderSwarm::SpiderSwarm()
     , mBestPossibleFitnessGeneration(-99999)
     , mDrawDebugNetworks(false)
     , mRestartOnNextUpdate(false)
+    , mSimulatingStage(SimulationStage::None)
     , mDrawingMethod(SpiderSwarm::DrawingMethod::Species1)
     , mBestIndex(0)
     , mSubstrate(nullptr)
@@ -83,22 +84,6 @@ SpiderSwarm::SpiderSwarm()
 
   NEAT::RNG rng;
   rng.TimeSeed();
-
-  //mCurrentExperiment = new WalkingSimpleInputs();
-  //mCurrentExperiment = new StandingSimpleInputs();
-  mCurrentExperiment = new WalkingRotationInputs();
-  //mCurrentExperiment = new WalkingRotationNoKill();
-  //mCurrentExperiment = new StandingRotationInputs();
-  mPopulation = mCurrentExperiment->population();
-  mSubstrate  = mCurrentExperiment->substrate();
-
-  if (mPopulation == nullptr)
-    throw std::runtime_error("Population is not defined by experiment");
-
-  if (mSubstrate == nullptr)
-    throw std::runtime_error("Substrate is not defined by experiment");
-
-  recreatePhenotypes();
 }
 
 /**
@@ -123,6 +108,55 @@ SpiderSwarm::~SpiderSwarm() {
  */
 void SpiderSwarm::setDrawingMethod(DrawingMethod dm) {
   mDrawingMethod = dm;
+}
+
+/**
+ * @brief
+ *   Starts an experiment by a given name
+ *
+ * @param name
+ */
+void SpiderSwarm::setupExperiment(const std::string& name) {
+  stopExperiment();
+
+  if (mCurrentExperiment != nullptr) {
+    delete mCurrentExperiment;
+    mCurrentExperiment = nullptr;
+  }
+
+  if (name == "WalkingRotationInputs")
+    mCurrentExperiment = new WalkingRotationInputs();
+  else if (name == "WalkingSimpleInputs")
+    mCurrentExperiment = new WalkingSimpleInputs();
+  else if (name == "StandingRotationInputs")
+    mCurrentExperiment = new StandingRotationInputs();
+  else if (name == "WalkingRotationNoKill")
+    mCurrentExperiment = new WalkingRotationNoKill();
+  else if (name == "StandingSimpleInputs")
+    mCurrentExperiment = new StandingSimpleInputs();
+  else
+    throw std::runtime_error("Unable to find experiment: " + name);
+
+  mPopulation = mCurrentExperiment->population();
+  mSubstrate  = mCurrentExperiment->substrate();
+
+  if (mPopulation == nullptr)
+    throw std::runtime_error("Population is not defined by experiment");
+
+  if (mSubstrate == nullptr)
+    throw std::runtime_error("Substrate is not defined by experiment");
+}
+
+void SpiderSwarm::startExperiment() {
+  mSimulatingStage = SimulationStage::Experiment;
+}
+
+/**
+ * @brief
+ *   Stops the current active experiment, if any
+ */
+void SpiderSwarm::stopExperiment() {
+  mSimulatingStage = SimulationStage::None;
 }
 
 /**
@@ -164,6 +198,9 @@ void SpiderSwarm::toggleDrawDebugNetworks() {
  *   to start again.
  */
 void SpiderSwarm::update(float deltaTime) {
+  if (mSimulatingStage == SimulationStage::None)
+    return;
+
   if (mRestartOnNextUpdate) {
     for (auto& p : mPhenotypes)
       p.remove();
@@ -236,6 +273,9 @@ void SpiderSwarm::update(float deltaTime) {
  * @param bindTexture
  */
 void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
+  if (mSimulatingStage == SimulationStage::None)
+    return;
+
   size_t numPhenotypes = mPhenotypes.size();
   size_t gridIndex     = 0;
   size_t gridSize      = grid.size();
