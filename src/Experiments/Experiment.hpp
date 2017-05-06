@@ -67,6 +67,9 @@ public:
   // Returns the fitness functions
   const std::vector<Fitness>& fitnessFunctions() const;
 
+  // Returns total duration for the experiment
+  float totalDuration() const;
+
   // Optional: Allows you to set values on the phenotype
   // before a simulation is started
   virtual void initPhenotype(Phenotype& p) const;

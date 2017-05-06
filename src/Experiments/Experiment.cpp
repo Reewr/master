@@ -116,6 +116,17 @@ const std::vector<Fitness>& Experiment::fitnessFunctions() const {
 
 /**
  * @brief
+ *   Returns the total duration for the experiment, including
+ *   the experiment duration and preperation duration
+ *
+ * @return
+ */
+float Experiment::totalDuration() const {
+  return mParameters.experimentDuration + mParameters.preperationDuration;
+}
+
+/**
+ * @brief
  *   Allows you to initialize a phenotype. Prior to this function
  *   all the phenotypes are completely reset.
  *
