@@ -88,11 +88,14 @@ public:
   // Stops the experiment
   void stopExperiment();
 
+  // Runs the simulation for the genome
+  void runGenome(int genomeId);
+
   // Returns the current drawing method
   DrawingMethod drawingMethod();
 
   // Toggles the drawing of the neural network for each spider
-  void toggleDrawDebugNetworks();
+  void toggleDrawANN();
 
   // Updates the SpiderSwarm which will either run a normal update
   // on the current batch or figure out which batch is next
@@ -172,6 +175,8 @@ private:
                      Substrate&                       sub)>
     mBuildingWorker;
 #endif
+
+  void updateSimulation(float deltaTime);
 
   // If called, it will use as many threads as possible to
   void updateUsingThreads(float deltaTime);

@@ -110,6 +110,54 @@ void SpiderSwarm::setDrawingMethod(DrawingMethod dm) {
   mDrawingMethod = dm;
 }
 
+void SpiderSwarm::runGenome(int genomeId) {
+  if (mCurrentExperiment == nullptr) {
+    mLog->debug("Must setup experiment before running genome");
+    return;
+  }
+
+  NEAT::Genome* g = nullptr;
+
+  if (genomeId == mBestPossibleGenome.GetID())
+    g = &mBestPossibleGenome;
+  else {
+    for(unsigned int i = 0; i < mPopulation->m_Species.size(); i++) {
+      for(unsigned int j = 0; i < mPopulation->m_Species[i].m_Individuals.size(); j++) {
+        if (mPopulation->m_Species[i].m_Individuals[j].GetID() == genomeId) {
+          g = &mPopulation->m_Species[i].m_Individuals[j];
+          break;
+        }
+      }
+    }
+  }
+
+  if (g == nullptr) {
+    mLog->error("Unable to find genome with Id: {}", genomeId);
+    return;
+  }
+
+  mLog->info("Found genome, building network..");
+
+  if (mPhenotypes.size() == 0)
+    mPhenotypes.resize(1);
+
+  mPhenotypes[0].reset(0, 0, 0, genomeId);
+  mCurrentExperiment->initPhenotype(mPhenotypes[0]);
+
+  if (mCurrentExperiment->parameters().useESHyperNEAT) {
+    g->BuildESHyperNEATPhenotype(*mPhenotypes[0].network,
+                                 *mSubstrate,
+                                 mPopulation->m_Parameters);
+  } else {
+    g->BuildHyperNEATPhenotype(*mPhenotypes[0].network,
+                               *mSubstrate);
+  }
+
+  mSimulatingStage = SimulationStage::Simulating;
+  mCurrentDuration = 0;
+  mLog->info("Ready to simulate genome: {}", genomeId);
+}
+
 /**
  * @brief
  *   Starts an experiment by a given name
@@ -173,14 +221,20 @@ SpiderSwarm::DrawingMethod SpiderSwarm::drawingMethod() {
  * @brief
  *   Toggles the drawing of the neural networks
  */
-void SpiderSwarm::toggleDrawDebugNetworks() {
+void SpiderSwarm::toggleDrawANN() {
   mDrawDebugNetworks = !mDrawDebugNetworks;
 
-  if (mDrawDebugNetworks) {
+  if (mDrawDebugNetworks && mSimulatingStage == SimulationStage::Experiment) {
     for (auto& i : mPhenotypes) {
       i.drawablePhenotype->recreate(*i.network, mmm::vec3(1.0, 1.0, 1.0));
     }
+  } else if (mDrawDebugNetworks && mSimulatingStage == SimulationStage::Simulating) {
+    mPhenotypes[0].drawablePhenotype->recreate(*mPhenotypes[0].network, mmm::vec3(1));
   }
+}
+
+void SpiderSwarm::updateSimulation(float deltaTime) {
+  mPhenotypes[0].update(*mCurrentExperiment);
 }
 
 /**
@@ -200,6 +254,9 @@ void SpiderSwarm::toggleDrawDebugNetworks() {
 void SpiderSwarm::update(float deltaTime) {
   if (mSimulatingStage == SimulationStage::None)
     return;
+
+  if (mSimulatingStage == SimulationStage::Simulating)
+    return updateSimulation(deltaTime);
 
   if (mRestartOnNextUpdate) {
     for (auto& p : mPhenotypes)
@@ -275,6 +332,14 @@ void SpiderSwarm::update(float deltaTime) {
 void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
   if (mSimulatingStage == SimulationStage::None)
     return;
+
+  if (mSimulatingStage == SimulationStage::Simulating) {
+    mPhenotypes[0].draw(prog, grid[0], bindTexture);
+
+    if (bindTexture && mDrawDebugNetworks) {
+      mPhenotypes[0].drawablePhenotype->draw3D(grid[0] + mmm::vec3(0, 5, 0));
+    }
+  }
 
   size_t numPhenotypes = mPhenotypes.size();
   size_t gridIndex     = 0;
