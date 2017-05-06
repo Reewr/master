@@ -165,8 +165,8 @@ void SpiderSwarm::runGenome(int genomeId) {
  *
  * @param name
  */
-void SpiderSwarm::setupExperiment(const std::string& name) {
-  stopExperiment();
+void SpiderSwarm::setup(const std::string& name, bool startExperiment) {
+  stop();
 
   if (mCurrentExperiment != nullptr) {
     delete mCurrentExperiment;
@@ -196,9 +196,12 @@ void SpiderSwarm::setupExperiment(const std::string& name) {
     throw std::runtime_error("Substrate is not defined by experiment");
 
   recreatePhenotypes();
+
+  if (startExperiment)
+    start();
 }
 
-void SpiderSwarm::startExperiment() {
+void SpiderSwarm::start() {
   mSimulatingStage = SimulationStage::Experiment;
 }
 
@@ -206,7 +209,7 @@ void SpiderSwarm::startExperiment() {
  * @brief
  *   Stops the current active experiment, if any
  */
-void SpiderSwarm::stopExperiment() {
+void SpiderSwarm::stop() {
   mSimulatingStage = SimulationStage::None;
 }
 

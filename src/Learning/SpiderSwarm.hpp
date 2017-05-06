@@ -81,12 +81,12 @@ public:
   void setDrawingMethod(DrawingMethod dm = DrawingMethod::SpeciesLeaders);
 
   // Starts an experiment
-  void setupExperiment(const std::string& name);
+  void setup(const std::string& name, bool startExperiment = false);
 
-  void startExperiment();
+  void start();
 
   // Stops the experiment
-  void stopExperiment();
+  void stop();
 
   // Runs the simulation for the genome
   void runGenome(int genomeId);
