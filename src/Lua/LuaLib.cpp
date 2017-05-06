@@ -1198,9 +1198,9 @@ sol::table LuaLib::Learning::openSpiderSwarm(sol::this_state state) {
     "parameters", &SpiderSwarm::parameters,
     "substrate", &SpiderSwarm::substrate,
     "restart", &SpiderSwarm::restart,
-    "setupExperiment", &SpiderSwarm::setupExperiment,
-    "startExperiment", &SpiderSwarm::startExperiment,
-    "stopExperiment", &SpiderSwarm::stopExperiment,
+    "setup", &SpiderSwarm::setup,
+    "start", &SpiderSwarm::start,
+    "stop", &SpiderSwarm::stop,
     "runGenome", &SpiderSwarm::runGenome,
     "toggleDrawANN", &SpiderSwarm::toggleDrawANN,
     "currentDuration", &SpiderSwarm::currentDuration);
