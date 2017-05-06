@@ -51,7 +51,8 @@ SpiderSwarm::SpiderSwarm()
     , mDrawingMethod(SpiderSwarm::DrawingMethod::Species1)
     , mBestIndex(0)
     , mSubstrate(nullptr)
-    , mPopulation(nullptr) {
+    , mPopulation(nullptr)
+    , mCurrentExperiment(nullptr) {
 
 // Save some memory if bullet has profiling on and therefore
 // does not allow for threading
