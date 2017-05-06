@@ -339,8 +339,6 @@ bool Phenotype::hasBeenKilled() const {
 float Phenotype::finalizeFitness(const Experiment& experiment) {
   hasFinalized = true;
 
-  duration = experiment.parameters().experimentDuration;
-
   int index = 0;
   for(const auto& s : experiment.fitnessFunctions()) {
     fitness[index] = s.runFinalize(*this, fitness[index], duration);
