@@ -201,7 +201,16 @@ void SpiderSwarm::setup(const std::string& name, bool startExperiment) {
     start();
 }
 
+/**
+ * @brief
+ *   Starts a simulation that has been setup
+ */
 void SpiderSwarm::start() {
+  if (mCurrentExperiment == nullptr || mPopulation == nullptr || mSubstrate == nullptr) {
+    mLog->warn("Cannot start experiment without setting up experiment");
+    return;
+  }
+
   mSimulatingStage = SimulationStage::Experiment;
 }
 
@@ -210,6 +219,11 @@ void SpiderSwarm::start() {
  *   Stops the current active experiment, if any
  */
 void SpiderSwarm::stop() {
+  if (mCurrentExperiment == nullptr || mPopulation == nullptr || mSubstrate == nullptr) {
+    mLog->warn("Cannot stop experiment without setting up experiment");
+    return;
+  }
+
   mSimulatingStage = SimulationStage::None;
 }
 
