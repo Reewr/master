@@ -455,6 +455,11 @@ void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
  * @param filename
  */
 void SpiderSwarm::save(const std::string& filename) {
+  if (mCurrentExperiment == nullptr) {
+    mLog->warn("You must have an experiment loaded before saving");
+    return;
+  }
+
   std::string popFilename    = filename + ".population";
   std::string subFilename    = filename + ".substrate";
   std::string genomeFilename = filename + ".genome";
@@ -497,6 +502,11 @@ void SpiderSwarm::save(const std::string& filename) {
  * @param filename
  */
 void SpiderSwarm::load(const std::string& filename) {
+  if (mCurrentExperiment == nullptr) {
+    mLog->warn("You must load experiment before loading file");
+    return;
+  }
+
   std::string popFilename    = filename + ".population";
   std::string paramFilename  = filename + ".parameters";
   std::string subFilename    = filename + ".substrate";
