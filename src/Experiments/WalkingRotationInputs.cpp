@@ -12,6 +12,7 @@ const float PI = mmm::constants<float>::pi;
 WalkingRotationInputs::WalkingRotationInputs() : Experiment("WalkingRotationInputs") {
 
   mParameters.numActivates = 6;
+  mParameters.experimentDuration = 20;
   mFitnessFunctions =
   { Fitness("Movement",
             "Fitness based on movement in positive z direction.",
@@ -23,8 +24,8 @@ WalkingRotationInputs::WalkingRotationInputs() : Experiment("WalkingRotationInpu
 
               return massPos.z();
             },
-            [](const Phenotype&, float current, float) -> float {
-              return mmm::max(current, 0);
+            [](const Phenotype& p, float current, float) -> float {
+              return mmm::max(current - p.initialPosition.z, 0);
             }),
     Fitness("Colliding",
             "If the spider falls, stop the simulation",
@@ -522,7 +523,6 @@ WalkingRotationInputs::WalkingRotationInputs() : Experiment("WalkingRotationInpu
                       params);
 
   mPopulation = new NEAT::Population(genome, params, true, params.MaxWeight, time(0));
-  mParameters.numActivates = 8;
 }
 
 WalkingRotationInputs::~WalkingRotationInputs() {
