@@ -11,6 +11,7 @@
 #include "../Experiments/StandingRotationInputs.hpp"
 #include "../Experiments/WalkingRotationNoKill.hpp"
 #include "../Experiments/WalkingCurve.hpp"
+#include "../Experiments/StandingCurve.hpp"
 
 #include <btBulletDynamicsCommon.h>
 #include <thread>
@@ -186,6 +187,8 @@ void SpiderSwarm::setup(const std::string& name, bool startExperiment) {
     mCurrentExperiment = new StandingSimpleInputs();
   else if (name == "WalkingCurve")
     mCurrentExperiment = new WalkingCurve();
+  else if (name == "StandingCurve")
+    mCurrentExperiment = new StandingCurve();
   else
     throw std::runtime_error("Unable to find experiment: " + name);
 
