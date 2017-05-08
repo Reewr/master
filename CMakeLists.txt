@@ -214,6 +214,7 @@ set(SOURCE_FILES
   ${SRC_DIR}/Experiments/WalkingRotationNoKill.cpp
   ${SRC_DIR}/Experiments/StandingRotationInputs.cpp
   ${SRC_DIR}/Experiments/WalkingCurve.cpp
+  ${SRC_DIR}/Experiments/StandingCurve.cpp
 
   # src/Learning
   ${SRC_DIR}/Learning/SpiderSwarm.cpp
@@ -324,6 +325,7 @@ set(HEADER_FILES
   ${SRC_DIR}/Experiments/WalkingRotationNoKill.hpp
   ${SRC_DIR}/Experiments/StandingRotationInputs.hpp
   ${SRC_DIR}/Experiments/WalkingCurve.hpp
+  ${SRC_DIR}/Experiments/StandingCurve.hpp
 
   # src/Learning
   ${SRC_DIR}/Learning/SpiderSwarm.hpp
