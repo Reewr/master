@@ -28,7 +28,7 @@ StandingCurve::StandingCurve() : Experiment("StandingCurve") {
               current += mmm::abs(massPos.x() - p.initialPosition.x);
               current += mmm::abs(massPos.y() - p.initialPosition.y);
               current += mmm::abs(massPos.z() - p.initialPosition.z);
-              return score(1.f, current, 0);
+              return ExpUtil::score(1.f, current, 0);
             }),
     Fitness("ROTITATION",
             "Fitness based on no rotation.",
@@ -43,7 +43,7 @@ StandingCurve::StandingCurve() : Experiment("StandingCurve") {
               o.y += mmm::radians(90);
 
               current += mmm::sum(mmm::abs(o - p.initialPosition));
-              return score(1.f, current, 0);
+              return ExpUtil::score(1.f, current, 0);
             }),
     Fitness("Lifespan  ",
             "Fitness based on lifespan.",
