@@ -610,10 +610,10 @@ std::vector<double> WalkingCurve::inputs(const Phenotype& p) const {
   inputs[1] = rots.y;
   inputs[2] = rots.z;
   inputs[3] = mmm::sin(p.duration * 2);
-  inputs[4] = mmm::cos(p.duration * 2);
+  inputs[4] = 1;
   inputs[5] = 1;
   inputs[6] = 1;
-  inputs[7] = 1;
+  inputs[7] = mmm::cos(p.duration * 2);
   inputs[8] = p.collidesWithTerrain("TarsusL1") ? 1.0 : 0.0;
   inputs[9] = p.collidesWithTerrain("TarsusL2") ? 1.0 : 0.0;
   inputs[10] = p.collidesWithTerrain("TarsusL3") ? 1.0 : 0.0;
