@@ -89,23 +89,23 @@ void Master::draw3D() {
   glCullFace(GL_BACK);
 
   std::shared_ptr<Program> shadowProgram = mShadowmap->program();
-  mCamera->setLightVPUniforms(shadowProgram, "light");
+  /* mCamera->setLightVPUniforms(shadowProgram, "light"); */
 
-  mShadowmap->bind(true);
-  for (auto d : mDrawable3D)
-    d->draw(shadowProgram, false);
-  mSwarm->draw(shadowProgram, false);
-  mShadowmap->finalize();
-  mShadowmap->texture()->bind(0);
+  /* mShadowmap->bind(true); */
+  /* for (auto d : mDrawable3D) */
+  /*   d->draw(shadowProgram, false); */
+  /* mSwarm->draw(shadowProgram, false); */
+  /* mShadowmap->finalize(); */
+  /* mShadowmap->texture()->bind(0); */
 
   std::shared_ptr<Program> modelProgram =
     mAsset->rManager()->get<Program>("Program::Model");
 
   modelProgram->setUniform("view", mCamera->view());
   modelProgram->setUniform("proj", mCamera->projection());
-  modelProgram->setUniform("dir", mCamera->light().direction);
+  /* modelProgram->setUniform("dir", mCamera->light().direction); */
 
-  mCamera->setLightVPUniforms(modelProgram, "light");
+  /* mCamera->setLightVPUniforms(modelProgram, "light"); */
 
   for (auto d : mDrawable3D)
     d->draw(modelProgram, true);
