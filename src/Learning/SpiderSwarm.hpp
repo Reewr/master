@@ -65,7 +65,8 @@ public:
     Species1,
     SpeciesLeaders,
     BestFitness,
-    DrawAll
+    DrawAll,
+    DrawNone
   };
 
   enum class SimulationStage {
@@ -79,6 +80,9 @@ public:
 
   // Sets the drawing method. Will update on the next update
   void setDrawingMethod(DrawingMethod dm = DrawingMethod::SpeciesLeaders);
+
+  void disableDrawing();
+  void enableDrawing();
 
   // Starts an experiment
   void setup(const std::string& name, bool startExperiment = false);
@@ -152,6 +156,7 @@ private:
 
   // Drawing settings
   DrawingMethod mDrawingMethod;
+  bool mDisableDrawing;
 
   std::vector<size_t> mSpeciesLeaders;
   size_t              mBestIndex;

@@ -113,6 +113,14 @@ void SpiderSwarm::setDrawingMethod(DrawingMethod dm) {
   mDrawingMethod = dm;
 }
 
+void SpiderSwarm::disableDrawing() {
+  mDisableDrawing = true;
+}
+
+void SpiderSwarm::enableDrawing() {
+  mDisableDrawing = false;
+}
+
 void SpiderSwarm::runGenome(int genomeId) {
   if (mCurrentExperiment == nullptr) {
     mLog->debug("Must setup experiment before running genome");
@@ -357,7 +365,7 @@ void SpiderSwarm::update(float deltaTime) {
  * @param bindTexture
  */
 void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
-  if (mSimulatingStage == SimulationStage::None)
+  if (mSimulatingStage == SimulationStage::None || mDisableDrawing)
     return;
 
   if (mSimulatingStage == SimulationStage::Simulating) {

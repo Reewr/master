@@ -1182,6 +1182,14 @@ sol::table LuaLib::Learning::openLearning(sol::this_state state) {
   module["SpiderSwarm"] = openSpiderSwarm(state);
   module["NEATParameters"] = openNEATParameters(state);
   module["openNEATSubstrate"] = openNEATSubstrate(state);
+  module["SpiderSwarm"] = lua.create_named_table("DrawingMethod",
+   "DrawSingleInBatch", SpiderSwarm::DrawingMethod::DrawSingleInBatch,
+   "DrawAllInBatch", SpiderSwarm::DrawingMethod::DrawAllInBatch,
+   "Species1", SpiderSwarm::DrawingMethod::Species1,
+   "SpeciesLeaders", SpiderSwarm::DrawingMethod::SpeciesLeaders,
+   "BestFitness", SpiderSwarm::DrawingMethod::BestFitness,
+   "DrawAll", SpiderSwarm::DrawingMethod::DrawAll,
+   "DrawNone", SpiderSwarm::DrawingMethod::DrawNone);
 
   return module;
 }
@@ -1201,7 +1209,10 @@ sol::table LuaLib::Learning::openSpiderSwarm(sol::this_state state) {
     "setup", &SpiderSwarm::setup,
     "start", &SpiderSwarm::start,
     "stop", &SpiderSwarm::stop,
+    "setDrawingMethod", &SpiderSwarm::setDrawingMethod,
     "runGenome", &SpiderSwarm::runGenome,
+    "disableDrawing", &SpiderSwarm::disableDrawing,
+    "enableDrawing", &SpiderSwarm::enableDrawing,
     "toggleDrawANN", &SpiderSwarm::toggleDrawANN,
     "currentDuration", &SpiderSwarm::currentDuration);
 
