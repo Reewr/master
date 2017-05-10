@@ -589,7 +589,7 @@ StandingCurve::~StandingCurve() {
 }
 
 float StandingCurve::mergeFitnessValues(const mmm::vec<9>& fitness) const {
-  return fitness.x * fitness.y;
+  return mmm::product(fitness.xyzw);
 }
 
 void StandingCurve::outputs(Phenotype&                 p,
