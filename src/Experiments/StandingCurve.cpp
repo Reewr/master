@@ -635,8 +635,8 @@ std::vector<double> StandingCurve::inputs(const Phenotype& p) const {
   inputs[0] = rots.x;
   inputs[1] = rots.y;
   inputs[2] = rots.z;
-  inputs[3] = mmm::sin(p.duration * 2);
-  inputs[4] = mmm::cos(p.duration * 2);
+  inputs[3] = 1; // mmm::sin(p.duration * 2);
+  inputs[4] = 1; // mmm::cos(p.duration * 2);
   inputs[5] = 1;
   inputs[6] = 1;
   inputs[7] = 1;
