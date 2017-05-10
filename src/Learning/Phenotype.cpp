@@ -245,7 +245,7 @@ void Phenotype::update(const Experiment& experiment) {
     // ESHyperNEAT does not support leaky as the bias and timeconst variables
     // never change.
     if (experiment.substrate()->m_leaky && !expParams.useESHyperNEAT)
-      network->ActivateLeaky(deltaTime);
+      network->ActivateLeaky(duration);
     else
       network->Activate();
   }
