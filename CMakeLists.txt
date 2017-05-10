@@ -216,6 +216,7 @@ set(SOURCE_FILES
   ${SRC_DIR}/Experiments/WalkingCurve.cpp
   ${SRC_DIR}/Experiments/StandingCurve.cpp
   ${SRC_DIR}/Experiments/WalkingPunished.cpp
+  ${SRC_DIR}/Experiments/WalkingCTRNN.cpp
 
   # src/Learning
   ${SRC_DIR}/Learning/SpiderSwarm.cpp
@@ -328,6 +329,7 @@ set(HEADER_FILES
   ${SRC_DIR}/Experiments/WalkingCurve.hpp
   ${SRC_DIR}/Experiments/StandingCurve.hpp
   ${SRC_DIR}/Experiments/WalkingPunished.hpp
+  ${SRC_DIR}/Experiments/WalkingCTRNN.hpp
 
   # src/Learning
   ${SRC_DIR}/Learning/SpiderSwarm.hpp
