@@ -80,6 +80,13 @@ void Phenotype::remove() {
   delete planeBody;
   delete hoverText;
 }
+btRigidBody* Phenotype::rigidBody(const std::string& name) const {
+  auto& parts = spider->parts();
+  if (spider->parts().count(name) == 0)
+    throw std::runtime_error("No such part: " + name);
+
+  return parts.at(name).part->rigidBody();
+}
 
 /**
  * @brief

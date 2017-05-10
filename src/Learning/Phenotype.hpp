@@ -72,6 +72,8 @@ struct Phenotype : Logging::Log {
   // Deletes the memory allocated in reset
   void remove();
 
+  btRigidBody* rigidBody(const std::string& name) const;
+
   // Checks if a spider part is resting / colliding with the terrain
   bool collidesWithTerrain(btRigidBody* spiderPart) const;
   bool collidesWithTerrain(Drawable3D* spiderPart) const;
