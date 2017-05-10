@@ -574,7 +574,7 @@ WalkingPunished::~WalkingPunished() {
 }
 
 float WalkingPunished::mergeFitnessValues(const mmm::vec<9>& fitness) const {
-  return fitness[0] * fitness[1] * fitness[2] * fitness[3];
+  return fitness[0] * fitness[1] * fitness[2];
 }
 
 void WalkingPunished::outputs(Phenotype&                 p,
