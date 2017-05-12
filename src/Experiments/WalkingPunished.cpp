@@ -59,55 +59,64 @@ WalkingPunished::WalkingPunished() : Experiment("WalkingPunished") {
             }),
   Fitness("Off Center",
             "Fitness based how much off center it is",
-            [](const Phenotype& p, float current, float dt) -> float {
-              float xpos = p.spider->parts().at("Sternum").part->rigidBody()->getCenterOfMassPosition().x();
-              return current + ExpUtil::score(dt, xpos, 0.5);
+            [](const Phenotype& p, float current, float) -> float {
+              const btRigidBody* sternum = p.rigidBody("Sternum");
+              float xpos = sternum->getCenterOfMassPosition().x();
+              return current + ExpUtil::score(1.0, xpos, 0.1);
             },
             [](const Phenotype&, float current, float duration) -> float {
-              return current / duration;
+              return current / (duration * 60);
+            }),
+
+  Fitness("Off Center Rotation",
+            "Fitness based how much rotation off center it is",
+            [](const Phenotype& p, float current, float) -> float {
+              const btRigidBody* sternum = p.rigidBody("Sternum");
+              float yrot = ExpUtil::getEulerAngles(sternum->getOrientation()).y;
+              yrot += mmm::radians(90);
+              return current + ExpUtil::score(1.0, yrot, mmm::radians(10));
+            },
+            [](const Phenotype&, float current, float duration) -> float {
+              return current / (duration * 60);
             }),
 
     Fitness("Colliding",
             "If the spider falls, punish it",
             [](const Phenotype& phenotype, float current, float dt) -> float {
 
-            mmm::vec<29> collides({
-                phenotype.collidesWithTerrain("Abdomin") ? 1.f : 0.f,
-                phenotype.collidesWithTerrain("Sternum") ? 1.f : 0.f,
-                phenotype.collidesWithTerrain("Eye") ? 1.f : 0.f,
-                phenotype.collidesWithTerrain("Hip") ? 1.f : 0.f,
-                phenotype.collidesWithTerrain("Neck") ? 1.f : 0.f,
-                phenotype.collidesWithTerrain("PatellaR1") ? 1.f : 0.f,
-                phenotype.collidesWithTerrain("PatellaR2") ? 1.f : 0.f,
-                phenotype.collidesWithTerrain("PatellaR3") ? 1.f : 0.f,
-                phenotype.collidesWithTerrain("PatellaR4") ? 1.f : 0.f,
-                phenotype.collidesWithTerrain("PatellaL1") ? 1.f : 0.f,
-                phenotype.collidesWithTerrain("PatellaL2") ? 1.f : 0.f,
-                phenotype.collidesWithTerrain("PatellaL3") ? 1.f : 0.f,
-                phenotype.collidesWithTerrain("PatellaL4") ? 1.f : 0.f,
-                phenotype.collidesWithTerrain("FemurR1") ? 1.f : 0.f,
-                phenotype.collidesWithTerrain("FemurR2") ? 1.f : 0.f,
-                phenotype.collidesWithTerrain("FemurR3") ? 1.f : 0.f,
-                phenotype.collidesWithTerrain("FemurR4") ? 1.f : 0.f,
-                phenotype.collidesWithTerrain("FemurL1") ? 1.f : 0.f,
-                phenotype.collidesWithTerrain("FemurL2") ? 1.f : 0.f,
-                phenotype.collidesWithTerrain("FemurL3") ? 1.f : 0.f,
-                phenotype.collidesWithTerrain("FemurL4") ? 1.f : 0.f,
-                phenotype.collidesWithTerrain("TrochanterR1") ? 1.f : 0.f,
-                phenotype.collidesWithTerrain("TrochanterR2") ? 1.f : 0.f,
-                phenotype.collidesWithTerrain("TrochanterR3") ? 1.f : 0.f,
-                phenotype.collidesWithTerrain("TrochanterR4") ? 1.f : 0.f,
-                phenotype.collidesWithTerrain("TrochanterL1") ? 1.f : 0.f,
-                phenotype.collidesWithTerrain("TrochanterL2") ? 1.f : 0.f,
-                phenotype.collidesWithTerrain("TrochanterL3") ? 1.f : 0.f,
-                phenotype.collidesWithTerrain("TrochanterL4") ? 1.f : 0.f
-            });
+              if (phenotype.collidesWithTerrain("Abdomin") ||
+                phenotype.collidesWithTerrain("Sternum") ||
+                phenotype.collidesWithTerrain("Eye") ||
+                phenotype.collidesWithTerrain("Hip") ||
+                phenotype.collidesWithTerrain("Neck") ||
+                phenotype.collidesWithTerrain("PatellaR1") ||
+                phenotype.collidesWithTerrain("PatellaR2") ||
+                phenotype.collidesWithTerrain("PatellaR3") ||
+                phenotype.collidesWithTerrain("PatellaR4") ||
+                phenotype.collidesWithTerrain("PatellaL1") ||
+                phenotype.collidesWithTerrain("PatellaL2") ||
+                phenotype.collidesWithTerrain("PatellaL3") ||
+                phenotype.collidesWithTerrain("PatellaL4") ||
+                phenotype.collidesWithTerrain("FemurR1") ||
+                phenotype.collidesWithTerrain("FemurR2") ||
+                phenotype.collidesWithTerrain("FemurR3") ||
+                phenotype.collidesWithTerrain("FemurR4") ||
+                phenotype.collidesWithTerrain("FemurL1") ||
+                phenotype.collidesWithTerrain("FemurL2") ||
+                phenotype.collidesWithTerrain("FemurL3") ||
+                phenotype.collidesWithTerrain("FemurL4") ||
+                phenotype.collidesWithTerrain("TrochanterR1") ||
+                phenotype.collidesWithTerrain("TrochanterR2") ||
+                phenotype.collidesWithTerrain("TrochanterR3") ||
+                phenotype.collidesWithTerrain("TrochanterR4") ||
+                phenotype.collidesWithTerrain("TrochanterL1") ||
+                phenotype.collidesWithTerrain("TrochanterL2") ||
+                phenotype.collidesWithTerrain("TrochanterL3") ||
+                phenotype.collidesWithTerrain("TrochanterL4"))
+                phenotype.kill();
 
-              return current + dt * (1 - mmm::sum(collides) / 29.f);
-            },
-            [](const Phenotype&, float current, float duration) {
-              return current / duration;
-            }),
+              return current;
+            })
   };
 
   std::vector<std::vector<double>> inputs{
@@ -215,8 +224,8 @@ WalkingPunished::WalkingPunished() : Experiment("WalkingPunished") {
   // NEAT::ActivationFunction::TAHN
   // NEAT::ActivationFunction::TAHN_CUBIC
   // NEAT::ActivationFunction::ABS
-  mSubstrate->m_hidden_nodes_activation = NEAT::ActivationFunction::SIGNED_SIGMOID;
-  mSubstrate->m_output_nodes_activation = NEAT::ActivationFunction::SIGNED_SIGMOID;
+  mSubstrate->m_hidden_nodes_activation = NEAT::ActivationFunction::TANH;
+  mSubstrate->m_output_nodes_activation = NEAT::ActivationFunction::TANH;
 
   // This is only available in HyperNEAT and not ESHyperNEAT
   //mSubstrate->m_leaky = true;
@@ -348,7 +357,7 @@ WalkingPunished::WalkingPunished() : Experiment("WalkingPunished") {
   params.MutateAddLinkFromBiasProb = 0.0;
 
   // Probability for a baby to be mutated with the Remove-Link mutation
-  params.MutateRemLinkProb = 0.1;
+  params.MutateRemLinkProb = 0.02;
 
   // Probability for a baby that a simple neuron will be replaced with a link
   params.MutateRemSimpleNeuronProb = 0.1;
@@ -367,7 +376,7 @@ WalkingPunished::WalkingPunished() : Experiment("WalkingPunished") {
   ///////////////////////////////////
 
   // Probability for a baby's weights to be mutated
-  params.MutateWeightsProb = 0.8;
+  params.MutateWeightsProb = 0.9;
 
   // Probability for a severe (shaking) weight mutation
   params.MutateWeightsSevereProb = 0.5;
@@ -376,7 +385,7 @@ WalkingPunished::WalkingPunished() : Experiment("WalkingPunished") {
   params.WeightMutationRate = 0.96;
 
   // Maximum perturbation for a weight mutation
-  params.WeightMutationMaxPower = 0.5;
+  params.WeightMutationMaxPower = 0.2;
 
   // Maximum magnitude of a replaced weight
   params.WeightReplacementMaxPower = 1.0;
@@ -388,10 +397,10 @@ WalkingPunished::WalkingPunished() : Experiment("WalkingPunished") {
   params.MaxWeight = 3.0;
 
   // Probability for a baby's A activation function parameters to be perturbed
-  params.MutateActivationAProb = 0.1;
+  params.MutateActivationAProb = 0.0;
 
   // Probability for a baby's B activation function parameters to be perturbed
-  params.MutateActivationBProb = 0.1;
+  params.MutateActivationBProb = 0.0;
 
   // Maximum magnitude for the A parameter perturbation
   params.ActivationAMutationMaxPower = 0.0;
@@ -400,7 +409,7 @@ WalkingPunished::WalkingPunished() : Experiment("WalkingPunished") {
   params.ActivationBMutationMaxPower = 0.0;
 
   // Activation parameter A min/max
-  params.MinActivationA = 1.0;
+  params.MinActivationA = 0.05;
   params.MaxActivationA = 6.0;
 
   // Activation parameter B min/max
@@ -408,7 +417,7 @@ WalkingPunished::WalkingPunished() : Experiment("WalkingPunished") {
   params.MaxActivationB = 0.0;
 
   // Maximum magnitude for time costants perturbation
-  params.TimeConstantMutationMaxPower = 0.1;
+  params.TimeConstantMutationMaxPower = 0.0;
 
   // Maximum magnitude for biases perturbation
   params.BiasMutationMaxPower = params.WeightMutationMaxPower;
@@ -429,7 +438,7 @@ WalkingPunished::WalkingPunished() : Experiment("WalkingPunished") {
 
   // Probability for a baby that an activation function type will be changed for a single neuron
   // considered a structural mutation because of the large impact on fitness
-  params.MutateNeuronActivationTypeProb = 0.15;
+  params.MutateNeuronActivationTypeProb = 0.03;
 
   // Probabilities for a particular activation function appearance
   params.ActivationFunction_SignedSigmoid_Prob = 1.0;
@@ -560,8 +569,8 @@ WalkingPunished::WalkingPunished() : Experiment("WalkingPunished") {
                       0,
                       mSubstrate->GetMinCPPNOutputs(),
                       false,
+                      NEAT::ActivationFunction::TANH_CUBIC,
                       NEAT::ActivationFunction::SIGNED_SINE,
-                      NEAT::ActivationFunction::SIGNED_GAUSS,
                       0,
                       params);
 
@@ -574,7 +583,7 @@ WalkingPunished::~WalkingPunished() {
 }
 
 float WalkingPunished::mergeFitnessValues(const mmm::vec<9>& fitness) const {
-  return fitness[0] * fitness[1] * fitness[2];
+  return fitness[0] * fitness[1] * fitness[2] * fitness[3];
 }
 
 void WalkingPunished::outputs(Phenotype&                 p,
