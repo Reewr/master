@@ -12,6 +12,7 @@
 #include "../Experiments/WalkingRotationNoKill.hpp"
 #include "../Experiments/WalkingCurve.hpp"
 #include "../Experiments/StandingCurve.hpp"
+#include "../Experiments/StandingCurve2.hpp"
 #include "../Experiments/WalkingPunished.hpp"
 #include "../Experiments/WalkingCTRNN.hpp"
 
@@ -199,6 +200,8 @@ void SpiderSwarm::setup(const std::string& name, bool startExperiment) {
     mCurrentExperiment = new WalkingCurve();
   else if (name == "StandingCurve")
     mCurrentExperiment = new StandingCurve();
+  else if (name == "StandingCurve2")
+    mCurrentExperiment = new StandingCurve2();
   else if (name == "WalkingPunished")
     mCurrentExperiment = new WalkingPunished();
   else if (name == "WalkingCTRNN")
