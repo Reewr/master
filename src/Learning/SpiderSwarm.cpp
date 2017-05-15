@@ -11,9 +11,13 @@
 #include "../Experiments/StandingRotationInputs.hpp"
 #include "../Experiments/WalkingRotationNoKill.hpp"
 #include "../Experiments/WalkingCurve.hpp"
+#include "../Experiments/WalkingMultiKill.hpp"
 #include "../Experiments/StandingCurve.hpp"
+#include "../Experiments/StandingCurve2.hpp"
 #include "../Experiments/WalkingPunished.hpp"
 #include "../Experiments/WalkingCTRNN.hpp"
+#include "../Experiments/WalkingRT.hpp"
+#include "../Experiments/WalkingRT2.hpp"
 
 #include <btBulletDynamicsCommon.h>
 #include <thread>
@@ -201,12 +205,20 @@ void SpiderSwarm::setup(const std::string& name, bool startExperiment) {
     mCurrentExperiment = new StandingSimpleInputs();
   else if (name == "WalkingCurve")
     mCurrentExperiment = new WalkingCurve();
+  else if (name == "WalkingMultiKill")
+    mCurrentExperiment = new WalkingMultiKill();
   else if (name == "StandingCurve")
     mCurrentExperiment = new StandingCurve();
+  else if (name == "StandingCurve2")
+    mCurrentExperiment = new StandingCurve2();
   else if (name == "WalkingPunished")
     mCurrentExperiment = new WalkingPunished();
   else if (name == "WalkingCTRNN")
     mCurrentExperiment = new WalkingCTRNN();
+  else if (name == "WalkingRT")
+    mCurrentExperiment = new WalkingRT();
+  else if (name == "WalkingRT2")
+    mCurrentExperiment = new WalkingRT2();
   else
     throw std::runtime_error("Unable to find experiment: " + name);
 
