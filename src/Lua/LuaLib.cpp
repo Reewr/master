@@ -1211,6 +1211,7 @@ sol::table LuaLib::Learning::openSpiderSwarm(sol::this_state state) {
     "stop", &SpiderSwarm::stop,
     "setDrawingMethod", &SpiderSwarm::setDrawingMethod,
     "runGenome", &SpiderSwarm::runGenome,
+    "runBestGenome", &SpiderSwarm::runBestGenome,
     "disableDrawing", &SpiderSwarm::disableDrawing,
     "enableDrawing", &SpiderSwarm::enableDrawing,
     "toggleDrawANN", &SpiderSwarm::toggleDrawANN,

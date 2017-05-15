@@ -72,7 +72,8 @@ public:
   enum class SimulationStage {
     None,
     Experiment,
-    Simulating
+    SimulationReady,
+    Simulating,
   };
 
   SpiderSwarm();
@@ -94,6 +95,9 @@ public:
 
   // Runs the simulation for the genome
   void runGenome(int genomeId);
+
+  // Runs the best genome
+  void runBestGenome();
 
   // Returns the current drawing method
   DrawingMethod drawingMethod();

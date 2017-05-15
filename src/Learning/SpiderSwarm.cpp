@@ -123,6 +123,10 @@ void SpiderSwarm::enableDrawing() {
   mDisableDrawing = false;
 }
 
+void SpiderSwarm::runBestGenome() {
+  runGenome(mBestPossibleGenome.GetID());
+}
+
 void SpiderSwarm::runGenome(int genomeId) {
   if (mCurrentExperiment == nullptr) {
     mLog->debug("Must setup experiment before running genome");
@@ -166,7 +170,7 @@ void SpiderSwarm::runGenome(int genomeId) {
                                *mSubstrate);
   }
 
-  mSimulatingStage = SimulationStage::Simulating;
+  mSimulatingStage = SimulationStage::SimulationReady;
   mCurrentDuration = 0;
   mLog->info("Ready to simulate genome: {}", genomeId);
 }
@@ -231,7 +235,10 @@ void SpiderSwarm::start() {
     return;
   }
 
-  mSimulatingStage = SimulationStage::Experiment;
+  if (mSimulatingStage == SimulationStage::SimulationReady)
+    mSimulatingStage = SimulationStage::Simulating;
+  else if (mSimulatingStage == SimulationStage::None)
+    mSimulatingStage = SimulationStage::Experiment;
 }
 
 /**
@@ -274,6 +281,9 @@ void SpiderSwarm::toggleDrawANN() {
 }
 
 void SpiderSwarm::updateSimulation(float deltaTime) {
+  if (mSimulatingStage == SimulationStage::SimulationReady && mPhenotypes[0].duration > 0.0)
+    return;
+
   mPhenotypes[0].failed = false;
   mPhenotypes[0].update(*mCurrentExperiment);
 }
@@ -296,7 +306,8 @@ void SpiderSwarm::update(float deltaTime) {
   if (mSimulatingStage == SimulationStage::None)
     return;
 
-  if (mSimulatingStage == SimulationStage::Simulating)
+  if (mSimulatingStage == SimulationStage::Simulating ||
+      mSimulatingStage == SimulationStage::SimulationReady)
     return updateSimulation(deltaTime);
 
   if (mRestartOnNextUpdate) {
