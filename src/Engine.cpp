@@ -415,6 +415,8 @@ void Engine::deinitialize(bool isFullDeinit) {
 void Engine::runLoop() {
   // Used to check the difference between the loops
   static float startTime = glfwGetTime();
+  static int numFrames   = 30;
+  static float loopTime  = 1.0 / float(numFrames);
 
   while (!glfwWindowShouldClose(mWindow)) {
     float currentTime = glfwGetTime();
@@ -433,6 +435,14 @@ void Engine::runLoop() {
 
     glfwSwapBuffers(mWindow);
     glfwPollEvents();
+
+    float remainingLoopTime = loopTime - (glfwGetTime() - currentTime);
+
+    if (remainingLoopTime > 0) {
+      mLog->debug("Sleeping for {}", int(remainingLoopTime * 1000));
+      std::chrono::milliseconds ms(int(remainingLoopTime * 1000));
+      std::this_thread::sleep_for(ms);
+    }
 
     // Special case for when the engine has to be entirely
     // reloaded due context setting changes.
