@@ -19,7 +19,7 @@ out vec4 fragment;
 // light properties
 const float spec_exp = 1;
 
-const vec3 specular_light = vec3(1.0, 1.0, 1.0);
+const vec3 specular_light = vec3(0.8, 0.8, 0.8);
 const vec3 diffuse_light  = vec3(0.7, 0.7, 0.7);
 const vec3 ambient_light  = vec3(0.2, 0.2, 0.2);
 
@@ -50,13 +50,13 @@ void main () {
 
   // ignore shadows:
   //fragment = texture(diffuseMap, texCoord);
-  fragment = vec4(texel, 1.0);
+  //fragment = vec4(texel, 1.0);
 
   // with shadows:
   // fragment = vec4((specular + diffuse) * visibility + ambient, 1.0);
 
   // without phong shading, until we fix normals...
-  // fragment = vec4(texel * visibility + ambient, 1.0);
+  fragment = vec4(texel * visibility + ambient, 1.0);
 
   // with fog:
   // fragment.rgb = fog(fragment);
