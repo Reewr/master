@@ -66,6 +66,10 @@ Master::Master(Asset* a) : mAsset(a) {
   // just run physics once so the terrain is positioned correctly
   mWorld->doPhysics(1);
   mLog->info("Initialized successfully");
+
+  mSwarm->setup("WalkingCurve");
+  mSwarm->load("experiments/WalkingCurve/02/current-g400");
+  mSwarm->runBestGenome();
 }
 
 Master::~Master() {
