@@ -376,8 +376,6 @@ void Console::input(const Input::Event& event) {
         break;
       case GLFW_KEY_TAB:
         setAutoComplete();
-      default:
-        return event.stopPropgation();
     }
   }
 
@@ -433,6 +431,10 @@ void Console::input(const Input::Event& event) {
     setCommandFromHistory();
     return event.stopPropgation();
   }
+
+  // If it hasnt been handled yet, console still take precedence over
+  // everything else since the console is open and is grabbing all input
+  return event.stopPropgation();
 }
 
 /**
