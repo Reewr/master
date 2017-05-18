@@ -386,10 +386,10 @@ void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
     return;
 
   if (mSimulatingStage == SimulationStage::Simulating) {
-    mPhenotypes[0].draw(prog, grid[0], bindTexture);
+    mPhenotypes[0].draw(prog, mmm::vec3(0, 0, 0), bindTexture);
 
     if (bindTexture && mDrawDebugNetworks) {
-      mPhenotypes[0].drawablePhenotype->draw3D(grid[0] + mmm::vec3(0, 5, 0));
+      mPhenotypes[0].drawablePhenotype->draw3D(mmm::vec3(0, 5, 0));
     }
 
     return;
