@@ -385,7 +385,8 @@ void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
   if (mSimulatingStage == SimulationStage::None || mDisableDrawing)
     return;
 
-  if (mSimulatingStage == SimulationStage::Simulating) {
+  if (mSimulatingStage == SimulationStage::Simulating ||
+      mSimulatingStage == SimulationStage::SimulationReady) {
     mPhenotypes[0].draw(prog, mmm::vec3(0, 0, 0), bindTexture);
 
     if (bindTexture && mDrawDebugNetworks) {
