@@ -208,20 +208,15 @@ set(SOURCE_FILES
   # src/Experiment
   ${SRC_DIR}/Experiments/Experiment.cpp
   ${SRC_DIR}/Experiments/ExperimentUtil.cpp
-  ${SRC_DIR}/Experiments/WalkingSimpleInputs.cpp
-  ${SRC_DIR}/Experiments/StandingSimpleInputs.cpp
   ${SRC_DIR}/Experiments/WalkingRotationInputs.cpp
   ${SRC_DIR}/Experiments/WalkingRotationNoKill.cpp
-  ${SRC_DIR}/Experiments/StandingRotationInputs.cpp
   ${SRC_DIR}/Experiments/WalkingCurve.cpp
   ${SRC_DIR}/Experiments/WalkingMultiKill.cpp
   ${SRC_DIR}/Experiments/StandingCurve.cpp
   ${SRC_DIR}/Experiments/StandingCurve2.cpp
   ${SRC_DIR}/Experiments/WalkingPunished.cpp
-  ${SRC_DIR}/Experiments/WalkingCTRNN.cpp
   ${SRC_DIR}/Experiments/WalkingRT.cpp
   ${SRC_DIR}/Experiments/WalkingRT2.cpp
-  ${SRC_DIR}/Experiments/WalkingChanged.cpp
 
   # src/Learning
   ${SRC_DIR}/Learning/SpiderSwarm.cpp
@@ -326,20 +321,15 @@ set(HEADER_FILES
   # src/Experiments
   ${SRC_DIR}/Experiments/Experiment.hpp
   ${SRC_DIR}/Experiments/ExperimentUtil.hpp
-  ${SRC_DIR}/Experiments/WalkingSimpleInputs.hpp
-  ${SRC_DIR}/Experiments/StandingSimpleInputs.hpp
   ${SRC_DIR}/Experiments/WalkingRotationInputs.hpp
   ${SRC_DIR}/Experiments/WalkingRotationNoKill.hpp
-  ${SRC_DIR}/Experiments/StandingRotationInputs.hpp
   ${SRC_DIR}/Experiments/WalkingCurve.hpp
   ${SRC_DIR}/Experiments/WalkingMultiKill.hpp
   ${SRC_DIR}/Experiments/StandingCurve.hpp
   ${SRC_DIR}/Experiments/StandingCurve2.hpp
   ${SRC_DIR}/Experiments/WalkingPunished.hpp
-  ${SRC_DIR}/Experiments/WalkingCTRNN.hpp
   ${SRC_DIR}/Experiments/WalkingRT.hpp
   ${SRC_DIR}/Experiments/WalkingRT2.hpp
-  ${SRC_DIR}/Experiments/WalkingChanged.hpp
 
   # src/Learning
   ${SRC_DIR}/Learning/SpiderSwarm.hpp

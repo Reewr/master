@@ -5,18 +5,13 @@
 #include "DrawablePhenotype.hpp"
 #include "Substrate.hpp"
 
-#include "../Experiments/WalkingSimpleInputs.hpp"
-#include "../Experiments/StandingSimpleInputs.hpp"
 #include "../Experiments/WalkingRotationInputs.hpp"
-#include "../Experiments/StandingRotationInputs.hpp"
 #include "../Experiments/WalkingRotationNoKill.hpp"
 #include "../Experiments/WalkingCurve.hpp"
 #include "../Experiments/WalkingMultiKill.hpp"
-#include "../Experiments/WalkingChanged.hpp"
 #include "../Experiments/StandingCurve.hpp"
 #include "../Experiments/StandingCurve2.hpp"
 #include "../Experiments/WalkingPunished.hpp"
-#include "../Experiments/WalkingCTRNN.hpp"
 #include "../Experiments/WalkingRT.hpp"
 #include "../Experiments/WalkingRT2.hpp"
 
@@ -196,28 +191,18 @@ void SpiderSwarm::setup(const std::string& name, bool startExperiment) {
 
   if (name == "WalkingRotationInputs")
     mCurrentExperiment = new WalkingRotationInputs();
-  else if (name == "WalkingSimpleInputs")
-    mCurrentExperiment = new WalkingSimpleInputs();
-  else if (name == "StandingRotationInputs")
-    mCurrentExperiment = new StandingRotationInputs();
   else if (name == "WalkingRotationNoKill")
     mCurrentExperiment = new WalkingRotationNoKill();
-  else if (name == "StandingSimpleInputs")
-    mCurrentExperiment = new StandingSimpleInputs();
   else if (name == "WalkingCurve")
     mCurrentExperiment = new WalkingCurve();
   else if (name == "WalkingMultiKill")
     mCurrentExperiment = new WalkingMultiKill();
-  else if (name == "WalkingChanged")
-    mCurrentExperiment = new WalkingChanged();
   else if (name == "StandingCurve")
     mCurrentExperiment = new StandingCurve();
   else if (name == "StandingCurve2")
     mCurrentExperiment = new StandingCurve2();
   else if (name == "WalkingPunished")
     mCurrentExperiment = new WalkingPunished();
-  else if (name == "WalkingCTRNN")
-    mCurrentExperiment = new WalkingCTRNN();
   else if (name == "WalkingRT")
     mCurrentExperiment = new WalkingRT();
   else if (name == "WalkingRT2")
