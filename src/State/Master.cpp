@@ -144,8 +144,10 @@ void Master::input(const Input::Event& event) {
   }
 
   if (event.keyPressed(GLFW_KEY_R)) {
-    mSwarm->runBestGenome();
-    mSwarm->start();
+    if (mSwarm->stage() == SpiderSwarm::SimulationStage::SimulationReady)
+      mSwarm->start();
+    else
+      mSwarm->runBestGenome();
     event.stopPropgation();
     return;
   }
