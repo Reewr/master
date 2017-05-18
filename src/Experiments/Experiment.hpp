@@ -87,15 +87,14 @@ public:
   // Default behaviour is to sum all fitness values
   virtual float mergeFitnessValues(const mmm::vec<9>& fitnesses) const;
 
+  // Alows you to do some final changes before generation is ended
+  virtual void postUpdate(const Phenotype& p);
+
   // Tells the experiment to use the outputs from the network
   virtual void outputs(Phenotype& p, const std::vector<double>& outputs) const = 0;
 
   // Tells the experiment to retrieve inputs
   virtual std::vector<double> inputs(const Phenotype& p) const = 0;
-
-  virtual void postUpdate(const Phenotype& p) const {
-    // by default do nothing
-  };
 
 protected:
   Experiment(const std::string& name);

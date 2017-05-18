@@ -548,6 +548,15 @@ void Experiment::initPhenotype(Phenotype&) const {}
 
 /**
  * @brief
+ *   Allows you to perform some last changes or calculations before the
+ *   generation is ended.
+ *
+ * @param Phenotype
+ */
+void Experiment::postUpdate(const Phenotype&) const {}
+
+/**
+ * @brief
  *   Allows you to customize the way that the fitness values are merged
  *
  *   Default behaviour is to sum all fitness values together
