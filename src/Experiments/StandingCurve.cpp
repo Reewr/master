@@ -7,14 +7,12 @@
 
 #include <btBulletDynamicsCommon.h>
 
-const float PI = mmm::constants<float>::pi;
-
 StandingCurve::StandingCurve() : Experiment("StandingCurve") {
 
   mParameters.numActivates = 8;
   mParameters.experimentDuration = 30;
   mFitnessFunctions =
-  { Fitness("STAND     ",
+  { Fitness("Standing",
             "Fitness based on no movement.",
             [](const Phenotype&, float current, float) -> float {
               return current;
@@ -30,7 +28,7 @@ StandingCurve::StandingCurve() : Experiment("StandingCurve") {
               current += mmm::abs(massPos.z() - p.initialPosition.z);
               return ExpUtil::score(1.f, current, 0);
             }),
-    Fitness("ROTITATION",
+    Fitness("Rotation",
             "Fitness based on no rotation.",
             [](const Phenotype&, float current, float) -> float {
               return current;
@@ -45,7 +43,7 @@ StandingCurve::StandingCurve() : Experiment("StandingCurve") {
               current += mmm::sum(mmm::abs(o - p.initialPosition));
               return ExpUtil::score(1.f, current, 0);
             }),
-    Fitness("Lifespan  ",
+    Fitness("Lifespan",
             "Fitness based on lifespan.",
             [](const Phenotype&, float, float) -> float {
               return 0.f;
@@ -55,11 +53,10 @@ StandingCurve::StandingCurve() : Experiment("StandingCurve") {
             }),
     Fitness("Vibrating",
             "Fitness based how little it vibrates with the legs",
-            [](const Phenotype& p, float, float) -> float {
+            [](const Phenotype&, float, float) -> float {
               return 0;
             },
             [](const Phenotype& p, float current, float duration) -> float {
-              float dt          = 1.f / 60.f;
               size_t numUpdates = p.tmp.size();
               size_t numJoints  = numUpdates == 0 ? 0 : p.tmp[0].size();
 

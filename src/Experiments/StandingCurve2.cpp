@@ -6,14 +6,12 @@
 
 #include <btBulletDynamicsCommon.h>
 
-const float PI = mmm::constants<float>::pi;
-
 StandingCurve2::StandingCurve2() : Experiment("StandingCurve2") {
 
   mParameters.numActivates = 8;
   mParameters.experimentDuration = 30;
   mFitnessFunctions =
-  { Fitness("STAND     ",
+  { Fitness("Stand",
             "Fitness based on no movement.",
             [](const Phenotype& p, float current, float dt) -> float {
               if (p.duration <= 2*dt)
@@ -41,11 +39,10 @@ StandingCurve2::StandingCurve2() : Experiment("StandingCurve2") {
             }),
     Fitness("Vibrating",
             "Fitness based how little it vibrates with the legs",
-            [](const Phenotype& p, float, float) -> float {
+            [](const Phenotype&, float, float) -> float {
               return 0;
             },
             [](const Phenotype& p, float current, float duration) -> float {
-              float dt          = 1.f / 60.f;
               size_t numUpdates = p.tmp.size();
               size_t numJoints  = numUpdates == 0 ? 0 : p.tmp[0].size();
 

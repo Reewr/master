@@ -7,8 +7,6 @@
 
 #include <btBulletDynamicsCommon.h>
 
-const float PI = mmm::constants<float>::pi;
-
 WalkingRT::WalkingRT() : Experiment("WalkingRT") {
 
   mParameters.numActivates = 8;
@@ -24,12 +22,10 @@ WalkingRT::WalkingRT() : Experiment("WalkingRT") {
 
     Fitness("TEST      ",
             "...",
-            [](const Phenotype& p, float current, float) -> float {
+            [](const Phenotype&, float current, float) -> float {
               return current;
-            }, [](const Phenotype& p, float current, float) -> float {
+            }, [](const Phenotype& p, float, float) -> float {
               size_t numUpdates = p.tmp.size() / 3;
-
-              const float dt = 1.f / 60.f;
 
               float x = 0.f;
               float y = 0.f;
@@ -55,7 +51,7 @@ WalkingRT::WalkingRT() : Experiment("WalkingRT") {
 
     Fitness("Vibrating",
             "Fitness based how little it vibrates with the legs",
-            [](const Phenotype& p, float, float) -> float {
+            [](const Phenotype&, float, float) -> float {
               return 0;
             },
             [](const Phenotype& p, float current, float duration) -> float {

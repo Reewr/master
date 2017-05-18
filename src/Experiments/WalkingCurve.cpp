@@ -7,8 +7,6 @@
 
 #include <btBulletDynamicsCommon.h>
 
-const float PI = mmm::constants<float>::pi;
-
 WalkingCurve::WalkingCurve() : Experiment("WalkingCurve") {
 
   mParameters.numActivates = 8;
@@ -29,7 +27,7 @@ WalkingCurve::WalkingCurve() : Experiment("WalkingCurve") {
             }),
   Fitness("Vibrating",
             "Fitness based how little it vibrates with the legs",
-            [](const Phenotype& p, float, float) -> float {
+            [](const Phenotype&, float, float) -> float {
               return 0;
             },
             [](const Phenotype& p, float current, float duration) -> float {

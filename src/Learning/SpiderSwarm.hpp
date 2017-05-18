@@ -94,7 +94,7 @@ public:
   void stop();
 
   // Runs the simulation for the genome
-  void runGenome(int genomeId);
+  void runGenome(unsigned int genomeId);
 
   // Runs the best genome
   void runBestGenome();
@@ -181,7 +181,7 @@ private:
     mBuildingWorker;
 #endif
 
-  void updateSimulation(float deltaTime);
+  void updateSimulation();
 
   // If called, it will use as many threads as possible to
   void updateUsingThreads(float deltaTime);

@@ -127,7 +127,7 @@ void SpiderSwarm::runBestGenome() {
   runGenome(mBestPossibleGenome.GetID());
 }
 
-void SpiderSwarm::runGenome(int genomeId) {
+void SpiderSwarm::runGenome(unsigned int genomeId) {
   if (mCurrentExperiment == nullptr) {
     mLog->debug("Must setup experiment before running genome");
     return;
@@ -280,7 +280,7 @@ void SpiderSwarm::toggleDrawANN() {
   }
 }
 
-void SpiderSwarm::updateSimulation(float deltaTime) {
+void SpiderSwarm::updateSimulation() {
   if (mSimulatingStage == SimulationStage::SimulationReady && mPhenotypes[0].duration > 0.0)
     return;
 
@@ -308,7 +308,7 @@ void SpiderSwarm::update(float deltaTime) {
 
   if (mSimulatingStage == SimulationStage::Simulating ||
       mSimulatingStage == SimulationStage::SimulationReady)
-    return updateSimulation(deltaTime);
+    return updateSimulation();
 
   if (mRestartOnNextUpdate) {
     for (auto& p : mPhenotypes)
@@ -398,6 +398,9 @@ void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
   size_t gridSize      = grid.size();
 
   switch (mDrawingMethod) {
+    case DrawingMethod::DrawNone:
+      break;
+
     // Draw only the first spider of the current batch
     case DrawingMethod::DrawSingleInBatch: {
       if (mBatchStart < mPhenotypes.size()) {
