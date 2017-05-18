@@ -293,6 +293,12 @@ Texture& Texture::clampToEdge() {
   return *this;
 }
 
+Texture& Texture::repeat() {
+  setSamplerFiltering(GL_TEXTURE_WRAP_T, GL_REPEAT);
+  setSamplerFiltering(GL_TEXTURE_WRAP_S, GL_REPEAT);
+  return *this;
+}
+
 void Texture::setSamplerFiltering(GLenum param, GLenum value) {
   if (mTextureId == 0 || mSamplerId == 0)
     return;

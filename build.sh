@@ -190,6 +190,8 @@ clean_build_dir() {
   else
     make cleanbuild
   fi
+
+  cd ..
 }
 
 # Generates the documentation via the use of Doxygen

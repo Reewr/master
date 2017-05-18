@@ -49,7 +49,7 @@ void GLGrid3D::generateVertices(std::vector<std::vector<mmm::vec3>>& v,
 
       s.x       = x / (mSize.x - 1);
       v[y][x]   = mmm::vec3(-0.5 + s.x, 0, -0.5 + s.y);
-      t[y][x]   = s;
+      t[y][x]   = s * 4;
       v[y][x].y = 0;
     }
   }

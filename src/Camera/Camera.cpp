@@ -24,8 +24,8 @@ Camera::Light::Light()
 Camera::Camera(Asset* asset)
     : Logging::Log("Camera")
     , mAsset(asset)
-    , mPosition(0, 1, 3)
-    , mTarget(0, 1, 2)
+    , mPosition(6, 4, 6)
+    , mTarget(2, 0, 2)
     , mUp(0, 1, 0)
     , mModel(mat4::identity)
     , mView(mat4::identity)
@@ -206,6 +206,26 @@ const vec3& Camera::target() const {
  */
 const vec3& Camera::position() const {
   return mPosition;
+}
+
+/**
+ * @brief
+ *   Sets the camera position
+ *
+ * @param position
+ */
+void Camera::setPosition(const mmm::vec3& position) {
+  mPosition = position;
+}
+
+/**
+ * @brief
+ *   Sets the position at where the camera is looking
+ *
+ * @param target
+ */
+void Camera::setTarget(const mmm::vec3& target) {
+  mTarget = target;
 }
 
 /**

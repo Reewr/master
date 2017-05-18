@@ -1182,6 +1182,14 @@ sol::table LuaLib::Learning::openLearning(sol::this_state state) {
   module["SpiderSwarm"] = openSpiderSwarm(state);
   module["NEATParameters"] = openNEATParameters(state);
   module["openNEATSubstrate"] = openNEATSubstrate(state);
+  module["SpiderSwarm"] = lua.create_named_table("DrawingMethod",
+   "DrawSingleInBatch", SpiderSwarm::DrawingMethod::DrawSingleInBatch,
+   "DrawAllInBatch", SpiderSwarm::DrawingMethod::DrawAllInBatch,
+   "Species1", SpiderSwarm::DrawingMethod::Species1,
+   "SpeciesLeaders", SpiderSwarm::DrawingMethod::SpeciesLeaders,
+   "BestFitness", SpiderSwarm::DrawingMethod::BestFitness,
+   "DrawAll", SpiderSwarm::DrawingMethod::DrawAll,
+   "DrawNone", SpiderSwarm::DrawingMethod::DrawNone);
 
   return module;
 }
@@ -1195,15 +1203,19 @@ sol::table LuaLib::Learning::openSpiderSwarm(sol::this_state state) {
   sol::usertype<SpiderSwarm> type(ctor,
     "save", &SpiderSwarm::save,
     "load", &SpiderSwarm::load,
-    "loadPopulation", &SpiderSwarm::loadPopulation,
-    "loadSubstrate", &SpiderSwarm::loadSubstrate,
     "parameters", &SpiderSwarm::parameters,
     "substrate", &SpiderSwarm::substrate,
     "restart", &SpiderSwarm::restart,
-    "toggleDrawDebugNetworks", &SpiderSwarm::toggleDrawDebugNetworks,
-    "currentDuration", &SpiderSwarm::currentDuration,
-    "iterationDuration", &SpiderSwarm::iterationDuration,
-    "setIterationDuration", &SpiderSwarm::setIterationDuration);
+    "setup", &SpiderSwarm::setup,
+    "start", &SpiderSwarm::start,
+    "stop", &SpiderSwarm::stop,
+    "setDrawingMethod", &SpiderSwarm::setDrawingMethod,
+    "runGenome", &SpiderSwarm::runGenome,
+    "runBestGenome", &SpiderSwarm::runBestGenome,
+    "disableDrawing", &SpiderSwarm::disableDrawing,
+    "enableDrawing", &SpiderSwarm::enableDrawing,
+    "toggleDrawANN", &SpiderSwarm::toggleDrawANN,
+    "currentDuration", &SpiderSwarm::currentDuration);
 
   module.set_usertype("SpiderSwarm", type);
 

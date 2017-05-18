@@ -272,13 +272,23 @@ PhysicsElements* PhysicsMesh::createCopyAll() {
 
     // auto mass = 2.f;
     auto mass = mainBody->getInvMass();
+
+    if (mesh.first == "Abdomin")
+      mass = 10.f;
+    else if (mesh.first == "Sternum")
+      mass = 5.f;
+    else if (mesh.first == "Eye")
+      mass = 2.5;
+    else
+      mass = 1.0f;
+
     shape->calculateLocalInertia(mass, inertia);
 
     mat.setFromOpenGLSubMatrix(mmm::transpose(t).rawdata);
     btMotionState* motion = new btDefaultMotionState(btTransform(mat, pos));
 
     auto info       = RigidBodyInfo(mass, motion, shape, inertia);
-    info.m_friction = 10.0;
+    info.m_friction = 0.84;
 
     btRigidBody* body = new btRigidBody(info);
 

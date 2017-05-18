@@ -65,7 +65,15 @@ public:
     Species1,
     SpeciesLeaders,
     BestFitness,
-    DrawAll
+    DrawAll,
+    DrawNone
+  };
+
+  enum class SimulationStage {
+    None,
+    Experiment,
+    SimulationReady,
+    Simulating,
   };
 
   SpiderSwarm();
@@ -74,11 +82,28 @@ public:
   // Sets the drawing method. Will update on the next update
   void setDrawingMethod(DrawingMethod dm = DrawingMethod::SpeciesLeaders);
 
+  void disableDrawing();
+  void enableDrawing();
+
+  // Starts an experiment
+  void setup(const std::string& name, bool startExperiment = false);
+
+  void start();
+
+  // Stops the experiment
+  void stop();
+
+  // Runs the simulation for the genome
+  void runGenome(unsigned int genomeId);
+
+  // Runs the best genome
+  void runBestGenome();
+
   // Returns the current drawing method
   DrawingMethod drawingMethod();
 
   // Toggles the drawing of the neural network for each spider
-  void toggleDrawDebugNetworks();
+  void toggleDrawANN();
 
   // Updates the SpiderSwarm which will either run a normal update
   // on the current batch or figure out which batch is next
@@ -95,13 +120,13 @@ public:
   // from file
   void load(const std::string& filename);
 
-  // Individual load functions
-  void loadPopulation(const std::string& filename);
-  void loadSubstrate(const std::string& filename);
-
   float currentDuration();
-  float iterationDuration();
-  void setIterationDuration(float x);
+
+  SimulationStage stage();
+
+  // returns the phenotypes
+  const std::vector<Phenotype>& phenotypes();
+
 
   // Returns a reference to the parameter
   NEAT::Parameters& parameters();
@@ -121,8 +146,6 @@ public:
 private:
   std::vector<Phenotype> mPhenotypes;
 
-  unsigned int mNumInputs;
-
   size_t mCurrentBatch;
   size_t mBatchStart;
   size_t mBatchEnd;
@@ -130,12 +153,12 @@ private:
   size_t mGeneration;
 
   float mCurrentDuration;
-  float mIterationDuration;
   float mBestPossibleFitness;
   unsigned int mBestPossibleFitnessGeneration;
 
   bool mDrawDebugNetworks;
   bool mRestartOnNextUpdate;
+  SimulationStage mSimulatingStage;
 
   Statistics mStats;
 
@@ -143,6 +166,7 @@ private:
 
   // Drawing settings
   DrawingMethod mDrawingMethod;
+  bool mDisableDrawing;
 
   std::vector<size_t> mSpeciesLeaders;
   size_t              mBestIndex;
@@ -152,16 +176,18 @@ private:
 #ifdef BT_NO_PROFILE
   std::function<void(std::vector<Phenotype>::iterator begin,
                      std::vector<Phenotype>::iterator end,
-                     float                            deltaTime)>
+                     const Experiment& experiment)>
     mWorker;
 
   std::function<void(std::vector<Phenotype>::iterator begin,
                      std::vector<Phenotype>::iterator end,
+                     const Experiment&                exp,
                      NEAT::Population&                pop,
-                     Substrate&                       sub,
-                     NEAT::Parameters&                params)>
-    mBuildingESHyperNeatWorker;
+                     Substrate&                       sub)>
+    mBuildingWorker;
 #endif
+
+  void updateSimulation();
 
   // If called, it will use as many threads as possible to
   void updateUsingThreads(float deltaTime);
@@ -183,7 +209,5 @@ private:
   // NEAT stuff
   Substrate*        mSubstrate;
   NEAT::Population* mPopulation;
-
-  void setDefaultSubstrate();
-  void setDefaultPopulation();
+  Experiment*       mCurrentExperiment;
 };

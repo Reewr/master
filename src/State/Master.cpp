@@ -66,6 +66,10 @@ Master::Master(Asset* a) : mAsset(a) {
   // just run physics once so the terrain is positioned correctly
   mWorld->doPhysics(1);
   mLog->info("Initialized successfully");
+
+  mSwarm->setup("WalkingCurve");
+  mSwarm->load("experiments/WalkingCurve/02/current-g400");
+  mSwarm->runBestGenome();
 }
 
 Master::~Master() {
@@ -139,6 +143,15 @@ void Master::input(const Input::Event& event) {
     event.stopPropgation();
   }
 
+  if (event.keyPressed(GLFW_KEY_R)) {
+    if (mSwarm->stage() == SpiderSwarm::SimulationStage::SimulationReady)
+      mSwarm->start();
+    else
+      mSwarm->runBestGenome();
+    event.stopPropgation();
+    return;
+  }
+
   if (event.scrollUp())
     mCamera->zoom(1);
   else if (event.scrollDown())
@@ -151,6 +164,20 @@ void Master::update(float deltaTime) {
   mDeltaTime = deltaTime;
   // mWorld->doPhysics(deltaTime);
   mSwarm->update(deltaTime);
+
+  SpiderSwarm::SimulationStage s = mSwarm->stage();
+
+  // When simulating, let the camera follow the sternum
+  if (s == SpiderSwarm::SimulationStage::Simulating ||
+      s == SpiderSwarm::SimulationStage::SimulationReady) {
+    const Phenotype& p   = mSwarm->phenotypes().at(0);
+    const btVector3& massPos = p.rigidBody("Sternum")->getCenterOfMassPosition();
+    vec3 target = mmm::vec3(massPos.x(), 0, massPos.z());
+    vec3 pos    = target + vec3(4, 4, 4);
+
+    mCamera->setPosition(pos);
+    mCamera->setTarget(target);
+  }
 
   if (mGUIElements.size() == 0 || !mGUIElements.back()->isVisible())
     mCamera->input(deltaTime);

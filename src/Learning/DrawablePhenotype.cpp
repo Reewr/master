@@ -214,10 +214,10 @@ void DrawablePhenotype::recreate(const NEAT::NeuralNetwork& network,
 
     vec4 color;
     vec3 start = vec3(source.m_substrate_coords[0],
-                      source.m_substrate_coords[2],
+                      source.m_substrate_coords.size() > 2 ? source.m_substrate_coords[2] : 0,
                       source.m_substrate_coords[1]);
     vec3 end = vec3(target.m_substrate_coords[0],
-                    target.m_substrate_coords[2],
+                    target.m_substrate_coords.size() > 2 ? target.m_substrate_coords[2] : 0,
                     target.m_substrate_coords[1]);
 
     if (conn.m_recur_flag) {
@@ -291,7 +291,7 @@ void DrawablePhenotype::recreate(const NEAT::NeuralNetwork& network,
   // of that neuron.
   for (auto& neuron : network.m_neurons) {
     vec3 pos = vec3(neuron.m_substrate_coords[0],
-                    neuron.m_substrate_coords[2],
+                    neuron.m_substrate_coords.size() > 2 ? neuron.m_substrate_coords[2] : 0,
                     neuron.m_substrate_coords[1]);
 
     float radiusFilled  = 0;

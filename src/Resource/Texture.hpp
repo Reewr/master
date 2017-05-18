@@ -71,6 +71,7 @@ public:
   Texture& nearestMipmap();
   Texture& linearNearestMipmap();
   Texture& clampToEdge();
+  Texture& repeat();
   Texture& generateMipmaps(GLenum target = GL_TEXTURE_2D);
 
   //! Lets you individually set the parameter. Only takes openGL enums

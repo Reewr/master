@@ -52,8 +52,9 @@ public:
   // Upcasts a Drawable3D objet to a Spider object, if possible.
   static Spider* upcast(Drawable3D* drawable);
 
-private:
   static std::map<std::string, Part>        SPIDER_PARTS;
+
+private:
   static std::map<std::string, btTransform> SPIDER_POSITIONS;
 
   PhysicsElements*             mElements;

@@ -416,6 +416,17 @@ void Engine::runLoop() {
   // Used to check the difference between the loops
   static float startTime = glfwGetTime();
 
+  // Lock the frames to 30 FPS.
+  // Set this to a high number or comment out the
+  // remaining loop time if you want more frames.
+  //
+  // The reason for this lock is so that the movement of the
+  // character is slower and therefore more visible to the human
+  // eye. This is purely for display and presentation purposes and
+  // will eventually be removed
+  static int numFrames   = 30;
+  static float loopTime  = 1.0 / float(numFrames);
+
   while (!glfwWindowShouldClose(mWindow)) {
     float currentTime = glfwGetTime();
     float deltaTime   = currentTime - startTime;
@@ -426,13 +437,24 @@ void Engine::runLoop() {
 
     // Clear everything
     // glClearColor(0, 0.4, 0.7, 1);
-    glClearColor(0.15, 0.15, 0.18, 1);
+    // glClearColor(0.15, 0.15, 0.18, 1);
+    // White color is used to the background seamlessly matches the color of
+    // the paper.
+    glClearColor(1.0, 1.0, 1.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     mCurrent->draw(deltaTime);
 
     glfwSwapBuffers(mWindow);
     glfwPollEvents();
+
+    float remainingLoopTime = loopTime - (glfwGetTime() - currentTime);
+
+    // Lock FPS to specific duration. See comment before loop started
+    if (remainingLoopTime > 0) {
+      std::chrono::milliseconds ms(int(remainingLoopTime * 1000));
+      std::this_thread::sleep_for(ms);
+    }
 
     // Special case for when the engine has to be entirely
     // reloaded due context setting changes.

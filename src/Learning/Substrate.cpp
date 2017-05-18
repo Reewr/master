@@ -153,7 +153,9 @@ void Substrate::load(const std::string& filename) {
 }
 
 void Substrate::loadValue(const std::string& value, bool& t) {
-  t = value == "1";
+  std::string val = value;
+  str::trim(val);
+  t = val == "1";
 }
 
 void Substrate::loadValue(const std::string& value, int& t) {
