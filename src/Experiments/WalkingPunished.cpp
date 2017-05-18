@@ -125,22 +125,10 @@ WalkingPunished::WalkingPunished() : Experiment("WalkingPunished") {
   mSubstrate->m_max_weight_and_bias = 3.0;
 
   NEAT::Parameters params = getDefaultParameters();
-
-  // Below follows all the parameters. The first comment is described
-  // by the author of the library and "US" is a comment from our side to
-  // explain more on the subject
-  //
-  // If there is a commented out value behind the value, then that represents
-  // the default value for that parameter
-  // Probability for a baby to be mutated with the Add-Neuron mutation.
-  // Maximum number of tries to find 2 neurons to add/remove a link
   params.MutateWeightsProb = 0.9;
   params.WeightMutationMaxPower = 0.2;
   params.WeightReplacementMaxPower = 1.0;
-
   params.MutateNeuronActivationTypeProb = 0.03;
-
-  // Probabilities for a particular activation function appearance
   params.ActivationFunction_SignedSigmoid_Prob = 1.0;
   params.ActivationFunction_Tanh_Prob = 1.0;
   params.ActivationFunction_Linear_Prob = 1.0;
