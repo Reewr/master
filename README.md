@@ -47,6 +47,8 @@ cd master-thesis
 ./build.sh run
 ```
 
+**Note**: The current implementation is not optimized for speed, but rather for presentation and displaying of results purposes. As such, the engine has been changed slightly to improve visuals.
+
 The [build.sh](./build.sh) file has several commands that can be useful for development, such as `run` for building the engine followed by starting it, `build` to just build it, `clean` to rebuild it. More commands and more information can be found by using `./build.sh -h`
 
 # Documentation
@@ -54,6 +56,12 @@ The [build.sh](./build.sh) file has several commands that can be useful for deve
 The documentation of the code is slightly sparse, but it is getting better and better. The code documentation tool that this project has chosen is [Doxygen](http://www.stack.nl/~dimitri/doxygen/index.html). This is available for most Linux distributions and may also be on other systems such as Windows and Mac.
 
 After this tool has been installed, you can run `./build.sh doc` to generate the documentation in folders under `doc`.
+
+# Running Simulations
+
+Running simulations can be done by starting the game, opening the console (see config.ini for the keybinding, may be changed), followed by the command `swarm:setup("name", false)` where the `name` is replaced by the experiment you want to run. This will start loading the required resources. The next command will start the simulation: `swarm:start()`. The `false` variable may also be changed for a `true` variable to start the simulation as soon as the required resources are loaded.
+
+To run an existing simulation, `swarm:setup("name", false)`, where name is the experiment you want to load, followed by `swarm:load("path-to-file")`, where `path-to-file` is the relative path to files from root of the folder. Keep in mind, do *not* use extensions when trying to load the file as the engine will load the required files by appending the needed file extensions. After this is done, the `swarm:runBestGenome()` followed by `swarm:start()` will start the simulation of the best genome.
 
 # Dependencies
 
