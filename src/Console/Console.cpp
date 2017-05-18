@@ -376,6 +376,8 @@ void Console::input(const Input::Event& event) {
         break;
       case GLFW_KEY_TAB:
         setAutoComplete();
+      default:
+        return event.stopPropgation();
     }
   }
 
