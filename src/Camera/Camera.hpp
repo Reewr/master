@@ -68,6 +68,9 @@ public:
   // returns the target vector
   const mmm::vec3& target() const;
 
+  void setPosition(const mmm::vec3& position);
+  void setTarget(const mmm::vec3& target);
+
   // Updates the camera to set a new view matrix
   void update(float dt);
 

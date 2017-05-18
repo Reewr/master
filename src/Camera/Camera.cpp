@@ -210,6 +210,26 @@ const vec3& Camera::position() const {
 
 /**
  * @brief
+ *   Sets the camera position
+ *
+ * @param position
+ */
+void Camera::setPosition(const mmm::vec3& position) {
+  mPosition = position;
+}
+
+/**
+ * @brief
+ *   Sets the position at where the camera is looking
+ *
+ * @param target
+ */
+void Camera::setTarget(const mmm::vec3& target) {
+  mTarget = target;
+}
+
+/**
+ * @brief
  *   This function should be called on every iteration, prior to calling
  *   update(float). This handles the input.
  *
