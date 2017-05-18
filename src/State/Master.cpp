@@ -143,6 +143,13 @@ void Master::input(const Input::Event& event) {
     event.stopPropgation();
   }
 
+  if (event.keyPressed(GLFW_KEY_R)) {
+    mSwarm->runBestGenome();
+    mSwarm->start();
+    event.stopPropgation();
+    return;
+  }
+
   if (event.scrollUp())
     mCamera->zoom(1);
   else if (event.scrollDown())
