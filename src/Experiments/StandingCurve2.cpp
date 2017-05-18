@@ -117,14 +117,14 @@ StandingCurve2::StandingCurve2() : Experiment("StandingCurve2") {
   mSubstrate->m_max_weight_and_bias = 4.0;
 
   NEAT::Parameters params = getDefaultParameters();
-params.SurvivalRate = 0.25;
-params.MultipointCrossoverRate = 0.75;
-params.EliteFraction = 0.2;
-params.MutateAddNeuronProb = 0.03;
-params.MutateAddLinkProb = 0.2;
-params.MaxWeight = 4.0;
-params.ActivationFunctionDiffCoeff = 0.0;
-params.CompatTreshold = 2.0;
+  params.SurvivalRate = 0.25;
+  params.MultipointCrossoverRate = 0.75;
+  params.EliteFraction = 0.2;
+  params.MutateAddNeuronProb = 0.03;
+  params.MutateAddLinkProb = 0.2;
+  params.MaxWeight = 4.0;
+  params.ActivationFunctionDiffCoeff = 0.0;
+  params.CompatTreshold = 2.0;
 
   NEAT::Genome genome(0,
                       mSubstrate->GetMinCPPNInputs(),
