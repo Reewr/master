@@ -38,37 +38,6 @@ WalkingRT2::WalkingRT2() : Experiment("WalkingRT2") {
               return current;
             }),
 
-    // Fitness("TEST      ",
-    //         "...",
-    //         [](const Phenotype& p, float current, float) -> float {
-    //           return current;
-    //         }, [](const Phenotype& p, float current, float) -> float {
-    //           size_t numUpdates = p.tmp.size() / 3;
-
-    //           const float dt = 1.f / 60.f;
-
-    //           float x = 0.f;
-    //           float y = 0.f;
-
-    //           for (size_t i = 0; i < 8; ++i) {
-
-    //             float prev_trochan = 0.f;
-
-    //             for (size_t j = 0; j < numUpdates; ++j) {
-    //               float trochan = p.tmp[j*3+1][i];
-    //               float contact = p.tmp[j*3+2][i];
-
-    //               if (mmm::sign(trochan - prev_trochan) == contact)
-    //                 x += 1.f;
-
-    //               y += 1.f;
-    //               prev_trochan = trochan;
-    //             }
-    //           }
-
-    //           return x / y;
-    //         }),
-
     // Fitness("Vibrating",
     //         "Fitness based how little it vibrates with the legs",
     //         [](const Phenotype& p, float, float) -> float {
@@ -252,39 +221,4 @@ std::vector<double> WalkingRT2::inputs(const Phenotype& p) const {
   }
 
   return inputs;
-}
-
-void WalkingRT2::postUpdate(const Phenotype& p) const {
-  // auto& parts = p.spider->parts();
-
-  // auto& tl1 = parts.at("TrochanterL1");
-  // auto& tl2 = parts.at("TrochanterL2");
-  // auto& tl3 = parts.at("TrochanterL3");
-  // auto& tl4 = parts.at("TrochanterL4");
-  // auto& tr1 = parts.at("TrochanterR1");
-  // auto& tr2 = parts.at("TrochanterR2");
-  // auto& tr3 = parts.at("TrochanterR3");
-  // auto& tr4 = parts.at("TrochanterR4");
-
-  // p.tmp.push_back(std::vector<float>{
-  //   ExpUtil::normalizeAngle(tl1.hinge->getHingeAngle(), tl1.hinge->getLowerLimit(), tl1.hinge->getUpperLimit(), tl1.restAngle),
-  //   ExpUtil::normalizeAngle(tl2.hinge->getHingeAngle(), tl2.hinge->getLowerLimit(), tl2.hinge->getUpperLimit(), tl2.restAngle),
-  //   ExpUtil::normalizeAngle(tl3.hinge->getHingeAngle(), tl3.hinge->getLowerLimit(), tl3.hinge->getUpperLimit(), tl3.restAngle),
-  //   ExpUtil::normalizeAngle(tl4.hinge->getHingeAngle(), tl4.hinge->getLowerLimit(), tl4.hinge->getUpperLimit(), tl4.restAngle),
-  //   ExpUtil::normalizeAngle(tr1.hinge->getHingeAngle(), tr1.hinge->getLowerLimit(), tr1.hinge->getUpperLimit(), tr1.restAngle),
-  //   ExpUtil::normalizeAngle(tr2.hinge->getHingeAngle(), tr2.hinge->getLowerLimit(), tr2.hinge->getUpperLimit(), tr2.restAngle),
-  //   ExpUtil::normalizeAngle(tr3.hinge->getHingeAngle(), tr3.hinge->getLowerLimit(), tr3.hinge->getUpperLimit(), tr3.restAngle),
-  //   ExpUtil::normalizeAngle(tr4.hinge->getHingeAngle(), tr4.hinge->getLowerLimit(), tr4.hinge->getUpperLimit(), tr4.restAngle)
-  // });
-
-  // p.tmp.push_back(std::vector<float>{
-  //   p.collidesWithTerrain("TarsusL1") ? -1.f : 1.f,
-  //   p.collidesWithTerrain("TarsusL2") ? -1.f : 1.f,
-  //   p.collidesWithTerrain("TarsusL3") ? -1.f : 1.f,
-  //   p.collidesWithTerrain("TarsusL4") ? -1.f : 1.f,
-  //   p.collidesWithTerrain("TarsusR1") ? -1.f : 1.f,
-  //   p.collidesWithTerrain("TarsusR2") ? -1.f : 1.f,
-  //   p.collidesWithTerrain("TarsusR3") ? -1.f : 1.f,
-  //   p.collidesWithTerrain("TarsusR4") ? -1.f : 1.f
-  // });
 }
