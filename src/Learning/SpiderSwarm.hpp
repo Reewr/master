@@ -122,6 +122,12 @@ public:
 
   float currentDuration();
 
+  SimulationStage stage();
+
+  // returns the phenotypes
+  const std::vector<Phenotype>& phenotypes();
+
+
   // Returns a reference to the parameter
   NEAT::Parameters& parameters();
 

@@ -606,6 +606,26 @@ float SpiderSwarm::currentDuration() {
 
 /**
  * @brief
+ *   Returns const reference to a list of Phenotypes
+ *
+ * @return
+ */
+const std::vector<Phenotype>& SpiderSwarm::phenotypes() {
+  return mPhenotypes;
+}
+
+/**
+ * @brief
+ *   Returns the current stage of the SpiderSwarm
+ *
+ * @return
+ */
+SpiderSwarm::SimulationStage SpiderSwarm::stage() {
+  return mSimulatingStage;
+}
+
+/**
+ * @brief
  *   If BT_NO_PROFILE is defined, it will assume that we are to use
  *   multithreading. Unlike `updateUsingThreads` it does not split the current
  *   batch into several smaller pieces, but instead splits the entire number
