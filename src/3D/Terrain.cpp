@@ -17,7 +17,7 @@ using mmm::mat4;
 using RigidBodyInfo = btRigidBody::btRigidBodyConstructionInfo;
 
 Terrain::Terrain() : Logging::Log("Terrain") {
-  mGrid   = new GLGrid3D(vec2(128, 128));
+  mGrid   = new GLGrid3D(vec2(16, 16));
   mShape  = new btStaticPlaneShape(btVector3(0, 1, 0), 1);
   mMotion = new btDefaultMotionState(
     btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1, 0)));
@@ -31,7 +31,7 @@ Terrain::Terrain() : Logging::Log("Terrain") {
   mTexture->linearMipmap();
   mTexture->repeat();
   /* mScale = mmm::scale(38.0f, 0.0f, 38.0f); */
-  mScale = mmm::scale(50.0f, 0.0f, 50.0f);
+  mScale = mmm::scale(64.0f, 0.0f, 64.0f);
 }
 
 Terrain::~Terrain() {
