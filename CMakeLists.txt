@@ -217,6 +217,8 @@ set(SOURCE_FILES
   ${SRC_DIR}/Experiments/WalkingPunished.cpp
   ${SRC_DIR}/Experiments/WalkingRT.cpp
   ${SRC_DIR}/Experiments/WalkingRT2.cpp
+  ${SRC_DIR}/Experiments/WalkingRTNK.cpp
+  ${SRC_DIR}/Experiments/WalkingRTNK2.cpp
 
   # src/Learning
   ${SRC_DIR}/Learning/SpiderSwarm.cpp
@@ -330,6 +332,8 @@ set(HEADER_FILES
   ${SRC_DIR}/Experiments/WalkingPunished.hpp
   ${SRC_DIR}/Experiments/WalkingRT.hpp
   ${SRC_DIR}/Experiments/WalkingRT2.hpp
+  ${SRC_DIR}/Experiments/WalkingRTNK.hpp
+  ${SRC_DIR}/Experiments/WalkingRTNK2.hpp
 
   # src/Learning
   ${SRC_DIR}/Learning/SpiderSwarm.hpp
