@@ -292,7 +292,7 @@ NEAT::Parameters Experiment::getDefaultParameters() const {
   params.MutateActivationBProb = 0.0;
 
   // Maximum magnitude for the A parameter perturbation
-  params.ActivationAMutationMaxPower = 0.0;
+  params.ActivationAMutationMaxPower = 0.2;
 
   // Maximum magnitude for the B parameter perturbation
   params.ActivationBMutationMaxPower = 0.0;
