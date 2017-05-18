@@ -391,6 +391,8 @@ void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
     if (bindTexture && mDrawDebugNetworks) {
       mPhenotypes[0].drawablePhenotype->draw3D(grid[0] + mmm::vec3(0, 5, 0));
     }
+
+    return;
   }
 
   size_t numPhenotypes = mPhenotypes.size();
