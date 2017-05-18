@@ -88,7 +88,7 @@ public:
   virtual float mergeFitnessValues(const mmm::vec<9>& fitnesses) const;
 
   // Alows you to do some final changes before generation is ended
-  virtual void postUpdate(const Phenotype& p);
+  virtual void postUpdate(const Phenotype& p) const;
 
   // Tells the experiment to use the outputs from the network
   virtual void outputs(Phenotype& p, const std::vector<double>& outputs) const = 0;
