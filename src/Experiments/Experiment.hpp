@@ -70,6 +70,15 @@ public:
   // Returns total duration for the experiment
   float totalDuration() const;
 
+  // Returns default parameters used in this project
+  // and not nessassarily default to MultiNEAT
+  NEAT::Parameters getDefaultParameters() const;
+
+  // Creates teh default substrate. Keep in mind that this is
+  // allocated and will not be deallocated and has to be done by
+  // the caller
+  Substrate* createDefaultSubstrate() const;
+
   // Optional: Allows you to set values on the phenotype
   // before a simulation is started
   virtual void initPhenotype(Phenotype& p) const;
