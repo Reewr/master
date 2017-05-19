@@ -160,7 +160,11 @@ bool Phenotype::collidesWithTerrain(const std::string& str) const {
  *
  * @param deltaTime
  */
-void Phenotype::updatePrepareStanding(float deltaTime) {
+void Phenotype::updatePrepareStanding(const Experiment& experiment) {
+  const ExperimentParameters& expParams = experiment.parameters();
+  float deltaTime = expParams.deltaTime;
+
+
   // Initiate start position
   //
   // We want to the simulation to always be equal for all robots. In order to do
@@ -168,16 +172,18 @@ void Phenotype::updatePrepareStanding(float deltaTime) {
   // starts.
   //
   // This makes sure that all positions are equal.
-  for (auto& part : spider->parts()) {
-    if (part.second.hinge != nullptr) {
+  if (!expParams.flatMode) {
+    for (auto& part : spider->parts()) {
+      if (part.second.hinge != nullptr) {
 
-      float currentAngle = part.second.hinge->getHingeAngle();
-      float velocity =
-        mmm::clamp(part.second.restAngle - currentAngle, -1.f, 1.f) * 16.f;
-      part.second.hinge->enableAngularMotor(true, velocity, 5.f);
-    } else if (part.second.dof != nullptr) {
+        float currentAngle = part.second.hinge->getHingeAngle();
+        float velocity =
+          mmm::clamp(part.second.restAngle - currentAngle, -1.f, 1.f) * 16.f;
+        part.second.hinge->enableAngularMotor(true, velocity, 5.f);
+      } else if (part.second.dof != nullptr) {
 
-      // TODO
+        // TODO
+      }
     }
   }
 
@@ -210,7 +216,7 @@ void Phenotype::update(const Experiment& experiment) {
   // If the duration is less than 0, prepare the robot
   // to be standing
   if (duration < 0.0)
-    return updatePrepareStanding(deltaTime);
+    return updatePrepareStanding(experiment);
 
   duration += deltaTime;
 

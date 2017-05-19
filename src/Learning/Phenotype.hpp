@@ -99,7 +99,7 @@ struct Phenotype : Logging::Log {
 private:
 
   // Prepares the phenotype for simulation
-  void updatePrepareStanding(float deltatime);
+  void updatePrepareStanding(const Experiment& experiment);
 
   // Updates the fitness of the phenotype by
   // running the fitness handlers

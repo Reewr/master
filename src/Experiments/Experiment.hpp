@@ -27,6 +27,9 @@ struct ExperimentParameters {
 
   // Whether or not to use ESHyperNEAT vs HyperNEAT
   bool useESHyperNEAT = false;
+
+  // Start in flat mode
+  bool flatMode = false;
 };
 
 /**
