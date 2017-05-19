@@ -125,61 +125,9 @@ void SpiderSwarm::enableDrawing() {
   mDisableDrawing = false;
 }
 
-void SpiderSwarm::runBestGenome() {
-  runGenome(mBestPossibleGenome.GetID());
-}
-
-void SpiderSwarm::runGenome(unsigned int genomeId) {
-  if (mCurrentExperiment == nullptr) {
-    mLog->debug("Must setup experiment before running genome");
-    return;
-  }
-
-  NEAT::Genome* g = nullptr;
-
-  if (genomeId == mBestPossibleGenome.GetID())
-    g = &mBestPossibleGenome;
-  else {
-    for(unsigned int i = 0; i < mPopulation->m_Species.size(); i++) {
-      for(unsigned int j = 0; i < mPopulation->m_Species[i].m_Individuals.size(); j++) {
-        if (mPopulation->m_Species[i].m_Individuals[j].GetID() == genomeId) {
-          g = &mPopulation->m_Species[i].m_Individuals[j];
-          break;
-        }
-      }
-    }
-  }
-
-  if (g == nullptr) {
-    mLog->error("Unable to find genome with Id: {}", genomeId);
-    return;
-  }
-
-  mLog->info("Found genome, building network..");
-
-  if (mPhenotypes.size() == 0)
-    mPhenotypes.resize(1);
-
-  mPhenotypes[0].reset(0, 0, 0, genomeId);
-  mCurrentExperiment->initPhenotype(mPhenotypes[0]);
-
-  if (mCurrentExperiment->parameters().useESHyperNEAT) {
-    g->BuildESHyperNEATPhenotype(*mPhenotypes[0].network,
-                                 *mSubstrate,
-                                 mPopulation->m_Parameters);
-  } else {
-    g->BuildHyperNEATPhenotype(*mPhenotypes[0].network,
-                               *mSubstrate);
-  }
-
-  mSimulatingStage = SimulationStage::SimulationReady;
-  mCurrentDuration = 0;
-  mLog->info("Ready to simulate genome: {}", genomeId);
-}
-
 /**
  * @brief
- *   Starts an experiment by a given name
+ *   Setups an experiment by a given name
  *
  * @param name
  */
@@ -262,6 +210,109 @@ void SpiderSwarm::stop() {
 
 /**
  * @brief
+ *   This overwrites the currently stored bestGenome on the spiderswarm
+ *   with a new open, allowing you to run this genome by using
+ *   runBestGenome.
+ *
+ *   Assumes that the current loaded experiment is the population and substrate
+ *   to use. Gives undefined results if this is not the case
+ *
+ *   Expects the filename to not contain the .genome extension
+ *
+ * @param name
+ */
+void SpiderSwarm::loadGenome(const std::string& filename) {
+  if (mCurrentExperiment == nullptr) {
+    mLog->debug("Must setup experiment before running genome");
+    return;
+  }
+
+  std::string genomeFilename = filename + ".genome";
+
+  // Load the best possible genome if its available.
+  std::ifstream fs;
+  fs.open(genomeFilename);
+
+  if (fs.is_open()) {
+    mBestPossibleGenome = NEAT::Genome(genomeFilename.c_str());
+    mLog->info("Loaded new genome with id: {}", mBestPossibleGenome.GetID());
+  } else {
+    mLog->error("Unable to open genome file: {}", genomeFilename);
+    throw std::runtime_error("Unable to open genome file: " + genomeFilename);
+  }
+
+  mSimulatingStage = SimulationStage::None;
+  mCurrentDuration = 0;
+}
+
+/**
+ * @brief
+ *   When a new experiment is loaded from file (not setup, but using the load function),
+ *   it also loads all the genomes. This function allows you to simulate one of those
+ *   genomes
+ *
+ * @param genomeId
+ */
+void SpiderSwarm::runGenome(unsigned int genomeId) {
+  if (mCurrentExperiment == nullptr) {
+    mLog->debug("Must setup experiment before running genome");
+    return;
+  }
+
+  NEAT::Genome* g = nullptr;
+
+  if (genomeId == mBestPossibleGenome.GetID())
+    g = &mBestPossibleGenome;
+  else {
+    for(unsigned int i = 0; i < mPopulation->m_Species.size(); i++) {
+      for(unsigned int j = 0; i < mPopulation->m_Species[i].m_Individuals.size(); j++) {
+        if (mPopulation->m_Species[i].m_Individuals[j].GetID() == genomeId) {
+          g = &mPopulation->m_Species[i].m_Individuals[j];
+          break;
+        }
+      }
+    }
+  }
+
+  if (g == nullptr) {
+    mLog->error("Unable to find genome with Id: {}", genomeId);
+    return;
+  }
+
+  mLog->info("Found genome, building network..");
+
+  if (mPhenotypes.size() == 0)
+    mPhenotypes.resize(1);
+
+  mPhenotypes[0].reset(0, 0, 0, genomeId);
+  mCurrentExperiment->initPhenotype(mPhenotypes[0]);
+
+  if (mCurrentExperiment->parameters().useESHyperNEAT) {
+    g->BuildESHyperNEATPhenotype(*mPhenotypes[0].network,
+                                 *mSubstrate,
+                                 mPopulation->m_Parameters);
+  } else {
+    g->BuildHyperNEATPhenotype(*mPhenotypes[0].network,
+                               *mSubstrate);
+  }
+
+  mSimulatingStage = SimulationStage::SimulationReady;
+  mCurrentDuration = 0;
+  mLog->info("Ready to simulate genome: {}", genomeId);
+}
+
+/**
+ * @brief
+ *   This is a shortcut for running the best genome that is loaded. This
+ *   uses the runGenome function together with teh ID of the best stored
+ *   genome.
+ */
+void SpiderSwarm::runBestGenome() {
+  runGenome(mBestPossibleGenome.GetID());
+}
+
+/**
+ * @brief
  *   Returns the current drawing method
  *
  * @return
@@ -281,8 +332,11 @@ void SpiderSwarm::toggleDrawANN() {
     for (auto& i : mPhenotypes) {
       i.drawablePhenotype->recreate(*i.network, mmm::vec3(1.0, 1.0, 1.0));
     }
-  } else if (mDrawDebugNetworks && mSimulatingStage == SimulationStage::Simulating) {
-    mPhenotypes[0].drawablePhenotype->recreate(*mPhenotypes[0].network, mmm::vec3(1));
+  } else if (mDrawDebugNetworks &&
+             (mSimulatingStage == SimulationStage::Simulating ||
+              mSimulatingStage == SimulationStage::SimulationReady)) {
+    mPhenotypes[0].drawablePhenotype->recreate(*mPhenotypes[0].network,
+                                               mmm::vec3(1));
   }
 }
 

@@ -82,16 +82,25 @@ public:
   // Sets the drawing method. Will update on the next update
   void setDrawingMethod(DrawingMethod dm = DrawingMethod::SpeciesLeaders);
 
+  // Allows you to disable drawing, saving some resources
   void disableDrawing();
+
+  // Allows you to enable drawing
   void enableDrawing();
 
-  // Starts an experiment
+  // Setups an experiment
   void setup(const std::string& name, bool startExperiment = false);
 
+  // Starts the simluation
   void start();
 
   // Stops the experiment
   void stop();
+
+  // Allows you to load a specific genome file associated to the current experiment
+  // Assumes that the current loaded experiment is the population and substrate
+  // to use. Gives undefined results if this is not the case
+  void loadGenome(const std::string& filename);
 
   // Runs the simulation for the genome
   void runGenome(unsigned int genomeId);
@@ -120,13 +129,14 @@ public:
   // from file
   void load(const std::string& filename);
 
+  // Returns the current duration
   float currentDuration();
 
+  // Returns the current stage
   SimulationStage stage();
 
   // returns the phenotypes
   const std::vector<Phenotype>& phenotypes();
-
 
   // Returns a reference to the parameter
   NEAT::Parameters& parameters();
