@@ -12,6 +12,8 @@
 #include "../3D/Sphere.hpp"
 #include "../Shape/GL/Shape.hpp"
 
+#include "../GlobalLog.hpp"
+
 using mmm::vec2;
 using mmm::vec3;
 using mmm::vec4;
@@ -196,9 +198,53 @@ void DrawablePhenotype::recreate(const NEAT::NeuralNetwork& network,
 //    color.w = 1;
 //  }
 //
+  int inputHidden = 0;
+  int inputOutput = 0;
+  int hiddenOutput = 0;
+  int hiddenHidden = 0;
+  int outputHidden = 0;
+  int outputOutput = 0;
+  int loopedHidden = 0;
+  int loopedOutput = 0;
+  int biasHidden   = 0;
+  int biasInput    = 0;
+  int biasOutput   = 0;
+  int numConnections = network.m_connections.size();
+  int inputs   = network.m_num_inputs;
+  int outputs  = network.m_num_outputs;
+  int hiddens  = network.m_neurons.size() - inputs - outputs - 1;
+
+  NEAT::NeuronType input  = NEAT::NeuronType::INPUT;
+  NEAT::NeuronType output = NEAT::NeuronType::OUTPUT;
+  NEAT::NeuronType bias   = NEAT::NeuronType::BIAS;
+  NEAT::NeuronType hidden = NEAT::NeuronType::HIDDEN;
+
   for (auto& conn : network.m_connections) {
     const NEAT::Neuron& source = network.m_neurons[conn.m_source_neuron_idx];
     const NEAT::Neuron& target = network.m_neurons[conn.m_target_neuron_idx];
+
+    if (source.m_type == input && target.m_type == hidden)
+      inputHidden++;
+    else if (source.m_type == input && target.m_type == output)
+      inputOutput++;
+    else if (source.m_type == hidden && target.m_type == output)
+      hiddenOutput++;
+    else if (source.m_type == hidden && target.m_type == hidden && source == target)
+      loopedHidden++;
+    else if (source.m_type == hidden && target.m_type == hidden && source == target)
+      hiddenHidden++;
+    else if (source.m_type == output && target.m_type == hidden)
+      outputHidden++;
+    else if (source.m_type == output && target.m_type == output && source == target)
+      loopedOutput++;
+    else if (source.m_type == output && target.m_type == output)
+      outputOutput++;
+    else if (source.m_type == bias && target.m_type == output)
+      biasOutput++;
+    else if (source.m_type == bias && target.m_type == hidden)
+      biasHidden++;
+    else if (source.m_type == bias && target.m_type == input)
+      biasInput++;
 
     // double thickness =
     //   mmm::clamp(scale(conn.m_weight, 0, maxWeight, 1, maxLineThickness),
@@ -232,6 +278,19 @@ void DrawablePhenotype::recreate(const NEAT::NeuralNetwork& network,
     color.w = 1;
   }
 
+  debug("Network has following:");
+  debug("Total connections: {}", numConnections);
+  debug("Input neurons: {}", inputs);
+  debug("Output neurons: {}", outputs);
+  debug("Hidden neurons: {}", hiddens);
+  debug("Input to Hidden: {}", inputHidden);
+  debug("Input to Output: {}", inputOutput);
+  debug("Hidden to Output: {}", hiddenOutput);
+  debug("Hidden to Hidden: {}", hiddenHidden);
+  debug("Output to Hidden: {}", outputHidden);
+  debug("Output to Output: {}", outputOutput);
+  debug("Looped hidden: {}", loopedHidden);
+  debug("Looped output: {}", loopedOutput);
   mNum3DLines = lines.size();
 
   Utils::assertGL();
