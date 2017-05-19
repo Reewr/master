@@ -43,6 +43,7 @@ Master::Master(Asset* a) : mAsset(a) {
 
   mLua    = a->lua();
   mCamera = new Camera(a);
+  mFixedCamera = true;
   mWorld  = new World(vec3(0, -9.81, 0));
   mShadowmap =
     new Framebuffer(r->get<Program>("Program::Shadow"), shadowRes, true);
@@ -146,6 +147,10 @@ void Master::input(const Input::Event& event) {
       mSwarm->runBestGenome();
     event.stopPropgation();
     return;
+  } else if (event.keyPressed(GLFW_KEY_F)) {
+    mFixedCamera = !mFixedCamera;
+    event.stopPropgation();
+    return;
   }
 
   if (event.scrollUp())
@@ -164,10 +169,11 @@ void Master::update(float deltaTime) {
   SpiderSwarm::SimulationStage s = mSwarm->stage();
 
   // When simulating, let the camera follow the sternum
-  if (s == SpiderSwarm::SimulationStage::Simulating ||
-      s == SpiderSwarm::SimulationStage::SimulationReady) {
-    const Phenotype& p   = mSwarm->phenotypes().at(0);
-    const btVector3& massPos = p.rigidBody("Sternum")->getCenterOfMassPosition();
+  if (mFixedCamera && (s == SpiderSwarm::SimulationStage::Simulating ||
+                       s == SpiderSwarm::SimulationStage::SimulationReady)) {
+    const Phenotype& p = mSwarm->phenotypes().at(0);
+    const btVector3& massPos =
+      p.rigidBody("Sternum")->getCenterOfMassPosition();
     vec3 target = mmm::vec3(massPos.x(), 0, massPos.z());
     vec3 pos    = target + vec3(4, 4, 4);
 
