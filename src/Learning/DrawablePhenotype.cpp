@@ -214,11 +214,11 @@ void DrawablePhenotype::recreate(const NEAT::NeuralNetwork& network,
 
     vec4 color;
     vec3 start = vec3(source.m_substrate_coords[0],
-                      source.m_substrate_coords.size() > 2 ? source.m_substrate_coords[2] : 0,
-                      source.m_substrate_coords[1]);
+                      source.m_substrate_coords[1],
+                      source.m_substrate_coords.size() > 2 ? source.m_substrate_coords[2] : 0);
     vec3 end = vec3(target.m_substrate_coords[0],
-                    target.m_substrate_coords.size() > 2 ? target.m_substrate_coords[2] : 0,
-                    target.m_substrate_coords[1]);
+                    target.m_substrate_coords[1],
+                    target.m_substrate_coords.size() > 2 ? target.m_substrate_coords[2] : 0);
 
     if (conn.m_recur_flag) {
       color = conn.m_weight < 0 ? vec4(0, w, 0, 1) : vec4(w);
@@ -291,8 +291,8 @@ void DrawablePhenotype::recreate(const NEAT::NeuralNetwork& network,
   // of that neuron.
   for (auto& neuron : network.m_neurons) {
     vec3 pos = vec3(neuron.m_substrate_coords[0],
-                    neuron.m_substrate_coords.size() > 2 ? neuron.m_substrate_coords[2] : 0,
-                    neuron.m_substrate_coords[1]);
+                    neuron.m_substrate_coords[1],
+                    neuron.m_substrate_coords.size() > 2 ? neuron.m_substrate_coords[2] : 0);
 
     float radiusFilled  = 0;
     float radiusOutline = 0;
