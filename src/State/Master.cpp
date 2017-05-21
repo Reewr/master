@@ -57,7 +57,7 @@ Master::Master(Asset* a) : mAsset(a) {
   mSwarm      = new SpiderSwarm();
   mController = new Controller(
      new StandingCurve2(),
-     "../master-thesis-bac/experiments/StandingCurve2/Velocity/noe",
+     "../master-thesis-bac/experiments/StandingCurve2/Velocity/current-g272",
      new WalkingRTNK(),
      "../master-thesis-bac/experiments/WalkingRTNK/current-g285");
   mSwarm->load("testswarm");
