@@ -9,81 +9,125 @@ The report should be read in order for this to make sense. The report can be fou
 ## Standing
 
 **Standing 01**
-<video src="./Videos/Standing01.mp4" width="800" height="600">
+<video  width="800" height="600" controls="controls" preload="none">
+  <source src="./Videos/Standing01.mp4" type="video/mp4"/>
+</video>
 
 **Standing 01 - take 2**
-<video src="./Videos/Standing01-take2.mp4" width="800" height="600">
+<video  width="800" height="600" controls="controls" preload="none">
+  <source src="./Videos/Standing01-alternative.mp4" type="video/mp4"/>
+</video>
 
 **Standing 02**
-<video src="./Videos/Standing02.mp4" width="800" height="600">
+<video  width="800" height="600" controls="controls" preload="none">
+  <source src="./Videos/Standing02.mp4" type="video/mp4"/>
+</video>
 
 **Alternate champion**
-<video src="./Videos/Standing03.mp4" width="800" height="600">
+<video  width="800" height="600" controls="controls" preload="none">
+  <source src="./Videos/Standing03.mp4" type="video/mp4"/>
+</video>
 
 ### Champion
 
-<video src="./Videos/StandingChampion.mp4" width="800" height="600">
+<video  width="800" height="600" controls="controls" preload="none">
+  <source src="./Videos/StandingChampion.mp4" type="video/mp4"/>
+</video>
 
 **Champion throughout the generations**
 
 This video displays how the champion changed from its first generation until its last. This video was not inlucded in the report.
 
-<video src="./Videos/GenerationVideoStanding.mp4" width="800" height="600">
+<!-- <video  width="800" height="600" controls="controls" preload="none"> -->
+<!--   <source src="./Videos/GenerationVideoStanding.mp4" type="video/mp4"/> -->
+<!-- </video> -->
 
 **Substate of the Standing champion**
 
 This video displays the substrate evolved by HyperNEAT. See the report for details.
 
-<video src="./Videos/Substrate-StandingChampion.mp4" width="800" height="600">
+<video  width="800" height="600" controls="controls" preload="none">
+  <source src="./Videos/Substrate-StandingChampion.mp4" type="video/mp4"/>
+</video>
 
 ## Walking
 
 **Walking 01**
-<video src="./Videos/Walking01.mp4" width="800" height="600">
+<video  width="800" height="600" controls="controls" preload="none">
+  <source src="./Videos/Walking01.mp4" type="video/mp4"/>
+</video>
 
 **Walking 02**
-<video src="./Videos/Walking02.mp4" width="800" height="600">
+<video  width="800" height="600" controls="controls" preload="none">
+  <source src="./Videos/Walking02.mp4" type="video/mp4"/>
+</video>
 
 **Walking 03**
-<video src="./Videos/Walking03.mp4" width="800" height="600">
+<video  width="800" height="600" controls="controls" preload="none">
+  <source src="./Videos/Walking03.mp4" type="video/mp4"/>
+</video>
 
 **Walking 04**
-<video src="./Videos/Walking04.mp4" width="800" height="600">
+<video  width="800" height="600" controls="controls" preload="none">
+  <source src="./Videos/Walking04.mp4" type="video/mp4"/>
+</video>
 
 **Walking 05**
-<video src="./Videos/Walking05.mp4" width="800" height="600">
+<video  width="800" height="600" controls="controls" preload="none">
+  <source src="./Videos/Walking05.mp4" type="video/mp4"/>
+</video>
 
 **Walking 06**
-<video src="./Videos/Walking06.mp4" width="800" height="600">
+<video  width="800" height="600" controls="controls" preload="none">
+  <source src="./Videos/Walking06.mp4" type="video/mp4"/>
+</video>
 
 **Walking 07**
-<video src="./Videos/Walking07.mp4" width="800" height="600">
+<video  width="800" height="600" controls="controls" preload="none">
+  <source src="./Videos/Walking07.mp4" type="video/mp4"/>
+</video>
 
 **Others**
 
 These next videos were not included in the report as they weren't unique enough.
 
-<video src="./Videos/Other1.mp4" width="800" height="600">
-<video src="./Videos/Other2.mp4" width="800" height="600">
-<video src="./Videos/Other3.mp4" width="800" height="600">
-<video src="./Videos/Other4.mp4" width="800" height="600">
-<video src="./Videos/Other5.mp4" width="800" height="600">
+<video  width="800" height="600" controls="controls" preload="none">
+  <source src="./Videos/Other1.mp4" type="video/mp4"/>
+</video>
+<video  width="800" height="600" controls="controls" preload="none">
+  <source src="./Videos/Other2.mp4" type="video/mp4"/>
+</video>
+<video  width="800" height="600" controls="controls" preload="none">
+  <source src="./Videos/Other3.mp4" type="video/mp4"/>
+</video>
+<video  width="800" height="600" controls="controls" preload="none">
+  <source src="./Videos/Other4.mp4" type="video/mp4"/>
+</video>
+<video  width="800" height="600" controls="controls" preload="none">
+  <source src="./Videos/Other5.mp4" type="video/mp4"/>
+</video>
 
 ### Champion
 
 **Walking Champion**
-<video src="./Videos/WalkingChampion.mp4" width="800" height="600">
+<video  width="800" height="600" controls="controls" preload="none">
+  <source src="./Videos/WalkingChampion.mp4" type="video/mp4"/>
+</video>
 
 **Champion throughout the generations**
 
 This video displays how the champion changed from its first generation until its last. This video was not inlucded in the report.
 
-<video src="./Videos/GenerationVideo.mp4" width="800" height="600">
+<video  width="800" height="600" controls="controls" preload="none">
+  <source src="./Videos/GenerationVideo.mp4" type="video/mp4"/>
+</video>
 
 **Substate of the Walking champion**
 
 This video displays the substrate evolved by HyperNEAT. See the report for details.
 
-<video src="./Videos/Substrate-WalkingChampion.mp4" width="800" height="600">
+<video  width="800" height="600" controls="controls" preload="none">
+  <source src="./Videos/Substrate-WalkingChampion.mp4" type="video/mp4"/>
+</video>
 
 ## Control Strategy
