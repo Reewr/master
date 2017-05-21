@@ -5,7 +5,9 @@
 #include "../Experiments/Experiment.hpp"
 #include "../Input/Event.hpp"
 #include "../OpenGLHeaders.hpp"
+#include "../GlobalLog.hpp"
 
+#include <btBulletDynamicsCommon.h>
 #include <NeuralNetwork.h>
 
 void loadExperiments(Experiment* experiment, const std::string& filename) {
@@ -34,6 +36,7 @@ Controller::Controller(Experiment*        standing,
                        const std::string& walkingExperiment) {
   mStanding = standing;
   mWalking  = walking;
+  isExperimenting = true;
 
   loadExperiments(mStanding, standingExperiment);
   loadExperiments(mWalking, walkingExperiment);
@@ -124,6 +127,30 @@ void Controller::input(const Input::Event& event) {
     changeStage(Stage::Walking);
     return event.stopPropgation();
   }
+
+  if (event.keyPressed(GLFW_KEY_U)) {
+    debug("Starting experiment");
+    isExperimenting = true;
+    mExperimentDuration = 0;
+    mData = {};
+    changeStage(Stage::Walking);
+    return event.stopPropgation();
+  }
+
+  if (event.keyPressed(GLFW_KEY_Y)) {
+    isExperimenting = false;
+    changeStage(Stage::None);
+
+    debug("Here's the info for the last experiment");
+    debug("Experiment duration: {}", mPhenotype->duration);
+
+    debug("DATA:");
+    for(auto m : mData) {
+      debug("{}", m);
+    }
+
+    return event.stopPropgation();
+  }
 }
 
 void Controller::update(float) {
@@ -135,6 +162,22 @@ void Controller::update(float) {
     mPhenotype->update(*mWalking);
   } else if (mCurrentStage == Stage::Standing) {
     mPhenotype->update(*mStanding);
+  }
+
+  if (isExperimenting) {
+    mExperimentDuration += 1.0/60.0;
+    const btVector3& pos = mPhenotype->rigidBody("Sternum")->getCenterOfMassPosition();
+    float w = mCurrentStage == Stage::Walking ? 1.f : 0.f;
+    mData.push_back(mmm::vec4(w, pos.x(), pos.y(), pos.z()));
+  }
+
+  bool isMod5 = int(mExperimentDuration) % 5 == 0 && int(mExperimentDuration) != 0;
+  if (isExperimenting && mCurrentStage == Stage::Walking && isMod5) {
+    changeStage(Stage::Standing);
+    mExperimentDuration = 0;
+  } else if (isExperimenting && mCurrentStage == Stage::Standing && isMod5) {
+    changeStage(Stage::Walking);
+    mExperimentDuration = 0;
   }
 
   mPhenotype->failed = false;

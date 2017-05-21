@@ -268,7 +268,7 @@ void SpiderSwarm::runGenome(unsigned int genomeId) {
     g = &mBestPossibleGenome;
   else {
     for(unsigned int i = 0; i < mPopulation->m_Species.size(); i++) {
-      for(unsigned int j = 0; i < mPopulation->m_Species[i].m_Individuals.size(); j++) {
+      for(unsigned int j = 0; j < mPopulation->m_Species[i].m_Individuals.size(); j++) {
         if (mPopulation->m_Species[i].m_Individuals[j].GetID() == genomeId) {
           g = &mPopulation->m_Species[i].m_Individuals[j];
           break;
