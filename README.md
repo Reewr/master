@@ -1,6 +1,5 @@
 ---
 title: Neuroevolution for Actively Controlled Virtual Characters
-layout: post
 ---
 
 # Summary
