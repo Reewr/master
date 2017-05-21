@@ -1,7 +1,3 @@
----
-title: Neuroevolution for Actively Controlled Virtual Characters
----
-
 # Summary
 
 # Result
