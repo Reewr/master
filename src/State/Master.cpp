@@ -55,12 +55,12 @@ Master::Master(Asset* a) : mAsset(a) {
 
   mDrawable3D = { new Terrain() };
   mSwarm      = new SpiderSwarm();
-//  mController = new Controller(
-//      new StandingCurve2(),
-//      "experiments/StandingCurve2/Velocity/current-g188",
-//      new WalkingRotationInputs(),
-//      "experiments/WalkingRotationInputs/TANH/current-g187");
-  // mSwarm->load("testswarm");
+  mController = new Controller(
+     new StandingCurve2(),
+     "../master-thesis-bac/experiments/StandingCurve2/Velocity/noe",
+     new WalkingRTNK(),
+     "../master-thesis-bac/experiments/WalkingRTNK/current-g285");
+  mSwarm->load("testswarm");
 
   for (auto d : mDrawable3D)
     mWorld->addObject(d);
@@ -84,7 +84,7 @@ Master::~Master() {
   delete mShadowmap;
   delete mWorld;
   delete mSwarm;
-  //delete mController;
+  delete mController;
 
   for (auto d : mDrawable3D)
     delete d;
@@ -106,8 +106,8 @@ void Master::draw3D() {
   mShadowmap->bind(true);
   for (auto d : mDrawable3D)
     d->draw(shadowProgram, false);
-  mSwarm->draw(shadowProgram, false);
-  //mController->draw(shadowProgram, false);
+  // mSwarm->draw(shadowProgram, false);
+  mController->draw(shadowProgram, false);
   mShadowmap->finalize();
   mShadowmap->texture()->bind(0);
 
@@ -122,8 +122,8 @@ void Master::draw3D() {
 
   for (auto d : mDrawable3D)
     d->draw(modelProgram, true);
-  /* mController->draw(modelProgram, true); */
-  mSwarm->draw(modelProgram, true);
+  mController->draw(modelProgram, true);
+  // mSwarm->draw(modelProgram, true);
 }
 
 void Master::drawGUI() {
@@ -148,25 +148,25 @@ void Master::input(const Input::Event& event) {
   for (auto g : mGUIElements)
     g->input(event);
 
-  /* mController->input(event); */
+  mController->input(event);
 
   if (event.keyPressed(GLFW_KEY_ESCAPE)) {
     event.sendStateChange(States::Quit);
     event.stopPropgation();
   }
 
-  /* if (event.keyPressed(GLFW_KEY_R)) { */
-  /*   if (mSwarm->stage() == SpiderSwarm::SimulationStage::SimulationReady) */
-  /*     mSwarm->start(); */
-  /*   else */
-  /*     mSwarm->runBestGenome(); */
-  /*   event.stopPropgation(); */
-  /*   return; */
-  /* } else if (event.keyPressed(GLFW_KEY_F)) { */
-  /*   mFixedCamera = !mFixedCamera; */
-  /*   event.stopPropgation(); */
-  /*   return; */
-  /* } */
+  // if (event.keyPressed(GLFW_KEY_R)) {
+  //   if (mSwarm->stage() == SpiderSwarm::SimulationStage::SimulationReady)
+  //     mSwarm->start();
+  //   else
+  //     mSwarm->runBestGenome();
+  //   event.stopPropgation();
+  //   return;
+  // } else if (event.keyPressed(GLFW_KEY_F)) {
+  //   mFixedCamera = !mFixedCamera;
+  //   event.stopPropgation();
+  //   return;
+  // }
 
   if (event.scrollUp())
     mCamera->zoom(1);
@@ -179,23 +179,23 @@ void Master::input(const Input::Event& event) {
 void Master::update(float deltaTime) {
   mDeltaTime = deltaTime;
   // mWorld->doPhysics(deltaTime);
-  mSwarm->update(deltaTime);
-  /* mController->update(deltaTime); */
+  // mSwarm->update(deltaTime);
+  mController->update(deltaTime);
 
-  /* SpiderSwarm::SimulationStage s = mSwarm->stage(); */
+  SpiderSwarm::SimulationStage s = mSwarm->stage();
 
-  /* // When simulating, let the camera follow the sternum */
-  /* if (mFixedCamera && (s == SpiderSwarm::SimulationStage::Simulating || */
-  /*                      s == SpiderSwarm::SimulationStage::SimulationReady)) { */
-  /*   const Phenotype& p = mSwarm->phenotypes().at(0); */
-  /*   const btVector3& massPos = */
-  /*     p.rigidBody("Sternum")->getCenterOfMassPosition(); */
-  /*   vec3 target = mmm::vec3(massPos.x(), 0, massPos.z()); */
-  /*   vec3 pos    = target + vec3(4, 4, 4); */
+  // When simulating, let the camera follow the sternum
+  if (mFixedCamera && (s == SpiderSwarm::SimulationStage::Simulating ||
+                       s == SpiderSwarm::SimulationStage::SimulationReady)) {
+    const Phenotype& p = mSwarm->phenotypes().at(0);
+    const btVector3& massPos =
+      p.rigidBody("Sternum")->getCenterOfMassPosition();
+    vec3 target = mmm::vec3(massPos.x(), 0, massPos.z());
+    vec3 pos    = target + vec3(4, 4, 4);
 
-  /*   mCamera->setPosition(pos); */
-  /*   mCamera->setTarget(target); */
-  /* } */
+    mCamera->setPosition(pos);
+    mCamera->setTarget(target);
+  }
 
   if (mGUIElements.size() == 0 || !mGUIElements.back()->isVisible())
     mCamera->input(deltaTime);
