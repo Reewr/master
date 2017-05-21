@@ -143,3 +143,11 @@ void Controller::update(float) {
 void Controller::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
   mPhenotype->draw(prog, mmm::vec3(0), bindTexture);
 }
+
+const Phenotype& Controller::phenotype() const {
+  return *mPhenotype;
+}
+
+Controller::Stage Controller::stage() const {
+  return mCurrentStage;
+}

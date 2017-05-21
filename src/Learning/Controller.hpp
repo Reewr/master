@@ -38,6 +38,10 @@ public:
 
   void update(float deltaTime);
 
+  const Phenotype& phenotype() const;
+
+  Stage stage() const;
+
 private:
   void changeStage(Stage stage);
 
