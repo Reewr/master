@@ -2,11 +2,12 @@
 
 #include "Experiment.hpp"
 
-class WalkingRotationNoKill : public Experiment {
+class Standing0102 : public Experiment {
 public:
-  WalkingRotationNoKill();
-  ~WalkingRotationNoKill();
+  Standing0102();
+  ~Standing0102();
 
+  float mergeFitnessValues(const mmm::vec<9>& fitness) const;
   void outputs(Phenotype& p, const std::vector<double>& outputs) const;
   std::vector<double> inputs(const Phenotype& p) const;
 };

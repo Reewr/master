@@ -12,10 +12,10 @@
  *   In addition, it also takes an input of whether a leg is toching
  *   the ground or not.
  */
-class WalkingRTNK2 : public Experiment {
+class Walking07 : public Experiment {
 public:
-  WalkingRTNK2();
-  ~WalkingRTNK2();
+  Walking07();
+  ~Walking07();
 
   float mergeFitnessValues(const mmm::vec<9>& fitness) const;
   void outputs(Phenotype& p, const std::vector<double>& outputs) const;

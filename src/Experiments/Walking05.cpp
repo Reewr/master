@@ -1,4 +1,5 @@
-#include "StandingCurve2.hpp"
+#include "Walking05.hpp"
+
 #include "ExperimentUtil.hpp"
 
 #include "../Learning/Phenotype.hpp"
@@ -6,38 +7,27 @@
 
 #include <btBulletDynamicsCommon.h>
 
-StandingCurve2::StandingCurve2() : Experiment("StandingCurve2") {
+const float PI = mmm::constants<float>::pi;
+
+Walking05::Walking05() : Experiment("Walking05") {
 
   mParameters.numActivates = 8;
   mParameters.experimentDuration = 30;
   mFitnessFunctions =
-  { Fitness("Stand",
-            "Fitness based on no movement.",
-            [](const Phenotype& p, float current, float dt) -> float {
-              if (p.duration <= 2*dt)
-                return 1.f;
-
+  { Fitness("Movement",
+            "Fitness based on movement in positive z direction.",
+            [](const Phenotype& p, float, float) -> float {
               const auto&        parts = p.spider->parts();
               const btRigidBody* sternum =
                 parts.at("Sternum").part->rigidBody();
-              const btVector3& v = sternum->getLinearVelocity();
+              const btVector3& massPos = sternum->getCenterOfMassPosition();
 
-              current *= ExpUtil::score(dt, v.x(), 0);
-              current *= ExpUtil::score(dt, v.y(), 0);
-              current *= ExpUtil::score(dt, v.z(), 0);
-
-              return current;
-            }),
-
-    Fitness("Lifespan  ",
-            "Fitness based on lifespan.",
-            [](const Phenotype&, float, float) -> float {
-              return 0.f;
+              return massPos.z();
             },
-            [](const Phenotype&, float, float duration) -> float {
-              return duration;
+            [](const Phenotype&, float current, float) -> float {
+              return mmm::max(current, 0);
             }),
-    Fitness("Vibrating",
+  Fitness("Vibrating",
             "Fitness based how little it vibrates with the legs",
             [](const Phenotype&, float, float) -> float {
               return 0;
@@ -67,85 +57,105 @@ StandingCurve2::StandingCurve2() : Experiment("StandingCurve2") {
 
               return 1.0f + current;
             }),
+  Fitness("Off Center",
+            "Fitness based how much off center it is",
+            [](const Phenotype& p, float current, float) -> float {
+              const btRigidBody* sternum = p.rigidBody("Sternum");
+              float xpos = sternum->getCenterOfMassPosition().x();
+              return current + ExpUtil::score(1.0, xpos, 0.1);
+            },
+            [](const Phenotype&, float current, float duration) -> float {
+              return current / (duration * 60);
+            }),
+
+  Fitness("Off Center Rotation",
+            "Fitness based how much rotation off center it is",
+            [](const Phenotype& p, float current, float) -> float {
+              const btRigidBody* sternum = p.rigidBody("Sternum");
+              float yrot = ExpUtil::getEulerAngles(sternum->getOrientation()).y;
+              yrot += mmm::radians(90);
+              return current + ExpUtil::score(1.0, yrot, mmm::radians(10));
+            },
+            [](const Phenotype&, float current, float duration) -> float {
+              return current / (duration * 60);
+            }),
 
     Fitness("Colliding",
-            "If the spider falls, stop the simulation",
-            [](const Phenotype& phenotype, float current, float) -> float {
+            "If the spider falls, punish it",
+            [](const Phenotype& phenotype, float current, float dt) -> float {
 
               if (phenotype.collidesWithTerrain("Abdomin") ||
-                  phenotype.collidesWithTerrain("Sternum") ||
-                  phenotype.collidesWithTerrain("Eye") ||
-                  phenotype.collidesWithTerrain("Hip") ||
-                  phenotype.collidesWithTerrain("Neck") ||
-                  phenotype.collidesWithTerrain("PatellaR1") ||
-                  phenotype.collidesWithTerrain("PatellaR2") ||
-                  phenotype.collidesWithTerrain("PatellaR3") ||
-                  phenotype.collidesWithTerrain("PatellaR4") ||
-                  phenotype.collidesWithTerrain("PatellaL1") ||
-                  phenotype.collidesWithTerrain("PatellaL2") ||
-                  phenotype.collidesWithTerrain("PatellaL3") ||
-                  phenotype.collidesWithTerrain("PatellaL4") ||
-                  phenotype.collidesWithTerrain("FemurR1") ||
-                  phenotype.collidesWithTerrain("FemurR2") ||
-                  phenotype.collidesWithTerrain("FemurR3") ||
-                  phenotype.collidesWithTerrain("FemurR4") ||
-                  phenotype.collidesWithTerrain("FemurL1") ||
-                  phenotype.collidesWithTerrain("FemurL2") ||
-                  phenotype.collidesWithTerrain("FemurL3") ||
-                  phenotype.collidesWithTerrain("FemurL4") ||
-                  phenotype.collidesWithTerrain("TrochanterR1") ||
-                  phenotype.collidesWithTerrain("TrochanterR2") ||
-                  phenotype.collidesWithTerrain("TrochanterR3") ||
-                  phenotype.collidesWithTerrain("TrochanterR4") ||
-                  phenotype.collidesWithTerrain("TrochanterL1") ||
-                  phenotype.collidesWithTerrain("TrochanterL2") ||
-                  phenotype.collidesWithTerrain("TrochanterL3") ||
-                  phenotype.collidesWithTerrain("TrochanterL4")) {
+                phenotype.collidesWithTerrain("Sternum") ||
+                phenotype.collidesWithTerrain("Eye") ||
+                phenotype.collidesWithTerrain("Hip") ||
+                phenotype.collidesWithTerrain("Neck") ||
+                phenotype.collidesWithTerrain("PatellaR1") ||
+                phenotype.collidesWithTerrain("PatellaR2") ||
+                phenotype.collidesWithTerrain("PatellaR3") ||
+                phenotype.collidesWithTerrain("PatellaR4") ||
+                phenotype.collidesWithTerrain("PatellaL1") ||
+                phenotype.collidesWithTerrain("PatellaL2") ||
+                phenotype.collidesWithTerrain("PatellaL3") ||
+                phenotype.collidesWithTerrain("PatellaL4") ||
+                phenotype.collidesWithTerrain("FemurR1") ||
+                phenotype.collidesWithTerrain("FemurR2") ||
+                phenotype.collidesWithTerrain("FemurR3") ||
+                phenotype.collidesWithTerrain("FemurR4") ||
+                phenotype.collidesWithTerrain("FemurL1") ||
+                phenotype.collidesWithTerrain("FemurL2") ||
+                phenotype.collidesWithTerrain("FemurL3") ||
+                phenotype.collidesWithTerrain("FemurL4") ||
+                phenotype.collidesWithTerrain("TrochanterR1") ||
+                phenotype.collidesWithTerrain("TrochanterR2") ||
+                phenotype.collidesWithTerrain("TrochanterR3") ||
+                phenotype.collidesWithTerrain("TrochanterR4") ||
+                phenotype.collidesWithTerrain("TrochanterL1") ||
+                phenotype.collidesWithTerrain("TrochanterL2") ||
+                phenotype.collidesWithTerrain("TrochanterL3") ||
+                phenotype.collidesWithTerrain("TrochanterL4"))
                 phenotype.kill();
-              }
 
               return current;
-            }),
+            })
   };
 
   mSubstrate = createDefaultSubstrate();
   mSubstrate->m_hidden_nodes_activation = NEAT::ActivationFunction::TANH;
   mSubstrate->m_output_nodes_activation = NEAT::ActivationFunction::TANH;
-  mSubstrate->m_max_weight_and_bias = 4.0;
+  mSubstrate->m_max_weight_and_bias = 3.0;
 
   NEAT::Parameters params = getDefaultParameters();
-  params.SurvivalRate = 0.25;
-  params.MultipointCrossoverRate = 0.75;
-  params.EliteFraction = 0.2;
-  params.MutateAddNeuronProb = 0.03;
-  params.MutateAddLinkProb = 0.2;
-  params.MaxWeight = 4.0;
-  params.ActivationFunctionDiffCoeff = 0.0;
-  params.CompatTreshold = 2.0;
+  params.MutateWeightsProb = 0.9;
+  params.WeightMutationMaxPower = 0.2;
+  params.WeightReplacementMaxPower = 1.0;
+  params.MutateNeuronActivationTypeProb = 0.03;
+  params.ActivationFunction_SignedSigmoid_Prob = 1.0;
+  params.ActivationFunction_Tanh_Prob = 1.0;
+  params.ActivationFunction_Linear_Prob = 1.0;
 
   NEAT::Genome genome(0,
                       mSubstrate->GetMinCPPNInputs(),
                       0,
                       mSubstrate->GetMinCPPNOutputs(),
                       false,
+                      NEAT::ActivationFunction::TANH_CUBIC,
                       NEAT::ActivationFunction::SIGNED_SINE,
-                      NEAT::ActivationFunction::SIGNED_GAUSS,
                       0,
                       params);
 
   mPopulation = new NEAT::Population(genome, params, true, params.MaxWeight, time(0));
 }
 
-StandingCurve2::~StandingCurve2() {
+Walking05::~Walking05() {
   delete mPopulation;
   delete mSubstrate;
 }
 
-float StandingCurve2::mergeFitnessValues(const mmm::vec<9>& fitness) const {
-  return mmm::product(fitness.xyz);
+float Walking05::mergeFitnessValues(const mmm::vec<9>& fitness) const {
+  return fitness[0] * fitness[1] * fitness[2] * fitness[3];
 }
 
-void StandingCurve2::outputs(Phenotype&                 p,
+void Walking05::outputs(Phenotype&                 p,
                                   const std::vector<double>& outputs) const {
   size_t index = 16;
   for(auto& part : p.spider->parts()) {
@@ -176,7 +186,7 @@ void StandingCurve2::outputs(Phenotype&                 p,
   }
 }
 
-std::vector<double> StandingCurve2::inputs(const Phenotype& p) const {
+std::vector<double> Walking05::inputs(const Phenotype& p) const {
   btRigidBody* sternum = p.spider->parts().at("Sternum").part->rigidBody();
   mmm::vec3 rots       = ExpUtil::getEulerAngles(sternum->getOrientation());
   std::vector<double> inputs = p.previousOutput;
@@ -185,14 +195,14 @@ std::vector<double> StandingCurve2::inputs(const Phenotype& p) const {
     inputs.insert(inputs.end(), mSubstrate->m_output_coords.size(), 0);
   }
 
-  inputs[0] = rots.x;
-  inputs[1] = rots.y;
-  inputs[2] = rots.z;
-  inputs[3] = 1; // mmm::sin(p.duration * 2);
-  inputs[4] = 1; // mmm::cos(p.duration * 2);
+  inputs[0] = ExpUtil::normalizeAngle(rots.x, -PI, PI, 0);
+  inputs[1] = ExpUtil::normalizeAngle(rots.y + mmm::degrees(90), -PI, PI, 0);
+  inputs[2] = ExpUtil::normalizeAngle(rots.z, -PI, PI, 0);
+  inputs[3] = mmm::sin(p.duration * 2);
+  inputs[4] = 1;
   inputs[5] = 1;
   inputs[6] = 1;
-  inputs[7] = 1;
+  inputs[7] = mmm::cos(p.duration * 2);
   inputs[8] = p.collidesWithTerrain("TarsusL1") ? 1.0 : 0.0;
   inputs[9] = p.collidesWithTerrain("TarsusL2") ? 1.0 : 0.0;
   inputs[10] = p.collidesWithTerrain("TarsusL3") ? 1.0 : 0.0;

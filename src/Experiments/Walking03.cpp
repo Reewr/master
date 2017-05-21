@@ -1,4 +1,4 @@
-#include "StandingCurve.hpp"
+#include "Walking03.hpp"
 
 #include "ExperimentUtil.hpp"
 
@@ -7,82 +7,69 @@
 
 #include <btBulletDynamicsCommon.h>
 
-StandingCurve::StandingCurve() : Experiment("StandingCurve") {
+const float PI = mmm::constants<float>::pi;
+
+Walking03::Walking03() : Experiment("Walking03") {
 
   mParameters.numActivates = 8;
   mParameters.experimentDuration = 30;
   mFitnessFunctions =
-  { Fitness("Standing",
-            "Fitness based on no movement.",
-            [](const Phenotype&, float current, float) -> float {
-              return current;
-            },
+  { Fitness("Movement",
+            "Fitness based on movement in positive z direction.",
             [](const Phenotype& p, float current, float) -> float {
-              const auto&        parts = p.spider->parts();
-              const btRigidBody* sternum =
-                parts.at("Sternum").part->rigidBody();
+              const btRigidBody* sternum = p.rigidBody("Sternum");
               const btVector3& massPos = sternum->getCenterOfMassPosition();
-
-              current += mmm::abs(massPos.x() - p.initialPosition.x);
-              current += mmm::abs(massPos.y() - p.initialPosition.y);
-              current += mmm::abs(massPos.z() - p.initialPosition.z);
-              return ExpUtil::score(1.f, current, 0);
+              return mmm::max(current, massPos.z());
             }),
-    Fitness("Rotation",
-            "Fitness based on no rotation.",
-            [](const Phenotype&, float current, float) -> float {
+
+    Fitness("TEST      ",
+            "...",
+            [](const Phenotype& p, float current, float deltaTime) -> float {
+              const btRigidBody* sternum = p.rigidBody("Sternum");
+
+              auto t = sternum->getCenterOfMassPosition();
+              auto r = mmm::degrees(ExpUtil::getEulerAngles(sternum->getOrientation()));
+              r.y += 90.f;
+
+              auto x = ExpUtil::score(deltaTime, mmm::abs(t.x() * 10.f) + mmm::abs(r.y), 1.f);
+
+              current += x * mmm::max(t.z(), 0.f);
+
               return current;
-            },
-            [](const Phenotype& p, float current, float) -> float {
-              const auto&        parts = p.spider->parts();
-              const btRigidBody* sternum =
-                parts.at("Sternum").part->rigidBody();
-              mmm::vec3 o = ExpUtil::getEulerAngles(sternum->getOrientation());
-              o.y += mmm::radians(90);
-
-              current += mmm::sum(mmm::abs(o - p.initialPosition));
-              return ExpUtil::score(1.f, current, 0);
-            }),
-    Fitness("Lifespan",
-            "Fitness based on lifespan.",
-            [](const Phenotype&, float, float) -> float {
-              return 0.f;
-            },
-            [](const Phenotype&, float, float duration) -> float {
-              return duration;
-            }),
-    Fitness("Vibrating",
-            "Fitness based how little it vibrates with the legs",
-            [](const Phenotype&, float, float) -> float {
-              return 0;
-            },
-            [](const Phenotype& p, float current, float duration) -> float {
-              size_t numUpdates = p.tmp.size();
-              size_t numJoints  = numUpdates == 0 ? 0 : p.tmp[0].size();
-
-              for(size_t i = 0; i < numJoints; ++i) {
-                float dir   = 0.0;
-                float freq  = 0.0;
-
-                for(size_t j = 0; j < numUpdates; j++) {
-                  float currentDir = p.tmp[j][i];
-
-                  if (currentDir != dir)
-                    freq += 1;
-
-                  dir = currentDir;
-                }
-
-                float avgHz = freq / duration;
-
-                if (avgHz > 10)
-                  current -= 1 / float(numJoints);
-              }
-
-              return 1.0f + current;
             }),
 
-    Fitness("Colliding",
+    // Fitness("Vibrating",
+    //         "Fitness based how little it vibrates with the legs",
+    //         [](const Phenotype& p, float, float) -> float {
+    //           return 0;
+    //         },
+    //         [](const Phenotype& p, float current, float duration) -> float {
+    //           size_t numUpdates = p.tmp.size() / 3;
+    //           size_t numJoints  = numUpdates == 0 ? 0 : p.tmp[0].size();
+
+    //           for(size_t i = 0; i < numJoints; ++i) {
+    //             float dir   = 0.0;
+    //             float freq  = 0.0;
+
+    //             for(size_t j = 0; j < numUpdates; j++) {
+    //               float currentDir = p.tmp[j*3][i];
+
+    //               if (currentDir != dir)
+    //                 freq += 1;
+
+    //               dir = currentDir;
+    //             }
+
+    //             float avgHz = freq / duration;
+
+    //             if (avgHz > 10)
+    //               current -= 1 / float(numJoints);
+    //           }
+
+    //           return 1.0f + current;
+    //         }),
+
+    Fitness("Colliding ",
             "If the spider falls, stop the simulation",
             [](const Phenotype& phenotype, float current, float) -> float {
 
@@ -123,20 +110,22 @@ StandingCurve::StandingCurve() : Experiment("StandingCurve") {
   };
 
   mSubstrate = createDefaultSubstrate();
-  mSubstrate->m_hidden_nodes_activation = NEAT::ActivationFunction::TANH;
-  mSubstrate->m_output_nodes_activation = NEAT::ActivationFunction::TANH;
-  mSubstrate->m_max_weight_and_bias = 4.0;
 
   NEAT::Parameters params = getDefaultParameters();
-
-  params.SurvivalRate = 0.25;
-  params.MultipointCrossoverRate = 0.75;
-  params.EliteFraction = 0.2;
-  params.MutateAddNeuronProb = 0.03;
-  params.MutateAddLinkProb = 0.2;
-  params.MaxWeight = 4.0;
-  params.ActivationFunctionDiffCoeff = 0.0;
-  params.CompatTreshold = 2.0;
+  params.ActivationFunction_SignedSigmoid_Prob = 1.0;
+  params.ActivationFunction_UnsignedSigmoid_Prob = 0.0;
+  params.ActivationFunction_Tanh_Prob = 1.0;
+  params.ActivationFunction_TanhCubic_Prob = 1.0;
+  params.ActivationFunction_SignedStep_Prob = 1.0;
+  params.ActivationFunction_UnsignedStep_Prob = 0.0;
+  params.ActivationFunction_SignedGauss_Prob = 1.0;
+  params.ActivationFunction_UnsignedGauss_Prob = 0.0;
+  params.ActivationFunction_Abs_Prob = 1.0;
+  params.ActivationFunction_SignedSine_Prob = 1.0;
+  params.ActivationFunction_UnsignedSine_Prob = 0.0;
+  params.ActivationFunction_Linear_Prob = 1.0;
+  params.ActivationFunction_Relu_Prob = 0.0;
+  params.ActivationFunction_Softplus_Prob = 0.0;
 
   NEAT::Genome genome(0,
                       mSubstrate->GetMinCPPNInputs(),
@@ -151,16 +140,16 @@ StandingCurve::StandingCurve() : Experiment("StandingCurve") {
   mPopulation = new NEAT::Population(genome, params, true, params.MaxWeight, time(0));
 }
 
-StandingCurve::~StandingCurve() {
+Walking03::~Walking03() {
   delete mPopulation;
   delete mSubstrate;
 }
 
-float StandingCurve::mergeFitnessValues(const mmm::vec<9>& fitness) const {
-  return mmm::product(fitness.xyzw);
+float Walking03::mergeFitnessValues(const mmm::vec<9>& fitness) const {
+  return mmm::sum(fitness);
 }
 
-void StandingCurve::outputs(Phenotype&                 p,
+void Walking03::outputs(Phenotype&                 p,
                                   const std::vector<double>& outputs) const {
   size_t index = 16;
   for(auto& part : p.spider->parts()) {
@@ -178,9 +167,9 @@ void StandingCurve::outputs(Phenotype&                 p,
                                                zero);
       velocity = output - currentAngle;
 
-      if (p.tmp.size() <= index - 16)
-        p.tmp.push_back({});
-      p.tmp[index-16].push_back(output > currentAngle ? 1.0 : 0.0);
+      // if (p.tmp.size() <= index - 16)
+      //   p.tmp.push_back({});
+      // p.tmp[index-16].push_back(output > currentAngle ? 1.0 : 0.0);
 
       index++;
     } else {
@@ -191,7 +180,7 @@ void StandingCurve::outputs(Phenotype&                 p,
   }
 }
 
-std::vector<double> StandingCurve::inputs(const Phenotype& p) const {
+std::vector<double> Walking03::inputs(const Phenotype& p) const {
   btRigidBody* sternum = p.spider->parts().at("Sternum").part->rigidBody();
   mmm::vec3 rots       = ExpUtil::getEulerAngles(sternum->getOrientation());
   std::vector<double> inputs = p.previousOutput;
@@ -200,14 +189,14 @@ std::vector<double> StandingCurve::inputs(const Phenotype& p) const {
     inputs.insert(inputs.end(), mSubstrate->m_output_coords.size(), 0);
   }
 
-  inputs[0] = rots.x;
-  inputs[1] = rots.y;
-  inputs[2] = rots.z;
-  inputs[3] = 1; // mmm::sin(p.duration * 2);
-  inputs[4] = 1; // mmm::cos(p.duration * 2);
-  inputs[5] = 1;
-  inputs[6] = 1;
-  inputs[7] = 1;
+  // inputs[0] = rots.x;
+  // inputs[1] = rots.y;
+  // inputs[2] = rots.z;
+  inputs[3] = mmm::sin(p.duration * 2);
+  // inputs[4] = 1;
+  // inputs[5] = 1;
+  // inputs[6] = 1;
+  inputs[7] = mmm::cos(p.duration * 2);
   inputs[8] = p.collidesWithTerrain("TarsusL1") ? 1.0 : 0.0;
   inputs[9] = p.collidesWithTerrain("TarsusL2") ? 1.0 : 0.0;
   inputs[10] = p.collidesWithTerrain("TarsusL3") ? 1.0 : 0.0;

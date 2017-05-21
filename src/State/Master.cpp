@@ -26,13 +26,6 @@
 #include "../Utils/Utils.hpp"
 
 #include "../Learning/SpiderSwarm.hpp"
-#include "../Learning/Controller.hpp"
-#include "../Experiments/WalkingRTNK.hpp"
-#include "../Experiments/WalkingRotationInputs.hpp"
-#include "../Experiments/StandingCurve2.hpp"
-#include "../Experiments/StandingCurve.hpp"
-
-#include <random>
 
 using mmm::vec2;
 using mmm::vec3;
@@ -55,11 +48,6 @@ Master::Master(Asset* a) : mAsset(a) {
 
   mDrawable3D = { new Terrain() };
   mSwarm      = new SpiderSwarm();
-  mController = new Controller(
-     new StandingCurve2(),
-     "../master-thesis-bac/experiments/StandingCurve2/Velocity/current-g272",
-     new WalkingRTNK(),
-     "../master-thesis-bac/experiments/WalkingRTNK/current-g285");
   mSwarm->load("testswarm");
 
   for (auto d : mDrawable3D)
@@ -84,7 +72,6 @@ Master::~Master() {
   delete mShadowmap;
   delete mWorld;
   delete mSwarm;
-  delete mController;
 
   for (auto d : mDrawable3D)
     delete d;
@@ -106,8 +93,7 @@ void Master::draw3D() {
   mShadowmap->bind(true);
   for (auto d : mDrawable3D)
     d->draw(shadowProgram, false);
-  // mSwarm->draw(shadowProgram, false);
-  mController->draw(shadowProgram, false);
+  mSwarm->draw(shadowProgram, false);
   mShadowmap->finalize();
   mShadowmap->texture()->bind(0);
 
@@ -122,8 +108,7 @@ void Master::draw3D() {
 
   for (auto d : mDrawable3D)
     d->draw(modelProgram, true);
-  mController->draw(modelProgram, true);
-  // mSwarm->draw(modelProgram, true);
+  mSwarm->draw(modelProgram, true);
 }
 
 void Master::drawGUI() {
@@ -148,25 +133,11 @@ void Master::input(const Input::Event& event) {
   for (auto g : mGUIElements)
     g->input(event);
 
-  mController->input(event);
 
   if (event.keyPressed(GLFW_KEY_ESCAPE)) {
     event.sendStateChange(States::Quit);
     event.stopPropgation();
   }
-
-  // if (event.keyPressed(GLFW_KEY_R)) {
-  //   if (mSwarm->stage() == SpiderSwarm::SimulationStage::SimulationReady)
-  //     mSwarm->start();
-  //   else
-  //     mSwarm->runBestGenome();
-  //   event.stopPropgation();
-  //   return;
-  // } else if (event.keyPressed(GLFW_KEY_F)) {
-  //   mFixedCamera = !mFixedCamera;
-  //   event.stopPropgation();
-  //   return;
-  // }
 
   if (event.scrollUp())
     mCamera->zoom(1);
@@ -180,29 +151,6 @@ void Master::update(float deltaTime) {
   mDeltaTime = deltaTime;
   // mWorld->doPhysics(deltaTime);
   // mSwarm->update(deltaTime);
-  mController->update(deltaTime);
-
-  SpiderSwarm::SimulationStage s = mSwarm->stage();
-  Controller::Stage conStage = mController->stage();
-
-  bool controllerSimulating = conStage == Controller::Stage::Walking || conStage == Controller::Stage::Standing;
-  bool swarmSimulating = s == SpiderSwarm::SimulationStage::Simulating || s == SpiderSwarm::SimulationStage::SimulationReady;
-  bool shouldFixedCamera = mFixedCamera && (controllerSimulating || swarmSimulating);
-
-  // When simulating, let the camera follow the sternum
-  if (shouldFixedCamera) {
-    btVector3 massPos;
-    if (swarmSimulating) {
-      massPos = mSwarm->phenotypes().at(0).rigidBody("Sternum")->getCenterOfMassPosition();
-    } else {
-      massPos = mController->phenotype().rigidBody("Sternum")->getCenterOfMassPosition();
-    }
-    vec3 target = mmm::vec3(massPos.x(), 0, massPos.z());
-    vec3 pos    = target + vec3(4, 4, 4);
-
-    mCamera->setPosition(pos);
-    mCamera->setTarget(target);
-  }
 
   if (mGUIElements.size() == 0 || !mGUIElements.back()->isVisible())
     mCamera->input(deltaTime);

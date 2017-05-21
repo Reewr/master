@@ -1,5 +1,4 @@
-#include "WalkingMultiKill.hpp"
-
+#include "Standing0304.hpp"
 #include "ExperimentUtil.hpp"
 
 #include "../Learning/Phenotype.hpp"
@@ -7,42 +6,38 @@
 
 #include <btBulletDynamicsCommon.h>
 
-WalkingMultiKill::WalkingMultiKill() : Experiment("WalkingMultiKill") {
+Standing0304::Standing0304() : Experiment("Standing0304") {
 
   mParameters.numActivates = 8;
   mParameters.experimentDuration = 30;
   mFitnessFunctions =
-  { Fitness("Movement  ",
-            "Fitness based on movement in positive z direction.",
-            [](const Phenotype& p, float current, float) -> float {
-              const btRigidBody* sternum = p.rigidBody("Sternum");
-              const btVector3& massPos = sternum->getCenterOfMassPosition();
+  { Fitness("Stand",
+            "Fitness based on no movement.",
+            [](const Phenotype& p, float current, float dt) -> float {
+              if (p.duration <= 2*dt)
+                return 1.f;
 
-              if (mmm::abs(massPos.x()) > 0.5f)
-                p.kill();
-              if (mmm::abs(massPos.y() - p.initialPosition.y) > 0.3f)
-                p.kill();
+              const auto&        parts = p.spider->parts();
+              const btRigidBody* sternum =
+                parts.at("Sternum").part->rigidBody();
+              const btVector3& v = sternum->getLinearVelocity();
 
-              return mmm::max(current, massPos.z());
-            }),
-    Fitness("Rotation  ",
-            "Fitness based on how little rotation it does",
-            [](const Phenotype& p, float current, float) -> float {
-              const btRigidBody* sternum = p.rigidBody("Sternum");
-              auto r = mmm::degrees(ExpUtil::getEulerAngles(sternum->getOrientation()));
-              r.y += 90.f;
-
-              if (mmm::abs(r.x) > 30.f)
-                p.kill();
-              if (mmm::abs(r.y) > 15.f)
-                p.kill();
-              if (mmm::abs(r.z) > 30.f)
-                p.kill();
+              current *= ExpUtil::score(dt, v.x(), 0);
+              current *= ExpUtil::score(dt, v.y(), 0);
+              current *= ExpUtil::score(dt, v.z(), 0);
 
               return current;
             }),
 
-    Fitness("Vibrating ",
+    Fitness("Lifespan  ",
+            "Fitness based on lifespan.",
+            [](const Phenotype&, float, float) -> float {
+              return 0.f;
+            },
+            [](const Phenotype&, float, float duration) -> float {
+              return duration;
+            }),
+    Fitness("Vibrating",
             "Fitness based how little it vibrates with the legs",
             [](const Phenotype&, float, float) -> float {
               return 0;
@@ -72,7 +67,8 @@ WalkingMultiKill::WalkingMultiKill() : Experiment("WalkingMultiKill") {
 
               return 1.0f + current;
             }),
-    Fitness("Colliding ",
+
+    Fitness("Colliding",
             "If the spider falls, stop the simulation",
             [](const Phenotype& phenotype, float current, float) -> float {
 
@@ -113,14 +109,20 @@ WalkingMultiKill::WalkingMultiKill() : Experiment("WalkingMultiKill") {
   };
 
   mSubstrate = createDefaultSubstrate();
+  mSubstrate->m_hidden_nodes_activation = NEAT::ActivationFunction::TANH;
+  mSubstrate->m_output_nodes_activation = NEAT::ActivationFunction::TANH;
+  mSubstrate->m_max_weight_and_bias = 4.0;
+
   NEAT::Parameters params = getDefaultParameters();
-  params.ActivationFunction_TanhCubic_Prob = 1.0;
-  params.ActivationFunction_SignedStep_Prob = 1.0;
-  params.ActivationFunction_SignedGauss_Prob = 1.0;
-  params.ActivationFunction_Abs_Prob = 1.0;
-  params.ActivationFunction_SignedSine_Prob = 1.0;
-  params.ActivationFunction_Linear_Prob = 1.0;
-  params.DisjointCoeff = 1.0;
+  params.SurvivalRate = 0.25;
+  params.MultipointCrossoverRate = 0.75;
+  params.EliteFraction = 0.2;
+  params.MutateAddNeuronProb = 0.03;
+  params.MutateAddLinkProb = 0.2;
+  params.MaxWeight = 4.0;
+  params.ActivationFunctionDiffCoeff = 0.0;
+  params.CompatTreshold = 2.0;
+
   NEAT::Genome genome(0,
                       mSubstrate->GetMinCPPNInputs(),
                       0,
@@ -134,16 +136,16 @@ WalkingMultiKill::WalkingMultiKill() : Experiment("WalkingMultiKill") {
   mPopulation = new NEAT::Population(genome, params, true, params.MaxWeight, time(0));
 }
 
-WalkingMultiKill::~WalkingMultiKill() {
+Standing0304::~Standing0304() {
   delete mPopulation;
   delete mSubstrate;
 }
 
-float WalkingMultiKill::mergeFitnessValues(const mmm::vec<9>& fitness) const {
-  return fitness.x * fitness.z;
+float Standing0304::mergeFitnessValues(const mmm::vec<9>& fitness) const {
+  return mmm::product(fitness.xyz);
 }
 
-void WalkingMultiKill::outputs(Phenotype&                 p,
+void Standing0304::outputs(Phenotype&                 p,
                                   const std::vector<double>& outputs) const {
   size_t index = 16;
   for(auto& part : p.spider->parts()) {
@@ -174,7 +176,7 @@ void WalkingMultiKill::outputs(Phenotype&                 p,
   }
 }
 
-std::vector<double> WalkingMultiKill::inputs(const Phenotype& p) const {
+std::vector<double> Standing0304::inputs(const Phenotype& p) const {
   btRigidBody* sternum = p.spider->parts().at("Sternum").part->rigidBody();
   mmm::vec3 rots       = ExpUtil::getEulerAngles(sternum->getOrientation());
   std::vector<double> inputs = p.previousOutput;
@@ -186,11 +188,11 @@ std::vector<double> WalkingMultiKill::inputs(const Phenotype& p) const {
   inputs[0] = rots.x;
   inputs[1] = rots.y;
   inputs[2] = rots.z;
-  inputs[3] = mmm::sin(p.duration * 2);
-  inputs[4] = 1;
+  inputs[3] = 1; // mmm::sin(p.duration * 2);
+  inputs[4] = 1; // mmm::cos(p.duration * 2);
   inputs[5] = 1;
   inputs[6] = 1;
-  inputs[7] = mmm::cos(p.duration * 2);
+  inputs[7] = 1;
   inputs[8] = p.collidesWithTerrain("TarsusL1") ? 1.0 : 0.0;
   inputs[9] = p.collidesWithTerrain("TarsusL2") ? 1.0 : 0.0;
   inputs[10] = p.collidesWithTerrain("TarsusL3") ? 1.0 : 0.0;

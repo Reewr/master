@@ -40,7 +40,6 @@ private:
   World*       mWorld;
   Lua::Lua*    mLua;
   SpiderSwarm* mSwarm;
-  Controller* mController;
   // Input::Input* mInput;
   Asset* mAsset;
 

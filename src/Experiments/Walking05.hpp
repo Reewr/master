@@ -2,10 +2,10 @@
 
 #include "Experiment.hpp"
 
-class WalkingRT2 : public Experiment {
+class Walking05 : public Experiment {
 public:
-  WalkingRT2();
-  ~WalkingRT2();
+  Walking05();
+  ~Walking05();
 
   float mergeFitnessValues(const mmm::vec<9>& fitness) const;
   void outputs(Phenotype& p, const std::vector<double>& outputs) const;

@@ -1,4 +1,4 @@
-#include "WalkingRT2.hpp"
+#include "Walking07.hpp"
 
 #include "ExperimentUtil.hpp"
 
@@ -9,12 +9,12 @@
 
 const float PI = mmm::constants<float>::pi;
 
-WalkingRT2::WalkingRT2() : Experiment("WalkingRT2") {
+Walking07::Walking07() : Experiment("Walking07") {
 
   mParameters.numActivates = 8;
-  mParameters.experimentDuration = 30;
+  mParameters.experimentDuration = 15;
   mFitnessFunctions =
-  { Fitness("Movement",
+  { Fitness("MovementZ",
             "Fitness based on movement in positive z direction.",
             [](const Phenotype& p, float current, float) -> float {
               const btRigidBody* sternum = p.rigidBody("Sternum");
@@ -22,95 +22,91 @@ WalkingRT2::WalkingRT2() : Experiment("WalkingRT2") {
               return mmm::max(current, massPos.z());
             }),
 
-    Fitness("TEST      ",
-            "...",
-            [](const Phenotype& p, float current, float deltaTime) -> float {
+    Fitness("MovementX",
+            "Fitness based on movement in positive z direction.",
+            [](const Phenotype& p, float current, float) -> float {
               const btRigidBody* sternum = p.rigidBody("Sternum");
-
-              auto t = sternum->getCenterOfMassPosition();
-              auto r = mmm::degrees(ExpUtil::getEulerAngles(sternum->getOrientation()));
-              r.y += 90.f;
-
-              auto x = ExpUtil::score(deltaTime, mmm::abs(t.x() * 10.f) + mmm::abs(r.y), 1.f);
-
-              current += x * mmm::max(t.z(), 0.f);
-
-              return current;
+              const btVector3& massPos = sternum->getCenterOfMassPosition();
+              return mmm::max(current, mmm::abs(massPos.x()));
             }),
 
-    // Fitness("Vibrating",
-    //         "Fitness based how little it vibrates with the legs",
-    //         [](const Phenotype& p, float, float) -> float {
-    //           return 0;
-    //         },
-    //         [](const Phenotype& p, float current, float duration) -> float {
-    //           size_t numUpdates = p.tmp.size() / 3;
-    //           size_t numJoints  = numUpdates == 0 ? 0 : p.tmp[0].size();
+    Fitness("Vibrating",
+            "Fitness based how little it vibrates with the legs",
+            [](const Phenotype& p, float, float) -> float {
+              return 0;
+            },
+            [](const Phenotype& p, float current, float duration) -> float {
+              size_t numUpdates = p.tmp.size();
+              size_t numJoints  = numUpdates == 0 ? 0 : p.tmp[0].size();
 
-    //           for(size_t i = 0; i < numJoints; ++i) {
-    //             float dir   = 0.0;
-    //             float freq  = 0.0;
+              for(size_t i = 0; i < numJoints; ++i) {
+                float dir   = 0.0;
+                float freq  = 0.0;
 
-    //             for(size_t j = 0; j < numUpdates; j++) {
-    //               float currentDir = p.tmp[j*3][i];
+                for(size_t j = 0; j < numUpdates; j++) {
+                  float currentDir = p.tmp[j][i];
 
-    //               if (currentDir != dir)
-    //                 freq += 1;
+                  if (currentDir != dir)
+                    freq += 1;
 
-    //               dir = currentDir;
-    //             }
+                  dir = currentDir;
+                }
 
-    //             float avgHz = freq / duration;
+                float avgHz = freq / duration;
 
-    //             if (avgHz > 10)
-    //               current -= 1 / float(numJoints);
-    //           }
-
-    //           return 1.0f + current;
-    //         }),
-
-    Fitness("Colliding ",
-            "If the spider falls, stop the simulation",
-            [](const Phenotype& phenotype, float current, float) -> float {
-
-              if (phenotype.collidesWithTerrain("Abdomin") ||
-                  phenotype.collidesWithTerrain("Sternum") ||
-                  phenotype.collidesWithTerrain("Eye") ||
-                  phenotype.collidesWithTerrain("Hip") ||
-                  phenotype.collidesWithTerrain("Neck") ||
-                  phenotype.collidesWithTerrain("PatellaR1") ||
-                  phenotype.collidesWithTerrain("PatellaR2") ||
-                  phenotype.collidesWithTerrain("PatellaR3") ||
-                  phenotype.collidesWithTerrain("PatellaR4") ||
-                  phenotype.collidesWithTerrain("PatellaL1") ||
-                  phenotype.collidesWithTerrain("PatellaL2") ||
-                  phenotype.collidesWithTerrain("PatellaL3") ||
-                  phenotype.collidesWithTerrain("PatellaL4") ||
-                  phenotype.collidesWithTerrain("FemurR1") ||
-                  phenotype.collidesWithTerrain("FemurR2") ||
-                  phenotype.collidesWithTerrain("FemurR3") ||
-                  phenotype.collidesWithTerrain("FemurR4") ||
-                  phenotype.collidesWithTerrain("FemurL1") ||
-                  phenotype.collidesWithTerrain("FemurL2") ||
-                  phenotype.collidesWithTerrain("FemurL3") ||
-                  phenotype.collidesWithTerrain("FemurL4") ||
-                  phenotype.collidesWithTerrain("TrochanterR1") ||
-                  phenotype.collidesWithTerrain("TrochanterR2") ||
-                  phenotype.collidesWithTerrain("TrochanterR3") ||
-                  phenotype.collidesWithTerrain("TrochanterR4") ||
-                  phenotype.collidesWithTerrain("TrochanterL1") ||
-                  phenotype.collidesWithTerrain("TrochanterL2") ||
-                  phenotype.collidesWithTerrain("TrochanterL3") ||
-                  phenotype.collidesWithTerrain("TrochanterL4")) {
-                phenotype.kill();
+                if (avgHz > 5)
+                  current -= 1 / float(numJoints);
               }
+
+              return 1.0f + current;
+            }),
+
+    Fitness("Colliding",
+            "If the spider falls, stop the simulation",
+            [](const Phenotype& phenotype, float current, float deltaTime) -> float {
+
+              std::vector<bool> xs{
+                phenotype.collidesWithTerrain("Abdomin"),
+                phenotype.collidesWithTerrain("Sternum"),
+                phenotype.collidesWithTerrain("Eye"),
+                phenotype.collidesWithTerrain("Hip"),
+                phenotype.collidesWithTerrain("Neck"),
+                phenotype.collidesWithTerrain("PatellaR1"),
+                phenotype.collidesWithTerrain("PatellaR2"),
+                phenotype.collidesWithTerrain("PatellaR3"),
+                phenotype.collidesWithTerrain("PatellaR4"),
+                phenotype.collidesWithTerrain("PatellaL1"),
+                phenotype.collidesWithTerrain("PatellaL2"),
+                phenotype.collidesWithTerrain("PatellaL3"),
+                phenotype.collidesWithTerrain("PatellaL4"),
+                phenotype.collidesWithTerrain("FemurR1"),
+                phenotype.collidesWithTerrain("FemurR2"),
+                phenotype.collidesWithTerrain("FemurR3"),
+                phenotype.collidesWithTerrain("FemurR4"),
+                phenotype.collidesWithTerrain("FemurL1"),
+                phenotype.collidesWithTerrain("FemurL2"),
+                phenotype.collidesWithTerrain("FemurL3"),
+                phenotype.collidesWithTerrain("FemurL4"),
+                phenotype.collidesWithTerrain("TrochanterR1"),
+                phenotype.collidesWithTerrain("TrochanterR2"),
+                phenotype.collidesWithTerrain("TrochanterR3"),
+                phenotype.collidesWithTerrain("TrochanterR4"),
+                phenotype.collidesWithTerrain("TrochanterL1"),
+                phenotype.collidesWithTerrain("TrochanterL2"),
+                phenotype.collidesWithTerrain("TrochanterL3"),
+                phenotype.collidesWithTerrain("TrochanterL4")
+              };
+
+              for (auto x : xs)
+                if (x)
+                  current += 1.f / 29.f * deltaTime;
 
               return current;
             }),
   };
 
-  mSubstrate = createDefaultSubstrate();
 
+  mSubstrate = createDefaultSubstrate();
   NEAT::Parameters params = getDefaultParameters();
   params.ActivationFunction_SignedSigmoid_Prob = 1.0;
   params.ActivationFunction_UnsignedSigmoid_Prob = 0.0;
@@ -140,16 +136,16 @@ WalkingRT2::WalkingRT2() : Experiment("WalkingRT2") {
   mPopulation = new NEAT::Population(genome, params, true, params.MaxWeight, time(0));
 }
 
-WalkingRT2::~WalkingRT2() {
+Walking07::~Walking07() {
   delete mPopulation;
   delete mSubstrate;
 }
 
-float WalkingRT2::mergeFitnessValues(const mmm::vec<9>& fitness) const {
-  return mmm::sum(fitness);
+float Walking07::mergeFitnessValues(const mmm::vec<9>& f) const {
+  return mmm::max(f.x - f.y, 0.f) * f.z * ExpUtil::score(1.f, f.w, 0.f);
 }
 
-void WalkingRT2::outputs(Phenotype&                 p,
+void Walking07::outputs(Phenotype&                 p,
                                   const std::vector<double>& outputs) const {
   size_t index = 16;
   for(auto& part : p.spider->parts()) {
@@ -167,9 +163,9 @@ void WalkingRT2::outputs(Phenotype&                 p,
                                                zero);
       velocity = output - currentAngle;
 
-      // if (p.tmp.size() <= index - 16)
-      //   p.tmp.push_back({});
-      // p.tmp[index-16].push_back(output > currentAngle ? 1.0 : 0.0);
+      if (p.tmp.size() <= index - 16)
+        p.tmp.push_back({});
+      p.tmp[index-16].push_back(output > currentAngle ? 1.0 : 0.0);
 
       index++;
     } else {
@@ -180,7 +176,7 @@ void WalkingRT2::outputs(Phenotype&                 p,
   }
 }
 
-std::vector<double> WalkingRT2::inputs(const Phenotype& p) const {
+std::vector<double> Walking07::inputs(const Phenotype& p) const {
   btRigidBody* sternum = p.spider->parts().at("Sternum").part->rigidBody();
   mmm::vec3 rots       = ExpUtil::getEulerAngles(sternum->getOrientation());
   std::vector<double> inputs = p.previousOutput;
@@ -189,9 +185,9 @@ std::vector<double> WalkingRT2::inputs(const Phenotype& p) const {
     inputs.insert(inputs.end(), mSubstrate->m_output_coords.size(), 0);
   }
 
-  // inputs[0] = rots.x;
-  // inputs[1] = rots.y;
-  // inputs[2] = rots.z;
+  inputs[0] = rots.x;
+  inputs[1] = rots.y;
+  inputs[2] = rots.z;
   inputs[3] = mmm::sin(p.duration * 2);
   // inputs[4] = 1;
   // inputs[5] = 1;

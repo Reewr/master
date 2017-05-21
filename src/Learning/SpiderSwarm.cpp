@@ -5,18 +5,14 @@
 #include "DrawablePhenotype.hpp"
 #include "Substrate.hpp"
 
-#include "../Experiments/WalkingRotationInputs.hpp"
-#include "../Experiments/WalkingRotationNoKill.hpp"
-#include "../Experiments/WalkingCurve.hpp"
-#include "../Experiments/WalkingMultiKill.hpp"
-#include "../Experiments/StandingCurve.hpp"
-#include "../Experiments/StandingCurve2.hpp"
-#include "../Experiments/StandingAngles.hpp"
-#include "../Experiments/WalkingPunished.hpp"
-#include "../Experiments/WalkingRT.hpp"
-#include "../Experiments/WalkingRT2.hpp"
-#include "../Experiments/WalkingRTNK.hpp"
-#include "../Experiments/WalkingRTNK2.hpp"
+#include "../Experiments/Walking0102.hpp"
+#include "../Experiments/Walking04.hpp"
+#include "../Experiments/Standing0102.hpp"
+#include "../Experiments/Standing0304.hpp"
+#include "../Experiments/Walking05.hpp"
+#include "../Experiments/Walking03.hpp"
+#include "../Experiments/Walking08.hpp"
+#include "../Experiments/Walking07.hpp"
 
 #include <btBulletDynamicsCommon.h>
 #include <thread>
@@ -140,30 +136,22 @@ void SpiderSwarm::setup(const std::string& name, bool startExperiment) {
     mCurrentExperiment = nullptr;
   }
 
-  if (name == "WalkingRotationInputs")
-    mCurrentExperiment = new WalkingRotationInputs();
-  else if (name == "WalkingRotationNoKill")
-    mCurrentExperiment = new WalkingRotationNoKill();
-  else if (name == "WalkingCurve")
-    mCurrentExperiment = new WalkingCurve();
-  else if (name == "WalkingMultiKill")
-    mCurrentExperiment = new WalkingMultiKill();
-  else if (name == "StandingCurve")
-    mCurrentExperiment = new StandingCurve();
-  else if (name == "StandingCurve2")
-    mCurrentExperiment = new StandingCurve2();
-  else if (name == "StandingAngles")
-    mCurrentExperiment = new StandingAngles();
-  else if (name == "WalkingPunished")
-    mCurrentExperiment = new WalkingPunished();
-  else if (name == "WalkingRT")
-    mCurrentExperiment = new WalkingRT();
-  else if (name == "WalkingRT2")
-    mCurrentExperiment = new WalkingRT2();
-  else if (name == "WalkingRTNK")
-    mCurrentExperiment = new WalkingRTNK();
-  else if (name == "WalkingRTNK2")
-    mCurrentExperiment = new WalkingRTNK2();
+  if (name == "Walking0102")
+    mCurrentExperiment = new Walking0102();
+  else if (name == "Walking04")
+    mCurrentExperiment = new Walking04();
+  else if (name == "Standing0102")
+    mCurrentExperiment = new Standing0102();
+  else if (name == "Standing0304")
+    mCurrentExperiment = new Standing0304();
+  else if (name == "Walking05")
+    mCurrentExperiment = new Walking05();
+  else if (name == "Walking03")
+    mCurrentExperiment = new Walking03();
+  else if (name == "Walking08")
+    mCurrentExperiment = new Walking08();
+  else if (name == "Walking07")
+    mCurrentExperiment = new Walking07();
   else
     throw std::runtime_error("Unable to find experiment: " + name);
 

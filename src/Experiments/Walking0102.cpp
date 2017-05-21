@@ -1,4 +1,4 @@
-#include "WalkingCurve.hpp"
+#include "Walking0102.hpp"
 
 #include "ExperimentUtil.hpp"
 
@@ -7,10 +7,11 @@
 
 #include <btBulletDynamicsCommon.h>
 
-WalkingCurve::WalkingCurve() : Experiment("WalkingCurve") {
+const float PI = mmm::constants<float>::pi;
 
-  mParameters.numActivates = 8;
-  mParameters.experimentDuration = 30;
+Walking0102::Walking0102() : Experiment("Walking0102") {
+
+  mParameters.numActivates = 6;
   mFitnessFunctions =
   { Fitness("Movement",
             "Fitness based on movement in positive z direction.",
@@ -25,37 +26,6 @@ WalkingCurve::WalkingCurve() : Experiment("WalkingCurve") {
             [](const Phenotype&, float current, float) -> float {
               return mmm::max(current, 0);
             }),
-  Fitness("Vibrating",
-            "Fitness based how little it vibrates with the legs",
-            [](const Phenotype&, float, float) -> float {
-              return 0;
-            },
-            [](const Phenotype& p, float current, float duration) -> float {
-              size_t numUpdates = p.tmp.size();
-              size_t numJoints  = numUpdates == 0 ? 0 : p.tmp[0].size();
-
-              for(size_t i = 0; i < numJoints; ++i) {
-                float dir   = 0.0;
-                float freq  = 0.0;
-
-                for(size_t j = 0; j < numUpdates; j++) {
-                  float currentDir = p.tmp[j][i];
-
-                  if (currentDir != dir)
-                    freq += 1;
-
-                  dir = currentDir;
-                }
-
-                float avgHz = freq / duration;
-
-                if (avgHz > 10)
-                  current -= 1 / float(numJoints);
-              }
-
-              return 1.0f + current;
-            }),
-
     Fitness("Colliding",
             "If the spider falls, stop the simulation",
             [](const Phenotype& phenotype, float current, float) -> float {
@@ -96,8 +66,21 @@ WalkingCurve::WalkingCurve() : Experiment("WalkingCurve") {
             }),
   };
 
+  // When a new connection, it will not be added if the weight*maxWeightAndBias
+  // is less than 0.2
   mSubstrate = createDefaultSubstrate();
+  mSubstrate->m_hidden_nodes_activation = NEAT::ActivationFunction::TANH;
+  mSubstrate->m_output_nodes_activation = NEAT::ActivationFunction::TANH;
+  mSubstrate->m_max_weight_and_bias = 4.0;
+
   NEAT::Parameters params = getDefaultParameters();
+  params.SurvivalRate = 0.25;
+  params.MultipointCrossoverRate = 0.75;
+  params.EliteFraction = 0.2;
+  params.MutateAddNeuronProb = 0.03;
+  params.MutateAddLinkProb = 0.2;
+  params.MaxWeight = 4.0;
+  params.CompatTreshold = 2.0;
 
   NEAT::Genome genome(0,
                       mSubstrate->GetMinCPPNInputs(),
@@ -110,18 +93,15 @@ WalkingCurve::WalkingCurve() : Experiment("WalkingCurve") {
                       params);
 
   mPopulation = new NEAT::Population(genome, params, true, params.MaxWeight, time(0));
+  mParameters.numActivates = 8;
 }
 
-WalkingCurve::~WalkingCurve() {
+Walking0102::~Walking0102() {
   delete mPopulation;
   delete mSubstrate;
 }
 
-float WalkingCurve::mergeFitnessValues(const mmm::vec<9>& fitness) const {
-  return fitness.x * fitness.y;
-}
-
-void WalkingCurve::outputs(Phenotype&                 p,
+void Walking0102::outputs(Phenotype&                 p,
                                   const std::vector<double>& outputs) const {
   size_t index = 16;
   for(auto& part : p.spider->parts()) {
@@ -132,17 +112,10 @@ void WalkingCurve::outputs(Phenotype&                 p,
     float velocity;
 
     if (part.second.active) {
-      float zero   = (part.second.hinge->getUpperLimit() + part.second.hinge->getLowerLimit()) * 0.5;
-      float output = ExpUtil::denormalizeAngle(outputs[index],
-                                               part.second.hinge->getLowerLimit(),
-                                               part.second.hinge->getUpperLimit(),
-                                               zero);
-      velocity = output - currentAngle;
+      float output = outputs[index];
 
-      if (p.tmp.size() <= index - 16)
-        p.tmp.push_back({});
-      p.tmp[index-16].push_back(output > currentAngle ? 1.0 : 0.0);
-
+      currentAngle = ExpUtil::normalizeAngle(currentAngle, -PI, PI, 0);
+      velocity     = output - currentAngle;
       index++;
     } else {
       velocity = mmm::clamp(part.second.restAngle - currentAngle, -0.3f, 0.3f) * 16.0f;
@@ -152,7 +125,7 @@ void WalkingCurve::outputs(Phenotype&                 p,
   }
 }
 
-std::vector<double> WalkingCurve::inputs(const Phenotype& p) const {
+std::vector<double> Walking0102::inputs(const Phenotype& p) const {
   btRigidBody* sternum = p.spider->parts().at("Sternum").part->rigidBody();
   mmm::vec3 rots       = ExpUtil::getEulerAngles(sternum->getOrientation());
   std::vector<double> inputs = p.previousOutput;
@@ -164,11 +137,11 @@ std::vector<double> WalkingCurve::inputs(const Phenotype& p) const {
   inputs[0] = rots.x;
   inputs[1] = rots.y;
   inputs[2] = rots.z;
-  inputs[3] = mmm::sin(p.duration * 2);
+  inputs[3] = mmm::sin(p.duration * 3);
   inputs[4] = 1;
   inputs[5] = 1;
   inputs[6] = 1;
-  inputs[7] = mmm::cos(p.duration * 2);
+  inputs[7] = 1;
   inputs[8] = p.collidesWithTerrain("TarsusL1") ? 1.0 : 0.0;
   inputs[9] = p.collidesWithTerrain("TarsusL2") ? 1.0 : 0.0;
   inputs[10] = p.collidesWithTerrain("TarsusL3") ? 1.0 : 0.0;
@@ -182,13 +155,8 @@ std::vector<double> WalkingCurve::inputs(const Phenotype& p) const {
   for(auto& a : p.spider->parts()) {
     if (!a.second.active || a.second.hinge == nullptr)
       continue;
-    float zero  = (a.second.hinge->getUpperLimit() + a.second.hinge->getLowerLimit()) * 0.5;
-    float angle = ExpUtil::normalizeAngle(a.second.hinge->getHingeAngle(),
-                                          a.second.hinge->getLowerLimit(),
-                                          a.second.hinge->getUpperLimit(),
-                                          zero);
 
-    inputs[index] = angle;
+    inputs[index] = ExpUtil::normalizeAngle(a.second.hinge->getHingeAngle(), -PI, PI, 0);
     index++;
   }
 

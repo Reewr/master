@@ -1,4 +1,4 @@
-#include "WalkingRTNK.hpp"
+#include "Walking08.hpp"
 
 #include "ExperimentUtil.hpp"
 
@@ -9,7 +9,7 @@
 
 const float PI = mmm::constants<float>::pi;
 
-WalkingRTNK::WalkingRTNK() : Experiment("WalkingRTNK") {
+Walking08::Walking08() : Experiment("Walking08") {
 
   mParameters.numActivates = 8;
   mParameters.experimentDuration = 15;
@@ -93,16 +93,16 @@ WalkingRTNK::WalkingRTNK() : Experiment("WalkingRTNK") {
   mPopulation = new NEAT::Population(genome, params, true, params.MaxWeight, time(0));
 }
 
-WalkingRTNK::~WalkingRTNK() {
+Walking08::~Walking08() {
   delete mPopulation;
   delete mSubstrate;
 }
 
-float WalkingRTNK::mergeFitnessValues(const mmm::vec<9>& f) const {
+float Walking08::mergeFitnessValues(const mmm::vec<9>& f) const {
   return mmm::max(f.x - f.y, 0.f) * f.z;
 }
 
-void WalkingRTNK::outputs(Phenotype&                 p,
+void Walking08::outputs(Phenotype&                 p,
                                   const std::vector<double>& outputs) const {
   size_t index = 16;
   for(auto& part : p.spider->parts()) {
@@ -133,7 +133,7 @@ void WalkingRTNK::outputs(Phenotype&                 p,
   }
 }
 
-std::vector<double> WalkingRTNK::inputs(const Phenotype& p) const {
+std::vector<double> Walking08::inputs(const Phenotype& p) const {
   btRigidBody* sternum = p.spider->parts().at("Sternum").part->rigidBody();
   mmm::vec3 rots       = ExpUtil::getEulerAngles(sternum->getOrientation());
   std::vector<double> inputs = p.previousOutput;
