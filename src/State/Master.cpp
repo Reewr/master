@@ -182,20 +182,27 @@ void Master::update(float deltaTime) {
   mSwarm->update(deltaTime);
   /* mController->update(deltaTime); */
 
-  /* SpiderSwarm::SimulationStage s = mSwarm->stage(); */
+  SpiderSwarm::SimulationStage s = mSwarm->stage();
+  Controller::Stage conStage = mController->stage();
 
-  /* // When simulating, let the camera follow the sternum */
-  /* if (mFixedCamera && (s == SpiderSwarm::SimulationStage::Simulating || */
-  /*                      s == SpiderSwarm::SimulationStage::SimulationReady)) { */
-  /*   const Phenotype& p = mSwarm->phenotypes().at(0); */
-  /*   const btVector3& massPos = */
-  /*     p.rigidBody("Sternum")->getCenterOfMassPosition(); */
-  /*   vec3 target = mmm::vec3(massPos.x(), 0, massPos.z()); */
-  /*   vec3 pos    = target + vec3(4, 4, 4); */
+  bool controllerSimulating = conStage == Controller::Stage::Walking || conStage == Controller::Stage::Standing;
+  bool swarmSimulating = s == SpiderSwarm::SimulationStage::Simulating || s == SpiderSwarm::SimulationStage::SimulationReady;
+  bool shouldFixedCamera = mFixedCamera && (controllerSimulating || swarmSimulating);
 
-  /*   mCamera->setPosition(pos); */
-  /*   mCamera->setTarget(target); */
-  /* } */
+  // When simulating, let the camera follow the sternum
+  if (shouldFixedCamera) {
+    btVector3 massPos;
+    if (swarmSimulating) {
+      massPos = mSwarm->phenotypes().at(0).rigidBody("Sternum")->getCenterOfMassPosition();
+    } else {
+      massPos = mController->phenotype().rigidBody("Sternum")->getCenterOfMassPosition();
+    }
+    vec3 target = mmm::vec3(massPos.x(), 0, massPos.z());
+    vec3 pos    = target + vec3(4, 4, 4);
+
+    mCamera->setPosition(pos);
+    mCamera->setTarget(target);
+  }
 
   if (mGUIElements.size() == 0 || !mGUIElements.back()->isVisible())
     mCamera->input(deltaTime);
