@@ -61,6 +61,6 @@ private:
   Stage mCurrentStage;
 
   float mExperimentDuration;
-  std::map<Stage, std::vector<mmm::vec3>> mData;
+  std::vector<mmm::vec4> mData;
   bool isExperimenting;
 };

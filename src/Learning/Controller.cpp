@@ -132,8 +132,7 @@ void Controller::input(const Input::Event& event) {
     debug("Starting experiment");
     isExperimenting = true;
     mExperimentDuration = 0;
-    mData[Stage::Walking] = {};
-    mData[Stage::Standing] = {};
+    mData = {};
     changeStage(Stage::Walking);
     return event.stopPropgation();
   }
@@ -144,15 +143,9 @@ void Controller::input(const Input::Event& event) {
 
     debug("Here's the info for the last experiment");
     debug("Experiment duration: {}", mPhenotype->duration);
-    debug("Walking data:");
 
-    for(auto m : mData[Stage::Walking]) {
-      debug("{}", m);
-    }
-
-    debug("Standing data:");
-
-    for(auto m : mData[Stage::Standing]) {
+    debug("DATA:");
+    for(auto m : mData) {
       debug("{}", m);
     }
 
@@ -174,7 +167,8 @@ void Controller::update(float) {
   if (isExperimenting) {
     mExperimentDuration += 1.0/60.0;
     const btVector3& pos = mPhenotype->rigidBody("Sternum")->getCenterOfMassPosition();
-    mData[mCurrentStage].push_back(mmm::vec3(pos.x(), pos.y(), pos.z()));
+    float w = mCurrentStage == Stage::Walking ? 1.f : 0.f;
+    mData.push_back(mmm::vec4(w, pos.x(), pos.y(), pos.z()));
   }
 
   bool isMod5 = int(mExperimentDuration) % 5 == 0 && int(mExperimentDuration) != 0;
