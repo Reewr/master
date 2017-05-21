@@ -378,7 +378,7 @@ void DrawablePhenotype::recreate(const NEAT::NeuralNetwork& network,
       colorOutline = vec4(1, 0, 0, 1);
 
     radiusOutline = neuronRadius;
-    radiusFilled  = neuronRadius * mmm::clamp(neuron.m_activation, 0.3, 2.0);
+    radiusFilled  = neuronRadius;// * mmm::clamp(neuron.m_activation, 0.3, 2.0);
     colorFilled   = mmm::clamp(colorFilled, 0.0, 1.0);
 
     filled.push_back(new Sphere(pos, radiusFilled, colorFilled));
