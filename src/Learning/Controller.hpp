@@ -2,6 +2,11 @@
 
 #include <string>
 #include <memory>
+#include <map>
+#include <map>
+#include <vector>
+
+#include <mmm.hpp>
 
 #include <Genome.h>
 
@@ -54,4 +59,8 @@ private:
   Experiment* mWalking;
 
   Stage mCurrentStage;
+
+  float mExperimentDuration;
+  std::map<Stage, std::vector<mmm::vec3>> mData;
+  bool isExperimenting;
 };
