@@ -63,14 +63,6 @@ Running simulations can be done by starting the game, opening the console (see c
 
 To run an existing simulation, `swarm:setup("name", false)`, where name is the experiment you want to load, followed by `swarm:load("path-to-file")`, where `path-to-file` is the relative path to files from root of the folder. Keep in mind, do *not* use extensions when trying to load the file as the engine will load the required files by appending the needed file extensions. After this is done, the `swarm:runBestGenome()` followed by `swarm:start()` will start the simulation of the best genome.
 
-# Controls
-
-The controls of the engine is rather simple. By default, the camera is in a fixed position when a simulation is running to follow the spider. To disable this, `F` can be pressed.
-
-When an existing simulation has been loaded, the `R` button allows you to easily run the best genome and reset it, if it multiple times.
-
-The camera can be rotated by holding down middle mouse button and you can zoom in by scrolling the mouse wheel. Be aware that the camera is not fully implemented as to not take time away from the rest of project and may therefore be slightly jerky.
-
 # Dependencies
 
 This project utilizes 11 different dependencies for release builds and 12 different dependencies for development builds. What follows is a short explanation of each library. While all libraries are needed to build the engine, only those marked with a `*` was exclusively added to the engine to help with this project.
