@@ -13,42 +13,27 @@ The videos on this page are displayed in the same order as they appear in the re
 
 **Standing 01**
 
-<video  width="600" height="200" controls="controls" preload="none" poster="./images/Standing01.jpeg">
-  <source src="./Videos/Standing01-alternative.mp4" type="video/mp4"/>
-  Your browser does not support the video tag.
-</video>
+<iframe width="620" height="315" src="https://www.youtube.com/embed/_E-f6GLi0zM" frameborder="0" allowfullscreen></iframe>
 
 **Standing 01 - alternative 2**
 
-<video  width="600" height="200" controls="controls" preload="none" poster="./images/Standing01-alternative.jpeg">
-  <source src="./Videos/Standing01.mp4" type="video/mp4"/>
-  Your browser does not support the video tag.
-</video>
+<iframe width="620" height="315" src="https://www.youtube.com/embed/kMmK3OXLTPM" frameborder="0" allowfullscreen></iframe>
 
 **Standing 02**
 
-<video  width="600" height="200" controls="controls" preload="none" poster="./images/Standing02.jpeg">
-  <source src="./Videos/Standing02.mp4" type="video/mp4"/>
-  Your browser does not support the video tag.
-</video>
+<iframe width="620" height="315" src="https://www.youtube.com/embed/ssAxzKyAr5k" frameborder="0" allowfullscreen></iframe>
 
 **Alternate champion**
 
-<video  width="600" height="200" controls="controls" preload="none" poster="./images/Standing03.jpeg">
-  <source src="./Videos/Standing03.mp4" type="video/mp4"/>
-  Your browser does not support the video tag.
-</video>
+<iframe width="620" height="315" src="https://www.youtube.com/embed/VNkD4LDanr0" frameborder="0" allowfullscreen></iframe>
 
 ### Champion
 
-<video  width="600" height="200" controls="controls" preload="none" poster="./images/StandingChampion.jpeg">
-  <source src="./Videos/StandingChampion.mp4" type="video/mp4"/>
-  Your browser does not support the video tag.
-</video>
+<iframe width="620" height="315" src="https://www.youtube.com/embed/w-WTZkHRemY" frameborder="0" allowfullscreen></iframe>
 
-**Champion throughout the generations**
+<!-- **Champion throughout the generations** -->
 
-This video displays how the champion changed from its first generation until its last. This video was not inlucded in the report.
+<!-- This video displays how the champion changed from its first generation until its last. This video was not included in the report. -->
 
 <!-- <video  width="600" height="400 controls="controls" preload="none"> -->
 <!--   <source src="./Videos/GenerationVideoStanding.mp4" type="video/mp4"/> -->
@@ -58,109 +43,70 @@ This video displays how the champion changed from its first generation until its
 
 This video displays the substrate evolved by HyperNEAT. See the report for details.
 
-<video  width="600" height="200" controls="controls" preload="none" poster="./images/Substrate-StandingChampion.jpeg">
-  <source src="./Videos/Substrate-StandingChampion.mp4" type="video/mp4"/>
-  Your browser does not support the video tag.
-</video>
+<iframe width="620" height="315" src="https://www.youtube.com/embed/guQTUrpv-Rw" frameborder="0" allowfullscreen></iframe>
 
 ## Walking
 
 **Walking 01**
-<video  width="600" height="200" controls="controls" preload="none" poster="./images/Walking01.jpeg">
-  <source src="./Videos/Walking01.mp4" type="video/mp4"/>
-  Your browser does not support the video tag.
-</video>
+
+<iframe width="620" height="315" src="https://www.youtube.com/embed/By8iLB-vkFQ" frameborder="0" allowfullscreen></iframe>
 
 **Walking 02**
-<video  width="600" height="200" controls="controls" preload="none" poster="./images/Walking02.jpeg">
-  <source src="./Videos/Walking02.mp4" type="video/mp4"/>
-  Your browser does not support the video tag.
-</video>
+
+<iframe width="620" height="315" src="https://www.youtube.com/embed/qzyxJqjTpo4" frameborder="0" allowfullscreen></iframe>
 
 **Walking 03**
-<video  width="600" height="200" controls="controls" preload="none" poster="./images/Walking03.jpeg">
-  <source src="./Videos/Walking03.mp4" type="video/mp4"/>
-  Your browser does not support the video tag.
-</video>
+
+<iframe width="620" height="315" src="https://www.youtube.com/embed/jFTMHhkdmlI" frameborder="0" allowfullscreen></iframe>
 
 **Walking 04**
-<video  width="600" height="200" controls="controls" preload="none" poster="./images/Walking04.jpeg">
-  <source src="./Videos/Walking04.mp4" type="video/mp4"/>
-  Your browser does not support the video tag.
-</video>
+
+<iframe width="620" height="315" src="https://www.youtube.com/embed/uyQXeuBVeRI" frameborder="0" allowfullscreen></iframe>
 
 **Walking 05**
-<video  width="600" height="200" controls="controls" preload="none" poster="./images/Walking05.jpeg">
-  <source src="./Videos/Walking05.mp4" type="video/mp4"/>
-  Your browser does not support the video tag.
-</video>
+
+<iframe width="620" height="315" src="https://www.youtube.com/embed/T0BYo2ZaTlg" frameborder="0" allowfullscreen></iframe>
 
 **Walking 06**
-<video  width="600" height="200" controls="controls" preload="none" poster="./images/Walking06.jpeg">
-  <source src="./Videos/Walking06.mp4" type="video/mp4"/>
-  Your browser does not support the video tag.
-</video>
+
+<iframe width="620" height="315" src="https://www.youtube.com/embed/dzVktc0kTao" frameborder="0" allowfullscreen></iframe>
 
 **Walking 07**
-<video  width="600" height="200" controls="controls" preload="none" poster="./images/Walking07.jpeg">
-  <source src="./Videos/Walking07.mp4" type="video/mp4"/>
-  Your browser does not support the video tag.
-</video>
+
+<iframe width="620" height="315" src="https://www.youtube.com/embed/XeJbo8ktn1k" frameborder="0" allowfullscreen></iframe>
 
 **Others**
 
-These next videos were not included in the report as they weren't unique enough.
+These next videos did not have images series of them included in the report.
 
-<video  width="600" height="200" controls="controls" preload="none">
-  <source src="./Videos/Other1.mp4" type="video/mp4"/>
-  Your browser does not support the video tag.
-</video>
-<video  width="600" height="200" controls="controls" preload="none">
-  <source src="./Videos/Other2.mp4" type="video/mp4"/>
-  Your browser does not support the video tag.
-</video>
-<video  width="600" height="200" controls="controls" preload="none">
-  <source src="./Videos/Other3.mp4" type="video/mp4"/>
-  Your browser does not support the video tag.
-</video>
-<video  width="600" height="200" controls="controls" preload="none">
-  <source src="./Videos/Other4.mp4" type="video/mp4"/>
-  Your browser does not support the video tag.
-</video>
-<video  width="600" height="200" controls="controls" preload="none">
-  <source src="./Videos/Other5.mp4" type="video/mp4"/>
-  Your browser does not support the video tag.
-</video>
+<iframe width="620" height="315" src="https://www.youtube.com/embed/KwVDsfwyw0o" frameborder="0" allowfullscreen></iframe>
+
+<iframe width="620" height="315" src="https://www.youtube.com/embed/BojZ-1HqKBM" frameborder="0" allowfullscreen></iframe>
+
+<iframe width="620" height="315" src="https://www.youtube.com/embed/5GOVhdT4CUs" frameborder="0" allowfullscreen></iframe>
+
+<iframe width="620" height="315" src="https://www.youtube.com/embed/OrEM7Y0CI14" frameborder="0" allowfullscreen></iframe>
+
+<iframe width="620" height="315" src="https://www.youtube.com/embed/uvdT9Y3fkAI" frameborder="0" allowfullscreen></iframe>
 
 ### Champion
 
 **Walking Champion**
-<video  width="600" height="200" controls="controls" preload="none" poster="./images/WalkingChampion.jpeg">
-  <source src="./Videos/WalkingChampion.mp4" type="video/mp4"/>
-  Your browser does not support the video tag.
-</video>
+
+<iframe width="620" height="315" src="https://www.youtube.com/embed/R-zI7tLtpb0" frameborder="0" allowfullscreen></iframe>
 
 **Champion throughout the generations**
 
-This video displays how the champion changed from its first generation until its last. This video was not inlucded in the report.
+This video displays how the champion changed from its first generation until its last. This video was not included in the report.
 
-<video  width="600" height="200" controls="controls" preload="none">
-  <source src="./Videos/GenerationVideo.mp4" type="video/mp4"/>
-  Your browser does not support the video tag.
-</video>
+<iframe width="620" height="315" src="https://www.youtube.com/embed/c_Ubo0iL1F0" frameborder="0" allowfullscreen></iframe>
 
 **Substate of the Walking champion**
 
 This video displays the substrate evolved by HyperNEAT. See the report for details.
 
-<video  width="600" height="200" controls="controls" preload="none" poster="./images/Substrate-WalkingChampion.jpeg">
-  <source src="./Videos/Substrate-WalkingChampion.mp4" type="video/mp4"/>
-  Your browser does not support the video tag.
-</video>
+<iframe width="620" height="315" src="https://www.youtube.com/embed/mk3HpeXPpqs" frameborder="0" allowfullscreen></iframe>
 
 ## Control Strategy
 
-<video  width="600" height="200" controls="controls" preload="none" poster="./images/Exp1.jpeg">
-  <source src="./Videos/Experiment1.mp4" type="video/mp4"/>
-  Your browser does not support the video tag.
-</video>
+<iframe width="620" height="315" src="https://www.youtube.com/embed/Z_VkWO6BPDY" frameborder="0" allowfullscreen></iframe>
