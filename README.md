@@ -160,7 +160,7 @@ This video displays the substrate evolved by HyperNEAT. See the report for detai
 
 ## Control Strategy
 
-<video  width="600" height="200" controls="controls" preload="none">
+<video  width="600" height="200" controls="controls" preload="none" poster="./images/Exp1.jpeg">
   <source src="./Videos/Experiment1.mp4" type="video/mp4"/>
   Your browser does not support the video tag.
 </video>
