@@ -1,7 +1,7 @@
 # Neuroevolution for Actively Controlled Virtual Characters
 
 **Abstract**:
-
+  Physics-based character animation offer an attractive alternative to traditional animation techniques, however, physics-based approaches often struggle to incorporate active user control of these characters. This thesis suggests a different approach to the problem of actively controlled virtual characters. The proposed solution takes a neuroevolutionary approach, using _HyperNEAT_ to evolve neural controllers for a simulated eight-legged character, a previously untested character morphology for this algorithm. Using these controllers this thesis aims to evaluate the robustness and responsiveness of a control strategy that changes between them based on simulated user input. The results show that _HyperNEAT_ is quite capable of evolving long walking controllers for this character, but also suggests a need for further refinement when operated in tandem.
 
 
 # Result
