@@ -1,9 +1,10 @@
 #include "Experiment.hpp"
 
-#include <Population.h>
 #include "../Learning/Substrate.hpp"
+#include <Population.h>
 
-Experiment::Experiment(const std::string& name) : Logging::Log(name), mName(name) {}
+Experiment::Experiment(const std::string& name)
+    : Logging::Log(name), mName(name) {}
 Experiment::~Experiment() {}
 
 /**
@@ -154,7 +155,8 @@ NEAT::Parameters Experiment::getDefaultParameters() const {
   // Don't wipe the innovation database each generation?
   params.InnovationsForever = false;
 
-  // Allow clones or nearly identical genomes to exist simultaneously in the population.
+  // Allow clones or nearly identical genomes to exist simultaneously in the
+  // population.
   // This is useful for non-deterministic environments,
   // as the same individual will get more than one chance to prove himself, also
   // there will be more chances the same individual to mutate in different ways.
@@ -173,7 +175,8 @@ NEAT::Parameters Experiment::getDefaultParameters() const {
   // Make sure it is >= 1.0 to avoid confusion
   params.YoungAgeFitnessBoost = 1.1;
 
-  // Number of generations without improvement (stagnation) allowed for a species
+  // Number of generations without improvement (stagnation) allowed for a
+  // species
   params.SpeciesMaxStagnation = 15;
 
   // Minimum jump in fitness necessary to be considered as improvement.
@@ -200,18 +203,21 @@ NEAT::Parameters Experiment::getDefaultParameters() const {
   // Percent of best individuals that are allowed to reproduce. 1.0 = 100%
   params.SurvivalRate = 0.20;
 
-  // Probability for a baby to result from sexual reproduction (crossover/mating). 1.0 = 100%
+  // Probability for a baby to result from sexual reproduction
+  // (crossover/mating). 1.0 = 100%
   // If asexual reprodiction is chosen, the baby will be mutated 100%
   params.CrossoverRate = 0.7;
 
-  // If a baby results from sexual reproduction, this probability determines if mutation will
+  // If a baby results from sexual reproduction, this probability determines if
+  // mutation will
   // be performed after crossover. 1.0 = 100% (always mutate after crossover)
   params.OverallMutationRate = 0.25;
 
   // Probability for a baby to result from inter-species mating.
   params.InterspeciesCrossoverRate = 0.0001;
 
-  // Probability for a baby to result from Multipoint Crossover when mating. 1.0 = 100%
+  // Probability for a baby to result from Multipoint Crossover when mating. 1.0
+  // = 100%
   // The default is the Average mating.
   params.MultipointCrossoverRate = 0.65;
 
@@ -325,25 +331,26 @@ NEAT::Parameters Experiment::getDefaultParameters() const {
   params.MinNeuronBias = -params.MaxWeight;
   params.MaxNeuronBias = params.MaxWeight;
 
-  // Probability for a baby that an activation function type will be changed for a single neuron
+  // Probability for a baby that an activation function type will be changed for
+  // a single neuron
   // considered a structural mutation because of the large impact on fitness
   params.MutateNeuronActivationTypeProb = 0.15;
 
   // Probabilities for a particular activation function appearance
-  params.ActivationFunction_SignedSigmoid_Prob = 1.0;
+  params.ActivationFunction_SignedSigmoid_Prob   = 1.0;
   params.ActivationFunction_UnsignedSigmoid_Prob = 0.0;
-  params.ActivationFunction_Tanh_Prob = 0.0;
-  params.ActivationFunction_TanhCubic_Prob = 0.0;
-  params.ActivationFunction_SignedStep_Prob = 0.0;
-  params.ActivationFunction_UnsignedStep_Prob = 0.0;
-  params.ActivationFunction_SignedGauss_Prob = 1.0;
-  params.ActivationFunction_UnsignedGauss_Prob = 0.0;
-  params.ActivationFunction_Abs_Prob = 0.0;
-  params.ActivationFunction_SignedSine_Prob = 1.0;
-  params.ActivationFunction_UnsignedSine_Prob = 0.0;
-  params.ActivationFunction_Linear_Prob = 1.0;
-  params.ActivationFunction_Relu_Prob = 0.0;
-  params.ActivationFunction_Softplus_Prob = 0.0;
+  params.ActivationFunction_Tanh_Prob            = 0.0;
+  params.ActivationFunction_TanhCubic_Prob       = 0.0;
+  params.ActivationFunction_SignedStep_Prob      = 0.0;
+  params.ActivationFunction_UnsignedStep_Prob    = 0.0;
+  params.ActivationFunction_SignedGauss_Prob     = 1.0;
+  params.ActivationFunction_UnsignedGauss_Prob   = 0.0;
+  params.ActivationFunction_Abs_Prob             = 0.0;
+  params.ActivationFunction_SignedSine_Prob      = 1.0;
+  params.ActivationFunction_UnsignedSine_Prob    = 0.0;
+  params.ActivationFunction_Linear_Prob          = 1.0;
+  params.ActivationFunction_Relu_Prob            = 0.0;
+  params.ActivationFunction_Softplus_Prob        = 0.0;
 
   params.BiasMutationMaxPower = 0.5;
 
@@ -408,68 +415,68 @@ NEAT::Parameters Experiment::getDefaultParameters() const {
  */
 Substrate* Experiment::createDefaultSubstrate() const {
   std::vector<std::vector<double>> inputs{
-   { -1.00,  1.00, -1.00 }, // MiscL1
-   { -0.71,  1.00, -1.00 }, // MiscL2
-   { -0.42,  1.00, -1.00 }, // MiscL3
-   { -0.14,  1.00, -1.00 }, // MiscL4
-   {  1.00,  1.00, -1.00 }, // MiscR1
-   {  0.71,  1.00, -1.00 }, // MiscR2
-   {  0.42,  1.00, -1.00 }, // MiscR3
-   {  0.14,  1.00, -1.00 }, // MiscR4
+    { -1.00, 1.00, -1.00 }, // MiscL1
+    { -0.71, 1.00, -1.00 }, // MiscL2
+    { -0.42, 1.00, -1.00 }, // MiscL3
+    { -0.14, 1.00, -1.00 }, // MiscL4
+    { 1.00, 1.00, -1.00 },  // MiscR1
+    { 0.71, 1.00, -1.00 },  // MiscR2
+    { 0.42, 1.00, -1.00 },  // MiscR3
+    { 0.14, 1.00, -1.00 },  // MiscR4
 
-   { -1.00,  0.66, -1.00 }, // TouchL1
-   { -0.71,  0.66, -1.00 }, // TouchL2
-   { -0.42,  0.66, -1.00 }, // TouchL3
-   { -0.14,  0.66, -1.00 }, // TouchL4
-   {  1.00,  0.66, -1.00 }, // TouchR1
-   {  0.71,  0.66, -1.00 }, // TouchR2
-   {  0.42,  0.66, -1.00 }, // TouchR3
-   {  0.14,  0.66, -1.00 }, // TouchR4
+    { -1.00, 0.66, -1.00 }, // TouchL1
+    { -0.71, 0.66, -1.00 }, // TouchL2
+    { -0.42, 0.66, -1.00 }, // TouchL3
+    { -0.14, 0.66, -1.00 }, // TouchL4
+    { 1.00, 0.66, -1.00 },  // TouchR1
+    { 0.71, 0.66, -1.00 },  // TouchR2
+    { 0.42, 0.66, -1.00 },  // TouchR3
+    { 0.14, 0.66, -1.00 },  // TouchR4
 
-   { -1.00, -0.66, -1.00 }, // FemurL1
-   { -0.71, -0.66, -1.00 }, // FemurL2
-   { -0.42, -0.66, -1.00 }, // FemurL3
-   { -0.14, -0.66, -1.00 }, // FemurL4
-   {  1.00, -0.66, -1.00 }, // FemurR1
-   {  0.71, -0.66, -1.00 }, // FemurR2
-   {  0.42, -0.66, -1.00 }, // FemurR3
-   {  0.14, -0.66, -1.00 }, // FemurR4
+    { -1.00, -0.66, -1.00 }, // FemurL1
+    { -0.71, -0.66, -1.00 }, // FemurL2
+    { -0.42, -0.66, -1.00 }, // FemurL3
+    { -0.14, -0.66, -1.00 }, // FemurL4
+    { 1.00, -0.66, -1.00 },  // FemurR1
+    { 0.71, -0.66, -1.00 },  // FemurR2
+    { 0.42, -0.66, -1.00 },  // FemurR3
+    { 0.14, -0.66, -1.00 },  // FemurR4
 
-   { -1.00, -0.33, -1.00 }, // PatellaL1
-   { -0.71, -0.33, -1.00 }, // PatellaL2
-   { -0.42, -0.33, -1.00 }, // PatellaL3
-   { -0.14, -0.33, -1.00 }, // PatellaL4
-   {  1.00, -0.33, -1.00 }, // PatellaR1
-   {  0.71, -0.33, -1.00 }, // PatellaR2
-   {  0.42, -0.33, -1.00 }, // PatellaR3
-   {  0.14, -0.33, -1.00 }, // PatellaR4
+    { -1.00, -0.33, -1.00 }, // PatellaL1
+    { -0.71, -0.33, -1.00 }, // PatellaL2
+    { -0.42, -0.33, -1.00 }, // PatellaL3
+    { -0.14, -0.33, -1.00 }, // PatellaL4
+    { 1.00, -0.33, -1.00 },  // PatellaR1
+    { 0.71, -0.33, -1.00 },  // PatellaR2
+    { 0.42, -0.33, -1.00 },  // PatellaR3
+    { 0.14, -0.33, -1.00 },  // PatellaR4
 
-   { -1.00,  0.33, -1.00 }, // TarsusL1
-   { -0.71,  0.33, -1.00 }, // TarsusL2
-   { -0.42,  0.33, -1.00 }, // TarsusL3
-   { -0.14,  0.33, -1.00 }, // TarsusL4
-   {  1.00,  0.33, -1.00 }, // TarsusR1
-   {  0.71,  0.33, -1.00 }, // TarsusR2
-   {  0.42,  0.33, -1.00 }, // TarsusR3
-   {  0.14,  0.33, -1.00 }, // TarsusR4
+    { -1.00, 0.33, -1.00 }, // TarsusL1
+    { -0.71, 0.33, -1.00 }, // TarsusL2
+    { -0.42, 0.33, -1.00 }, // TarsusL3
+    { -0.14, 0.33, -1.00 }, // TarsusL4
+    { 1.00, 0.33, -1.00 },  // TarsusR1
+    { 0.71, 0.33, -1.00 },  // TarsusR2
+    { 0.42, 0.33, -1.00 },  // TarsusR3
+    { 0.14, 0.33, -1.00 },  // TarsusR4
 
-   { -1.00,  0.00, -1.00 }, // TibiaL1
-   { -0.71,  0.00, -1.00 }, // TibiaL2
-   { -0.42,  0.00, -1.00 }, // TibiaL3
-   { -0.14,  0.00, -1.00 }, // TibiaL4
-   {  1.00,  0.00, -1.00 }, // TibiaR1
-   {  0.71,  0.00, -1.00 }, // TibiaR2
-   {  0.42,  0.00, -1.00 }, // TibiaR3
-   {  0.14,  0.00, -1.00 }, // TibiaR4
+    { -1.00, 0.00, -1.00 }, // TibiaL1
+    { -0.71, 0.00, -1.00 }, // TibiaL2
+    { -0.42, 0.00, -1.00 }, // TibiaL3
+    { -0.14, 0.00, -1.00 }, // TibiaL4
+    { 1.00, 0.00, -1.00 },  // TibiaR1
+    { 0.71, 0.00, -1.00 },  // TibiaR2
+    { 0.42, 0.00, -1.00 },  // TibiaR3
+    { 0.14, 0.00, -1.00 },  // TibiaR4
 
-   { -1.00, -1.00, -1.00 }, // TrochanterL1
-   { -0.71, -1.00, -1.00 }, // TrochanterL2
-   { -0.42, -1.00, -1.00 }, // TrochanterL3
-   { -0.14, -1.00, -1.00 }, // TrochanterL4
-   {  1.00, -1.00, -1.00 }, // TrochanterR1
-   {  0.71, -1.00, -1.00 }, // TrochanterR2
-   {  0.42, -1.00, -1.00 }, // TrochanterR3
-   {  0.14, -1.00, -1.00 }  // TrochanterR4
+    { -1.00, -1.00, -1.00 }, // TrochanterL1
+    { -0.71, -1.00, -1.00 }, // TrochanterL2
+    { -0.42, -1.00, -1.00 }, // TrochanterL3
+    { -0.14, -1.00, -1.00 }, // TrochanterL4
+    { 1.00, -1.00, -1.00 },  // TrochanterR1
+    { 0.71, -1.00, -1.00 },  // TrochanterR2
+    { 0.42, -1.00, -1.00 },  // TrochanterR3
+    { 0.14, -1.00, -1.00 }   // TrochanterR4
   };
   std::vector<std::vector<double>> hidden{};
   std::vector<std::vector<double>> outputs{};
@@ -477,8 +484,8 @@ Substrate* Experiment::createDefaultSubstrate() const {
   // clang-format on
   // clone the input neuron positions to hidden, but at different height
   for (auto& x : inputs) {
-    outputs.push_back(std::vector<double>{x[0], x[1], 1.0});
-    hidden.push_back(std::vector<double>{x[0], x[1], 0.0});
+    outputs.push_back(std::vector<double>{ x[0], x[1], 1.0 });
+    hidden.push_back(std::vector<double>{ x[0], x[1], 0.0 });
   }
 
   Substrate* substrate = new Substrate(inputs, hidden, outputs);
@@ -510,8 +517,10 @@ Substrate* Experiment::createDefaultSubstrate() const {
   // NEAT::ActivationFunction::TAHN
   // NEAT::ActivationFunction::TAHN_CUBIC
   // NEAT::ActivationFunction::ABS
-  substrate->m_hidden_nodes_activation = NEAT::ActivationFunction::SIGNED_SIGMOID;
-  substrate->m_output_nodes_activation = NEAT::ActivationFunction::SIGNED_SIGMOID;
+  substrate->m_hidden_nodes_activation =
+    NEAT::ActivationFunction::SIGNED_SIGMOID;
+  substrate->m_output_nodes_activation =
+    NEAT::ActivationFunction::SIGNED_SIGMOID;
   substrate->m_max_weight_and_bias = 2.0;
 
   return substrate;

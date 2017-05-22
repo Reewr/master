@@ -1,14 +1,14 @@
 #include "Controller.hpp"
 
-#include "Phenotype.hpp"
-#include "Substrate.hpp"
 #include "../Experiments/Experiment.hpp"
+#include "../GlobalLog.hpp"
 #include "../Input/Event.hpp"
 #include "../OpenGLHeaders.hpp"
-#include "../GlobalLog.hpp"
+#include "Phenotype.hpp"
+#include "Substrate.hpp"
 
-#include <btBulletDynamicsCommon.h>
 #include <NeuralNetwork.h>
+#include <btBulletDynamicsCommon.h>
 
 void loadExperiments(Experiment* experiment, const std::string& filename) {
   std::string population = filename + ".population";
@@ -34,8 +34,8 @@ Controller::Controller(Experiment*        standing,
                        const std::string& standingExperiment,
                        Experiment*        walking,
                        const std::string& walkingExperiment) {
-  mStanding = standing;
-  mWalking  = walking;
+  mStanding       = standing;
+  mWalking        = walking;
   isExperimenting = true;
 
   loadExperiments(mStanding, standingExperiment);
@@ -64,9 +64,9 @@ Controller::Controller(Experiment*        standing,
 
   walkFS.close();
 
-  mPhenotype = new Phenotype();
+  mPhenotype       = new Phenotype();
   mStandingNetwork = new NEAT::NeuralNetwork();
-  mWalkingNetwork = new NEAT::NeuralNetwork();
+  mWalkingNetwork  = new NEAT::NeuralNetwork();
 
   mPhenotype->reset(0, 0, 0, 0);
   mTempNetwork = mPhenotype->network;
@@ -130,9 +130,9 @@ void Controller::input(const Input::Event& event) {
 
   if (event.keyPressed(GLFW_KEY_U)) {
     debug("Starting experiment");
-    isExperimenting = true;
+    isExperimenting     = true;
     mExperimentDuration = 0;
-    mData = {};
+    mData               = {};
     changeStage(Stage::Walking);
     return event.stopPropgation();
   }
@@ -145,7 +145,7 @@ void Controller::input(const Input::Event& event) {
     debug("Experiment duration: {}", mPhenotype->duration);
 
     debug("DATA:");
-    for(auto m : mData) {
+    for (auto m : mData) {
       debug("{}", m);
     }
 
@@ -165,13 +165,15 @@ void Controller::update(float) {
   }
 
   if (isExperimenting) {
-    mExperimentDuration += 1.0/60.0;
-    const btVector3& pos = mPhenotype->rigidBody("Sternum")->getCenterOfMassPosition();
+    mExperimentDuration += 1.0 / 60.0;
+    const btVector3& pos =
+      mPhenotype->rigidBody("Sternum")->getCenterOfMassPosition();
     float w = mCurrentStage == Stage::Walking ? 1.f : 0.f;
     mData.push_back(mmm::vec4(w, pos.x(), pos.y(), pos.z()));
   }
 
-  bool isMod5 = int(mExperimentDuration) % 5 == 0 && int(mExperimentDuration) != 0;
+  bool isMod5 =
+    int(mExperimentDuration) % 5 == 0 && int(mExperimentDuration) != 0;
   if (isExperimenting && mCurrentStage == Stage::Walking && isMod5) {
     changeStage(Stage::Standing);
     mExperimentDuration = 0;

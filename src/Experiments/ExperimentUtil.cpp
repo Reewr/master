@@ -106,8 +106,8 @@ float ExpUtil::normalizeAngle(float angle, float low, float up, float rest) {
   if (angle - rest == 0.f)
     return 0.f;
 
-  return angle < rest ? -(angle - rest) / (low - rest)
-                      : (angle - rest) / (up - rest);
+  return angle < rest ? -(angle - rest) / (low - rest) :
+                        (angle - rest) / (up - rest);
 };
 
 /**
@@ -123,6 +123,6 @@ float ExpUtil::normalizeAngle(float angle, float low, float up, float rest) {
  * @return
  */
 float ExpUtil::denormalizeAngle(float p, float low, float up, float rest) {
-  return p < 0 ? p * mmm::abs(low - rest) + rest
-               : p * mmm::abs(up - rest) + rest;
+  return p < 0 ? p * mmm::abs(low - rest) + rest :
+                 p * mmm::abs(up - rest) + rest;
 };

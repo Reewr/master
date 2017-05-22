@@ -4,11 +4,11 @@
 
 #include "Phenotype.hpp"
 
-template<size_t n>
+template <size_t   n>
 std::vector<float> vecNtoList(const mmm::vec<n>& t) {
   std::vector<float> elements;
 
-  for(size_t i = 0; i < n; i++)
+  for (size_t i = 0; i < n; i++)
     elements.push_back(t[i]);
 
   return elements;
@@ -25,7 +25,7 @@ Statistics::Statistics() {}
  * @param generation
  */
 void Statistics::addEntry(const std::vector<Phenotype>& phenotypes,
-                          unsigned int generation) {
+                          unsigned int                  generation) {
   mEntries[generation] = {};
   mEntries[generation].reserve(phenotypes.size());
 
@@ -40,7 +40,8 @@ void Statistics::addEntry(const std::vector<Phenotype>& phenotypes,
       absoluteBest = &phenotype;
 
     if (leaders.count(phenotype.speciesIndex) &&
-        leaders[phenotype.speciesIndex]->finalizedFitness < phenotype.finalizedFitness)
+        leaders[phenotype.speciesIndex]->finalizedFitness <
+          phenotype.finalizedFitness)
       leaders[phenotype.speciesIndex] = &phenotype;
     else if (leaders.count(phenotype.speciesIndex) == 0)
       leaders[phenotype.speciesIndex] = &phenotype;
@@ -50,15 +51,17 @@ void Statistics::addEntry(const std::vector<Phenotype>& phenotypes,
   for (const Phenotype& phenotype : phenotypes) {
     Entry e;
 
-    e.speciesId = phenotype.speciesId;
-    e.speciesIndex = phenotype.speciesIndex;
-    e.individualIndex = phenotype.individualIndex;
-    e.finalizedFitness = phenotype.finalizedFitness;
+    e.speciesId         = phenotype.speciesId;
+    e.speciesIndex      = phenotype.speciesIndex;
+    e.individualIndex   = phenotype.individualIndex;
+    e.finalizedFitness  = phenotype.finalizedFitness;
     e.individualFitness = vecNtoList(phenotype.fitness);
 
-    e.bestOfSpecies = leaders[phenotype.speciesIndex]->individualIndex == phenotype.individualIndex;
-    e.bestOfGeneration = absoluteBest->speciesIndex == phenotype.speciesIndex &&
-                         absoluteBest->individualIndex == phenotype.individualIndex;
+    e.bestOfSpecies = leaders[phenotype.speciesIndex]->individualIndex ==
+                      phenotype.individualIndex;
+    e.bestOfGeneration =
+      absoluteBest->speciesIndex == phenotype.speciesIndex &&
+      absoluteBest->individualIndex == phenotype.individualIndex;
 
     mEntries[generation].push_back(e);
   }
@@ -73,30 +76,29 @@ void Statistics::addEntry(const std::vector<Phenotype>& phenotypes,
 void Statistics::save(const std::string& filename) const {
   std::ofstream fs(filename);
 
-  std::string gen= "Generation";
-  std::string id = "SpeciesID";
-  std::string spec = "SpeciesIndex";
-  std::string ind= "IndividualIndex";
+  std::string gen           = "Generation";
+  std::string id            = "SpeciesID";
+  std::string spec          = "SpeciesIndex";
+  std::string ind           = "IndividualIndex";
   std::string bestOfSpecies = "BestOfSpecies";
   std::string bestOfGen     = "BestOfGeneration";
   std::string fitness       = "Fitness";
   std::string finalFitness  = "FinalFitness";
 
   // add csv header
-  fs << gen << " " << id << " " << spec << " " << ind << " " << bestOfSpecies << " " << bestOfGen << " ";
+  fs << gen << " " << id << " " << spec << " " << ind << " " << bestOfSpecies
+     << " " << bestOfGen << " ";
   fs << finalFitness << " " << fitness << std::endl;
 
-  for(auto& generation : mEntries) {
+  for (auto& generation : mEntries) {
     std::string genStr = std::to_string(generation.first);
-    for(auto& entry : generation.second) {
-      fs << genStr <<
-        " " << std::to_string(entry.speciesId) <<
-        " " << std::to_string(entry.speciesIndex) <<
-        " " << std::to_string(entry.individualIndex) <<
-        " " << std::to_string(entry.bestOfSpecies) <<
-        " " << std::to_string(entry.bestOfGeneration) <<
-        " " << std::to_string(entry.finalizedFitness) <<
-        " ";
+    for (auto& entry : generation.second) {
+      fs << genStr << " " << std::to_string(entry.speciesId) << " "
+         << std::to_string(entry.speciesIndex) << " "
+         << std::to_string(entry.individualIndex) << " "
+         << std::to_string(entry.bestOfSpecies) << " "
+         << std::to_string(entry.bestOfGeneration) << " "
+         << std::to_string(entry.finalizedFitness) << " ";
 
       for (unsigned int i = 0; i < entry.individualFitness.size(); i++) {
         if (i + 1 != entry.individualFitness.size())

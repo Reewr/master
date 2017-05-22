@@ -5,14 +5,14 @@
 #include "DrawablePhenotype.hpp"
 #include "Substrate.hpp"
 
-#include "../Experiments/Walking0102.hpp"
-#include "../Experiments/Walking04.hpp"
 #include "../Experiments/Standing0102.hpp"
 #include "../Experiments/Standing0304.hpp"
-#include "../Experiments/Walking05.hpp"
+#include "../Experiments/Walking0102.hpp"
 #include "../Experiments/Walking03.hpp"
-#include "../Experiments/Walking08.hpp"
+#include "../Experiments/Walking04.hpp"
+#include "../Experiments/Walking05.hpp"
 #include "../Experiments/Walking07.hpp"
+#include "../Experiments/Walking08.hpp"
 
 #include <btBulletDynamicsCommon.h>
 #include <thread>
@@ -175,7 +175,8 @@ void SpiderSwarm::setup(const std::string& name, bool startExperiment) {
  *   Starts a simulation that has been setup
  */
 void SpiderSwarm::start() {
-  if (mCurrentExperiment == nullptr || mPopulation == nullptr || mSubstrate == nullptr) {
+  if (mCurrentExperiment == nullptr || mPopulation == nullptr ||
+      mSubstrate == nullptr) {
     mLog->warn("Cannot start experiment without setting up experiment");
     return;
   }
@@ -191,7 +192,8 @@ void SpiderSwarm::start() {
  *   Stops the current active experiment, if any
  */
 void SpiderSwarm::stop() {
-  if (mCurrentExperiment == nullptr || mPopulation == nullptr || mSubstrate == nullptr) {
+  if (mCurrentExperiment == nullptr || mPopulation == nullptr ||
+      mSubstrate == nullptr) {
     mLog->warn("Cannot stop experiment without setting up experiment");
     return;
   }
@@ -238,8 +240,10 @@ void SpiderSwarm::loadGenome(const std::string& filename) {
 
 /**
  * @brief
- *   When a new experiment is loaded from file (not setup, but using the load function),
- *   it also loads all the genomes. This function allows you to simulate one of those
+ *   When a new experiment is loaded from file (not setup, but using the load
+ * function),
+ *   it also loads all the genomes. This function allows you to simulate one of
+ * those
  *   genomes
  *
  * @param genomeId
@@ -255,8 +259,10 @@ void SpiderSwarm::runGenome(unsigned int genomeId) {
   if (genomeId == mBestPossibleGenome.GetID())
     g = &mBestPossibleGenome;
   else {
-    for(unsigned int i = 0; i < mPopulation->m_Species.size(); i++) {
-      for(unsigned int j = 0; j < mPopulation->m_Species[i].m_Individuals.size(); j++) {
+    for (unsigned int i = 0; i < mPopulation->m_Species.size(); i++) {
+      for (unsigned int j = 0;
+           j < mPopulation->m_Species[i].m_Individuals.size();
+           j++) {
         if (mPopulation->m_Species[i].m_Individuals[j].GetID() == genomeId) {
           g = &mPopulation->m_Species[i].m_Individuals[j];
           break;
@@ -283,8 +289,7 @@ void SpiderSwarm::runGenome(unsigned int genomeId) {
                                  *mSubstrate,
                                  mPopulation->m_Parameters);
   } else {
-    g->BuildHyperNEATPhenotype(*mPhenotypes[0].network,
-                               *mSubstrate);
+    g->BuildHyperNEATPhenotype(*mPhenotypes[0].network, *mSubstrate);
   }
 
   mSimulatingStage = SimulationStage::SimulationReady;
@@ -332,7 +337,8 @@ void SpiderSwarm::toggleDrawANN() {
 }
 
 void SpiderSwarm::updateSimulation() {
-  if (mSimulatingStage == SimulationStage::SimulationReady && mPhenotypes[0].duration > 0.0)
+  if (mSimulatingStage == SimulationStage::SimulationReady &&
+      mPhenotypes[0].duration > 0.0)
     return;
 
   mPhenotypes[0].failed = false;
@@ -366,10 +372,10 @@ void SpiderSwarm::update(float deltaTime) {
       p.remove();
 
     mPhenotypes.clear();
-    mBatchStart = 0;
-    mBatchEnd = mBatchSize;
-    mCurrentBatch = 0;
-    mCurrentDuration = 0;
+    mBatchStart          = 0;
+    mBatchEnd            = mBatchSize;
+    mCurrentBatch        = 0;
+    mCurrentDuration     = 0;
     mRestartOnNextUpdate = false;
     mSpeciesLeaders.clear();
     mBestIndex = 0;
@@ -384,7 +390,7 @@ void SpiderSwarm::update(float deltaTime) {
     return;
 
   bool isWipeout = true;
-  for(auto& p : mPhenotypes)
+  for (auto& p : mPhenotypes)
     if (!p.hasBeenKilled()) {
       isWipeout = false;
       break;
@@ -420,12 +426,14 @@ void SpiderSwarm::update(float deltaTime) {
 
 /**
  * @brief
- *   Draws the spiders depending on the DrawingMethod used. See the documentation
+ *   Draws the spiders depending on the DrawingMethod used. See the
+ * documentation
  *   of DrawingMethod for information about how things are drawn.
  *
  *   You can change DrawingMethod by using `setDrawingMethod`
  *
- *   When drawing more than one spider, they are placed in a grid like structure.
+ *   When drawing more than one spider, they are placed in a grid like
+ * structure.
  *   They all really have position 0,0,0, but are offset slightly to make it
  *   easier to identify each one of them.
  *
@@ -461,7 +469,8 @@ void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
         mPhenotypes[mBatchStart].draw(prog, grid[0], bindTexture);
 
         if (bindTexture && mDrawDebugNetworks)
-          mPhenotypes[mBatchStart].drawablePhenotype->draw3D(grid[gridIndex] + mmm::vec3(0, 5, 0));
+          mPhenotypes[mBatchStart].drawablePhenotype->draw3D(
+            grid[gridIndex] + mmm::vec3(0, 5, 0));
       }
       break;
     }
@@ -516,7 +525,7 @@ void SpiderSwarm::draw(std::shared_ptr<Program>& prog, bool bindTexture) {
     // Draw the one with the best fitness in the last generation
     case DrawingMethod::BestFitness:
       if (mBestIndex < numPhenotypes) {
-        mPhenotypes[mBestIndex].draw(prog, mmm::vec3(0,0,0), bindTexture);
+        mPhenotypes[mBestIndex].draw(prog, mmm::vec3(0, 0, 0), bindTexture);
         if (bindTexture && mDrawDebugNetworks)
           mPhenotypes[mBestIndex].drawablePhenotype->draw3D(grid[gridIndex] +
                                                             mmm::vec3(0, 5, 0));
@@ -630,14 +639,14 @@ void SpiderSwarm::load(const std::string& filename) {
     mBestPossibleGenome = bestGenome();
   }
 
-  mCurrentBatch        = 0;
-  mBestIndex           = 0;
-  mGeneration          = mPopulation->m_Generation;
-  mCurrentDuration     = 0;
-  mBestPossibleFitness = 0;
+  mCurrentBatch                  = 0;
+  mBestIndex                     = 0;
+  mGeneration                    = mPopulation->m_Generation;
+  mCurrentDuration               = 0;
+  mBestPossibleFitness           = 0;
   mBestPossibleFitnessGeneration = 0;
-  mStats               = Statistics();
-  mSimulatingStage     = SimulationStage::None;
+  mStats                         = Statistics();
+  mSimulatingStage               = SimulationStage::None;
 
   mLog->info("Loaded from file: {}", filename);
   mLog->info("Ready to start experiment");
@@ -699,12 +708,17 @@ void SpiderSwarm::updateThreadBatches(float deltaTime) {
   int  grainSize = size / threads.size();
 
   for (auto it = std::begin(threads); it != std::end(threads) - 1; ++it) {
-    *it = std::thread(mWorker, workIter, workIter + grainSize, std::ref(*mCurrentExperiment));
+    *it = std::thread(mWorker,
+                      workIter,
+                      workIter + grainSize,
+                      std::ref(*mCurrentExperiment));
     workIter += grainSize;
   }
 
-  threads.back() =
-    std::thread(mWorker, workIter, std::end(mPhenotypes), std::ref(*mCurrentExperiment));
+  threads.back() = std::thread(mWorker,
+                               workIter,
+                               std::end(mPhenotypes),
+                               std::ref(*mCurrentExperiment));
 
   for (auto&& i : threads)
     i.join();
@@ -712,7 +726,7 @@ void SpiderSwarm::updateThreadBatches(float deltaTime) {
   mCurrentDuration += deltaTime;
 }
 #else
-void SpiderSwarm::updateThreadBatches(float) {}
+void  SpiderSwarm::updateThreadBatches(float) {}
 #endif
 
 /**
@@ -817,8 +831,8 @@ void SpiderSwarm::updateEpoch() {
 
   mSpeciesLeaders.clear();
 
-  float  best      = -99999.f;
-  size_t bestIndex = 0;
+  float  best        = -99999.f;
+  size_t bestIndex   = 0;
   bool   changedBest = false;
 
   ++mGeneration;
@@ -847,7 +861,7 @@ void SpiderSwarm::updateEpoch() {
         mBestPossibleFitness = best;
         mBestPossibleGenome  = mPopulation->m_Species[i].m_Individuals[j];
         mBestPossibleFitnessGeneration = mGeneration;
-        changedBest = true;
+        changedBest                    = true;
       }
 
       if (fitness > bestOfSpecies) {
@@ -896,7 +910,7 @@ void SpiderSwarm::updateEpoch() {
                i == mBestIndex ? " (best)" : "",
                p.hasBeenKilled() ? " (killed)" : "");
 
-    size_t j = 0;
+    size_t       j         = 0;
     unsigned int maxLength = 0;
 
     // Find the longest name so alignment can be done
@@ -940,7 +954,8 @@ void SpiderSwarm::updateEpoch() {
  *   `updateThreadBatches`
  */
 void SpiderSwarm::recreatePhenotypes() {
-  mLog->debug("Recreating {} phenotypes...", mPopulation->m_Parameters.PopulationSize);
+  mLog->debug("Recreating {} phenotypes...",
+              mPopulation->m_Parameters.PopulationSize);
   mLog->debug("We have {} species", mPopulation->m_Species.size());
 
   size_t index      = 0;
@@ -965,8 +980,8 @@ void SpiderSwarm::recreatePhenotypes() {
       mPhenotypes[index].spider->disableUpdatingFromPhysics();
       mCurrentExperiment->initPhenotype(mPhenotypes[index]);
 
-      // If we are using single-threaded mode, create the neural
-      // networks, otherwise wait until later
+// If we are using single-threaded mode, create the neural
+// networks, otherwise wait until later
 #ifndef BT_NO_PROFILE
       auto& individual = species.m_Individuals[j];
       if (mCurrentExperiment->parameters().useESHyperNEAT) {
@@ -989,8 +1004,8 @@ void SpiderSwarm::recreatePhenotypes() {
     mLog->debug("Removing spider due to decrease in population");
   }
 
-  // If using multithreaded more, generated the ESHyperNEAT neural
-  // networks in paralell
+// If using multithreaded more, generated the ESHyperNEAT neural
+// networks in paralell
 #ifdef BT_NO_PROFILE
   int size    = mPhenotypes.size();
   int nThread = mmm::min(std::thread::hardware_concurrency(), size);

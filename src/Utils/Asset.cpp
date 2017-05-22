@@ -1,7 +1,7 @@
 #include "Asset.hpp"
 
-#include "../Input/Input.hpp"
 #include "../Camera/Camera.hpp"
+#include "../Input/Input.hpp"
 #include "../Lua/Lua.hpp"
 #include "../Resource/ResourceManager.hpp"
 #include "../State/State.hpp"

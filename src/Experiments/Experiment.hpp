@@ -17,7 +17,7 @@ struct ExperimentParameters {
   int numActivates = 4;
 
   // Performs the static deltaTime that should be used.
-  float deltaTime  = 1.0f / 60.f;
+  float deltaTime = 1.0f / 60.f;
 
   // Sets the experiment duration
   unsigned int experimentDuration = 10;
@@ -43,7 +43,6 @@ struct ExperimentParameters {
  */
 class Experiment : public Logging::Log {
 public:
-
   virtual ~Experiment();
 
   // Returns the set substrate for the Experiment
@@ -94,7 +93,8 @@ public:
   virtual void postUpdate(const Phenotype& p) const;
 
   // Tells the experiment to use the outputs from the network
-  virtual void outputs(Phenotype& p, const std::vector<double>& outputs) const = 0;
+  virtual void outputs(Phenotype&                 p,
+                       const std::vector<double>& outputs) const = 0;
 
   // Tells the experiment to retrieve inputs
   virtual std::vector<double> inputs(const Phenotype& p) const = 0;

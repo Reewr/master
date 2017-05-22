@@ -37,14 +37,14 @@ struct Phenotype : Logging::Log {
   Spider*              spider;
   NEAT::NeuralNetwork* network;
 
-  btDefaultMotionState*      planeMotion;
-  btRigidBody*               planeBody;
+  btDefaultMotionState* planeMotion;
+  btRigidBody*          planeBody;
 
   DrawablePhenotype* drawablePhenotype;
-  Text3D* hoverText;
+  Text3D*            hoverText;
 
-  mmm::vec<9>  fitness;
-  mmm::vec3 initialPosition;
+  mmm::vec<9> fitness;
+  mmm::vec3   initialPosition;
 
   std::vector<double> previousOutput;
 
@@ -97,7 +97,6 @@ struct Phenotype : Logging::Log {
   void kill() const;
 
 private:
-
   // Prepares the phenotype for simulation
   void updatePrepareStanding(const Experiment& experiment);
 

@@ -9,11 +9,11 @@
 #include "../3D/World.hpp"
 #include "../GlobalLog.hpp"
 
+#include "../Experiments/Experiment.hpp"
+#include "../Experiments/ExperimentUtil.hpp"
 #include "DrawablePhenotype.hpp"
 #include "Fitness.hpp"
 #include "Substrate.hpp"
-#include "../Experiments/Experiment.hpp"
-#include "../Experiments/ExperimentUtil.hpp"
 
 using mmm::vec2;
 using mmm::vec3;
@@ -162,13 +162,14 @@ bool Phenotype::collidesWithTerrain(const std::string& str) const {
  */
 void Phenotype::updatePrepareStanding(const Experiment& experiment) {
   const ExperimentParameters& expParams = experiment.parameters();
-  float deltaTime = expParams.deltaTime;
+  float                       deltaTime = expParams.deltaTime;
 
 
   // Initiate start position
   //
   // We want to the simulation to always be equal for all robots. In order to do
-  // this more easily, we move the robot to a resting position before the simulation
+  // this more easily, we move the robot to a resting position before the
+  // simulation
   // starts.
   //
   // This makes sure that all positions are equal.
@@ -211,7 +212,7 @@ void Phenotype::update(const Experiment& experiment) {
     return;
 
   const ExperimentParameters& expParams = experiment.parameters();
-  float deltaTime = expParams.deltaTime;
+  float                       deltaTime = expParams.deltaTime;
 
   // If the duration is less than 0, prepare the robot
   // to be standing
@@ -226,7 +227,9 @@ void Phenotype::update(const Experiment& experiment) {
   // This is mostly for debugging as we may sometimes forget to add/remove
   // an input when we are adjusting the substrate
   if (inputs.size() != experiment.numInputs()) {
-    mLog->error("Missing inputs. Expected: {}, Got: {}", experiment.numInputs(), inputs.size());
+    mLog->error("Missing inputs. Expected: {}, Got: {}",
+                experiment.numInputs(),
+                inputs.size());
     throw std::runtime_error("Phenotype missing inputs. See message above.");
   }
 
@@ -246,8 +249,8 @@ void Phenotype::update(const Experiment& experiment) {
   //  ...
   //  and so on
   int numActivates = expParams.useESHyperNEAT ?
-                     experiment.neatParameters().IterationLevel + 2 :
-                     expParams.numActivates;
+                       experiment.neatParameters().IterationLevel + 2 :
+                       expParams.numActivates;
 
   // Activate the network, going through all connections and neurons
   // to set the activesum and activation values. The number of
@@ -312,9 +315,9 @@ void Phenotype::draw(std::shared_ptr<Program>& prog,
  * @param deltaTime
  */
 void Phenotype::updateFitness(const Experiment& experiment) {
-  int index = 0;
+  int   index     = 0;
   float deltaTime = experiment.parameters().deltaTime;
-  for(const auto& s : experiment.fitnessFunctions()) {
+  for (const auto& s : experiment.fitnessFunctions()) {
     fitness[index] = s.runCalculation(*this, fitness[index], deltaTime);
     index += 1;
   }
@@ -355,7 +358,7 @@ float Phenotype::finalizeFitness(const Experiment& experiment) {
   hasFinalized = true;
 
   int index = 0;
-  for(const auto& s : experiment.fitnessFunctions()) {
+  for (const auto& s : experiment.fitnessFunctions()) {
     fitness[index] = s.runFinalize(*this, fitness[index], duration);
     index += 1;
   }
@@ -402,7 +405,7 @@ void Phenotype::reset(int          speciesId,
                                                       plane,
                                                       btVector3(0, 0, 0));
     consInfo.m_friction = 0.84;
-    planeBody = new btRigidBody(consInfo);
+    planeBody           = new btRigidBody(consInfo);
     world->world()->addRigidBody(planeBody);
   }
 

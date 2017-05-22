@@ -8,13 +8,13 @@
 
 Standing0304::Standing0304() : Experiment("Standing0304") {
 
-  mParameters.numActivates = 8;
+  mParameters.numActivates       = 8;
   mParameters.experimentDuration = 30;
-  mFitnessFunctions =
-  { Fitness("Stand",
+  mFitnessFunctions              = {
+    Fitness("Stand",
             "Fitness based on no movement.",
             [](const Phenotype& p, float current, float dt) -> float {
-              if (p.duration <= 2*dt)
+              if (p.duration <= 2 * dt)
                 return 1.f;
 
               const auto&        parts = p.spider->parts();
@@ -31,26 +31,22 @@ Standing0304::Standing0304() : Experiment("Standing0304") {
 
     Fitness("Lifespan  ",
             "Fitness based on lifespan.",
-            [](const Phenotype&, float, float) -> float {
-              return 0.f;
-            },
+            [](const Phenotype&, float, float) -> float { return 0.f; },
             [](const Phenotype&, float, float duration) -> float {
               return duration;
             }),
     Fitness("Vibrating",
             "Fitness based how little it vibrates with the legs",
-            [](const Phenotype&, float, float) -> float {
-              return 0;
-            },
+            [](const Phenotype&, float, float) -> float { return 0; },
             [](const Phenotype& p, float current, float duration) -> float {
               size_t numUpdates = p.tmp.size();
               size_t numJoints  = numUpdates == 0 ? 0 : p.tmp[0].size();
 
-              for(size_t i = 0; i < numJoints; ++i) {
-                float dir   = 0.0;
-                float freq  = 0.0;
+              for (size_t i = 0; i < numJoints; ++i) {
+                float dir  = 0.0;
+                float freq = 0.0;
 
-                for(size_t j = 0; j < numUpdates; j++) {
+                for (size_t j = 0; j < numUpdates; j++) {
                   float currentDir = p.tmp[j][i];
 
                   if (currentDir != dir)
@@ -108,20 +104,20 @@ Standing0304::Standing0304() : Experiment("Standing0304") {
             }),
   };
 
-  mSubstrate = createDefaultSubstrate();
+  mSubstrate                            = createDefaultSubstrate();
   mSubstrate->m_hidden_nodes_activation = NEAT::ActivationFunction::TANH;
   mSubstrate->m_output_nodes_activation = NEAT::ActivationFunction::TANH;
-  mSubstrate->m_max_weight_and_bias = 4.0;
+  mSubstrate->m_max_weight_and_bias     = 4.0;
 
-  NEAT::Parameters params = getDefaultParameters();
-  params.SurvivalRate = 0.25;
-  params.MultipointCrossoverRate = 0.75;
-  params.EliteFraction = 0.2;
-  params.MutateAddNeuronProb = 0.03;
-  params.MutateAddLinkProb = 0.2;
-  params.MaxWeight = 4.0;
+  NEAT::Parameters params            = getDefaultParameters();
+  params.SurvivalRate                = 0.25;
+  params.MultipointCrossoverRate     = 0.75;
+  params.EliteFraction               = 0.2;
+  params.MutateAddNeuronProb         = 0.03;
+  params.MutateAddLinkProb           = 0.2;
+  params.MaxWeight                   = 4.0;
   params.ActivationFunctionDiffCoeff = 0.0;
-  params.CompatTreshold = 2.0;
+  params.CompatTreshold              = 2.0;
 
   NEAT::Genome genome(0,
                       mSubstrate->GetMinCPPNInputs(),
@@ -133,7 +129,8 @@ Standing0304::Standing0304() : Experiment("Standing0304") {
                       0,
                       params);
 
-  mPopulation = new NEAT::Population(genome, params, true, params.MaxWeight, time(0));
+  mPopulation =
+    new NEAT::Population(genome, params, true, params.MaxWeight, time(0));
 }
 
 Standing0304::~Standing0304() {
@@ -146,9 +143,9 @@ float Standing0304::mergeFitnessValues(const mmm::vec<9>& fitness) const {
 }
 
 void Standing0304::outputs(Phenotype&                 p,
-                                  const std::vector<double>& outputs) const {
+                           const std::vector<double>& outputs) const {
   size_t index = 16;
-  for(auto& part : p.spider->parts()) {
+  for (auto& part : p.spider->parts()) {
     if (part.second.hinge == nullptr)
       continue;
 
@@ -156,20 +153,24 @@ void Standing0304::outputs(Phenotype&                 p,
     float velocity;
 
     if (part.second.active) {
-      float zero   = (part.second.hinge->getUpperLimit() + part.second.hinge->getLowerLimit()) * 0.5;
-      float output = ExpUtil::denormalizeAngle(outputs[index],
-                                               part.second.hinge->getLowerLimit(),
-                                               part.second.hinge->getUpperLimit(),
-                                               zero);
+      float zero = (part.second.hinge->getUpperLimit() +
+                    part.second.hinge->getLowerLimit()) *
+                   0.5;
+      float output =
+        ExpUtil::denormalizeAngle(outputs[index],
+                                  part.second.hinge->getLowerLimit(),
+                                  part.second.hinge->getUpperLimit(),
+                                  zero);
       velocity = output - currentAngle;
 
       if (p.tmp.size() <= index - 16)
         p.tmp.push_back({});
-      p.tmp[index-16].push_back(output > currentAngle ? 1.0 : 0.0);
+      p.tmp[index - 16].push_back(output > currentAngle ? 1.0 : 0.0);
 
       index++;
     } else {
-      velocity = mmm::clamp(part.second.restAngle - currentAngle, -0.3f, 0.3f) * 16.0f;
+      velocity =
+        mmm::clamp(part.second.restAngle - currentAngle, -0.3f, 0.3f) * 16.0f;
     }
 
     part.second.hinge->enableAngularMotor(true, velocity, 16.f);
@@ -178,23 +179,23 @@ void Standing0304::outputs(Phenotype&                 p,
 
 std::vector<double> Standing0304::inputs(const Phenotype& p) const {
   btRigidBody* sternum = p.spider->parts().at("Sternum").part->rigidBody();
-  mmm::vec3 rots       = ExpUtil::getEulerAngles(sternum->getOrientation());
+  mmm::vec3    rots    = ExpUtil::getEulerAngles(sternum->getOrientation());
   std::vector<double> inputs = p.previousOutput;
 
   if (inputs.size() == 0) {
     inputs.insert(inputs.end(), mSubstrate->m_output_coords.size(), 0);
   }
 
-  inputs[0] = rots.x;
-  inputs[1] = rots.y;
-  inputs[2] = rots.z;
-  inputs[3] = 1; // mmm::sin(p.duration * 2);
-  inputs[4] = 1; // mmm::cos(p.duration * 2);
-  inputs[5] = 1;
-  inputs[6] = 1;
-  inputs[7] = 1;
-  inputs[8] = p.collidesWithTerrain("TarsusL1") ? 1.0 : 0.0;
-  inputs[9] = p.collidesWithTerrain("TarsusL2") ? 1.0 : 0.0;
+  inputs[0]  = rots.x;
+  inputs[1]  = rots.y;
+  inputs[2]  = rots.z;
+  inputs[3]  = 1; // mmm::sin(p.duration * 2);
+  inputs[4]  = 1; // mmm::cos(p.duration * 2);
+  inputs[5]  = 1;
+  inputs[6]  = 1;
+  inputs[7]  = 1;
+  inputs[8]  = p.collidesWithTerrain("TarsusL1") ? 1.0 : 0.0;
+  inputs[9]  = p.collidesWithTerrain("TarsusL2") ? 1.0 : 0.0;
   inputs[10] = p.collidesWithTerrain("TarsusL3") ? 1.0 : 0.0;
   inputs[11] = p.collidesWithTerrain("TarsusL4") ? 1.0 : 0.0;
   inputs[12] = p.collidesWithTerrain("TarsusR1") ? 1.0 : 0.0;
@@ -203,10 +204,11 @@ std::vector<double> Standing0304::inputs(const Phenotype& p) const {
   inputs[15] = p.collidesWithTerrain("TarsusR4") ? 1.0 : 0.0;
 
   size_t index = 16;
-  for(auto& a : p.spider->parts()) {
+  for (auto& a : p.spider->parts()) {
     if (!a.second.active || a.second.hinge == nullptr)
       continue;
-    float zero  = (a.second.hinge->getUpperLimit() + a.second.hinge->getLowerLimit()) * 0.5;
+    float zero =
+      (a.second.hinge->getUpperLimit() + a.second.hinge->getLowerLimit()) * 0.5;
     float angle = ExpUtil::normalizeAngle(a.second.hinge->getHingeAngle(),
                                           a.second.hinge->getLowerLimit(),
                                           a.second.hinge->getUpperLimit(),

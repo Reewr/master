@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <stack>
 #include <vector>
-#include <vector>
 
 #include "../GLSL/Program.hpp"
 #include "../Resource/Font.hpp"

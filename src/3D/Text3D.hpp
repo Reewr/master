@@ -19,9 +19,9 @@ public:
 
   void setPosition(const mmm::vec3& position);
 
-  void draw(mmm::vec3 offset = mmm::vec3(0,0,0));
+  void draw(mmm::vec3 offset = mmm::vec3(0, 0, 0));
 
 private:
   std::shared_ptr<Program> mFont3DProgram;
-  mmm::vec3 mPosition;
+  mmm::vec3                mPosition;
 };

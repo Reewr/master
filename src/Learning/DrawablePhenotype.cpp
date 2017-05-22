@@ -140,8 +140,8 @@ void DrawablePhenotype::recreate(const NEAT::NeuralNetwork& network,
 
   // double rectDiv          = size.x / 15.0;
   // double maxLineThickness = 3.0;
-  double magn             = 255.0;
-  double neuronRadius     = size.x / 15;
+  double magn         = 255.0;
+  double neuronRadius = size.x / 15;
 
   vec3 maxValues;
   vec3 minValues;
@@ -165,54 +165,56 @@ void DrawablePhenotype::recreate(const NEAT::NeuralNetwork& network,
   //
   // Lines go from one neuron to another
   //
-//  for (auto& conn : network.m_connections) {
-//    const NEAT::Neuron& source = network.m_neurons[conn.m_source_neuron_idx];
-//    const NEAT::Neuron& target = network.m_neurons[conn.m_target_neuron_idx];
-//    // double thickness =
-//    //   mmm::clamp(scale(conn.m_weight, 0, maxWeight, 1, maxLineThickness),
-//    //              1,
-//    //              maxLineThickness);
-//
-//    double w =
-//      mmm::clamp(scale(mmm::abs(conn.m_weight), 0.0, maxWeight, 0.0, 1.0),
-//                 0.2,
-//                 1.0);
-//
-//    vec4 color;
-//    vec3 start = vec3(source.m_substrate_coords[0],
-//                      source.m_substrate_coords[2],
-//                      source.m_substrate_coords[1]);
-//    vec3 end = vec3(target.m_substrate_coords[0],
-//                    target.m_substrate_coords[2],
-//                    target.m_substrate_coords[1]);
-//
-//    if (conn.m_recur_flag) {
-//      color = conn.m_weight < 0 ? vec4(0, w, 0, 1) : vec4(w);
-//    } else {
-//      color = conn.m_weight < 0 ? vec4(0, 0, w, 1) : vec4(w, 0, 0, 1);
-//    }
-//
-//    lines.push_back({ start, { 0, 0 }, color.xyz });
-//    lines.push_back({ end, { 0, 0 }, color.xyz });
-//
-//    color.w = 1;
-//  }
-//
-  int inputHidden = 0;
-  int inputOutput = 0;
-  int hiddenOutput = 0;
-  int hiddenHidden = 0;
-  int outputHidden = 0;
-  int outputOutput = 0;
-  int loopedHidden = 0;
-  int loopedOutput = 0;
-  int biasHidden   = 0;
-  int biasInput    = 0;
-  int biasOutput   = 0;
+  //  for (auto& conn : network.m_connections) {
+  //    const NEAT::Neuron& source =
+  //    network.m_neurons[conn.m_source_neuron_idx];
+  //    const NEAT::Neuron& target =
+  //    network.m_neurons[conn.m_target_neuron_idx];
+  //    // double thickness =
+  //    //   mmm::clamp(scale(conn.m_weight, 0, maxWeight, 1, maxLineThickness),
+  //    //              1,
+  //    //              maxLineThickness);
+  //
+  //    double w =
+  //      mmm::clamp(scale(mmm::abs(conn.m_weight), 0.0, maxWeight, 0.0, 1.0),
+  //                 0.2,
+  //                 1.0);
+  //
+  //    vec4 color;
+  //    vec3 start = vec3(source.m_substrate_coords[0],
+  //                      source.m_substrate_coords[2],
+  //                      source.m_substrate_coords[1]);
+  //    vec3 end = vec3(target.m_substrate_coords[0],
+  //                    target.m_substrate_coords[2],
+  //                    target.m_substrate_coords[1]);
+  //
+  //    if (conn.m_recur_flag) {
+  //      color = conn.m_weight < 0 ? vec4(0, w, 0, 1) : vec4(w);
+  //    } else {
+  //      color = conn.m_weight < 0 ? vec4(0, 0, w, 1) : vec4(w, 0, 0, 1);
+  //    }
+  //
+  //    lines.push_back({ start, { 0, 0 }, color.xyz });
+  //    lines.push_back({ end, { 0, 0 }, color.xyz });
+  //
+  //    color.w = 1;
+  //  }
+  //
+  int inputHidden    = 0;
+  int inputOutput    = 0;
+  int hiddenOutput   = 0;
+  int hiddenHidden   = 0;
+  int outputHidden   = 0;
+  int outputOutput   = 0;
+  int loopedHidden   = 0;
+  int loopedOutput   = 0;
+  int biasHidden     = 0;
+  int biasInput      = 0;
+  int biasOutput     = 0;
   int numConnections = network.m_connections.size();
-  int inputs   = network.m_num_inputs;
-  int outputs  = network.m_num_outputs;
-  int hiddens  = network.m_neurons.size() - inputs - outputs - 1;
+  int inputs         = network.m_num_inputs;
+  int outputs        = network.m_num_outputs;
+  int hiddens        = network.m_neurons.size() - inputs - outputs - 1;
 
   NEAT::NeuronType input  = NEAT::NeuronType::INPUT;
   NEAT::NeuronType output = NEAT::NeuronType::OUTPUT;
@@ -229,13 +231,16 @@ void DrawablePhenotype::recreate(const NEAT::NeuralNetwork& network,
       inputOutput++;
     else if (source.m_type == hidden && target.m_type == output)
       hiddenOutput++;
-    else if (source.m_type == hidden && target.m_type == hidden && source == target)
+    else if (source.m_type == hidden && target.m_type == hidden &&
+             source == target)
       loopedHidden++;
-    else if (source.m_type == hidden && target.m_type == hidden && source == target)
+    else if (source.m_type == hidden && target.m_type == hidden &&
+             source == target)
       hiddenHidden++;
     else if (source.m_type == output && target.m_type == hidden)
       outputHidden++;
-    else if (source.m_type == output && target.m_type == output && source == target)
+    else if (source.m_type == output && target.m_type == output &&
+             source == target)
       loopedOutput++;
     else if (source.m_type == output && target.m_type == output)
       outputOutput++;
@@ -259,12 +264,16 @@ void DrawablePhenotype::recreate(const NEAT::NeuralNetwork& network,
                  1.0);
 
     vec4 color;
-    vec3 start = vec3(source.m_substrate_coords[0],
-                      source.m_substrate_coords[1],
-                      source.m_substrate_coords.size() > 2 ? source.m_substrate_coords[2] : 0);
-    vec3 end = vec3(target.m_substrate_coords[0],
-                    target.m_substrate_coords[1],
-                    target.m_substrate_coords.size() > 2 ? target.m_substrate_coords[2] : 0);
+    vec3 start =
+      vec3(source.m_substrate_coords[0],
+           source.m_substrate_coords[1],
+           source.m_substrate_coords.size() > 2 ? source.m_substrate_coords[2] :
+                                                  0);
+    vec3 end =
+      vec3(target.m_substrate_coords[0],
+           target.m_substrate_coords[1],
+           target.m_substrate_coords.size() > 2 ? target.m_substrate_coords[2] :
+                                                  0);
 
     if (conn.m_recur_flag) {
       color = conn.m_weight < 0 ? vec4(0, w, 0, 1) : vec4(w);
@@ -349,9 +358,11 @@ void DrawablePhenotype::recreate(const NEAT::NeuralNetwork& network,
   // The size of the filled circle and its color is dependent on the activation
   // of that neuron.
   for (auto& neuron : network.m_neurons) {
-    vec3 pos = vec3(neuron.m_substrate_coords[0],
-                    neuron.m_substrate_coords[1],
-                    neuron.m_substrate_coords.size() > 2 ? neuron.m_substrate_coords[2] : 0);
+    vec3 pos =
+      vec3(neuron.m_substrate_coords[0],
+           neuron.m_substrate_coords[1],
+           neuron.m_substrate_coords.size() > 2 ? neuron.m_substrate_coords[2] :
+                                                  0);
 
     float radiusFilled  = 0;
     float radiusOutline = 0;
@@ -378,8 +389,8 @@ void DrawablePhenotype::recreate(const NEAT::NeuralNetwork& network,
       colorOutline = vec4(1, 0, 0, 1);
 
     radiusOutline = neuronRadius;
-    radiusFilled  = neuronRadius;// * mmm::clamp(neuron.m_activation, 0.3, 2.0);
-    colorFilled   = mmm::clamp(colorFilled, 0.0, 1.0);
+    radiusFilled = neuronRadius; // * mmm::clamp(neuron.m_activation, 0.3, 2.0);
+    colorFilled  = mmm::clamp(colorFilled, 0.0, 1.0);
 
     filled.push_back(new Sphere(pos, radiusFilled, colorFilled));
     mDrawables.push_back(new Sphere(pos, radiusOutline, colorOutline, true));
@@ -390,10 +401,10 @@ void DrawablePhenotype::recreate(const NEAT::NeuralNetwork& network,
 
 void DrawablePhenotype::recreate(const NEAT::NeuralNetwork& network,
                                  mmm::vec2                  size) {
-  double rectDiv          = size.x / 15.0;
+  double rectDiv = size.x / 15.0;
   /* double maxLineThickness = 3.0; */
-  double magn             = 255.0;
-  double neuronRadius     = 15;
+  double magn         = 255.0;
+  double neuronRadius = 15;
 
   vec3 maxValues;
   vec3 minValues;

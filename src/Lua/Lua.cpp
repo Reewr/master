@@ -365,10 +365,11 @@ namespace Lua {
                      sol::c_call<decltype(&LuaLib::Learning::openSpiderSwarm),
                                  &LuaLib::Learning::openSpiderSwarm>,
                      false);
-      engine.require("NEATParameters",
-                     sol::c_call<decltype(&LuaLib::Learning::openNEATParameters),
-                                 &LuaLib::Learning::openNEATParameters>,
-                     false);
+      engine
+        .require("NEATParameters",
+                 sol::c_call<decltype(&LuaLib::Learning::openNEATParameters),
+                             &LuaLib::Learning::openNEATParameters>,
+                 false);
       engine.require("NEATSubstrate",
                      sol::c_call<decltype(&LuaLib::Learning::openNEATSubstrate),
                                  &LuaLib::Learning::openNEATSubstrate>,

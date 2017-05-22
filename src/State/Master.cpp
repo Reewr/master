@@ -10,7 +10,6 @@
 #include "../3D/World.hpp"
 #include "../Camera/Camera.hpp"
 #include "../Console/Console.hpp"
-#include "../Console/Console.hpp"
 #include "../Drawable/Drawable3D.hpp"
 #include "../GLSL/Program.hpp"
 #include "../Graphical/Framebuffer.hpp"
@@ -39,10 +38,10 @@ Master::Master(Asset* a) : mAsset(a) {
   r->unloadUnnecessary(ResourceScope::Master);
   r->loadRequired(ResourceScope::Master);
 
-  mLua    = a->lua();
-  mCamera = new Camera(a);
+  mLua         = a->lua();
+  mCamera      = new Camera(a);
   mFixedCamera = true;
-  mWorld  = new World(vec3(0, -9.81, 0));
+  mWorld       = new World(vec3(0, -9.81, 0));
   mShadowmap =
     new Framebuffer(r->get<Program>("Program::Shadow"), shadowRes, true);
 

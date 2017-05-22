@@ -424,7 +424,7 @@ void Engine::runLoop() {
   // character is slower and therefore more visible to the human
   // eye. This is purely for display and presentation purposes and
   // will eventually be removed
-  static int numFrames   = 30;
+  static int   numFrames = 30;
   static float loopTime  = 1.0 / float(numFrames);
 
   while (!glfwWindowShouldClose(mWindow)) {

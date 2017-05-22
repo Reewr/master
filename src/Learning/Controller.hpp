@@ -1,9 +1,8 @@
 #pragma once
 
-#include <string>
+#include <map>
 #include <memory>
-#include <map>
-#include <map>
+#include <string>
 #include <vector>
 
 #include <mmm.hpp>
@@ -24,15 +23,11 @@ namespace NEAT {
 
 class Controller {
 public:
-  enum class Stage {
-    None,
-    Standing,
-    Walking
-  };
+  enum class Stage { None, Standing, Walking };
 
-  Controller(Experiment* standing,
+  Controller(Experiment*        standing,
              const std::string& standingExperiment,
-             Experiment* walking,
+             Experiment*        walking,
              const std::string& walkingExperiment);
 
   ~Controller();
@@ -64,7 +59,7 @@ private:
 
   Stage mCurrentStage;
 
-  float mExperimentDuration;
+  float                  mExperimentDuration;
   std::vector<mmm::vec4> mData;
-  bool isExperimenting;
+  bool                   isExperimenting;
 };

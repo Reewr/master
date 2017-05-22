@@ -12,8 +12,8 @@ const float PI = mmm::constants<float>::pi;
 Walking0102::Walking0102() : Experiment("Walking0102") {
 
   mParameters.numActivates = 6;
-  mFitnessFunctions =
-  { Fitness("Movement",
+  mFitnessFunctions        = {
+    Fitness("Movement",
             "Fitness based on movement in positive z direction.",
             [](const Phenotype& p, float, float) -> float {
               const auto&        parts = p.spider->parts();
@@ -68,19 +68,19 @@ Walking0102::Walking0102() : Experiment("Walking0102") {
 
   // When a new connection, it will not be added if the weight*maxWeightAndBias
   // is less than 0.2
-  mSubstrate = createDefaultSubstrate();
+  mSubstrate                            = createDefaultSubstrate();
   mSubstrate->m_hidden_nodes_activation = NEAT::ActivationFunction::TANH;
   mSubstrate->m_output_nodes_activation = NEAT::ActivationFunction::TANH;
-  mSubstrate->m_max_weight_and_bias = 4.0;
+  mSubstrate->m_max_weight_and_bias     = 4.0;
 
-  NEAT::Parameters params = getDefaultParameters();
-  params.SurvivalRate = 0.25;
+  NEAT::Parameters params        = getDefaultParameters();
+  params.SurvivalRate            = 0.25;
   params.MultipointCrossoverRate = 0.75;
-  params.EliteFraction = 0.2;
-  params.MutateAddNeuronProb = 0.03;
-  params.MutateAddLinkProb = 0.2;
-  params.MaxWeight = 4.0;
-  params.CompatTreshold = 2.0;
+  params.EliteFraction           = 0.2;
+  params.MutateAddNeuronProb     = 0.03;
+  params.MutateAddLinkProb       = 0.2;
+  params.MaxWeight               = 4.0;
+  params.CompatTreshold          = 2.0;
 
   NEAT::Genome genome(0,
                       mSubstrate->GetMinCPPNInputs(),
@@ -92,7 +92,8 @@ Walking0102::Walking0102() : Experiment("Walking0102") {
                       0,
                       params);
 
-  mPopulation = new NEAT::Population(genome, params, true, params.MaxWeight, time(0));
+  mPopulation =
+    new NEAT::Population(genome, params, true, params.MaxWeight, time(0));
   mParameters.numActivates = 8;
 }
 
@@ -102,9 +103,9 @@ Walking0102::~Walking0102() {
 }
 
 void Walking0102::outputs(Phenotype&                 p,
-                                  const std::vector<double>& outputs) const {
+                          const std::vector<double>& outputs) const {
   size_t index = 16;
-  for(auto& part : p.spider->parts()) {
+  for (auto& part : p.spider->parts()) {
     if (part.second.hinge == nullptr)
       continue;
 
@@ -118,7 +119,8 @@ void Walking0102::outputs(Phenotype&                 p,
       velocity     = output - currentAngle;
       index++;
     } else {
-      velocity = mmm::clamp(part.second.restAngle - currentAngle, -0.3f, 0.3f) * 16.0f;
+      velocity =
+        mmm::clamp(part.second.restAngle - currentAngle, -0.3f, 0.3f) * 16.0f;
     }
 
     part.second.hinge->enableAngularMotor(true, velocity, 16.f);
@@ -127,23 +129,23 @@ void Walking0102::outputs(Phenotype&                 p,
 
 std::vector<double> Walking0102::inputs(const Phenotype& p) const {
   btRigidBody* sternum = p.spider->parts().at("Sternum").part->rigidBody();
-  mmm::vec3 rots       = ExpUtil::getEulerAngles(sternum->getOrientation());
+  mmm::vec3    rots    = ExpUtil::getEulerAngles(sternum->getOrientation());
   std::vector<double> inputs = p.previousOutput;
 
   if (inputs.size() == 0) {
     inputs.insert(inputs.end(), mSubstrate->m_output_coords.size(), 0);
   }
 
-  inputs[0] = rots.x;
-  inputs[1] = rots.y;
-  inputs[2] = rots.z;
-  inputs[3] = mmm::sin(p.duration * 3);
-  inputs[4] = 1;
-  inputs[5] = 1;
-  inputs[6] = 1;
-  inputs[7] = 1;
-  inputs[8] = p.collidesWithTerrain("TarsusL1") ? 1.0 : 0.0;
-  inputs[9] = p.collidesWithTerrain("TarsusL2") ? 1.0 : 0.0;
+  inputs[0]  = rots.x;
+  inputs[1]  = rots.y;
+  inputs[2]  = rots.z;
+  inputs[3]  = mmm::sin(p.duration * 3);
+  inputs[4]  = 1;
+  inputs[5]  = 1;
+  inputs[6]  = 1;
+  inputs[7]  = 1;
+  inputs[8]  = p.collidesWithTerrain("TarsusL1") ? 1.0 : 0.0;
+  inputs[9]  = p.collidesWithTerrain("TarsusL2") ? 1.0 : 0.0;
   inputs[10] = p.collidesWithTerrain("TarsusL3") ? 1.0 : 0.0;
   inputs[11] = p.collidesWithTerrain("TarsusL4") ? 1.0 : 0.0;
   inputs[12] = p.collidesWithTerrain("TarsusR1") ? 1.0 : 0.0;
@@ -152,11 +154,12 @@ std::vector<double> Walking0102::inputs(const Phenotype& p) const {
   inputs[15] = p.collidesWithTerrain("TarsusR4") ? 1.0 : 0.0;
 
   size_t index = 16;
-  for(auto& a : p.spider->parts()) {
+  for (auto& a : p.spider->parts()) {
     if (!a.second.active || a.second.hinge == nullptr)
       continue;
 
-    inputs[index] = ExpUtil::normalizeAngle(a.second.hinge->getHingeAngle(), -PI, PI, 0);
+    inputs[index] =
+      ExpUtil::normalizeAngle(a.second.hinge->getHingeAngle(), -PI, PI, 0);
     index++;
   }
 

@@ -48,7 +48,6 @@ namespace NEAT {
  */
 class SpiderSwarm : Logging::Log {
 public:
-
   //! This describes the different drawing methods
   //!
   //! - DrawSingleInBatch: Draw first one of the current batch
@@ -97,7 +96,8 @@ public:
   // Stops the experiment
   void stop();
 
-  // Allows you to load a specific genome file associated to the current experiment
+  // Allows you to load a specific genome file associated to the current
+  // experiment
   // Assumes that the current loaded experiment is the population and substrate
   // to use. Gives undefined results if this is not the case
   void loadGenome(const std::string& filename);
@@ -162,12 +162,12 @@ private:
   size_t mBatchSize;
   size_t mGeneration;
 
-  float mCurrentDuration;
-  float mBestPossibleFitness;
+  float        mCurrentDuration;
+  float        mBestPossibleFitness;
   unsigned int mBestPossibleFitnessGeneration;
 
-  bool mDrawDebugNetworks;
-  bool mRestartOnNextUpdate;
+  bool            mDrawDebugNetworks;
+  bool            mRestartOnNextUpdate;
   SimulationStage mSimulatingStage;
 
   Statistics mStats;
@@ -176,7 +176,7 @@ private:
 
   // Drawing settings
   DrawingMethod mDrawingMethod;
-  bool mDisableDrawing;
+  bool          mDisableDrawing;
 
   std::vector<size_t> mSpeciesLeaders;
   size_t              mBestIndex;
@@ -186,7 +186,7 @@ private:
 #ifdef BT_NO_PROFILE
   std::function<void(std::vector<Phenotype>::iterator begin,
                      std::vector<Phenotype>::iterator end,
-                     const Experiment& experiment)>
+                     const Experiment&                experiment)>
     mWorker;
 
   std::function<void(std::vector<Phenotype>::iterator begin,

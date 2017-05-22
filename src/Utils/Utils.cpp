@@ -25,8 +25,9 @@ static int  MS_MINUTE = 60 * MS_SECOND;
  * @return
  */
 std::string Utils::timeSinceStart(bool includeMicro) {
-  auto finish = std::chrono::high_resolution_clock::now();
-  unsigned long long int micro = std::chrono::duration_cast<std::chrono::microseconds>(finish - START)
+  auto                   finish = std::chrono::high_resolution_clock::now();
+  unsigned long long int micro =
+    std::chrono::duration_cast<std::chrono::microseconds>(finish - START)
       .count();
 
   unsigned long long int ms = (double) micro / 1000.0;
@@ -40,8 +41,8 @@ std::string Utils::timeSinceStart(bool includeMicro) {
 
   if (!includeMicro) {
     return (mins < 10 ? "0" : "") + std::to_string(mins) + ":" +
-          (secs < 10 ? "0" : "") + std::to_string(secs) + "." +
-          (ms < 10 ? "00" : ms < 100 ? "0" : "") + std::to_string(ms);
+           (secs < 10 ? "0" : "") + std::to_string(secs) + "." +
+           (ms < 10 ? "00" : ms < 100 ? "0" : "") + std::to_string(ms);
   }
 
   return (mins < 10 ? "0" : "") + std::to_string(mins) + ":" +

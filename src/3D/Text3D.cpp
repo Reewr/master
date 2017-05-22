@@ -1,21 +1,21 @@
 #include "Text3D.hpp"
 
-#include "../Utils/Asset.hpp"
-#include "../Utils/CFG.hpp"
 #include "../Camera/Camera.hpp"
+#include "../GLSL/Program.hpp"
+#include "../Resource/Font.hpp"
 #include "../Resource/ResourceManager.hpp"
 #include "../Resource/Texture.hpp"
-#include "../Resource/Font.hpp"
-#include "../GLSL/Program.hpp"
+#include "../Utils/Asset.hpp"
+#include "../Utils/CFG.hpp"
 #include "../Utils/Utils.hpp"
 
 Text3D::Text3D(const std::string& font,
-       const std::string& text,
-       const mmm::vec3&   position)
-  : Text(font, text, mmm::vec2(0), 300) {
-    mFont3DProgram = mAsset->rManager()->get<Program>("Program::Font3D");
-    setPosition(position);
-  }
+               const std::string& text,
+               const mmm::vec3&   position)
+    : Text(font, text, mmm::vec2(0), 300) {
+  mFont3DProgram = mAsset->rManager()->get<Program>("Program::Font3D");
+  setPosition(position);
+}
 
 /**
  * @brief
@@ -48,12 +48,12 @@ void Text3D::setPosition(const mmm::vec3& position) {
  *   Draws the 3D text
  */
 void Text3D::draw(mmm::vec3 offset) {
-  Camera* camera        = mAsset->camera();
-  const mmm::mat4& proj = camera->projection();
-  const mmm::mat4& view = camera->view();
+  Camera*          camera = mAsset->camera();
+  const mmm::mat4& proj   = camera->projection();
+  const mmm::mat4& view   = camera->view();
 
-  mmm::vec3 cameraRight = {view[0][0], view[0][1], view[0][2]};
-  mmm::vec3 cameraUp    = {view[1][0], view[1][1], view[1][2]};
+  mmm::vec3 cameraRight = { view[0][0], view[0][1], view[0][2] };
+  mmm::vec3 cameraUp    = { view[1][0], view[1][1], view[1][2] };
 
   mFont3DProgram->bind();
   mFont3DProgram->setUniform("MVP", proj * view * mmm::mat4::identity);
@@ -61,10 +61,12 @@ void Text3D::draw(mmm::vec3 offset) {
   mFont3DProgram->setUniform("cameraUp", cameraUp);
 
   if (mHasBackgroundColor) {
-    // Background needs a slight offset depending on the inverse of camera viewpoint
+    // Background needs a slight offset depending on the inverse of camera
+    // viewpoint
     // since it needs to be behind the text
     mmm::vec3 backgroundOffset = (camera->target() - camera->position()) * 0.01;
-    mFont3DProgram->setUniform("worldPosition", mPosition + offset + backgroundOffset);
+    mFont3DProgram->setUniform("worldPosition",
+                               mPosition + offset + backgroundOffset);
     mFont3DProgram->setUniform("isBackground", true);
 
     glBindVertexArray(mVAOBackground);

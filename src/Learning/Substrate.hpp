@@ -125,7 +125,7 @@ Substrate::loadArrayValue(const std::string& value) {
   val = val.substr(firstSquare + 1, firstSquare + lastSquare - 1);
 
   if (val.find_first_of("1234567890") == std::string::npos) {
-    return { };
+    return {};
   }
 
   std::vector<std::string> arrays;
