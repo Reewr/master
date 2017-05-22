@@ -1,5 +1,4 @@
 ---
-layout: page
 title: Neuroevolution for Actively Controlled Virtual Characters
 description: A master thesis by Svein Inge Albrigtsen and Alexander Imenes
 ---
@@ -15,13 +14,13 @@ The report should be read in order for this to make sense. The report can be fou
 
 **Standing 01**
 <video  width="800" height="600" controls="controls" preload="none" poster="./images/Standing01.jpeg">
-  <source src="./Videos/Standing01.mp4" type="video/mp4"/>
+  <source src="./Videos/Standing01-alternative.mp4" type="video/mp4"/>
   Your browser does not support the video tag.
 </video>
 
 **Standing 01 - take 2**
 <video  width="800" height="600" controls="controls" preload="none" poster="./images/Standing01-alternative.jpeg">
-  <source src="./Videos/Standing01-alternative.mp4" type="video/mp4"/>
+  <source src="./Videos/Standing01.mp4" type="video/mp4"/>
   Your browser does not support the video tag.
 </video>
 
