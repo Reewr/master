@@ -47,7 +47,6 @@ Master::Master(Asset* a) : mAsset(a) {
 
   mDrawable3D = { new Terrain() };
   mSwarm      = new SpiderSwarm();
-  mSwarm->load("testswarm");
 
   for (auto d : mDrawable3D)
     mWorld->addObject(d);
@@ -116,11 +115,6 @@ void Master::drawGUI() {
   for (auto g : mGUIElements)
     g->draw();
 
-  // render shadowMap as a GUI overlay for debugging...
-  // mAsset->rManager()->get<Program>("Program::GUI")->bind();
-  // mShadowmap->texture()->bind(0);
-  // mShadowmap->quad()->draw();
-
   try {
     mLua->engine["draw"]();
   } catch (const sol::error& e) {
@@ -149,7 +143,7 @@ void Master::input(const Input::Event& event) {
 void Master::update(float deltaTime) {
   mDeltaTime = deltaTime;
   // mWorld->doPhysics(deltaTime);
-  // mSwarm->update(deltaTime);
+  mSwarm->update(deltaTime);
 
   if (mGUIElements.size() == 0 || !mGUIElements.back()->isVisible())
     mCamera->input(deltaTime);

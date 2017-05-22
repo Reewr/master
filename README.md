@@ -63,6 +63,28 @@ Running simulations can be done by starting the game, opening the console (see c
 
 To run an existing simulation, `swarm:setup("name", false)`, where name is the experiment you want to load, followed by `swarm:load("path-to-file")`, where `path-to-file` is the relative path to files from root of the folder. Keep in mind, do *not* use extensions when trying to load the file as the engine will load the required files by appending the needed file extensions. After this is done, the `swarm:runBestGenome()` followed by `swarm:start()` will start the simulation of the best genome.
 
+## Running Champions
+
+In order to start and run the simulations for the champions in the `champions` directory, you can do the following:
+
+```bash
+# start the game
+./build.sh run
+
+# Once in the game, open the console and do the following:
+swarm:setup("Walking08", false)
+swarm:load("champions/Walking/WalkingChampion")
+swarm:runBestGenome()
+swarm:start()
+
+#or for standing
+
+swarm:setup("Standing0304", false)
+swarm:load("champions/Standing/StandingChampion")
+swarm:runBestGenome()
+swarm:start()
+```
+
 # Dependencies
 
 This project utilizes 11 different dependencies for release builds and 12 different dependencies for development builds. What follows is a short explanation of each library. While all libraries are needed to build the engine, only those marked with a `*` was exclusively added to the engine to help with this project.
