@@ -1,9 +1,3 @@
----
-title: Neuroevolution for Actively Controlled Virtual Characters
-description: A master thesis by Svein Inge Albrigtsen and Alexander Imenes
----
-
-
 # Summary
 
 # Result
