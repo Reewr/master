@@ -9,13 +9,15 @@ It is highly recommended to read the report before watching the result as this g
 
 The videos on this page are displayed in the same order as they appear in the report. This is true for all videos, except for the videos marked `others` as these are not included in the report itself.
 
+All of the videos are running at half the speed in order (30 fps) to empathize the motions of the character.
+
 ## Standing
 
 **Standing 01**
 
 <iframe width="620" height="315" src="https://www.youtube.com/embed/_E-f6GLi0zM" frameborder="0" allowfullscreen></iframe>
 
-**Standing 01 - alternative 2**
+**Standing 01 - alternative**
 
 <iframe width="620" height="315" src="https://www.youtube.com/embed/kMmK3OXLTPM" frameborder="0" allowfullscreen></iframe>
 
