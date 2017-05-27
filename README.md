@@ -41,9 +41,9 @@ All of the videos are running at half the speed in order (30 fps) to empathize t
 <!--   <source src="./Videos/GenerationVideoStanding.mp4" type="video/mp4"/> -->
 <!-- </video> -->
 
-**Substate of the Standing champion**
+**Final Network of the Standing Champion**
 
-This video displays the final output network (phenotype) produced by CPPN using the substrate as a template. See the report for details.
+This video displays the final network (phenotype) produced by CPPN using the substrate. See the report for details.
 
 <iframe width="620" height="315" src="https://www.youtube.com/embed/guQTUrpv-Rw" frameborder="0" allowfullscreen></iframe>
 
@@ -103,9 +103,9 @@ This video displays how the champion changed from its first generation until its
 
 <iframe width="620" height="315" src="https://www.youtube.com/embed/c_Ubo0iL1F0" frameborder="0" allowfullscreen></iframe>
 
-**Substate of the Walking champion**
+**Final Network of the Walking Champion**
 
-This video displays the final output network (phenotype) produced by CPPN using the substrate as a template. See the report for details.
+This video displays the final network (phenotype) produced by CPPN using the substrate. See the report for details.
 
 <iframe width="620" height="315" src="https://www.youtube.com/embed/mk3HpeXPpqs" frameborder="0" allowfullscreen></iframe>
 
