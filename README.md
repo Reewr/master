@@ -43,7 +43,7 @@ All of the videos are running at half the speed in order (30 fps) to empathize t
 
 **Substate of the Standing champion**
 
-This video displays the substrate evolved by HyperNEAT. See the report for details.
+This video displays the final output network (phenotype) produced by CPPN using the substrate as a template. See the report for details.
 
 <iframe width="620" height="315" src="https://www.youtube.com/embed/guQTUrpv-Rw" frameborder="0" allowfullscreen></iframe>
 
@@ -105,7 +105,7 @@ This video displays how the champion changed from its first generation until its
 
 **Substate of the Walking champion**
 
-This video displays the substrate evolved by HyperNEAT. See the report for details.
+This video displays the final output network (phenotype) produced by CPPN using the substrate as a template. See the report for details.
 
 <iframe width="620" height="315" src="https://www.youtube.com/embed/mk3HpeXPpqs" frameborder="0" allowfullscreen></iframe>
 
